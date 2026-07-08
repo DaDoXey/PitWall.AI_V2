@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "description": "Override di range/default dei parametri di setup per vettura (e, dove sensato, per circuito). Fallback ai valori generici di SETUP_SECTIONS quando una vettura non e' presente.",
+    "status_legend": "DA_VERIFICARE = placeholder NON confermato, da NON usare come dato ACC reale. Va sostituito con valori reali forniti/confermati dall'utente.",
+    "schema": {
+      "cars": {
+        "<nome esatto da CAR_LIST>": {
+          "_status": "DA_VERIFICARE | OK",
+          "params": {
+            "<param_key>": { "min": 0, "max": 0, "step": 0, "default": 0, "_status": "DA_VERIFICARE" }
+          },
+          "tracks": {
+            "<nome esatto da TRACK_LIST>": {
+              "_status": "DA_VERIFICARE | OK",
+              "params": {
+                "<param_key>": { "default": 0, "_status": "DA_VERIFICARE" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "cars": {
+    "Ferrari 296 GT3": {
+      "_status": "DA_VERIFICARE",
+      "_note": "SEED dimostrativo: gli override sotto COPIANO i valori generici (no-op) solo per mostrare il meccanismo. Nessun numero reale ACC. Sostituire con valori confermati.",
+      "params": {
+        "caster": { "default": 10.0, "_status": "DA_VERIFICARE" }
+      },
+      "tracks": {
+        "Monza": {
+          "_status": "DA_VERIFICARE",
+          "params": {
+            "wing": { "default": 5, "_status": "DA_VERIFICARE" }
+          }
+        }
+      }
+    }
+  }
+}

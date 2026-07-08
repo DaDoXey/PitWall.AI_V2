@@ -1,0 +1,29 @@
+# ── Python (backend) ──
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.db
+.env
+.env.*
+!.env.example
+
+# ── Node / Next (frontend) ──
+node_modules/
+.next/
+out/
+build/
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+next-env.d.ts
+
+# ── Env locali del frontend ──
+frontend/.env.local
+!frontend/.env.local.example
+
+# ── OS / editor ──
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
