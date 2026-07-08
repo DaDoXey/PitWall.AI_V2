@@ -22,6 +22,10 @@ next-env.d.ts
 frontend/.env.local
 !frontend/.env.local.example
 
+# ── Session hot-cache (tooling ~/.claude, LOCALE) ──
+.claude/session-cache.md
+.claude/.session-cache-nudged
+
 # ── OS / editor ──
 .DS_Store
 Thumbs.db
