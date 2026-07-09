@@ -29,3 +29,47 @@ export async function postAnalysis(prompt: string) {
   if (!res.ok) throw new Error(`POST /api/analysis → ${res.status}`);
   return res.json() as Promise<{ question: string; text: string; source: string }>;
 }
+
+// Errore con lo status HTTP, così la UI può distinguere 400 (CSV non valido)
+// da 503 (screenshot senza chiave server) e mostrare il messaggio giusto.
+export class ApiError extends Error {
+  constructor(public status: number, message: string) {
+    super(message);
+    this.name = "ApiError";
+  }
+}
+
+async function postFile(path: string, file: File) {
+  const form = new FormData();
+  form.append("file", file);
+  const res = await fetch(`${API_BASE}${path}`, { method: "POST", body: form });
+  if (!res.ok) {
+    let detail = `${res.status}`;
+    try {
+      detail = (await res.json())?.detail ?? detail;
+    } catch {
+      /* corpo non-JSON: tieni lo status */
+    }
+    throw new ApiError(res.status, detail);
+  }
+  return res.json();
+}
+
+export type CsvResult = {
+  laps_count: number;
+  fuel_cons_avg: number;
+  has_pressure_data: boolean;
+  has_temp_data: boolean;
+  warnings: string[];
+  validation_errors: string[];
+};
+
+export function postCsvParse(file: File) {
+  return postFile("/api/csv/parse", file) as Promise<CsvResult>;
+}
+
+export type VisionResult = { params: Record<string, number>; summary: string };
+
+export function postSetupFromImage(file: File) {
+  return postFile("/api/setup/from-image", file) as Promise<VisionResult>;
+}
