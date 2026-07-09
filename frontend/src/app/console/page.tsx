@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import PageHeader from "@/components/ui/PageHeader";
 import { postAnalysis } from "@/lib/api";
 import {
@@ -177,6 +178,14 @@ function AnalysisCard({
       >
         <SectionBody body={section.body} />
       </div>
+      {isSetup && (
+        <Link
+          href="/setup"
+          className="mt-3 inline-flex items-center gap-1 font-mono text-[0.62rem] uppercase tracking-widest text-accent transition hover:underline"
+        >
+          Vedi i parametri evidenziati in Setup →
+        </Link>
+      )}
     </div>
   );
 }

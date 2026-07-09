@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import PageHeader from "@/components/ui/PageHeader";
 import {
   ApiError,
+  getSession,
   getSetupParams,
   postCsvParse,
   postSetupFromImage,
@@ -42,6 +43,8 @@ export default function SetupPage() {
   const [values, setValues] = useState<Record<string, number>>({});
   const [active, setActive] = useState<string>("");
   const [err, setErr] = useState<string | null>(null);
+  // Parametri suggeriti da Gigi (dallo scenario di sessione): evidenziati sugli slider.
+  const [suggested, setSuggested] = useState<Set<string>>(new Set());
 
   // Input sessione (Fase 7): default nascosto → demo pulita.
   const [showInputs, setShowInputs] = useState(false);
@@ -69,6 +72,13 @@ export default function SetupPage() {
       })
       .catch(() => setErr("Backend non raggiungibile — avvia FastAPI su :8000 (vedi README)."));
   }, [car, track]);
+
+  // Suggerimenti di Gigi: statici dallo scenario demo (/api/session). Caricati una volta.
+  useEffect(() => {
+    getSession()
+      .then((s) => setSuggested(new Set(s.suggested_params ?? [])))
+      .catch(() => setSuggested(new Set()));
+  }, []);
 
   const setVal = (key: string, v: number) => setValues((prev) => ({ ...prev, [key]: v }));
 
@@ -115,9 +125,45 @@ export default function SetupPage() {
   const section = params[active];
   const groups = section ? groupsFor(active, section) : [];
 
+  // Parametri suggeriti da Gigi risolti in {chiave,label,sezione} per il banner,
+  // e helper per il pallino sui tab che contengono almeno un suggerimento.
+  const suggestedItems = suggested.size
+    ? Object.entries(params).flatMap(([sk, sec]) =>
+        Object.entries(sec.params)
+          .filter(([k]) => suggested.has(k))
+          .map(([k, p]) => ({ key: k, label: p.label, section: sk })),
+      )
+    : [];
+  const sectionHasSuggested = (sk: string) =>
+    Object.keys(params[sk].params).some((k) => suggested.has(k));
+
   return (
     <div>
       <PageHeader title="Setup" subtitle={`${car} · ${track} · range ACC`} />
+
+      {/* Banner suggerimenti di Gigi (collega Console↔Setup) */}
+      {suggestedItems.length > 0 && (
+        <div className="mb-4 rounded-xl border border-accent/30 bg-accent/[0.06] p-4">
+          <div className="mb-2 flex items-center gap-2 font-mono text-[0.6rem] uppercase tracking-widest text-accent">
+            🔧 Suggeriti da Gigi
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {suggestedItems.map((it) => (
+              <button
+                key={it.key}
+                onClick={() => setActive(it.section)}
+                title={`Vai al tab ${params[it.section].label}`}
+                className="rounded-md border border-accent/40 bg-accent/10 px-2.5 py-1 text-[0.78rem] text-white transition hover:border-accent"
+              >
+                {it.label}
+              </button>
+            ))}
+          </div>
+          <div className="mt-2 text-[0.7rem] text-muted">
+            Parametri evidenziati dallo scenario analizzato nella Console.
+          </div>
+        </div>
+      )}
 
       {/* Toggle input sessione */}
       <label className="mb-4 flex w-fit cursor-pointer items-center gap-2 text-sm text-subtle">
@@ -154,11 +200,17 @@ export default function SetupPage() {
             <button
               key={k}
               onClick={() => setActive(k)}
-              className={`-mb-px border-b-2 px-4 py-2 text-sm transition ${
+              className={`-mb-px flex items-center gap-1.5 border-b-2 px-4 py-2 text-sm transition ${
                 on ? "border-accent text-white" : "border-transparent text-subtle hover:text-white"
               }`}
             >
               {params[k].label}
+              {sectionHasSuggested(k) && (
+                <span
+                  className="h-1.5 w-1.5 rounded-full bg-accent"
+                  title="Contiene parametri suggeriti da Gigi"
+                />
+              )}
             </button>
           );
         })}
@@ -198,6 +250,7 @@ export default function SetupPage() {
                   paramKey={key}
                   param={p}
                   value={values[key] ?? p.default}
+                  suggested={suggested.has(key)}
                   onChange={(v) => setVal(key, v)}
                 />
               );
@@ -447,19 +500,34 @@ function Slider({
   paramKey,
   param,
   value,
+  suggested,
   onChange,
 }: {
   paramKey: string;
   param: Param;
   value: number;
+  suggested?: boolean;
   onChange: (v: number) => void;
 }) {
-  const valColor = isPressure(paramKey) ? pressureStatusColor(value) : COLORS.text;
+  // Pressioni: colore-stato vs finestra. Altri suggeriti da Gigi: valore accent.
+  const valColor = isPressure(paramKey)
+    ? pressureStatusColor(value)
+    : suggested
+      ? COLORS.accent
+      : COLORS.text;
   return (
-    <div className="py-2" title={param.tip || undefined}>
-      <div className="flex items-baseline justify-between">
-        <span className="font-mono text-[0.66rem] uppercase tracking-wider text-subtle">
+    <div
+      className={`py-2 ${suggested ? "border-l-2 border-accent pl-2.5" : ""}`}
+      title={param.tip || undefined}
+    >
+      <div className="flex items-baseline justify-between gap-2">
+        <span className="flex items-center gap-1.5 font-mono text-[0.66rem] uppercase tracking-wider text-subtle">
           {param.label}
+          {suggested && (
+            <span className="rounded border border-accent px-1 py-px text-[0.5rem] font-semibold not-italic text-accent">
+              GIGI
+            </span>
+          )}
         </span>
         <span className="font-mono text-[0.82rem] font-semibold" style={{ color: valColor }}>
           {formatValue(param, value)}
