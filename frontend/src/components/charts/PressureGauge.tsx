@@ -1,4 +1,8 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { COLORS } from "@/lib/theme";
+import { DUR, EASE } from "@/lib/motion";
 
 const MIN = 27.0;
 const MAX = 30.5;
@@ -52,8 +56,18 @@ export default function PressureGauge({
           strokeWidth={10}
           strokeLinecap="round"
         />
-        <line x1={cx} y1={cy} x2={needle.x.toFixed(1)} y2={needle.y.toFixed(1)} stroke={color} strokeWidth={2.6} strokeLinecap="round" />
-        <circle cx={cx} cy={cy} r={3.5} fill={color} />
+        {/* Ago + mozzo: fanno lo sweep dalla posizione min (180°) al valore.
+            initial rotate = angleFor(value) − 180 (ago disegnato al valore, ruotato
+            indietro a min); anima a 0. rotate è transform → reduced-motion lo riduce. */}
+        <motion.g
+          style={{ transformOrigin: `${cx}px ${cy}px` }}
+          initial={{ rotate: angleFor(value) - 180 }}
+          animate={{ rotate: 0 }}
+          transition={{ duration: DUR.slow, ease: EASE }}
+        >
+          <line x1={cx} y1={cy} x2={needle.x.toFixed(1)} y2={needle.y.toFixed(1)} stroke={color} strokeWidth={2.6} strokeLinecap="round" />
+          <circle cx={cx} cy={cy} r={3.5} fill={color} />
+        </motion.g>
       </svg>
       <div className="-mt-2 font-mono text-lg" style={{ color }}>
         {value.toFixed(1)}

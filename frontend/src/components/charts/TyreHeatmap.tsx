@@ -1,4 +1,8 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { COLORS } from "@/lib/theme";
+import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { tempToColor, type Corner, type SessionData } from "@/lib/telemetry";
 
 // Geometria portata dalla v1 (telemetry._heatmap_html): scocca + 4 riquadri-gomma.
@@ -25,7 +29,7 @@ function Wheel({
   const x = cx - WHEEL_W / 2;
   const y = cy - WHEEL_H / 2;
   return (
-    <g>
+    <motion.g variants={fadeInUp}>
       <rect x={x} y={y} width={WHEEL_W} height={WHEEL_H} rx={12} fill={tempToColor(val, scale)} stroke="#000" strokeOpacity={0.35} />
       <text x={cx} y={cy - 4} textAnchor="middle" fontFamily="var(--font-mono)" fontSize={14} fontWeight={700} fill="#fff">
         {val}°
@@ -33,7 +37,7 @@ function Wheel({
       <text x={cx} y={cy + 20} textAnchor="middle" fontFamily="var(--font-mono)" fontSize={8} fill="#fff" opacity={0.85}>
         {label}
       </text>
-    </g>
+    </motion.g>
   );
 }
 
@@ -63,9 +67,11 @@ export default function TyreHeatmap({ data }: { data: SessionData }) {
         />
         <path d="M98 118 L142 118 L134 150 L106 150 Z" fill="#0e0e0e" stroke={COLORS.line} />
         <rect x={104} y={158} width={32} height={46} rx={6} fill="#0e0e0e" stroke={COLORS.line} />
-        {corners.map((c) => (
-          <Wheel key={c.k} cx={c.cx} cy={c.cy} val={M[c.k]} label={L[c.k]} scale={scale} />
-        ))}
+        <motion.g variants={staggerContainer} initial="hidden" animate="visible">
+          {corners.map((c) => (
+            <Wheel key={c.k} cx={c.cx} cy={c.cy} val={M[c.k]} label={L[c.k]} scale={scale} />
+          ))}
+        </motion.g>
       </svg>
       <div className="mt-2 flex items-center gap-2">
         <span className="font-mono text-[9px] text-muted">{lo}°</span>

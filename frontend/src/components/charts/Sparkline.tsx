@@ -1,3 +1,5 @@
+"use client";
+
 // Mini-trend SVG hand-rolled (no Recharts): decorativo-informativo, si legge a
 // colpo d'occhio. Coerente con PressureGauge/TyreHeatmap (già SVG) e leggero:
 // non trascina il bundle Recharts sulla Dashboard.
@@ -6,7 +8,13 @@
 // tutta la larghezza (`w-full` + height:auto) → niente `preserveAspectRatio="none"`
 // che prima stirava solo in orizzontale (linea schiacciata, pallino finale ovale).
 // Lo stroke resta costante via `vectorEffect="non-scaling-stroke"`.
+//
+// Motion (F9): la linea si "disegna" (pathLength 0→1), l'area sfuma e il pallino
+// finale compare a fine tratto. pathLength/opacity NON sono transform → reduced-
+// motion non li riduce da solo: useReducedMotion() degrada allo stato finale.
 import { useId } from "react";
+import { motion } from "framer-motion";
+import { DUR, EASE, useReducedMotion } from "@/lib/motion";
 
 export default function Sparkline({
   data,
@@ -26,6 +34,7 @@ export default function Sparkline({
   className?: string;
 }) {
   const gid = useId();
+  const reduce = useReducedMotion();
   if (!data || data.length < 2) return null;
 
   const min = Math.min(...data);
@@ -57,10 +66,16 @@ export default function Sparkline({
               <stop offset="100%" stopColor={color} stopOpacity={0} />
             </linearGradient>
           </defs>
-          <path d={area} fill={`url(#${gid})`} />
+          <motion.path
+            d={area}
+            fill={`url(#${gid})`}
+            initial={reduce ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: DUR.base, ease: EASE, delay: DUR.slow * 0.5 }}
+          />
         </>
       )}
-      <path
+      <motion.path
         d={line}
         fill="none"
         stroke={color}
@@ -68,8 +83,19 @@ export default function Sparkline({
         strokeLinecap="round"
         strokeLinejoin="round"
         vectorEffect="non-scaling-stroke"
+        initial={reduce ? false : { pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: DUR.slow, ease: EASE }}
       />
-      <circle cx={lastX} cy={lastY} r={strokeWidth + 0.75} fill={color} />
+      <motion.circle
+        cx={lastX}
+        cy={lastY}
+        r={strokeWidth + 0.75}
+        fill={color}
+        initial={reduce ? false : { opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: DUR.fast, delay: DUR.slow }}
+      />
     </svg>
   );
 }

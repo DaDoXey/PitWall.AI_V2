@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 
 const NAV = [
   { href: "/", label: "Dashboard", icon: "▦" },
@@ -26,16 +27,25 @@ export default function Sidebar() {
         {NAV.map((n) => {
           const active = path === n.href;
           return (
-            <Link
-              key={n.href}
-              href={n.href}
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm transition ${
-                active ? "bg-accent text-white" : "text-subtle hover:bg-raised"
-              }`}
-            >
-              <span>{n.icon}</span>
-              {n.label}
-            </Link>
+            <motion.div key={n.href} whileHover={{ x: active ? 0 : 2 }} whileTap={{ scale: 0.98 }}>
+              <Link
+                href={n.href}
+                className={`relative flex items-center gap-3 rounded-md px-3 py-2 text-sm transition ${
+                  active ? "text-white" : "text-subtle hover:bg-raised"
+                }`}
+              >
+                {/* Indicatore attivo condiviso: scorre da una voce all'altra (layoutId). */}
+                {active && (
+                  <motion.span
+                    layoutId="nav-active"
+                    className="absolute inset-0 rounded-md bg-accent"
+                    transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                  />
+                )}
+                <span className="relative z-10">{n.icon}</span>
+                <span className="relative z-10">{n.label}</span>
+              </Link>
+            </motion.div>
           );
         })}
       </nav>
