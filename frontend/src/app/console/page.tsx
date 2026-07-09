@@ -2,7 +2,9 @@
 
 import { Fragment, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import PageHeader from "@/components/ui/PageHeader";
+import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { postAnalysis } from "@/lib/api";
 import {
   CHIPS,
@@ -61,7 +63,12 @@ export default function ConsolePage() {
       <PageHeader title="Engineer Console" subtitle="Gigi · Race Engineer" />
 
       {/* Header Gigi */}
-      <div className="mb-5 flex items-center gap-3 rounded-xl border border-line border-l-[3px] border-l-accent bg-gradient-to-br from-surface to-raised px-4 py-3">
+      <motion.div
+        variants={fadeInUp}
+        initial="hidden"
+        animate="visible"
+        className="mb-5 flex items-center gap-3 rounded-xl border border-line border-l-[3px] border-l-accent bg-gradient-to-br from-surface to-raised px-4 py-3"
+      >
         <GigiAvatar size={44} />
         <div className="flex-1">
           <div className="font-display text-sm font-bold tracking-wide">Gigi</div>
@@ -73,7 +80,7 @@ export default function ConsolePage() {
           <span className="h-1.5 w-1.5 rounded-full bg-ok shadow-[0_0_6px_#00C853]" />
           online
         </div>
-      </div>
+      </motion.div>
 
       {/* Scenari rapidi */}
       <div className="mb-2 font-mono text-[0.62rem] uppercase tracking-widest text-muted">
@@ -81,14 +88,16 @@ export default function ConsolePage() {
       </div>
       <div className="mb-4 grid grid-cols-2 gap-2 md:grid-cols-4">
         {CHIPS.map((chip) => (
-          <button
+          <motion.button
             key={chip}
             onClick={() => analyze(chip)}
             disabled={loading}
+            whileHover={{ y: -1 }}
+            whileTap={{ scale: 0.97 }}
             className="rounded-md border border-line bg-surface px-3 py-2 text-sm text-subtle transition hover:border-line-strong hover:bg-raised disabled:cursor-not-allowed disabled:opacity-50"
           >
             {chip}
-          </button>
+          </motion.button>
         ))}
       </div>
 
@@ -130,11 +139,19 @@ export default function ConsolePage() {
       {loading && !data ? (
         <p className="text-sm text-subtle">Gigi sta analizzando…</p>
       ) : (
-        <div className={loading ? "opacity-50 transition" : "transition"}>
+        <motion.div
+          key={data?.question} // nuova analisi → remount → l'ingresso a cascata ri-scatta
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+          className={loading ? "opacity-50 transition" : "transition"}
+        >
           {sections.map((s, i) => (
-            <AnalysisCard key={s.title} index={i} section={s} isSetup={i === SETUP_SECTION_INDEX} />
+            <motion.div key={s.title} variants={fadeInUp}>
+              <AnalysisCard index={i} section={s} isSetup={i === SETUP_SECTION_INDEX} />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
     </div>
   );

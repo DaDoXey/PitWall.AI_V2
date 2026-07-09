@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import PageHeader from "@/components/ui/PageHeader";
 import TempLineChart from "@/components/charts/TempLineChart";
 import PressureGauge from "@/components/charts/PressureGauge";
 import TyreHeatmap from "@/components/charts/TyreHeatmap";
+import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { getSession } from "@/lib/api";
 import { TYRE_SERIES, type Corner, type SessionData } from "@/lib/telemetry";
 import { COLORS } from "@/lib/theme";
@@ -45,34 +47,35 @@ export default function TelemetryPage() {
         subtitle={`${s.track} · ${s.car} · ${s.laps} giri · stint ${s.stint.toLowerCase()}`}
       />
 
+      <motion.div variants={staggerContainer} initial="hidden" animate="visible">
       {/* Riga 1: line chart + heatmap */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <motion.div variants={fadeInUp} className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <div className="rounded-xl border border-line bg-surface p-4 lg:col-span-2">
           <div className="mb-1 font-mono text-sm">Temperatura gomme · {s.laps} giri</div>
           <TempLineChart data={data} />
         </div>
         <TyreHeatmap data={data} />
-      </div>
+      </motion.div>
 
       {/* Riga 2: gauge pressioni a caldo */}
-      <div className="mt-4">
+      <motion.div variants={fadeInUp} className="mt-4">
         <div className="mb-1 font-mono text-xs uppercase tracking-wider text-subtle">
           Pressioni gomme · a caldo (display)
         </div>
         <div className="mb-3 text-xs text-muted">
           Finestra ottimale {lo}–{hi} psi · valori a freddo (garage) distinti
         </div>
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <motion.div variants={staggerContainer} className="grid grid-cols-2 gap-3 md:grid-cols-4">
           {TYRE_SERIES.map((c) => (
-            <div key={c.key} className="rounded-xl border border-line bg-surface p-3">
+            <motion.div key={c.key} variants={fadeInUp} className="rounded-xl border border-line bg-surface p-3">
               <PressureGauge label={c.label} value={data.pressure.hot[c.key]} window={data.pressure.hot_window} />
-            </div>
+            </motion.div>
           ))}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Riga 3: tabella giro-per-giro */}
-      <div className="mt-6 overflow-x-auto rounded-xl border border-line bg-surface p-4">
+      <motion.div variants={fadeInUp} className="mt-6 overflow-x-auto rounded-xl border border-line bg-surface p-4">
         <div className="mb-3 font-mono text-xs uppercase tracking-wider text-subtle">Dati giro-per-giro</div>
         <table className="w-full text-sm">
           <thead>
@@ -110,20 +113,21 @@ export default function TelemetryPage() {
             ))}
           </tbody>
         </table>
-      </div>
+      </motion.div>
 
       {/* Riga 4: cross-check */}
-      <div className="mt-6 rounded-xl border border-line bg-surface p-4">
+      <motion.div variants={fadeInUp} className="mt-6 rounded-xl border border-line bg-surface p-4">
         <div className="mb-3 font-mono text-xs uppercase tracking-wider text-subtle">Cross-check dati</div>
-        <div className="flex flex-col gap-2">
+        <motion.div variants={staggerContainer} className="flex flex-col gap-2">
           {checks.map((cc, i) => (
-            <div key={i} className="flex items-center gap-2 text-sm text-[#cccccc]">
+            <motion.div key={i} variants={fadeInUp} className="flex items-center gap-2 text-sm text-[#cccccc]">
               <span className="h-2 w-2 rounded-full" style={{ background: cc.color }} />
               {cc.msg}
-            </div>
+            </motion.div>
           ))}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
+      </motion.div>
     </div>
   );
 }

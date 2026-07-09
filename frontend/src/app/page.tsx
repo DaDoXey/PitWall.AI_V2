@@ -239,7 +239,7 @@ function MetricCard({ label, valueNum, suffix, decimals, note, color, href, seri
         {note}
       </div>
       <div className="mt-3">
-        <Sparkline data={series} color={color} height={30} className="w-full" />
+        <Sparkline data={series} color={color} />
       </div>
     </Link>
   );

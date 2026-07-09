@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import PageHeader from "@/components/ui/PageHeader";
+import { fadeInUp, staggerContainer } from "@/lib/motion";
 import {
   ApiError,
   getSession,
@@ -143,7 +145,12 @@ export default function SetupPage() {
 
       {/* Banner suggerimenti di Gigi (collega Console↔Setup) */}
       {suggestedItems.length > 0 && (
-        <div className="mb-4 rounded-xl border border-accent/30 bg-accent/[0.06] p-4">
+        <motion.div
+          variants={fadeInUp}
+          initial="hidden"
+          animate="visible"
+          className="mb-4 rounded-xl border border-accent/30 bg-accent/[0.06] p-4"
+        >
           <div className="mb-2 flex items-center gap-2 font-mono text-[0.6rem] uppercase tracking-widest text-accent">
             🔧 Suggeriti da Gigi
           </div>
@@ -162,7 +169,7 @@ export default function SetupPage() {
           <div className="mt-2 text-[0.7rem] text-muted">
             Parametri evidenziati dallo scenario analizzato nella Console.
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* Toggle input sessione */}
@@ -232,36 +239,46 @@ export default function SetupPage() {
         </div>
       )}
 
-      {/* Gruppi di slider */}
-      {groups.map((g, gi) => (
-        <div key={gi} className="mb-6">
-          {g.title && (
-            <div className="mb-3 font-mono text-[0.62rem] uppercase tracking-widest text-accent">
-              {g.title}
-            </div>
-          )}
-          <div className={`grid gap-x-6 gap-y-1 ${GRID_COLS[g.cols]}`}>
-            {g.keys.map((key) => {
-              const p = section.params[key];
-              if (!p) return null;
-              return (
-                <Slider
-                  key={key}
-                  paramKey={key}
-                  param={p}
-                  value={values[key] ?? p.default}
-                  suggested={suggested.has(key)}
-                  onChange={(v) => setVal(key, v)}
-                />
-              );
-            })}
-          </div>
+      {/* Gruppi di slider — transizione morbida al cambio tab (AnimatePresence) */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={active}
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+          exit={{ opacity: 0, y: -8, transition: { duration: 0.15 } }}
+        >
+          {groups.map((g, gi) => (
+            <motion.div key={gi} variants={fadeInUp} className="mb-6">
+              {g.title && (
+                <div className="mb-3 font-mono text-[0.62rem] uppercase tracking-widest text-accent">
+                  {g.title}
+                </div>
+              )}
+              <div className={`grid gap-x-6 gap-y-1 ${GRID_COLS[g.cols]}`}>
+                {g.keys.map((key) => {
+                  const p = section.params[key];
+                  if (!p) return null;
+                  return (
+                    <Slider
+                      key={key}
+                      paramKey={key}
+                      param={p}
+                      value={values[key] ?? p.default}
+                      suggested={suggested.has(key)}
+                      onChange={(v) => setVal(key, v)}
+                    />
+                  );
+                })}
+              </div>
 
-          {active === "aero" && g.title.startsWith("Ride height") && (
-            <RakeInfo front={values["ride_height_front"] ?? 0} rear={values["ride_height_rear"] ?? 0} />
-          )}
-        </div>
-      ))}
+              {active === "aero" && g.title.startsWith("Ride height") && (
+                <RakeInfo front={values["ride_height_front"] ?? 0} rear={values["ride_height_rear"] ?? 0} />
+              )}
+            </motion.div>
+          ))}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
