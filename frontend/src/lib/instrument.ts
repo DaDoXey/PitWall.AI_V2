@@ -1,4 +1,5 @@
 // Token "strumento analogico da pit wall" (megaprompt #2, FASE 1).
+// Riferimento di design/data-viz del progetto: vedi ../../docs/DESIGN_REFERENCE.md (MoTeC i2 Pro).
 // Fonte UNICA da cui le viste dati (gauge, grafici, sparkline, heatmap, KPI)
 // derivano la resa "strumento reale": niente glow di default, colore solo per
 // STATO, grigi per griglia/assi/tacche, lancette/linee sottili, numeri monospace.
