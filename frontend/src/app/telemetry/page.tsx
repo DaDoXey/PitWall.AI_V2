@@ -6,6 +6,7 @@ import PageHeader from "@/components/ui/PageHeader";
 import TempLineChart from "@/components/charts/TempLineChart";
 import PressureGauge from "@/components/charts/PressureGauge";
 import TyreHeatmap from "@/components/charts/TyreHeatmap";
+import LapTable from "@/components/charts/LapTable";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { getSession } from "@/lib/api";
 import { TYRE_SERIES, type Corner, type SessionData } from "@/lib/telemetry";
@@ -77,42 +78,7 @@ export default function TelemetryPage() {
       {/* Riga 3: tabella giro-per-giro */}
       <motion.div variants={fadeInUp} className="mt-6 overflow-x-auto rounded-xl border border-line bg-surface p-4">
         <div className="mb-3 font-mono text-xs uppercase tracking-wider text-subtle">Dati giro-per-giro</div>
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="font-mono text-[0.62rem] uppercase text-muted">
-              <th className="py-1 text-left">Giro</th>
-              <th className="text-right">Cons. (L)</th>
-              {TYRE_SERIES.map((c) => (
-                <th key={c.key} className="text-right">
-                  T {c.label}
-                </th>
-              ))}
-              {TYRE_SERIES.map((c) => (
-                <th key={`p-${c.key}`} className="text-right">
-                  P {c.label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.laps.map((lap, i) => (
-              <tr key={lap} className="border-t border-line">
-                <td className="py-1 font-mono">{lap}</td>
-                <td className="text-right font-mono">{data.fuel_per_lap[i].toFixed(1)}</td>
-                {TYRE_SERIES.map((c) => (
-                  <td key={c.key} className="text-right font-mono">
-                    {data.temp.series[c.key][i]}
-                  </td>
-                ))}
-                {TYRE_SERIES.map((c) => (
-                  <td key={`p-${c.key}`} className="text-right font-mono">
-                    {data.pressure.hot_series[c.key][i]}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <LapTable data={data} />
       </motion.div>
 
       {/* Riga 4: cross-check */}

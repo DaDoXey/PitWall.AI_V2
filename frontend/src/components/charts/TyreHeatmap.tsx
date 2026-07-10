@@ -59,14 +59,20 @@ export default function TyreHeatmap({ data }: { data: SessionData }) {
     <div className="rounded-xl border border-line bg-inset p-4">
       <div className="mb-2 font-mono text-[0.72rem] uppercase tracking-wider text-subtle">Heatmap gomme · max stint</div>
       <svg viewBox="0 0 240 290" className="w-full" style={{ maxHeight: 340 }} preserveAspectRatio="xMidYMid meet">
+        {/* Silhouette GT3 vista dall'alto: naso affusolato, fender sui due assi,
+            fiancate dritte tra le ruote, coda rastremata. Le 4 gomme la fiancheggiano. */}
         <path
-          d="M120 24 C150 24 162 50 162 96 L162 230 C162 256 146 268 120 268 C94 268 78 256 78 230 L78 96 C78 50 90 24 120 24 Z"
+          d="M120 22 C102 22 90 32 86 52 C82 66 80 82 80 98 L80 208 C80 234 88 256 106 263 L134 263 C152 256 160 234 160 208 L160 98 C160 82 158 66 154 52 C150 32 138 22 120 22 Z"
           fill="#161616"
           stroke={COLORS.lineStrong}
           strokeWidth={2}
         />
-        <path d="M98 118 L142 118 L134 150 L106 150 Z" fill="#0e0e0e" stroke={COLORS.line} />
-        <rect x={104} y={158} width={32} height={46} rx={6} fill="#0e0e0e" stroke={COLORS.line} />
+        {/* Splitter anteriore */}
+        <path d="M101 31 L139 31 L136 39 L104 39 Z" fill="#0e0e0e" stroke={COLORS.line} />
+        {/* Abitacolo/greenhouse (trapezio: parabrezza più largo davanti) */}
+        <path d="M104 116 L136 116 L131 170 L109 170 Z" fill="#0e0e0e" stroke={COLORS.line} />
+        {/* Ala posteriore */}
+        <rect x={88} y={247} width={64} height={7} rx={2} fill="#0e0e0e" stroke={COLORS.line} />
         <motion.g variants={staggerContainer} initial="hidden" animate="visible">
           {corners.map((c) => (
             <Wheel key={c.k} cx={c.cx} cy={c.cy} val={M[c.k]} label={L[c.k]} scale={scale} />

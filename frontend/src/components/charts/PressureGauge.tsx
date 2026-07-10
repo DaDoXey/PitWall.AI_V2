@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import { COLORS } from "@/lib/theme";
-import { DUR, EASE } from "@/lib/motion";
+import { DUR, EASE, useReducedMotion } from "@/lib/motion";
+import CountUp from "@/components/ui/CountUp";
 
 const MIN = 27.0;
 const MAX = 30.5;
@@ -41,36 +42,48 @@ export default function PressureGauge({
   const cx = 80;
   const cy = 78;
   const r = 60;
-  const needle = polar(cx, cy, r - 6, angleFor(value));
+  const reduce = useReducedMotion();
+  const t = Math.max(0, Math.min(1, (value - MIN) / (MAX - MIN))); // riempimento proporzionale (frazione dell'arco)
+  const tip = polar(cx, cy, r, angleFor(value)); // marker sul valore corrente
+  const tickAt = (deg: number) => ({ i: polar(cx, cy, r - 9, deg), o: polar(cx, cy, r + 7, deg) });
+  const tLo = tickAt(angleFor(lo));
+  const tHi = tickAt(angleFor(hi));
 
   return (
     <div className="flex flex-col items-center">
       <div className="font-mono text-[0.7rem] uppercase tracking-wider text-subtle">{label}</div>
       <svg viewBox="0 0 160 96" className="w-full max-w-[180px]">
-        <path d={arcPath(cx, cy, r, 180, 0)} fill="none" stroke={COLORS.raised} strokeWidth={10} strokeLinecap="round" />
-        <path
-          d={arcPath(cx, cy, r, angleFor(lo), angleFor(hi))}
+        {/* Track di fondo: anello spesso */}
+        <path d={arcPath(cx, cy, r, 180, 0)} fill="none" stroke={COLORS.raised} strokeWidth={13} strokeLinecap="round" />
+        {/* Riempimento proporzionale al valore, glow HUD; draw-in da min → valore
+            (pathLength 0→t). pathLength non è transform → reduced-motion via guardia. */}
+        <motion.path
+          d={arcPath(cx, cy, r, 180, 0)}
           fill="none"
-          stroke={COLORS.ok}
-          strokeOpacity={0.5}
-          strokeWidth={10}
+          stroke={color}
+          strokeWidth={13}
           strokeLinecap="round"
-        />
-        {/* Ago + mozzo: fanno lo sweep dalla posizione min (180°) al valore.
-            initial rotate = angleFor(value) − 180 (ago disegnato al valore, ruotato
-            indietro a min); anima a 0. rotate è transform → reduced-motion lo riduce. */}
-        <motion.g
-          style={{ transformOrigin: `${cx}px ${cy}px` }}
-          initial={{ rotate: angleFor(value) - 180 }}
-          animate={{ rotate: 0 }}
+          style={{ filter: `drop-shadow(0 0 4px ${color})` }}
+          initial={reduce ? false : { pathLength: 0 }}
+          animate={{ pathLength: t }}
           transition={{ duration: DUR.slow, ease: EASE }}
-        >
-          <line x1={cx} y1={cy} x2={needle.x.toFixed(1)} y2={needle.y.toFixed(1)} stroke={color} strokeWidth={2.6} strokeLinecap="round" />
-          <circle cx={cx} cy={cy} r={3.5} fill={color} />
-        </motion.g>
+        />
+        {/* Tacche ai bordi della finestra ottimale */}
+        <line x1={tLo.i.x} y1={tLo.i.y} x2={tLo.o.x} y2={tLo.o.y} stroke={COLORS.ok} strokeWidth={2} strokeLinecap="round" />
+        <line x1={tHi.i.x} y1={tHi.i.y} x2={tHi.o.x} y2={tHi.o.y} stroke={COLORS.ok} strokeWidth={2} strokeLinecap="round" />
+        {/* Marker del valore corrente: compare a fine sweep */}
+        <motion.circle
+          cx={tip.x}
+          cy={tip.y}
+          r={3.5}
+          fill={color}
+          initial={reduce ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: DUR.fast, delay: DUR.slow }}
+        />
       </svg>
       <div className="-mt-2 font-mono text-lg" style={{ color }}>
-        {value.toFixed(1)}
+        <CountUp value={value} decimals={1} />
         <span className="text-xs text-subtle"> psi</span>
       </div>
       <div className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color }}>

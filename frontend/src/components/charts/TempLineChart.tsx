@@ -12,9 +12,11 @@ import {
   YAxis,
 } from "recharts";
 import { COLORS } from "@/lib/theme";
+import { useReducedMotion } from "@/lib/motion";
 import { TYRE_SERIES, type SessionData } from "@/lib/telemetry";
 
 export default function TempLineChart({ data }: { data: SessionData }) {
+  const reduce = useReducedMotion();
   const rows = data.laps.map((lap, i) => ({
     lap,
     fl: data.temp.series.fl[i],
@@ -51,7 +53,21 @@ export default function TempLineChart({ data }: { data: SessionData }) {
           label={{ value: `${data.temp.limit}°C`, fill: COLORS.subtle, fontSize: 10, position: "insideTopRight" }}
         />
         {TYRE_SERIES.map((s) => (
-          <Line key={s.key} type="monotone" dataKey={s.key} name={s.label} stroke={s.color} strokeWidth={2.2} dot={{ r: 2.5 }} />
+          <Line
+            key={s.key}
+            type="monotone"
+            dataKey={s.key}
+            name={s.label}
+            stroke={s.color}
+            strokeWidth={2.2}
+            dot={{ r: 2.5 }}
+            // Glow broadcast nel colore della serie: accento, non sbava la linea.
+            style={{ filter: `drop-shadow(0 0 3px ${s.color})` }}
+            // Draw-in nativo Recharts; reduced-motion → linea già completa.
+            isAnimationActive={!reduce}
+            animationDuration={900}
+            animationEasing="ease-out"
+          />
         ))}
       </LineChart>
     </ResponsiveContainer>

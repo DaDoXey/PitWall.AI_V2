@@ -4,6 +4,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import PageHeader from "@/components/ui/PageHeader";
+import GigiAvatar from "@/components/ui/GigiAvatar";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { postAnalysis } from "@/lib/api";
 import {
@@ -298,17 +299,4 @@ function renderInline(text: string): React.ReactNode {
   }
   if (last < text.length) nodes.push(text.slice(last));
   return nodes;
-}
-
-// Avatar Gigi (SVG inline, casco stilizzato con visiera accent).
-function GigiAvatar({ size }: { size: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" aria-hidden="true">
-      <circle cx="24" cy="24" r="23" fill="#1a1a1a" stroke="#333333" />
-      <path d="M12 26a12 12 0 0 1 24 0v4H12v-4Z" fill="#E8002D" />
-      <path d="M14 25a10 10 0 0 1 20 0v2H14v-2Z" fill="#0a0a0a" />
-      <rect x="15" y="27" width="18" height="7" rx="2" fill="#141414" stroke="#333333" />
-      <rect x="18" y="29" width="12" height="3" rx="1.5" fill="#E8002D" opacity="0.85" />
-    </svg>
-  );
 }

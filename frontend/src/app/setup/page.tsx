@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import PageHeader from "@/components/ui/PageHeader";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
@@ -173,15 +173,10 @@ export default function SetupPage() {
       )}
 
       {/* Toggle input sessione */}
-      <label className="mb-4 flex w-fit cursor-pointer items-center gap-2 text-sm text-subtle">
-        <input
-          type="checkbox"
-          checked={showInputs}
-          onChange={(e) => setShowInputs(e.target.checked)}
-          className="h-4 w-4 accent-accent"
-        />
-        Input sessione (selettori auto/pista · upload CSV/screenshot)
-      </label>
+      <div className="mb-4 flex w-fit items-center gap-2.5 text-sm text-subtle">
+        <Toggle checked={showInputs} onChange={setShowInputs} label="Mostra input sessione" />
+        <span>Input sessione (selettori auto/pista · upload CSV/screenshot)</span>
+      </div>
 
       {showInputs && (
         <SessionInputs
@@ -318,9 +313,9 @@ function SessionInputs({
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <Select label="Auto" value={car} options={CAR_LIST} onChange={onCar} />
-        <Select label="Tracciato" value={track} options={TRACK_LIST} onChange={onTrack} />
-        <Select label="Condizioni" value={conditions} options={CONDITIONS} onChange={onConditions} />
+        <PwSelect label="Auto" value={car} options={CAR_LIST} onChange={onCar} />
+        <PwSelect label="Tracciato" value={track} options={TRACK_LIST} onChange={onTrack} />
+        <Segmented label="Condizioni" value={conditions} options={CONDITIONS} onChange={onConditions} />
       </div>
 
       <div className="mt-3 grid grid-cols-1 gap-x-6 sm:grid-cols-2">
@@ -444,7 +439,102 @@ function ScreenshotUpload({ onApplyVision }: { onApplyVision: (vp: Record<string
   );
 }
 
-function Select({
+// Switch on/off custom (sostituisce il checkbox nativo). role="switch" accessibile.
+function Toggle({
+  checked,
+  onChange,
+  label,
+}: {
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  label: string;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      aria-label={label}
+      onClick={() => onChange(!checked)}
+      className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${checked ? "bg-accent" : "bg-line-strong"}`}
+    >
+      <span
+        className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-all ${checked ? "left-[1.125rem]" : "left-0.5"}`}
+      />
+    </button>
+  );
+}
+
+// Dropdown custom coerente col design system (sostituisce il <select> grigio nativo).
+function PwSelect({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  options: string[];
+  onChange: (v: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, [open]);
+
+  return (
+    <label className="flex flex-col gap-1">
+      <span className="font-mono text-[0.6rem] uppercase tracking-widest text-muted">{label}</span>
+      <div ref={ref} className="relative">
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          className="flex w-full items-center justify-between rounded-md border border-line bg-inset px-3 py-2 text-sm text-white transition hover:border-line-strong focus:border-accent focus:outline-none"
+        >
+          <span className="truncate">{value}</span>
+          <span className={`ml-2 text-muted transition-transform ${open ? "rotate-180" : ""}`}>▾</span>
+        </button>
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.12 }}
+              className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md border border-line bg-raised p-1 shadow-xl"
+            >
+              {options.map((o) => (
+                <button
+                  key={o}
+                  type="button"
+                  onClick={() => {
+                    onChange(o);
+                    setOpen(false);
+                  }}
+                  className={`block w-full rounded px-2.5 py-1.5 text-left text-sm transition ${
+                    o === value ? "bg-accent/15 text-accent" : "text-subtle hover:bg-surface hover:text-white"
+                  }`}
+                >
+                  {o}
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </label>
+  );
+}
+
+// Segmented control per poche opzioni fisse (Condizioni).
+function Segmented({
   label,
   value,
   options,
@@ -458,17 +548,20 @@ function Select({
   return (
     <label className="flex flex-col gap-1">
       <span className="font-mono text-[0.6rem] uppercase tracking-widest text-muted">{label}</span>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="rounded-md border border-line bg-inset px-3 py-2 text-sm text-white focus:border-accent focus:outline-none"
-      >
+      <div className="inline-flex rounded-md border border-line bg-inset p-0.5">
         {options.map((o) => (
-          <option key={o} value={o} className="bg-inset">
+          <button
+            key={o}
+            type="button"
+            onClick={() => onChange(o)}
+            className={`flex-1 rounded px-3 py-1.5 text-sm transition ${
+              value === o ? "bg-accent text-white" : "text-subtle hover:text-white"
+            }`}
+          >
             {o}
-          </option>
+          </button>
         ))}
-      </select>
+      </div>
     </label>
   );
 }
@@ -503,7 +596,7 @@ function MiniSlider({
         step={1}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="mt-1.5 h-1.5 w-full cursor-pointer appearance-none rounded-full bg-line-strong accent-accent"
+        className="pw-range mt-1.5 h-1.5 w-full cursor-pointer rounded-full bg-line-strong"
         aria-label={label}
       />
     </div>
@@ -558,7 +651,7 @@ function Slider({
         step={param.step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="mt-1.5 h-1.5 w-full cursor-pointer appearance-none rounded-full bg-line-strong accent-accent"
+        className="pw-range mt-1.5 h-1.5 w-full cursor-pointer rounded-full bg-line-strong"
         aria-label={param.label}
       />
     </div>

@@ -12,3 +12,41 @@ body {
   background: var(--bg);
   color: #ffffff;
 }
+
+/* Slider ACC custom (FASE 8): thumb grande con accento + glow in hover/focus.
+   Sostituisce il thumb nativo invisibile lasciato da `appearance-none`. */
+.pw-range {
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+}
+.pw-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: var(--accent);
+  border: 2px solid #1a1a1a;
+  box-shadow: 0 0 0 1px #333333;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+.pw-range:hover::-webkit-slider-thumb {
+  transform: scale(1.12);
+}
+.pw-range:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 1px var(--accent), 0 0 8px rgba(232, 0, 45, 0.6);
+}
+.pw-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: var(--accent);
+  border: 2px solid #1a1a1a;
+  box-shadow: 0 0 0 1px #333333;
+  cursor: pointer;
+}
+.pw-range:focus::-moz-range-thumb {
+  box-shadow: 0 0 8px rgba(232, 0, 45, 0.6);
+}
