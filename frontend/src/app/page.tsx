@@ -458,7 +458,7 @@ function KpiModal({ kpi, onClose }: { kpi: Kpi; onClose: () => void }) {
       onClick={onClose}
     >
       <motion.div
-        className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-line bg-surface p-6"
+        className="pw-scroll max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-line bg-surface p-6"
         initial={{ opacity: 0, y: 16, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 16, scale: 0.98 }}

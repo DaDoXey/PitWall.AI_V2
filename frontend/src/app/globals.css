@@ -76,3 +76,24 @@ body {
 .pw-scroll::-webkit-scrollbar-thumb:hover {
   background: var(--accent);
 }
+
+/* Scrollbar di pagina (default del browser) coerente col design system: niente
+   barra bianca sul viewport. `.pw-scroll` resta più specifica dove applicata. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #333333 var(--bg);
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}

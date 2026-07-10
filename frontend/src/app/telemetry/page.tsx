@@ -76,7 +76,7 @@ export default function TelemetryPage() {
       </motion.div>
 
       {/* Riga 3: tabella giro-per-giro */}
-      <motion.div variants={fadeInUp} className="mt-6 overflow-x-auto rounded-xl border border-line bg-surface p-4">
+      <motion.div variants={fadeInUp} className="pw-scroll mt-6 overflow-x-auto rounded-xl border border-line bg-surface p-4">
         <div className="mb-3 font-mono text-xs uppercase tracking-wider text-subtle">Dati giro-per-giro</div>
         <LapTable data={data} />
       </motion.div>
