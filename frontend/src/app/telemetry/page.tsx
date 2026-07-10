@@ -7,6 +7,7 @@ import TempLineChart from "@/components/charts/TempLineChart";
 import PressureGauge from "@/components/charts/PressureGauge";
 import TyreHeatmap from "@/components/charts/TyreHeatmap";
 import LapTable from "@/components/charts/LapTable";
+import LapChannelBars from "@/components/charts/LapChannelBars";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { getSession } from "@/lib/api";
 import { TYRE_SERIES, type Corner, type SessionData } from "@/lib/telemetry";
@@ -79,6 +80,12 @@ export default function TelemetryPage() {
       <motion.div variants={fadeInUp} className="pw-scroll mt-6 overflow-x-auto rounded-xl border border-line bg-surface p-4">
         <div className="mb-3 font-mono text-xs uppercase tracking-wider text-subtle">Dati giro-per-giro</div>
         <LapTable data={data} />
+      </motion.div>
+
+      {/* Riga 3b: channel report grafico — barre per canale (pannello separato) */}
+      <motion.div variants={fadeInUp} className="mt-6 rounded-xl border border-line bg-surface p-4">
+        <div className="mb-3 font-mono text-xs uppercase tracking-wider text-subtle">Andamento per giro · barre per canale</div>
+        <LapChannelBars data={data} />
       </motion.div>
 
       {/* Riga 4: cross-check */}
