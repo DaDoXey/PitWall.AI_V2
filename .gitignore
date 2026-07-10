@@ -23,8 +23,9 @@ next-env.d.ts
 frontend/.env.local
 !frontend/.env.local.example
 
-# ── Claude Code tooling (LOCALE: session-cache, hook marker, settings) — mai committare ──
+# ── Claude Code tooling (LOCALE: session-cache, hook marker, settings, CLAUDE.md) — mai committare ──
 .claude/
+/CLAUDE.md
 
 # ── Report/sunti di lavoro (materiale di contesto, MAI committati) ──
 *_REPORT.md

@@ -19,11 +19,12 @@ backend/     FastAPI — riusa la logica Python della v1 in app/core/
     api/             # /api/session, /api/analysis, /api/setup-params, /api/csv/parse, /api/setup/from-image
     core/            # logica riusata: agent, csv_parser, setup_params, vision_parser, demo_data, prompts
     tests/           # test_parser (baseline 12/12)
-frontend/    Next.js 15 (App Router) + TypeScript + Tailwind + Recharts + Framer Motion
+frontend/    Next.js 15.5 (App Router) + TypeScript + Tailwind + Recharts + Framer Motion
   src/
-    app/             # layout + pagine (dashboard, telemetry, console, setup, login)
-    components/ui/   # Sidebar, PageHeader, (charts in arrivo)
-    lib/             # api client, theme tokens
+    app/                 # layout + pagine (dashboard, telemetry, console, setup, login)
+    components/ui/       # Sidebar, PageHeader, MotionProvider, CountUp
+    components/charts/   # TempLineChart, PressureGauge, TyreHeatmap, LapTable, Sparkline
+    lib/                 # api, theme, instrument (token "analogici"), motion, telemetry, console, setup, catalog
 ```
 
 ## Avvio in locale
@@ -52,9 +53,14 @@ La `ANTHROPIC_API_KEY` vive **solo nel backend**. Con `PITWALL_ALLOW_LIVE=0` (de
 **cache demo** (nessuna rete): la demo non consuma la chiave. La LLM reale si abilita con
 `PITWALL_ALLOW_LIVE=1` + chiave nei secret del server.
 
-## Roadmap
-Fase 0 scaffold (fatta) → 1 backend API → 2 shell+Dashboard → 3 Telemetria → 4 Console →
-5 Setup → 6 estensioni (CSV/vision/auth/storico) → 7 polish + deploy + switch da Streamlit.
+## Stato attuale
+Migrazione **feature-complete** (tutte le pagine cablate alle API) + **2 megaprompt di redesign**:
+#1 estetico base, #2 "analogico da pit wall" (FASI 1–12, ✅ completo). Prossimo: **megaprompt #3**
+(5 rework di rifinitura: Setup, LapTable, Sidebar, KPI stile MoTeC, fix drag&drop).
+Cronologia iterazioni → `PROMPT_LOG.md` · malfunzionamenti gravi → `INCIDENTS.md`.
+
+## Roadmap residua
+Rework #4–#8 → auth reale (Google OAuth) → storico sessioni SQLite → deploy → switch da Streamlit.
 
 ## Deploy (previsto)
-Frontend su **Vercel**, backend su **Render/Railway/Fly** (free tier). Vedi i doc di planning.
+Frontend su **Vercel**, backend su **Render/Railway/Fly** (free tier). Vedi i doc di planning in `docs/`.

@@ -23,6 +23,9 @@ Per ogni iterazione (megaprompt, FASE, fix o richiesta dell'utente) crea una nuo
 - **File protetti** — dichiarare esplicitamente «nessuno toccato» o l'ok gate ricevuto.
 - **Decisione** — mantenuto / modificato ulteriormente / rollback.
 
+> I **malfunzionamenti gravi** (Gigi giù, rottura backend/frontend, dati corrotti, vulnerabilità) NON
+> vanno qui: si registrano in **`INCIDENTS.md`**. Qui restano le iterazioni e i fix ordinari.
+
 ### Guardrail fissi (validi per ogni entry)
 1. **File protetti** (STOP gate + «ok procedi»): `backend/app/core/*` (`agent.py`, `csv_parser.py`,
    `setup_params.py`, `vision_parser.py`), system prompt (`prompts/*`), **numeri** demo
