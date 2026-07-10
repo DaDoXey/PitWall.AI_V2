@@ -17,14 +17,17 @@ npm-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 next-env.d.ts
+*.tsbuildinfo
 
 # ── Env locali del frontend ──
 frontend/.env.local
 !frontend/.env.local.example
 
-# ── Session hot-cache (tooling ~/.claude, LOCALE) ──
-.claude/session-cache.md
-.claude/.session-cache-nudged
+# ── Claude Code tooling (LOCALE: session-cache, hook marker, settings) — mai committare ──
+.claude/
+
+# ── Report/sunti di lavoro (materiale di contesto, MAI committati) ──
+*_REPORT.md
 
 # ── OS / editor ──
 .DS_Store
