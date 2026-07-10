@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
+import { CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import PageHeader from "@/components/ui/PageHeader";
 import CountUp from "@/components/ui/CountUp";
 import Sparkline from "@/components/charts/Sparkline";
@@ -10,24 +11,47 @@ import { fadeInUp, staggerContainer, useReducedMotion } from "@/lib/motion";
 import { getSession } from "@/lib/api";
 import { TYRE_SERIES, type Corner, type SessionData } from "@/lib/telemetry";
 import { COLORS } from "@/lib/theme";
+import { INSTRUMENT } from "@/lib/instrument";
 
 // Orizzonte (giri) per la proiezione consumo — assunzione dichiarata, non un dato ACC.
 const PROJECTION_LAPS = 5;
 
-// Ordine di default delle card KPI (il drag&drop lo riordina, solo per la sessione).
+// Ordine di default delle card KPI. Il drag&drop lo riordina; ordine e taglie
+// (normale/estesa) sono persistiti in localStorage (sopravvivono al refresh).
 const KPI_ORDER = ["temp", "press", "fuel", "trend", "spread", "outwin", "proj"] as const;
+const STORE_KEY = "pw_dashboard_kpi_v1";
 
 export default function Dashboard() {
   const [data, setData] = useState<SessionData | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [order, setOrder] = useState<string[]>([...KPI_ORDER]);
+  const [sizes, setSizes] = useState<Set<string>>(new Set()); // KPI "estese" (col-span-2)
   const [selected, setSelected] = useState<string | null>(null); // KPI aperto nel modal
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [overIndex, setOverIndex] = useState<number | null>(null);
   const dragFrom = useRef<number | null>(null);
 
   useEffect(() => {
     getSession()
       .then(setData)
       .catch(() => setErr("Backend non raggiungibile — avvia FastAPI su :8000 (vedi README)."));
+  }, []);
+
+  // Ripristina ordine/taglie da localStorage (persistenza oltre la sessione).
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return;
+      const p = JSON.parse(raw) as { order?: string[]; extended?: string[] };
+      if (Array.isArray(p.order)) {
+        const valid = p.order.filter((id) => (KPI_ORDER as readonly string[]).includes(id));
+        const missing = (KPI_ORDER as readonly string[]).filter((id) => !valid.includes(id));
+        setOrder([...valid, ...missing]);
+      }
+      if (Array.isArray(p.extended)) setSizes(new Set(p.extended));
+    } catch {
+      /* localStorage non disponibile: si resta sui default */
+    }
   }, []);
 
   if (err)
@@ -51,17 +75,35 @@ export default function Dashboard() {
   const ordered = order.map((id) => byId[id]).filter(Boolean) as Kpi[];
   const openKpi = selected ? byId[selected] : null;
 
-  // Riordino solo-sessione (useState, nessun localStorage/backend).
+  function persist(o: string[], sz: Set<string>) {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify({ order: o, extended: [...sz] }));
+    } catch {
+      /* no-op */
+    }
+  }
+
+  // Riordino (persistito): sposta la card trascinata nella posizione di rilascio.
   function reorder(to: number) {
     const from = dragFrom.current;
     dragFrom.current = null;
+    setDraggingId(null);
+    setOverIndex(null);
     if (from === null || from === to) return;
-    setOrder((prev) => {
-      const next = [...prev];
-      const [moved] = next.splice(from, 1);
-      next.splice(to, 0, moved);
-      return next;
-    });
+    const next = [...order];
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved);
+    setOrder(next);
+    persist(next, sizes);
+  }
+
+  // Taglia card: normale ↔ estesa (col-span-2), persistita.
+  function toggleSize(id: string) {
+    const next = new Set(sizes);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    setSizes(next);
+    persist(order, next);
   }
 
   return (
@@ -97,18 +139,48 @@ export default function Dashboard() {
         animate="visible"
         className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
       >
-        {ordered.map((k, i) => (
-          <motion.div
-            key={k.id}
-            variants={fadeInUp}
-            draggable
-            onDragStart={() => (dragFrom.current = i)}
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={() => reorder(i)}
-          >
-            <KpiCard kpi={k} onOpen={() => setSelected(k.id)} />
-          </motion.div>
-        ))}
+        {ordered.map((k, i) => {
+          const extended = sizes.has(k.id);
+          const isDragging = draggingId === k.id;
+          const isTarget = overIndex === i && draggingId !== null && !isDragging;
+          return (
+            <motion.div
+              key={k.id}
+              variants={fadeInUp}
+              draggable
+              onDragStart={() => {
+                dragFrom.current = i;
+                setDraggingId(k.id);
+              }}
+              onDragEnd={() => {
+                setDraggingId(null);
+                setOverIndex(null);
+              }}
+              onDragOver={(e) => {
+                e.preventDefault();
+                setOverIndex(i);
+              }}
+              onDrop={() => reorder(i)}
+              className={`relative rounded-xl transition ${extended ? "sm:col-span-2" : ""} ${
+                isDragging ? "scale-[0.98] opacity-50" : ""
+              } ${isTarget ? "ring-2 ring-accent ring-offset-2 ring-offset-bg" : ""}`}
+            >
+              <KpiCard kpi={k} onOpen={() => setSelected(k.id)} />
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleSize(k.id);
+                }}
+                title={extended ? "Riduci" : "Estendi"}
+                aria-label={extended ? "Riduci card" : "Estendi card"}
+                className="absolute right-2 top-2 z-20 flex h-6 w-6 items-center justify-center rounded border border-line bg-surface/80 font-mono text-xs text-muted transition hover:border-accent hover:text-accent"
+              >
+                {extended ? "⤡" : "⤢"}
+              </button>
+            </motion.div>
+          );
+        })}
       </motion.div>
 
       {/* Prossime azioni: navigazione a pagina (invariata) */}
@@ -146,6 +218,8 @@ type Kpi = {
   detail: string; // "come si calcola" mostrato nel modal
   color: string;
   series?: number[];
+  refLines?: number[]; // linee-soglia nel grafico del modal
+  refs: string[]; // indici/soglie su cui si basa il dato (in chiaro)
 };
 
 function buildKpis(d: SessionData): Kpi[] {
@@ -190,6 +264,8 @@ function buildKpis(d: SessionData): Kpi[] {
       detail: `Massimo di stint sulla gomma più calda (${labelOf(hottest)}), confrontato col limite finestra ${d.temp.limit}°C.`,
       color: overLimit ? COLORS.accent : COLORS.ok,
       series: hotSeries,
+      refLines: [d.temp.limit],
+      refs: [`Limite finestra: ${d.temp.limit}°C`, `Gomma più calda: ${labelOf(hottest)}`],
     },
     {
       id: "press",
@@ -201,6 +277,8 @@ function buildKpis(d: SessionData): Kpi[] {
       detail: `Media delle 4 pressioni a caldo dell'ultimo giro. Finestra ottimale ${lo}–${hi} psi.`,
       color: out.length === 0 ? COLORS.ok : COLORS.warn,
       series: pressSeries,
+      refLines: [lo, hi],
+      refs: [`Finestra a caldo: ${lo}–${hi} psi`, `Media ultimo giro: ${d.pressure.avg_hot} psi`],
     },
     {
       id: "fuel",
@@ -212,6 +290,8 @@ function buildKpis(d: SessionData): Kpi[] {
       detail: `Consumo medio per giro sullo stint; Δ = escursione tra giro più e meno esoso (${spread.toFixed(1)} L).`,
       color: stable ? COLORS.ok : COLORS.warn,
       series: d.fuel_per_lap,
+      refLines: [d.session.fuel_avg_per_lap],
+      refs: [`Media stint: ${d.session.fuel_avg_per_lap} L/giro`, `Δ stint: ${spread.toFixed(1)} L`, `Totale: ${d.session.fuel_total} L`],
     },
     {
       id: "trend",
@@ -223,6 +303,8 @@ function buildKpis(d: SessionData): Kpi[] {
       detail: `Pendenza media della temperatura sulla gomma più calda (${labelOf(hottest)}): (ultimo − primo) / giri.`,
       color: tempTrend > 0 ? COLORS.warn : COLORS.ok,
       series: hotSeries,
+      refLines: [d.temp.limit],
+      refs: [`Pendenza: ${tempTrend.toFixed(2)} °C/giro`, `Gomma: ${labelOf(hottest)}`, `Limite: ${d.temp.limit}°C`],
     },
     {
       id: "spread",
@@ -234,6 +316,8 @@ function buildKpis(d: SessionData): Kpi[] {
       detail: `Differenza tra la gomma più gonfia e la più sgonfia (a caldo, ultimo giro). Riferimento: ampiezza finestra ${winWidth.toFixed(1)} psi.`,
       color: lastSpread > winWidth ? COLORS.warn : COLORS.ok,
       series: spreadSeries,
+      refLines: [winWidth],
+      refs: [`Ampiezza finestra: ${winWidth.toFixed(1)} psi`, `Spread ultimo giro: ${lastSpread.toFixed(1)} psi`],
     },
     {
       id: "outwin",
@@ -245,6 +329,7 @@ function buildKpis(d: SessionData): Kpi[] {
       detail: `Quante delle 4 gomme sono fuori dalla finestra pressioni a caldo (${lo}–${hi} psi) nell'ultimo giro.`,
       color: out.length === 0 ? COLORS.ok : COLORS.warn,
       series: outPerLap,
+      refs: [`Finestra a caldo: ${lo}–${hi} psi`, `Fuori ora: ${out.length ? out.map((k) => labelOf(k)).join(", ") : "nessuna"}`],
     },
     {
       id: "proj",
@@ -256,6 +341,8 @@ function buildKpis(d: SessionData): Kpi[] {
       detail: `Estrapolazione lineare: consumo medio × ${PROJECTION_LAPS} giri. (Orizzonte ${PROJECTION_LAPS} giri: assunzione di comodo, non un dato ACC.)`,
       color: COLORS.ok,
       series: d.fuel_per_lap,
+      refLines: [d.session.fuel_avg_per_lap],
+      refs: [`Consumo medio: ${d.session.fuel_avg_per_lap} L/giro`, `Orizzonte: ${PROJECTION_LAPS} giri`],
     },
   ];
 }
@@ -299,12 +386,7 @@ function KpiCard({ kpi, onOpen }: { kpi: Kpi; onOpen: () => void }) {
       onClick={onOpen}
       className="group block w-full cursor-pointer rounded-xl border border-line bg-surface p-4 text-left transition duration-200 hover:-translate-y-1 hover:border-accent/50 hover:shadow-[0_12px_30px_-14px_rgba(232,0,45,0.4)]"
     >
-      <div className="flex items-start justify-between">
-        <div className="font-mono text-[0.6rem] uppercase tracking-widest text-muted">{label}</div>
-        <span aria-hidden="true" className="font-mono text-sm text-muted transition-colors duration-200 group-hover:text-accent">
-          ⤢
-        </span>
-      </div>
+      <div className="pr-7 font-mono text-[0.6rem] uppercase tracking-widest text-muted">{label}</div>
       <div className="mt-2 block font-mono text-3xl" style={{ color }}>
         <CountUp value={valueNum} decimals={decimals} suffix={suffix} />
       </div>
@@ -315,13 +397,51 @@ function KpiCard({ kpi, onOpen }: { kpi: Kpi; onOpen: () => void }) {
       {series && series.length >= 2 && (
         <div className="mt-3">
           <Sparkline data={series} color={color} />
+          {/* Riferimento di lettura: estremi della serie (scala del mini-trend) */}
+          <div className="mt-1 flex justify-between font-mono text-[0.55rem] text-muted">
+            <span>min {fmtNum(Math.min(...series))}</span>
+            <span>max {fmtNum(Math.max(...series))}</span>
+          </div>
         </div>
       )}
     </button>
   );
 }
 
-// Modal dettaglio KPI (in-page, nessun cambio rotta).
+// Formattazione compatta per gli estremi della sparkline: intero o 1 decimale.
+function fmtNum(n: number): string {
+  return Number.isInteger(n) ? String(n) : n.toFixed(1);
+}
+
+// Grafico del modal (più leggibile della sparkline): assi con valori, griglia
+// hairline, marker su OGNI punto, linee-soglia. Statico (stile strumento).
+function KpiChart({ series, color, refLines }: { series: number[]; color: string; refLines?: number[] }) {
+  const rows = series.map((v, i) => ({ i: i + 1, v }));
+  const pool = [...series, ...(refLines ?? [])];
+  const lo = Math.min(...pool);
+  const hi = Math.max(...pool);
+  const pad = (hi - lo) * 0.15 || 1;
+  return (
+    <ResponsiveContainer width="100%" height={190}>
+      <LineChart data={rows} margin={{ top: 8, right: 14, bottom: 4, left: -14 }}>
+        <CartesianGrid stroke={INSTRUMENT.grid} vertical={false} />
+        <XAxis dataKey="i" stroke={INSTRUMENT.tick} tick={{ fill: COLORS.muted, fontSize: 10 }} />
+        <YAxis domain={[lo - pad, hi + pad]} stroke={INSTRUMENT.tick} tick={{ fill: COLORS.muted, fontSize: 10 }} width={30} />
+        <Tooltip
+          contentStyle={{ background: COLORS.surface, border: `1px solid ${COLORS.line}`, borderRadius: 8, fontSize: 12, boxShadow: "none" }}
+          labelFormatter={(l) => `Giro ${l}`}
+        />
+        {(refLines ?? []).map((y, idx) => (
+          <ReferenceLine key={idx} y={y} stroke={COLORS.muted} strokeDasharray="4 4" strokeWidth={1} />
+        ))}
+        <Line type="monotone" dataKey="v" name="valore" stroke={color} strokeWidth={2} dot={{ r: 2.5, fill: color, strokeWidth: 0 }} isAnimationActive={false} />
+      </LineChart>
+    </ResponsiveContainer>
+  );
+}
+
+// Modal dettaglio KPI (in-page, nessun cambio rotta): valore + grafico leggibile +
+// riferimenti/soglie in chiaro + come si calcola + nota di Gigi.
 function KpiModal({ kpi, onClose }: { kpi: Kpi; onClose: () => void }) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -338,7 +458,7 @@ function KpiModal({ kpi, onClose }: { kpi: Kpi; onClose: () => void }) {
       onClick={onClose}
     >
       <motion.div
-        className="w-full max-w-md rounded-2xl border border-line bg-surface p-6"
+        className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-line bg-surface p-6"
         initial={{ opacity: 0, y: 16, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 16, scale: 0.98 }}
@@ -357,12 +477,34 @@ function KpiModal({ kpi, onClose }: { kpi: Kpi; onClose: () => void }) {
           <StatusDot color={kpi.color} pulse={kpi.color !== COLORS.ok} />
           {kpi.note}
         </div>
+
         {kpi.series && kpi.series.length >= 2 && (
           <div className="mt-4 rounded-lg border border-line bg-inset p-3">
-            <Sparkline data={kpi.series} color={kpi.color} />
+            <KpiChart series={kpi.series} color={kpi.color} refLines={kpi.refLines} />
           </div>
         )}
+
+        {kpi.refs.length > 0 && (
+          <div className="mt-4">
+            <div className="mb-1.5 font-mono text-[0.55rem] uppercase tracking-widest text-muted">Riferimenti</div>
+            <ul className="flex flex-col gap-1">
+              {kpi.refs.map((r, idx) => (
+                <li key={idx} className="flex items-center gap-2 font-mono text-[0.72rem] text-subtle">
+                  <span className="h-1 w-1 rounded-full bg-line-strong" />
+                  {r}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <p className="mt-4 border-t border-line pt-3 text-[0.8rem] leading-relaxed text-subtle">{kpi.detail}</p>
+
+        {/* Nota di Gigi: /api/session non espone un testo per-KPI → placeholder onesto. */}
+        <div className="mt-3 rounded-lg border border-l-2 border-line border-l-accent bg-inset p-3">
+          <div className="mb-1 font-mono text-[0.55rem] uppercase tracking-widest text-accent">Nota di Gigi</div>
+          <p className="text-[0.78rem] text-muted">Nessuna nota disponibile per questo indicatore.</p>
+        </div>
       </motion.div>
     </motion.div>
   );

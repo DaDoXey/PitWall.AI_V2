@@ -27,6 +27,7 @@ export default function Sidebar() {
   }, []);
 
   const s = session?.session;
+  const suggestedCount = session?.suggested_params?.length ?? 0;
 
   return (
     <aside className="flex w-60 shrink-0 flex-col gap-4 border-r border-line bg-surface p-4">
@@ -50,7 +51,6 @@ export default function Sidebar() {
                   active ? "text-white" : "text-subtle hover:bg-raised"
                 }`}
               >
-                {/* Indicatore attivo condiviso: scorre da una voce all'altra (layoutId). */}
                 {active && (
                   <motion.span
                     layoutId="nav-active"
@@ -66,11 +66,15 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Sessione corrente (sempre visibile) */}
+      {/* Sessione corrente + stato sessione più visibile (badge demo) */}
       {s && (
         <div className="rounded-lg border border-l-2 border-line border-l-accent bg-inset p-3">
-          <div className="mb-1 font-mono text-[0.55rem] uppercase tracking-widest text-accent">
-            Sessione corrente
+          <div className="mb-1 flex items-center justify-between">
+            <span className="font-mono text-[0.55rem] uppercase tracking-widest text-accent">Sessione corrente</span>
+            <span className="inline-flex items-center gap-1 font-mono text-[0.5rem] uppercase tracking-widest text-ok">
+              <span className="h-1 w-1 rounded-full bg-ok" />
+              demo
+            </span>
           </div>
           <div className="text-sm text-white">{s.track}</div>
           <div className="font-mono text-[0.62rem] text-muted">
@@ -82,9 +86,7 @@ export default function Sidebar() {
 
       {/* Sessioni recenti (per ora la sola demo; predisposta per lo storico futuro) */}
       <div>
-        <div className="mb-1.5 font-mono text-[0.55rem] uppercase tracking-widest text-muted">
-          Sessioni recenti
-        </div>
+        <div className="mb-1.5 font-mono text-[0.55rem] uppercase tracking-widest text-muted">Sessioni recenti</div>
         <div className="rounded-lg border border-line bg-surface p-2.5">
           <div className="text-[0.8rem] text-white">{s?.track ?? "Monza"}</div>
           <div className="font-mono text-[0.6rem] text-muted">
@@ -94,19 +96,51 @@ export default function Sidebar() {
         <div className="mt-1 font-mono text-[0.55rem] text-muted">Storico completo · prossimamente</div>
       </div>
 
-      {/* Presenza di Gigi */}
-      <div className="mt-auto flex items-center gap-2 rounded-lg border border-line bg-surface p-2">
-        <GigiAvatar size={28} />
-        <div className="flex-1">
-          <div className="text-xs text-white">Gigi</div>
-          <div className="flex items-center gap-1 font-mono text-[0.55rem] uppercase tracking-widest text-ok">
-            <span className="h-1 w-1 rounded-full bg-ok" />
-            online
+      {/* Blocco inferiore: shortcut rapidi + presenza Gigi + ultimo consiglio */}
+      <div className="mt-auto flex flex-col gap-2">
+        {/* Shortcut rapidi (icone, non pulsanti pieni) */}
+        <div className="flex gap-2">
+          <Link
+            href="/console"
+            title="Chiedi a Gigi"
+            className="flex h-8 flex-1 items-center justify-center rounded-md border border-line text-subtle transition hover:border-accent hover:text-white"
+          >
+            🎧
+          </Link>
+          <Link
+            href="/setup"
+            title="Carica CSV / input sessione"
+            className="flex h-8 flex-1 items-center justify-center rounded-md border border-line text-subtle transition hover:border-accent hover:text-white"
+          >
+            📥
+          </Link>
+        </div>
+
+        {/* Presenza di Gigi */}
+        <div className="flex items-center gap-2 rounded-lg border border-line bg-surface p-2">
+          <GigiAvatar size={28} />
+          <div className="flex-1">
+            <div className="text-xs text-white">Gigi</div>
+            <div className="flex items-center gap-1 font-mono text-[0.55rem] uppercase tracking-widest text-ok">
+              <span className="h-1 w-1 rounded-full bg-ok" />
+              online
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="font-mono text-[0.6rem] text-muted">v0.1.0 · v2 scaffold</div>
+        {/* Ultimo focus di Gigi (dai suggested_params della sessione) */}
+        {suggestedCount > 0 && (
+          <Link
+            href="/console"
+            className="block truncate font-mono text-[0.58rem] text-subtle transition hover:text-white"
+            title="Vai alla Console per l'analisi completa"
+          >
+            Ultimo consiglio · {suggestedCount} parametri da rivedere →
+          </Link>
+        )}
+
+        <div className="font-mono text-[0.6rem] text-muted">v0.1.0 · v2 scaffold</div>
+      </div>
     </aside>
   );
 }

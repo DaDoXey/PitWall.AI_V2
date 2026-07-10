@@ -44,8 +44,9 @@ function Wheel({
 export default function TyreHeatmap({ data }: { data: SessionData }) {
   const scale = data.temp.scale;
   const [lo, hi] = scale;
-  const lx = BODY_LEFT_X - WHEEL_W / 2;
-  const rx = BODY_RIGHT_X + WHEEL_W / 2;
+  const WHEEL_INSET = 12; // avvicina le ruote al corpo → composizione più centrata/compatta
+  const lx = BODY_LEFT_X - WHEEL_W / 2 + WHEEL_INSET;
+  const rx = BODY_RIGHT_X + WHEEL_W / 2 - WHEEL_INSET;
   const L = data.tyre_labels;
   const M = data.temp.max;
   const corners: { cx: number; cy: number; k: Corner }[] = [
@@ -59,20 +60,9 @@ export default function TyreHeatmap({ data }: { data: SessionData }) {
     <div className="rounded-xl border border-line bg-inset p-4">
       <div className="mb-2 font-mono text-[0.72rem] uppercase tracking-wider text-subtle">Heatmap gomme · max stint</div>
       <svg viewBox="0 0 240 290" className="w-full" style={{ maxHeight: 340 }} preserveAspectRatio="xMidYMid meet">
-        {/* Silhouette GT3 vista dall'alto: naso affusolato, fender sui due assi,
-            fiancate dritte tra le ruote, coda rastremata. Le 4 gomme la fiancheggiano. */}
-        <path
-          d="M120 22 C102 22 90 32 86 52 C82 66 80 82 80 98 L80 208 C80 234 88 256 106 263 L134 263 C152 256 160 234 160 208 L160 98 C160 82 158 66 154 52 C150 32 138 22 120 22 Z"
-          fill="#161616"
-          stroke={COLORS.lineStrong}
-          strokeWidth={2}
-        />
-        {/* Splitter anteriore */}
-        <path d="M101 31 L139 31 L136 39 L104 39 Z" fill="#0e0e0e" stroke={COLORS.line} />
-        {/* Abitacolo/greenhouse (trapezio: parabrezza più largo davanti) */}
-        <path d="M104 116 L136 116 L131 170 L109 170 Z" fill="#0e0e0e" stroke={COLORS.line} />
-        {/* Ala posteriore */}
-        <rect x={88} y={247} width={64} height={7} rx={2} fill="#0e0e0e" stroke={COLORS.line} />
+        {/* Corpo auto: rettangolo arrotondato essenziale — placeholder in attesa di
+            riferimenti visivi futuri; le 4 gomme restano agganciate agli angoli. */}
+        <rect x={80} y={44} width={80} height={208} rx={18} fill="#161616" stroke={COLORS.lineStrong} strokeWidth={2} />
         <motion.g variants={staggerContainer} initial="hidden" animate="visible">
           {corners.map((c) => (
             <Wheel key={c.k} cx={c.cx} cy={c.cy} val={M[c.k]} label={L[c.k]} scale={scale} />

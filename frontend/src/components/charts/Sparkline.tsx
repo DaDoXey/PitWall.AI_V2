@@ -1,20 +1,15 @@
-"use client";
-
 // Mini-trend SVG hand-rolled (no Recharts): decorativo-informativo, si legge a
-// colpo d'occhio. Coerente con PressureGauge/TyreHeatmap (già SVG) e leggero:
-// non trascina il bundle Recharts sulla Dashboard.
+// colpo d'occhio. Coerente con gli altri SVG e leggero (niente bundle Recharts).
 //
 // Responsività: il viewBox definisce l'aspetto (≈5:1); la SVG scala UNIFORME a
-// tutta la larghezza (`w-full` + height:auto) → niente `preserveAspectRatio="none"`
-// che prima stirava solo in orizzontale (linea schiacciata, pallino finale ovale).
-// Lo stroke resta costante via `vectorEffect="non-scaling-stroke"`.
+// tutta la larghezza (`w-full` + height:auto). Stroke costante via `vectorEffect`.
 //
-// Motion (F9): la linea si "disegna" (pathLength 0→1), l'area sfuma e il pallino
-// finale compare a fine tratto. pathLength/opacity NON sono transform → reduced-
-// motion non li riduce da solo: useReducedMotion() degrada allo stato finale.
+// FASE 8 (megaprompt #2): resa STATICA. Prima linea (pathLength), area (opacity) e
+// pallino animavano con tempi diversi → durante il draw-in l'area appariva a piena
+// larghezza mentre la linea/pallino erano ancora indietro (il "gradient che continua
+// oltre l'ultimo punto"). Senza animazioni indipendenti area/linea/pallino restano
+// sempre coerenti; l'ingresso lo dà già la card contenitore.
 import { useId } from "react";
-import { motion } from "framer-motion";
-import { DUR, EASE, useReducedMotion } from "@/lib/motion";
 
 export default function Sparkline({
   data,
@@ -34,7 +29,6 @@ export default function Sparkline({
   className?: string;
 }) {
   const gid = useId();
-  const reduce = useReducedMotion();
   if (!data || data.length < 2) return null;
 
   const min = Math.min(...data);
@@ -62,20 +56,14 @@ export default function Sparkline({
         <>
           <defs>
             <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={color} stopOpacity={0.22} />
+              <stop offset="0%" stopColor={color} stopOpacity={0.18} />
               <stop offset="100%" stopColor={color} stopOpacity={0} />
             </linearGradient>
           </defs>
-          <motion.path
-            d={area}
-            fill={`url(#${gid})`}
-            initial={reduce ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: DUR.base, ease: EASE, delay: DUR.slow * 0.5 }}
-          />
+          <path d={area} fill={`url(#${gid})`} />
         </>
       )}
-      <motion.path
+      <path
         d={line}
         fill="none"
         stroke={color}
@@ -83,19 +71,8 @@ export default function Sparkline({
         strokeLinecap="round"
         strokeLinejoin="round"
         vectorEffect="non-scaling-stroke"
-        initial={reduce ? false : { pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration: DUR.slow, ease: EASE }}
       />
-      <motion.circle
-        cx={lastX}
-        cy={lastY}
-        r={strokeWidth + 0.75}
-        fill={color}
-        initial={reduce ? false : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: DUR.fast, delay: DUR.slow }}
-      />
+      <circle cx={lastX} cy={lastY} r={strokeWidth + 0.75} fill={color} />
     </svg>
   );
 }
