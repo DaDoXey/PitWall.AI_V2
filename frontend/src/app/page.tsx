@@ -165,7 +165,7 @@ export default function Dashboard() {
                 isDragging ? "scale-[0.98] opacity-50" : ""
               } ${isTarget ? "ring-2 ring-accent ring-offset-2 ring-offset-bg" : ""}`}
             >
-              <KpiCard kpi={k} onOpen={() => setSelected(k.id)} />
+              <KpiCard kpi={k} extended={extended} onOpen={() => setSelected(k.id)} />
               <button
                 type="button"
                 onClick={(e) => {
@@ -377,9 +377,11 @@ function StatusDot({ color, pulse }: { color: string; pulse: boolean }) {
   );
 }
 
-// Card KPI: count-up al mount, sparkline se c'è una serie, apre il dettaglio in-page.
-function KpiCard({ kpi, onOpen }: { kpi: Kpi; onOpen: () => void }) {
-  const { label, valueNum, suffix, decimals, note, color, series } = kpi;
+// Card KPI: count-up al mount, apre il dettaglio in-page. In formato normale
+// mostra la sparkline; in formato ESTESO rende lo stesso grafico della modale
+// (assi/griglia/soglie via KpiChart condiviso) — statico, il click apre la modale.
+function KpiCard({ kpi, extended, onOpen }: { kpi: Kpi; extended: boolean; onOpen: () => void }) {
+  const { label, valueNum, suffix, decimals, note, color, series, refLines } = kpi;
   return (
     <button
       type="button"
@@ -395,14 +397,20 @@ function KpiCard({ kpi, onOpen }: { kpi: Kpi; onOpen: () => void }) {
         {note}
       </div>
       {series && series.length >= 2 && (
-        <div className="mt-3">
-          <Sparkline data={series} color={color} />
-          {/* Riferimento di lettura: estremi della serie (scala del mini-trend) */}
-          <div className="mt-1 flex justify-between font-mono text-[0.55rem] text-muted">
-            <span>min {fmtNum(Math.min(...series))}</span>
-            <span>max {fmtNum(Math.max(...series))}</span>
+        extended ? (
+          <div className="pointer-events-none mt-3 rounded-lg border border-line bg-inset p-2">
+            <KpiChart series={series} color={color} refLines={refLines} unit={suffix.trim()} height={150} showTooltip={false} />
           </div>
-        </div>
+        ) : (
+          <div className="mt-3">
+            <Sparkline data={series} color={color} />
+            {/* Riferimento di lettura: estremi della serie (scala del mini-trend) */}
+            <div className="mt-1 flex justify-between font-mono text-[0.55rem] text-muted">
+              <span>min {fmtNum(Math.min(...series))}</span>
+              <span>max {fmtNum(Math.max(...series))}</span>
+            </div>
+          </div>
+        )
       )}
     </button>
   );
@@ -413,30 +421,76 @@ function fmtNum(n: number): string {
   return Number.isInteger(n) ? String(n) : n.toFixed(1);
 }
 
-// Grafico del modal (più leggibile della sparkline): assi con valori, griglia
-// hairline, marker su OGNI punto, linee-soglia. Statico (stile strumento).
-function KpiChart({ series, color, refLines }: { series: number[]; color: string; refLines?: number[] }) {
+// Passo "nice" per l'asse Y (stile MoTeC): arrotonda a 1/2/5×10ⁿ così le
+// etichette sono valori tondi, distinti e leggibili — non più float sovrapposti.
+function niceStep(range: number): number {
+  const raw = (range > 1e-6 ? range : 1) / 4; // ~4 intervalli
+  const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const norm = raw / mag;
+  const step = norm < 1.5 ? 1 : norm < 3 ? 2 : norm < 7 ? 5 : 10;
+  return step * mag;
+}
+
+// Grafico dettaglio KPI — COMPONENTE CONDIVISO tra modale e card estesa (così non
+// divergono): assi con scala/unità, griglia hairline, marker su ogni punto,
+// linee-soglia. Statico (stile strumento). `showTooltip` off nella card (preview).
+function KpiChart({
+  series,
+  color,
+  refLines,
+  unit,
+  height = 190,
+  showTooltip = true,
+}: {
+  series: number[];
+  color: string;
+  refLines?: number[];
+  unit?: string;
+  height?: number;
+  showTooltip?: boolean;
+}) {
   const rows = series.map((v, i) => ({ i: i + 1, v }));
   const pool = [...series, ...(refLines ?? [])];
   const lo = Math.min(...pool);
   const hi = Math.max(...pool);
   const pad = (hi - lo) * 0.15 || 1;
+  // Dominio + tick su valori tondi: risolve le etichette Y illeggibili/ripetute.
+  const step = niceStep(hi - lo);
+  const dLo = Math.floor((lo - pad) / step) * step;
+  const dHi = Math.ceil((hi + pad) / step) * step;
+  const ticks: number[] = [];
+  for (let t = dLo, n = 0; t <= dHi + 1e-9 && n < 20; t += step, n++) ticks.push(Number(t.toFixed(6)));
+  const decimals = step >= 1 ? 0 : step >= 0.1 ? 1 : 2;
+  const fmtTick = (n: number) => n.toFixed(decimals);
+
   return (
-    <ResponsiveContainer width="100%" height={190}>
-      <LineChart data={rows} margin={{ top: 8, right: 14, bottom: 4, left: -14 }}>
-        <CartesianGrid stroke={INSTRUMENT.grid} vertical={false} />
-        <XAxis dataKey="i" stroke={INSTRUMENT.tick} tick={{ fill: COLORS.muted, fontSize: 10 }} />
-        <YAxis domain={[lo - pad, hi + pad]} stroke={INSTRUMENT.tick} tick={{ fill: COLORS.muted, fontSize: 10 }} width={30} />
-        <Tooltip
-          contentStyle={{ background: COLORS.surface, border: `1px solid ${COLORS.line}`, borderRadius: 8, fontSize: 12, boxShadow: "none" }}
-          labelFormatter={(l) => `Giro ${l}`}
-        />
-        {(refLines ?? []).map((y, idx) => (
-          <ReferenceLine key={idx} y={y} stroke={COLORS.muted} strokeDasharray="4 4" strokeWidth={1} />
-        ))}
-        <Line type="monotone" dataKey="v" name="valore" stroke={color} strokeWidth={2} dot={{ r: 2.5, fill: color, strokeWidth: 0 }} isAnimationActive={false} />
-      </LineChart>
-    </ResponsiveContainer>
+    <div>
+      {/* Unità dell'ordinata: didascalia ORIZZONTALE sopra la scala Y (niente testo
+          ruotato/"storto"). L'ascissa è etichettata "Giro" sotto l'asse. */}
+      {unit && <div className="mb-1 pl-1 font-mono text-[0.55rem] uppercase tracking-widest text-muted">{unit}</div>}
+      <ResponsiveContainer width="100%" height={height}>
+        <LineChart data={rows} margin={{ top: 6, right: 16, bottom: 22, left: 4 }}>
+          <CartesianGrid stroke={INSTRUMENT.grid} vertical={false} />
+          <XAxis
+            dataKey="i"
+            stroke={INSTRUMENT.tick}
+            tick={{ fill: COLORS.muted, fontSize: 10 }}
+            label={{ value: "Giro", position: "insideBottom", offset: -10, style: { fill: COLORS.muted, fontSize: 10, textAnchor: "middle" } }}
+          />
+          <YAxis domain={[dLo, dHi]} ticks={ticks} tickFormatter={fmtTick} stroke={INSTRUMENT.tick} tick={{ fill: COLORS.muted, fontSize: 10 }} width={44} />
+          {showTooltip && (
+            <Tooltip
+              contentStyle={{ background: COLORS.surface, border: `1px solid ${COLORS.line}`, borderRadius: 8, fontSize: 12, boxShadow: "none" }}
+              labelFormatter={(l) => `Giro ${l}`}
+            />
+          )}
+          {(refLines ?? []).map((y, idx) => (
+            <ReferenceLine key={idx} y={y} stroke={COLORS.muted} strokeDasharray="4 4" strokeWidth={1} />
+          ))}
+          <Line type="monotone" dataKey="v" name="valore" stroke={color} strokeWidth={2} dot={{ r: 2.5, fill: color, strokeWidth: 0 }} isAnimationActive={false} />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
   );
 }
 
@@ -480,7 +534,7 @@ function KpiModal({ kpi, onClose }: { kpi: Kpi; onClose: () => void }) {
 
         {kpi.series && kpi.series.length >= 2 && (
           <div className="mt-4 rounded-lg border border-line bg-inset p-3">
-            <KpiChart series={kpi.series} color={kpi.color} refLines={kpi.refLines} />
+            <KpiChart series={kpi.series} color={kpi.color} refLines={kpi.refLines} unit={kpi.suffix.trim()} />
           </div>
         )}
 
