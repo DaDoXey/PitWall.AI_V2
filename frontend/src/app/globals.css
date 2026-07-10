@@ -27,8 +27,8 @@ body {
   height: 16px;
   border-radius: 9999px;
   background: var(--accent);
-  border: 2px solid #1a1a1a;
-  box-shadow: 0 0 0 1px #333333;
+  border: 2px solid #0a0a0a;
+  box-shadow: 0 0 0 1px #555555;
   cursor: pointer;
   transition: box-shadow 0.15s ease, transform 0.15s ease;
 }
@@ -43,10 +43,36 @@ body {
   height: 16px;
   border-radius: 9999px;
   background: var(--accent);
-  border: 2px solid #1a1a1a;
-  box-shadow: 0 0 0 1px #333333;
+  border: 2px solid #0a0a0a;
+  box-shadow: 0 0 0 1px #555555;
   cursor: pointer;
 }
 .pw-range:focus::-moz-range-thumb {
   box-shadow: 0 0 8px rgba(232, 0, 45, 0.6);
+}
+/* Firefox: parte "piena" del range in accento (soft) */
+.pw-range::-moz-range-progress {
+  height: 8px;
+  border-radius: 9999px;
+  background: rgba(232, 0, 45, 0.5);
+}
+
+/* Scrollbar coerente col design system (dropdown PwSelect, liste lunghe) */
+.pw-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #333333 #111111;
+}
+.pw-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.pw-scroll::-webkit-scrollbar-track {
+  background: #111111;
+  border-radius: 8px;
+}
+.pw-scroll::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 8px;
+}
+.pw-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
 }

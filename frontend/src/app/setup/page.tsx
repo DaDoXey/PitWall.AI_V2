@@ -508,7 +508,7 @@ function PwSelect({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.12 }}
-              className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md border border-line bg-raised p-1 shadow-xl"
+              className="pw-scroll absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md border border-line bg-raised p-1 shadow-xl"
             >
               {options.map((o) => (
                 <button
@@ -596,7 +596,7 @@ function MiniSlider({
         step={1}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="pw-range mt-1.5 h-1.5 w-full cursor-pointer rounded-full bg-line-strong"
+        className="pw-range mt-1.5 h-2 w-full cursor-pointer rounded-full border border-line-strong bg-[#2a2a2a]"
         aria-label={label}
       />
     </div>
@@ -651,7 +651,7 @@ function Slider({
         step={param.step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="pw-range mt-1.5 h-1.5 w-full cursor-pointer rounded-full bg-line-strong"
+        className="pw-range mt-1.5 h-2 w-full cursor-pointer rounded-full border border-line-strong bg-[#2a2a2a]"
         aria-label={param.label}
       />
     </div>
