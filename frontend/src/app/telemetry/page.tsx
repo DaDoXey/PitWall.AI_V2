@@ -8,10 +8,15 @@ import PressureGauge from "@/components/charts/PressureGauge";
 import TyreHeatmap from "@/components/charts/TyreHeatmap";
 import LapTable from "@/components/charts/LapTable";
 import LapChannelBars from "@/components/charts/LapChannelBars";
+import LapTimesTable from "@/components/charts/LapTimesTable";
+import LapDeltaChart from "@/components/charts/LapDeltaChart";
+import TyreOverlay from "@/components/charts/TyreOverlay";
+import ChannelHistogram from "@/components/charts/ChannelHistogram";
+import SetupRadar from "@/components/charts/SetupRadar";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { getSession } from "@/lib/api";
-import { TYRE_SERIES, type Corner, type SessionData } from "@/lib/telemetry";
-import { COLORS } from "@/lib/theme";
+import { TYRE_SERIES, type SessionData } from "@/lib/telemetry";
+import { buildCrossChecks } from "@/lib/crosscheck";
 
 export default function TelemetryPage() {
   const [data, setData] = useState<SessionData | null>(null);
@@ -76,6 +81,36 @@ export default function TelemetryPage() {
         </motion.div>
       </motion.div>
 
+      {/* Riga 2b: tempi sul giro (sezione Lap Times, FASE 7) */}
+      <motion.div variants={fadeInUp} className="pw-scroll mt-6 overflow-x-auto rounded-xl border border-line bg-surface p-4">
+        <div className="mb-3 font-mono text-xs uppercase tracking-wider text-subtle">Tempi sul giro</div>
+        <LapTimesTable data={data} />
+      </motion.div>
+
+      {/* Riga 2c: delta giro-su-giro (FASE 9) */}
+      <motion.div variants={fadeInUp} className="mt-6 rounded-xl border border-line bg-surface p-4">
+        <div className="mb-3 font-mono text-xs uppercase tracking-wider text-subtle">Delta giro-su-giro</div>
+        <LapDeltaChart data={data} />
+      </motion.div>
+
+      {/* Riga 2d: overlay confronto FL/FR/RL/RR (FASE 10) */}
+      <motion.div variants={fadeInUp} className="mt-6 rounded-xl border border-line bg-surface p-4">
+        <div className="mb-3 font-mono text-xs uppercase tracking-wider text-subtle">Overlay gomme · FL/FR/RL/RR</div>
+        <TyreOverlay data={data} />
+      </motion.div>
+
+      {/* Riga 2e: Analisi — distribuzione canale (istogramma) (FASE 11) */}
+      <motion.div variants={fadeInUp} className="mt-6 rounded-xl border border-line bg-surface p-4">
+        <div className="mb-3 font-mono text-xs uppercase tracking-wider text-subtle">Analisi · Distribuzione (istogramma)</div>
+        <ChannelHistogram data={data} />
+      </motion.div>
+
+      {/* Riga 2f: Analisi — radar bilanciamento setup (FASE 12) */}
+      <motion.div variants={fadeInUp} className="mt-6 rounded-xl border border-line bg-surface p-4">
+        <div className="mb-3 font-mono text-xs uppercase tracking-wider text-subtle">Analisi · Bilanciamento (radar)</div>
+        <SetupRadar data={data} />
+      </motion.div>
+
       {/* Riga 3: tabella giro-per-giro */}
       <motion.div variants={fadeInUp} className="pw-scroll mt-6 overflow-x-auto rounded-xl border border-line bg-surface p-4">
         <div className="mb-3 font-mono text-xs uppercase tracking-wider text-subtle">Dati giro-per-giro</div>
@@ -103,30 +138,4 @@ export default function TelemetryPage() {
       </motion.div>
     </div>
   );
-}
-
-function buildCrossChecks(d: SessionData) {
-  const out: { color: string; msg: string }[] = [];
-  const labels = d.tyre_labels;
-  const corners: Corner[] = ["fl", "fr", "rl", "rr"];
-
-  corners.forEach((k) => {
-    const mx = d.temp.max[k];
-    if (mx > d.temp.limit)
-      out.push({ color: COLORS.accent, msg: `${labels[k]}: ${mx}°C oltre il limite finestra (${d.temp.limit}°C)` });
-  });
-
-  const [lo, hi] = d.pressure.hot_window;
-  corners.forEach((k) => {
-    const v = d.pressure.hot[k];
-    if (v < lo) out.push({ color: COLORS.warn, msg: `${labels[k]}: ${v} psi sotto la finestra a caldo (${lo}–${hi})` });
-    else if (v > hi) out.push({ color: COLORS.warn, msg: `${labels[k]}: ${v} psi oltre la finestra a caldo (${lo}–${hi})` });
-  });
-
-  const spread = Math.max(...d.fuel_per_lap) - Math.min(...d.fuel_per_lap);
-  if (spread <= 0.4)
-    out.push({ color: COLORS.ok, msg: `Consumo stabile (variazione ${spread.toFixed(1)} L/giro su ${d.session.laps} giri)` });
-
-  if (out.length === 0) out.push({ color: COLORS.ok, msg: "Nessuna incongruenza rilevata" });
-  return out;
 }
