@@ -5,8 +5,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import GigiAvatar from "@/components/ui/GigiAvatar";
+import SessionHealth from "@/components/ui/SessionHealth";
+import GigiAdvice from "@/components/ui/GigiAdvice";
+import AlertsFeed from "@/components/ui/AlertsFeed";
+import SidebarSection from "@/components/ui/SidebarSection";
+import MiniValues from "@/components/ui/MiniValues";
+import QuickNotes from "@/components/ui/QuickNotes";
+import QuickCompare from "@/components/ui/QuickCompare";
 import { getSession } from "@/lib/api";
 import { DEFAULT_CONDITIONS } from "@/lib/catalog";
+import { buildHealth, HEALTH_COLOR, HEALTH_LABEL } from "@/lib/health";
+import { buildAlerts } from "@/lib/crosscheck";
 import type { SessionData } from "@/lib/telemetry";
 
 const NAV = [
@@ -19,6 +28,8 @@ const NAV = [
 export default function Sidebar() {
   const path = usePathname();
   const [session, setSession] = useState<SessionData | null>(null);
+  // Pannello footer aperto (note rapide / confronto), esclusivo. null = chiuso.
+  const [footerPanel, setFooterPanel] = useState<"notes" | "compare" | null>(null);
 
   useEffect(() => {
     getSession()
@@ -27,11 +38,14 @@ export default function Sidebar() {
   }, []);
 
   const s = session?.session;
-  const suggestedCount = session?.suggested_params?.length ?? 0;
+  // Stato aggregato + avvisi per i badge delle sezioni (visibili anche da compresse).
+  const health = session ? buildHealth(session) : null;
+  const alertCount = session ? buildAlerts(session).length : 0;
 
   return (
-    <aside className="flex w-60 shrink-0 flex-col gap-4 border-r border-line bg-surface p-4">
-      <div className="border-b border-line pb-3">
+    <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col border-r border-line bg-surface">
+      {/* Header fisso in alto */}
+      <div className="border-b border-line p-4">
         <div className="font-display text-lg font-bold tracking-wide">
           PITWALL<span className="text-accent">.AI</span>
         </div>
@@ -40,6 +54,10 @@ export default function Sidebar() {
         </div>
       </div>
 
+      {/* Area centrale scrollabile (nav + moduli). Assorbe l'eccesso di altezza
+          come coda in fondo invece di lasciare un vuoto a metà colonna (fix layout);
+          a finestra bassa scrolla, header e footer restano sempre raggiungibili. */}
+      <div className="pw-scroll flex flex-1 flex-col gap-4 overflow-y-auto p-4">
       <nav className="flex flex-col gap-1">
         {NAV.map((n) => {
           const active = path === n.href;
@@ -84,36 +102,106 @@ export default function Sidebar() {
         </div>
       )}
 
+      {/* Mini values window: 3 valori chiave di sessione (FASE 6) */}
+      {session && <MiniValues data={session} />}
+
+      {/* Salute sessione: semaforo aggregato (FASE 3), ora sezione comprimibile (FASE 5).
+          Il badge dello stato aggregato resta visibile anche a sezione compressa. */}
+      {session && health && (
+        <SidebarSection
+          id="health"
+          title="Salute sessione"
+          badge={
+            <span
+              className="inline-flex items-center gap-1 font-mono text-[0.5rem] uppercase tracking-widest"
+              style={{ color: HEALTH_COLOR[health.overall] }}
+            >
+              <span className="h-1 w-1 rounded-full" style={{ background: HEALTH_COLOR[health.overall] }} />
+              {HEALTH_LABEL[health.overall]}
+            </span>
+          }
+        >
+          <SessionHealth data={session} />
+        </SidebarSection>
+      )}
+
+      {/* Avvisi rapidi: incongruenze dal cross-check (FASE 5). Badge = conteggio. */}
+      {session && (
+        <SidebarSection
+          id="alerts"
+          title="Avvisi"
+          badge={
+            <span
+              className="font-mono text-[0.5rem] uppercase tracking-widest"
+              style={{ color: alertCount > 0 ? HEALTH_COLOR.warn : HEALTH_COLOR.ok }}
+            >
+              {alertCount > 0 ? `${alertCount} attivi` : "0"}
+            </span>
+          }
+        >
+          <AlertsFeed data={session} />
+        </SidebarSection>
+      )}
+
       {/* Sessioni recenti (per ora la sola demo; predisposta per lo storico futuro) */}
-      <div>
-        <div className="mb-1.5 font-mono text-[0.55rem] uppercase tracking-widest text-muted">Sessioni recenti</div>
+      <SidebarSection id="recent" title="Sessioni recenti">
         <div className="rounded-lg border border-line bg-surface p-2.5">
           <div className="text-[0.8rem] text-white">{s?.track ?? "Monza"}</div>
           <div className="font-mono text-[0.6rem] text-muted">
             {(s?.car ?? "BMW M4 GT3")} · best {s?.best_lap ?? "—"}
           </div>
         </div>
-        <div className="mt-1 font-mono text-[0.55rem] text-muted">Storico completo · prossimamente</div>
+        {/* Link Storico sessioni: coming-soon (non attende il backend SQLite) */}
+        <button
+          type="button"
+          disabled
+          aria-disabled="true"
+          title="Lo storico completo delle sessioni arriverà prossimamente"
+          className="mt-1.5 flex w-full cursor-not-allowed items-center justify-between rounded-md border border-dashed border-line px-2 py-1.5 text-left"
+        >
+          <span className="font-mono text-[0.58rem] text-subtle">Storico sessioni</span>
+          <span className="font-mono text-[0.5rem] uppercase tracking-widest text-muted">prossimamente</span>
+        </button>
+      </SidebarSection>
+
+      {/* Gigi consiglia: CTA prossima azione + ultimi consigli (FASE 4), sezione comprimibile */}
+      {session && (
+        <SidebarSection id="gigi" title="Gigi consiglia">
+          <GigiAdvice data={session} />
+        </SidebarSection>
+      )}
       </div>
 
-      {/* Blocco inferiore: shortcut rapidi + presenza Gigi + ultimo consiglio */}
-      <div className="mt-auto flex flex-col gap-2">
-        {/* Shortcut rapidi (icone, non pulsanti pieni) */}
-        <div className="flex gap-2">
-          <Link
-            href="/console"
-            title="Chiedi a Gigi"
-            className="flex h-8 flex-1 items-center justify-center rounded-md border border-line text-subtle transition hover:border-accent hover:text-white"
+      {/* Footer ancorato in fondo (niente più mt-auto → niente vuoto a metà colonna) */}
+      <div className="flex flex-col gap-2 border-t border-line p-4">
+        {/* Pannello footer attivo: note rapide / confronto (FASE 6) */}
+        {footerPanel === "notes" && <QuickNotes />}
+        {footerPanel === "compare" && session && <QuickCompare data={session} />}
+
+        {/* Azioni rapide: sostituiscono i due shortcut-icona (FASE 6) */}
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={() => setFooterPanel((p) => (p === "compare" ? null : "compare"))}
+            aria-pressed={footerPanel === "compare"}
+            title="Confronta la sessione corrente con la precedente"
+            className={`flex h-8 items-center justify-center gap-1 rounded-md border font-mono text-[0.58rem] transition ${
+              footerPanel === "compare" ? "border-accent text-white" : "border-line text-subtle hover:border-accent hover:text-white"
+            }`}
           >
-            🎧
-          </Link>
-          <Link
-            href="/setup"
-            title="Carica CSV / input sessione"
-            className="flex h-8 flex-1 items-center justify-center rounded-md border border-line text-subtle transition hover:border-accent hover:text-white"
+            ⇄ Confronto
+          </button>
+          <button
+            type="button"
+            onClick={() => setFooterPanel((p) => (p === "notes" ? null : "notes"))}
+            aria-pressed={footerPanel === "notes"}
+            title="Note rapide / promemoria personale"
+            className={`flex h-8 items-center justify-center gap-1 rounded-md border font-mono text-[0.58rem] transition ${
+              footerPanel === "notes" ? "border-accent text-white" : "border-line text-subtle hover:border-accent hover:text-white"
+            }`}
           >
-            📥
-          </Link>
+            ✎ Note
+          </button>
         </div>
 
         {/* Presenza di Gigi */}
@@ -127,17 +215,6 @@ export default function Sidebar() {
             </div>
           </div>
         </div>
-
-        {/* Ultimo focus di Gigi (dai suggested_params della sessione) */}
-        {suggestedCount > 0 && (
-          <Link
-            href="/console"
-            className="block truncate font-mono text-[0.58rem] text-subtle transition hover:text-white"
-            title="Vai alla Console per l'analisi completa"
-          >
-            Ultimo consiglio · {suggestedCount} parametri da rivedere →
-          </Link>
-        )}
 
         <div className="font-mono text-[0.6rem] text-muted">v0.1.0 · v2 scaffold</div>
       </div>
