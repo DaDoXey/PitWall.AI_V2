@@ -51,19 +51,6 @@ Per ognuno: **ID · Data · Severità · Stato · Area · Sintomo · Causa radic
 - **File:** `backend/app/core/data/car_setup_ranges.json`.
 - **Rif.:** MEGAPROMPT_STATE_REPORT §6 B2.
 
-### INC-V2-004 — Login espone la Sidebar dell'app (manca auth-gate reale)
-| | |
-|---|---|
-| **Data** | rilevato 09/07/2026 · **Stato:** 🟡 Medio · `APERTO` |
-| **Area** | Frontend / routing + auth |
-
-- **Sintomo:** la rotta `/login` renderizza la **Sidebar** applicativa; non c'è un vero gate d'accesso.
-- **Causa radice:** `app/layout.tsx` monta `Sidebar` su **ogni** rotta.
-- **Impatto:** login non isolata (incoerenza UX) e assenza di un confine auth; l'app è raggiungibile senza autenticazione reale.
-- **Risoluzione:** APERTA — serve route-group / layout dedicato al login **o** condizione su pathname; legata all'**auth reale (Google OAuth)** oggi solo placeholder.
-- **File:** `frontend/src/app/layout.tsx`, `frontend/src/app/login/page.tsx`.
-- **Rif.:** MEGAPROMPT_STATE_REPORT §6 A2 · REDESIGN_REWORK_REPORT §4 (backlog non-estetico).
-
 ### INC-V2-005 — Dashboard: le card ingrandite non si riposizionano col drag&drop
 | | |
 |---|---|
@@ -83,6 +70,20 @@ Per ognuno: **ID · Data · Severità · Stato · Area · Sintomo · Causa radic
 ---
 
 ## ✅ Incidenti RISOLTI
+
+### INC-V2-004 — Login espone la Sidebar dell'app (manca auth-gate reale)
+| | |
+|---|---|
+| **Data** | rilevato 09/07/2026 · risolto 11/07/2026 · **Stato:** 🟡 Medio · `RISOLTO` |
+| **Area** | Frontend / routing + auth |
+
+- **Sintomo:** la rotta `/login` renderizzava la **Sidebar** applicativa; nessun confine tra ingresso e app.
+- **Causa radice:** `app/layout.tsx` montava `Sidebar` su **ogni** rotta.
+- **Impatto:** login non isolata (incoerenza UX), assenza di confine auth.
+- **Risoluzione:** RISOLTO (megaprompt #6, **FASE 8**) — **route group**: `app/(app)/` (Sidebar + main; pagine spostate con `git mv`) e `app/(auth)/login/` (layout pulito, card centrata full-screen); root layout ridotto a fonts+globals. URL invariati; rotte 200; `tsc` 0 err (puliti i tipi stale in `.next/types` post-spostamento).
+- **Nota di scope (decisione di progetto, megaprompt #6 §1):** la parte "auth-gate reale" è **deliberatamente esclusa** — Google Sign-In reale in FASE 9 ma **senza** sessione server né protezione route (login dimostrativo; contenimento rischio pre-esame 15/07). Non è un residuo dimenticato.
+- **File:** `frontend/src/app/layout.tsx` · `app/(app)/layout.tsx` (new) · `app/(auth)/layout.tsx` (new) · `app/(auth)/login/page.tsx`.
+- **Rif.:** MEGAPROMPT_STATE_REPORT §6 A2 · PROMPT_LOG Entry #008 (F8).
 
 ### INC-V2-001 — Next.js 15.1.3 vulnerabile (CVE-2025-66478)
 | | |

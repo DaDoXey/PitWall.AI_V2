@@ -265,8 +265,8 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 | Data | 11/07/2026 |
 | Agente dev | Claude Code (`claude-opus-4-8`) |
 | Area | Sidebar (blocco A) · Lap Times (blocco B) · colore best-time (blocco C) · viz MoTeC in Telemetria (blocco D) |
-| Commit | **non ancora committato** |
-| Contesto | Quinto megaprompt, metodo a FASI (0–13) con STOP gate per fase. **TUTTE le FASI 0–13 COMPLETE**; in attesa di «ok push» per il commit. |
+| Commit | `d3e536f` (Sidebar) · `053ef9e` (Lap Times + best-time) · `06643dc` (viz MoTeC) · `83a7f17` (docs) — **pushati** |
+| Contesto | Quinto megaprompt, metodo a FASI (0–13) con STOP gate per fase. **TUTTE le FASI 0–13 COMPLETE**, poi committate e pushate previo «ok push». |
 
 **Catalogo messaggi:**
 1. Incollato MEGAPROMPT #5 (FASI 0–13, STOP gate + diff-only sui file protetti).
@@ -305,9 +305,63 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 
 **File protetti:** F0–F6 ☑ **nessuno toccato**. **F7:** `demo_data.py` **sbloccato con «ok procedi»** → **solo AGGIUNTA** (`LAP_TIMES` + helper + check), **nessun numero esistente modificato**; `csv_parser.py` **NON toccato** (Opzione 1).
 
-**Decisione:** ☑ FASI 0–13 **mantenute**. Megaprompt #5 **COMPLETO e verificato**. **NON committato/pushato**: in attesa dell'«ok push» esplicito di Edoardo.
+**Decisione:** ☑ FASI 0–13 **mantenute**. Megaprompt #5 **COMPLETO e verificato**, poi **committato in 4 commit logici e pushato** previo «ok push» (`main == origin` a `83a7f17`).
 
 **Rif.:** HAZARD-V2-B (INCIDENTS.md); memoria promemoria "carburante residuo".
+
+---
+
+## Entry #008 — MEGAPROMPT #6: semplificazione UX (Sidebar + Telemetria) + Login/Google Sign-In 🔄 IN CORSO
+
+| Campo | Valore |
+|---|---|
+| Data | 11/07/2026 |
+| Agente dev | Claude Code (`claude-opus-4-8`) |
+| Area | BLOCCO A Sidebar (fusione salute+avvisi) · BLOCCO B Telemetria (tab, corsie i2 Pro) · BLOCCO C Login/Google Sign-In |
+| Commit | non ancora committato |
+| Contesto | Sesto megaprompt: la Telemetria post-#5 è troppo densa ("PC della NASA", stesso dato gomme fino a 8 forme). Principio guida: checklist semplicità Jobs/Apple a ogni STOP gate + rigore MoTeC invariato. |
+
+**Catalogo messaggi:**
+1. Incollato MEGAPROMPT #6 (FASI 0–10, 3 blocchi, checklist semplicità sezione 0 come criterio d'accettazione).
+2. `ok, procedi` sul report FASE 0 (audit read-only).
+3. `ok procedi` sul piano FASE 1 + decisioni: **UserChip nella Sidebar** approvato; richiesta di documentare in PROMPT_LOG/INCIDENTS come da standard; spiegazione fornita per reperire il Google Client ID (Cloud Console, OAuth client web, origini localhost:3000, popup senza redirect URI).
+
+**Modifica (per FASE):**
+- **F0** — Audit read-only. Baseline duplicazione: temp gomme in **6–8 forme**, pressioni in **6** nella stessa pagina Telemetria; cross-check (il più actionable) ultimo in pagina. Nessuna lib auth presente; `@react-oauth/google` 0.13.5 compatibile React 19 (peer `>=16.8`). `/login` prende la Sidebar dal root layout → causa di INC-V2-004 → soluzione: route group `(app)`/`(auth)`. Snapshot 2×2 di `SetupRadar` estraibile a basso rischio. **Scoperta:** il placeholder "N" in alto a destra NON è nostro codice — è l'indicatore dev di Next.js → il chip profilo (F9) va creato da zero. File protetti: zero coinvolti in tutti e 3 i blocchi.
+- **F1** — Piano file-per-file approvato: 6 file nuovi (`HealthStatus`, `Tabs`, `TelemetryLanes`, `TyreSnapshotGrid`, `ChannelReport`, `lib/auth.ts`+`UserChip`), 2 rimossi a fine F5 (`TempLineChart`, `TyreOverlay`), route group con 5 file spostati. Libreria Sign-In: **`@react-oauth/google`** (client-side puro, popup reale, niente sessione server = spec F9, no peso next-auth pre-esame).
+- **F2** — NEW `components/ui/HealthStatus.tsx`: fusione a 2 stati (collassato = semaforo `SessionHealth`; espanso = + lista `AlertsFeed` nello stesso blocco). Composizione pura dei 2 componenti esistenti, zero soglie/logiche nuove. MOD `Sidebar.tsx`: le 2 `SidebarSection` "Salute sessione"+"Avvisi" → 1 sola, badge = stato aggregato + conteggio avvisi (visibile anche compressa).
+
+- **F3** — MOD `telemetry/page.tsx`: **header fisso**. Cross-check spostato da ultimo blocco in fondo a **prima cosa in pagina** (reso riga orizzontale compatta `flex-wrap` invece di lista verticale); sotto, heatmap + 4 gauge pressioni **affiancati** (grid 1/3+2/3, gauge in 2×2); `TempLineChart` scesa sotto come blocco temporaneo (sarà sostituita in F5). Vecchio blocco cross-check in fondo rimosso. Nessuna KPI nuova (no mini-dashboard).
+
+- **F4** — NEW `components/ui/Tabs.tsx` (switcher generico: mono uppercase, underline accent, niente glow). MOD `telemetry/page.tsx`: tutto il contenuto sotto l'header fisso entra in 2 tab — **"Tempi"** (LapTimesTable + LapDeltaChart, invariati dentro) e **"Analisi"** (provvisoria: line chart temp, TyreOverlay, Istogramma, Radar, LapTable, LapChannelBars spostati dentro senza modifiche — F5/F6 li trasformeranno). Dentro le tab niente motion wrapper (il cambio tab non ri-anima).
+
+- **F5** — NEW `charts/TyreSnapshotGrid.tsx` (**estratto** dallo Snapshot di `SetupRadar`, componente condiviso, zero duplicazione) + NEW `charts/TelemetryLanes.tsx`: 2 corsie sottili impilate (Temperatura 150px + Pressione 130px), **stesso asse X**, **un solo cursore sincronizzato** (`syncId` Recharts), soglia 95° tratteggiata solo su corsia temp col **tratto oltre soglia ridisegnato in rosso** (serie `*Over` con null fuori soglia), finestra pressioni tratteggiata su corsia press; tooltip **muti** (content null, solo cursore) → i numeri esatti vivono UNA volta sola nel box **"Valori"** a lato (riusa TyreSnapshotGrid, default ultimo giro, hover/tap aggiorna). MOD `SetupRadar.tsx`: usa TyreSnapshotGrid (rimossi GRID/tc/pc inline). MOD `telemetry/page.tsx`: nella tab Analisi le 2 card line-chart-temp + overlay → 1 card "Andamento gomme" con le corsie. `TempLineChart.tsx`/`TyreOverlay.tsx` non più importati, **file su disco finché Edoardo non conferma a schermo** (poi rimozione).
+
+- **F5-fix (da screenshot Edoardo)** — (a) sulla corsia Temperatura i punti del tratto oltre soglia (Post.DX) apparivano **rossi fissi invece che evidenziati all'hover** come le altre serie: la Line `*Over` aveva dot statici propri (r=2 alarm) e `activeDot={false}` → rimossi i dot statici. (b) box "Valori" con **spazio vuoto sotto**: aggiunte 2 statistiche del giro attivo che seguono il cursore — **Tempo giro** (fucsia `STATE.best` + badge `PB` se migliore, altrimenti Δ dal best) e **Consumo** (`fuel_per_lap`). Dati già esposti, nessun numero nuovo.
+- **F5-fix2 (tentativo, superato)** — ipotesi doppio activeDot: serie over resa muta (`dot/activeDot=false`). Non risolveva: il problema non era l'hover.
+- **F5-fix3 (RISOLUTIVO — primo screenshot effettivamente analizzato: gli allegati in chat non arrivavano, recuperato da `OneDrive/Immagini/Catture di schermata`)** — i marker di TUTTE le serie sono **pallini bianchi** (fill default Recharts); la linea over, **più spessa e disegnata sopra la base, copriva i pallini bianchi** della Post.DX sul tratto oltre soglia → punti "rossi/assenti" solo lì. Fix: la serie over ridisegna **gli stessi marker standard** (`dot={{r:1.6,strokeWidth:0}}` + `activeDot={{r:3}}`); base e over per Post.DX hanno lo stesso colore (accent) → sovrapposizione invisibile, marker identici ovunque.
+
+- **F5 chiusa** — «ok tutto a posto» di Edoardo dopo F5-fix3 → **rimossi** `TempLineChart.tsx` e `TyreOverlay.tsx` (orfani, non più importati). `tsc` 0 err dopo la rimozione.
+- **F6** — NEW `charts/ChannelReport.tsx`: unifica **LapTable** (tabella giro-per-giro) e **LapChannelBars** (barre per canale) in un solo componente con switch **Tabella ↔ Grafico** (come il Channel Report di i2 Pro); min/max/Δ leggibili in entrambe le modalità (sintesi in tabella, header card nelle barre). Riuso puro: i 2 componenti esistenti diventano interni. MOD `telemetry/page.tsx`: 2 card → 1 card "Channel report · giro per giro".
+
+- **F7** — Assemblaggio tab Analisi (ordine corsie→istogramma→radar→channel report già corretto da F5/F6). Puliti i titoli ridondanti ("Analisi · X" → "X" dentro la tab Analisi). **2 decisioni di ridondanza prese CON Edoardo** (domanda esplicita, opzioni + raccomandazione): (1) **Snapshot 2×2 rimosso dal radar** — stessa griglia dello stesso componente 2 volte nella stessa tab; il radar tiene stepper + Bilanciamento (unico), i valori esatti vivono solo nel box "Valori" delle corsie; (2) **tabella delta di LapDeltaChart sfoltita a Δtempo+Δconsumo** — rimosse colonne Δtemp max/Δpress (canali della tab Analisi; la tab Tempi resta sul cronometro), rimossi calcoli `tempMax`/`pressAvg` e semplificato `deltaColor`. Conteggio duplicazione per il gate: baseline **8 forme** contemporanee → **2 al primo colpo d'occhio** (heatmap+gauge header) + 5 nella tab Analisi mai tutte insieme.
+
+- **F8 (BLOCCO C)** — **Route group** (fix INC-V2-004): `app/(app)/` con NEW `(app)/layout.tsx` (Sidebar + main + MotionProvider) e pagine `page/console/telemetry/setup` spostate dentro con **`git mv`**; `app/(auth)/login/` con NEW `(auth)/layout.tsx` (nessuna Sidebar, card centrata full-screen); root `layout.tsx` ridotto a fonts+globals. URL invariati. Restyling login: centering demandato al layout, filetto accent in testa alla card (linguaggio PageHeader). **Gotcha post-spostamento:** `tsc` falliva sui tipi **stale** generati in `.next/types` (vecchi path) → `rm -rf .next/types/app` + re-hit rotte → rigenerati, 0 err. **INC-V2-004 spostato in RISOLTI** su INCIDENTS.md con nota di scope (auth-gate deliberatamente escluso, decisione megaprompt #6 §1).
+
+- **F9 — VERIFICATA end-to-end da Edoardo:** popup "Continua su PitWall.AI" (dopo rename Branding: il client Sheets della lezione era nello stesso progetto e il nome app è per-progetto), login con account reale, profilo nel chip, ⏻ Esci, login-first su nuova tab. Troubleshooting OAuth documentato: "no registered origin"/401 invalid_client → mancavano le Origini JavaScript autorizzate (`http://localhost:3000` + `http://localhost`); nome popup errato → Branding di progetto, non nome client.
+- **F9 (BLOCCO C)** — **Google Sign-In reale** + 2 richieste aggiuntive di Edoardo (logout; login sempre prima schermata). Client ID fornito da Edoardo → `frontend/.env.local` (`NEXT_PUBLIC_GOOGLE_CLIENT_ID`, gitignorato-verificato; **client secret NON usato né salvato** — flusso popup non ne ha bisogno; consigliata rigenerazione a Edoardo perché incollato in chat). Installato `@react-oauth/google@0.13.5`. NEW `lib/auth.tsx` (AuthProvider/useAuth: profilo in **sessionStorage** → muore con la tab → login sempre prima schermata di una nuova visita; decodifica JWT manuale base64url/UTF-8, zero dipendenze, zero logging — GDPR), NEW `ui/Providers.tsx` (GoogleOAuthProvider+AuthProvider nel root layout), NEW `ui/AuthGate.tsx` (gate client-side nel layout `(app)`: senza accesso → redirect `/login`, `return null` anti-flash; NON è confine di sicurezza server — scelta di progetto §1), NEW `ui/UserChip.tsx` (foto/nome/email reali o 🏁 Pilota demo + bottone **⏻ Esci** → signOut+`/login`) agganciato nell'header della Sidebar. MOD login page: bottone `GoogleLogin` reale (`theme=filled_black`; prop `locale` rimossa: non nel tipo TS), redirect se già loggato, nota privacy in card; **rimosso il form email/password finto** (con Sign-In reale accanto un form che non autentica stonava — decisione F9, reversibile). Restart dev server per caricare `.env.local`.
+
+**Motivazione:** stesso avviso (es. Post.DX oltre soglia) appariva 2 volte nello scroll della Sidebar (semaforo + lista); ridurre lo scroll verticale mobile. In Telemetria l'informazione più actionable (cross-check) era l'ULTIMA visibile e 11 blocchi erano impilati senza gerarchia; l'andamento gomme era rappresentato da 2 grafici pieni separati (line chart + overlay con toggle) e i dati per giro da 2 pannelli impilati (tabella + barre). La /login ereditava la Sidebar dal root layout (INC-V2-004) e mancavano Sign-In vero, logout e un ingresso obbligato dal login.
+- **F10** — Verifica finale + documentazione (nessuna modifica di codice, vedi sotto).
+
+**Risultato osservato:** Sidebar con una sezione salute+avvisi a 2 stati; Telemetria = cross-check in testa + heatmap/gauge sempre visibili + 2 tab (Tempi cronometrica, Analisi con corsie sincronizzate/istogramma/radar/channel report); login prima schermata sempre (sessionStorage), Google Sign-In reale con profilo nel chip Sidebar e ⏻ Esci. Ogni fase verificata a schermo da Edoardo.
+
+**Bilancio semplicità (checklist sezione 0, numeri prima→dopo):** forme del dato gomme visibili insieme **8 → 2** (header; 5 in tab Analisi mai simultanee); blocchi impilati in Telemetria **11 → 3 fissi + 2 tab**; duplicazioni eliminate: avvisi Sidebar 2×→1, line-chart+overlay→corsie uniche, tabella+barre→Channel Report a modalità, snapshot radar rimosso (=box Valori), delta multi-canale sfoltito, form login finto rimosso.
+
+**Verifica finale (F10):** `npx tsc --noEmit` **0 errori** · rotte `/ /console /telemetry /setup /login` **tutte 200** · backend `test_parser` **12/12** · **file protetti tutti intatti** (`git diff --quiet` su agent/csv_parser/setup_params/vision_parser/demo_data/demo_responses/car_setup_ranges/prompts/ + `lib/motion.ts`) · `.env.local` fuori dal tracking git (verificato). Google Sign-In verificato **end-to-end da Edoardo** («ok tutto giusto e vedo pure il nome utente»).
+
+**File protetti:** ☑ nessuno toccato in tutto il megaprompt #6.
+**Decisione:** ☑ Megaprompt #6 **COMPLETO e verificato** (F0–F10). **NON committato/pushato**: in attesa dell'«ok push» esplicito di Edoardo. INC-V2-004 chiuso su INCIDENTS.md.
 
 ---
 
