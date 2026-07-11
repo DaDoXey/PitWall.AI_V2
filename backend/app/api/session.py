@@ -28,6 +28,7 @@ def get_session():
             "avg_hot": dd.PRESS_AVG_HOT,
         },
         "fuel_per_lap": dd.FUEL_PER_LAP,
+        "lap_times": dd.LAP_TIMES,
         "laps": dd.lap_axis(),
         "suggested_params": sorted(dd.SUGGESTED_PARAMS),
     }

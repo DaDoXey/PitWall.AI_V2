@@ -109,6 +109,25 @@ if not all(HOT_PRESS_SERIES[p][-1] == HOT_PRESSURES[p] for p in HOT_PRESSURES):
 # ─────────────────────────────────────────────
 FUEL_PER_LAP = [3.2, 3.1, 3.3, 3.0, 3.2, 3.3, 3.2, 3.3]
 
+# ─────────────────────────────────────────────
+# TEMPI SUL GIRO — 8 giri (secondi). Storia coerente con temp/consumo: out-lap più
+# lento (gomme fredde, macchina carica), best a metà stint, poi degrado mentre la
+# Post.DX surriscalda (coerente con TYRE_TEMP_SERIES rr → 105°C).
+# Il minimo coincide ESATTAMENTE con SESSION["best_lap"] (stesso patto di coerenza
+# di TYRE_TEMP_MAX / HOT_PRESS_SERIES).
+# ─────────────────────────────────────────────
+LAP_TIMES = [109.412, 108.301, 107.945, 107.812, 108.017, 108.523, 108.874, 109.156]
+
+
+def _fmt_lap(sec: float) -> str:
+    m = int(sec // 60)
+    return f"{m}:{sec - m * 60:06.3f}"
+
+
+# Coerenza: il giro più veloce coincide con SESSION["best_lap"] (check attivo anche con -O).
+if _fmt_lap(min(LAP_TIMES)) != SESSION["best_lap"]:
+    raise ValueError("demo_data: LAP_TIMES min non coerente con SESSION['best_lap']")
+
 
 def lap_axis():
     """Asse giri 1..N coerente con la lunghezza delle serie."""

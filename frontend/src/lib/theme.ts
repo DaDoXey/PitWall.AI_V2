@@ -14,4 +14,5 @@ export const COLORS = {
   subtle: "#999999",
   muted: "#666666",
   blue: "#3B82F6",
+  best: "#C026D3", // fucsia/viola — SOLO giro più veloce / personal best (convenzione F1 broadcast)
 } as const;

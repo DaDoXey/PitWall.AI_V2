@@ -50,6 +50,13 @@ export interface SessionData {
     avg_hot: number;
   };
   fuel_per_lap: number[];
+  lap_times: number[]; // secondi per giro (parallelo a laps)
   laps: number[];
   suggested_params: string[];
+}
+
+// Formatta secondi → "m:ss.mmm" (es. 107.812 → "1:47.812").
+export function formatLapTime(sec: number): string {
+  const m = Math.floor(sec / 60);
+  return `${m}:${(sec - m * 60).toFixed(3).padStart(6, "0")}`;
 }

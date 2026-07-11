@@ -13,6 +13,7 @@ export const STATE = {
   warn: COLORS.warn, // #FFB300 — al limite
   alarm: COLORS.accent, // #E8002D — fuori finestra / critico
   cold: COLORS.blue, // #3B82F6 — sotto temperatura/pressione di esercizio
+  best: COLORS.best, // #C026D3 — giro più veloce / personal best (semantico, convenzione F1). USO ESCLUSIVO: mai decorativo.
 } as const;
 
 // ── Grigi strumento (griglia, assi, tacche, tracce) — riferimento di scala, non decoro ──
