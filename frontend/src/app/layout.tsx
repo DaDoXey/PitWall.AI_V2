@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Orbitron, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import Sidebar from "@/components/ui/Sidebar";
-import MotionProvider from "@/components/ui/MotionProvider";
+import Providers from "@/components/ui/Providers";
 
 const orbitron = Orbitron({ subsets: ["latin"], variable: "--font-orbitron", weight: ["400", "700"] });
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -13,16 +12,14 @@ export const metadata: Metadata = {
   description: "Virtual Race Engineer · ACC GT3",
 };
 
+// Root layout: SOLO fonts + globals. La Sidebar vive nel route group (app):
+// così /login (route group (auth)) non la eredita più — fix INC-V2-004
+// (megaprompt #6, FASE 8). Gli URL non cambiano: i gruppi non entrano nel path.
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="it" className={`${orbitron.variable} ${inter.variable} ${mono.variable}`}>
       <body className="min-h-screen bg-bg font-body text-white">
-        <div className="flex min-h-screen">
-          <Sidebar />
-          <main className="max-w-6xl flex-1 px-6 py-6">
-            <MotionProvider>{children}</MotionProvider>
-          </main>
-        </div>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

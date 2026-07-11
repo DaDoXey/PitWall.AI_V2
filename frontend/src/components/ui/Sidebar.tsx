@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import GigiAvatar from "@/components/ui/GigiAvatar";
+import UserChip from "@/components/ui/UserChip";
 import HealthStatus from "@/components/ui/HealthStatus";
 import GigiAdvice from "@/components/ui/GigiAdvice";
 import SidebarSection from "@/components/ui/SidebarSection";
@@ -43,13 +44,16 @@ export default function Sidebar() {
 
   return (
     <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col border-r border-line bg-surface">
-      {/* Header fisso in alto */}
+      {/* Header fisso in alto: brand + chip utente (FASE 9: profilo reale/demo + Esci) */}
       <div className="border-b border-line p-4">
         <div className="font-display text-lg font-bold tracking-wide">
           PITWALL<span className="text-accent">.AI</span>
         </div>
         <div className="mt-1 font-mono text-[0.6rem] uppercase tracking-[0.22em] text-muted">
           Virtual Race Engineer
+        </div>
+        <div className="mt-3">
+          <UserChip />
         </div>
       </div>
 
