@@ -9,7 +9,7 @@
 import { useState } from "react";
 import { Legend, PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart, ResponsiveContainer, Tooltip } from "recharts";
 import { COLORS } from "@/lib/theme";
-import { INSTRUMENT, STATE } from "@/lib/instrument";
+import { INSTRUMENT } from "@/lib/instrument";
 import type { Corner, SessionData } from "@/lib/telemetry";
 
 // Ordine radar (disposizione "auto" con startAngle=135): Ant.SX, Ant.DX, Post.DX, Post.SX.
@@ -18,14 +18,6 @@ const ORDER: { key: Corner; label: string }[] = [
   { key: "fr", label: "Ant.DX" },
   { key: "rr", label: "Post.DX" },
   { key: "rl", label: "Post.SX" },
-];
-
-// Ordine griglia 2×2 dello snapshot (come l'auto vista dall'alto).
-const GRID: { key: Corner; label: string }[] = [
-  { key: "fl", label: "Ant.SX" },
-  { key: "fr", label: "Ant.DX" },
-  { key: "rl", label: "Post.SX" },
-  { key: "rr", label: "Post.DX" },
 ];
 
 type Datum = { corner: string; temp: number; press: number; tempRaw: number; pressRaw: number };
@@ -49,13 +41,9 @@ export default function SetupRadar({ data }: { data: SessionData }) {
   const laps = data.laps ?? [];
   const [lapIdx, setLapIdx] = useState(Math.max(0, laps.length - 1)); // default: ultimo giro
 
-  // Accessori valore per il giro selezionato + soglie riusate (temp limite, finestra press).
+  // Accessori valore per il giro selezionato (soglie/griglia 2×2 → TyreSnapshotGrid).
   const t = (c: Corner) => data.temp.series[c][lapIdx];
   const p = (c: Corner) => data.pressure.hot_series[c][lapIdx];
-  const limit = data.temp.limit;
-  const [plo, phi] = data.pressure.hot_window;
-  const tc = (v: number) => (v > limit ? STATE.alarm : STATE.ok);
-  const pc = (v: number) => (v < plo || v > phi ? STATE.warn : STATE.ok);
 
   // Radar normalizzato nel giro (la forma mostra lo squilibrio).
   const tempRaw = ORDER.map((o) => t(o.key));
@@ -128,21 +116,10 @@ export default function SetupRadar({ data }: { data: SessionData }) {
           </div>
         </div>
 
-        {/* Snapshot valori reali + bilanciamento */}
+        {/* Bilanciamento (i valori esatti 2×2 vivono SOLO nel box "Valori" delle
+            corsie — Snapshot rimosso in megaprompt #6 F7, decisione di Edoardo:
+            stessa griglia dello stesso componente due volte nella stessa tab). */}
         <div className="flex flex-col gap-3">
-          <div>
-            <div className="mb-2 font-mono text-[0.55rem] uppercase tracking-widest text-muted">Snapshot · giro {lapNum}</div>
-            <div className="grid grid-cols-2 gap-2">
-              {GRID.map((c) => (
-                <div key={c.key} className="rounded-lg border border-line bg-inset p-2 text-center">
-                  <div className="font-mono text-[0.55rem] uppercase tracking-wider text-subtle">{c.label}</div>
-                  <div className="font-mono text-sm" style={{ color: tc(t(c.key)) }}>{Math.round(t(c.key))} °C</div>
-                  <div className="font-mono text-[0.7rem]" style={{ color: pc(p(c.key)) }}>{p(c.key).toFixed(1)} psi</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
           <div>
             <div className="mb-1.5 font-mono text-[0.55rem] uppercase tracking-widest text-muted">Bilanciamento</div>
             <div className="flex flex-col gap-1">

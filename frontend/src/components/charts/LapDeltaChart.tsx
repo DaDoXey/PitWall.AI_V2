@@ -2,17 +2,18 @@
 
 // Delta giro-su-giro (megaprompt #5, FASE 9): variazione di ciascun giro rispetto al
 // giro precedente o alla media dello stint. Grafico a barre sul Δ TEMPO (toggle di
-// riferimento) + tabella dei delta sugli altri canali (consumo, temp max, pressione).
+// riferimento) + tabella dei delta cronometrici (tempo, consumo). Le colonne
+// temp/pressione sono state RIMOSSE (megaprompt #6 F7, decisione di Edoardo):
+// quei canali si analizzano nella tab Analisi — la tab Tempi resta sul cronometro.
 // Colore = stato (più veloce=verde / più lento=ambra); il giro più veloce usa il
-// token best-time FUCSIA di FASE 8. Solo presentazione, nessuna logica di dominio.
+// token best-time FUCSIA. Solo presentazione, nessuna logica di dominio.
 import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { COLORS } from "@/lib/theme";
 import { INSTRUMENT, STATE } from "@/lib/instrument";
-import type { Corner, SessionData } from "@/lib/telemetry";
+import type { SessionData } from "@/lib/telemetry";
 
 type Mode = "prev" | "avg";
-const CORNERS: Corner[] = ["fl", "fr", "rl", "rr"];
 
 export default function LapDeltaChart({ data }: { data: SessionData }) {
   const [mode, setMode] = useState<Mode>("prev");
@@ -35,18 +36,13 @@ export default function LapDeltaChart({ data }: { data: SessionData }) {
     return INSTRUMENT.tick;
   };
 
-  // Canali per giro per la tabella dei delta (vs giro precedente).
-  const tempMax = times.map((_, i) => Math.max(...CORNERS.map((c) => data.temp.series[c][i])));
-  const pressAvg = times.map((_, i) => CORNERS.reduce((a, c) => a + data.pressure.hot_series[c][i], 0) / 4);
+  // Canali cronometrici per la tabella dei delta (vs giro precedente).
   const chan = [
-    { key: "time", label: "Tempo", arr: times, lowerBetter: true, fmt: (v: number) => `${v > 0 ? "+" : ""}${v.toFixed(3)} s` },
-    { key: "fuel", label: "Consumo", arr: data.fuel_per_lap, lowerBetter: true, fmt: (v: number) => `${v > 0 ? "+" : ""}${v.toFixed(1)} L` },
-    { key: "temp", label: "Temp max", arr: tempMax, lowerBetter: true, fmt: (v: number) => `${v > 0 ? "+" : ""}${Math.round(v)}°` },
-    { key: "press", label: "Press", arr: pressAvg, lowerBetter: false, fmt: (v: number) => `${v > 0 ? "+" : ""}${v.toFixed(1)}` },
+    { key: "time", label: "Tempo", arr: times, fmt: (v: number) => `${v > 0 ? "+" : ""}${v.toFixed(3)} s` },
+    { key: "fuel", label: "Consumo", arr: data.fuel_per_lap, fmt: (v: number) => `${v > 0 ? "+" : ""}${v.toFixed(1)} L` },
   ];
-  const deltaColor = (v: number, lowerBetter: boolean) => {
+  const deltaColor = (v: number) => {
     if (Math.abs(v) < 1e-9) return COLORS.muted;
-    if (!lowerBetter) return COLORS.subtle;
     return v < 0 ? STATE.ok : STATE.alarm;
   };
 
@@ -125,7 +121,7 @@ export default function LapDeltaChart({ data }: { data: SessionData }) {
                 {chan.map((c) => {
                   const v = i === 0 ? null : c.arr[i] - c.arr[i - 1];
                   return (
-                    <td key={c.key} className="px-3 text-right font-mono" style={{ color: v === null ? COLORS.muted : deltaColor(v, c.lowerBetter) }}>
+                    <td key={c.key} className="px-3 text-right font-mono" style={{ color: v === null ? COLORS.muted : deltaColor(v) }}>
                       {v === null ? "—" : c.fmt(v)}
                     </td>
                   );
