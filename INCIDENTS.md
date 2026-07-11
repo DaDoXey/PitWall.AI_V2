@@ -112,6 +112,22 @@ Per ognuno: **ID · Data · Severità · Stato · Area · Sintomo · Causa radic
 - **Sintomo:** lanciare `npm run build` mentre `npm run dev` è attivo **corrompe la cartella `.next`** → dev instabile / build fallata.
 - **Mitigazione (procedura fissa):** con il dev server attivo usare **solo** `npx tsc --noEmit` per la verifica; **mai** `npm run build`. Regola ripetuta in `PROMPT_LOG.md`, session-cache e report.
 
+### HAZARD-V2-B — `uvicorn --reload` su Windows serve codice **stale** dopo modifica backend
+| | |
+|---|---|
+| **Stato** | `MITIGATO` (procedura) · **Area:** Backend / dev server |
+
+- **Sintomo:** dopo aver modificato `demo_data.py`/`session.py` (FASE 7), `GET /api/session` **non** esponeva
+  `lap_times` benché l'import diretto della funzione (`app.api.session.get_session()`) lo restituisse
+  correttamente. WatchFiles stampava «detected changes … Reloading» ma la risposta HTTP restava vecchia.
+- **Causa radice:** reloader **WatchFiles** di uvicorn inaffidabile su Windows — reload segnalato ma il
+  processo di serving non rigenerato col nuovo modulo.
+- **Impatto:** verifica a endpoint **fuorviante** (sembrava un bug del codice, mentre il codice era corretto).
+  Nessun dato corrotto, nessun impatto sul deliverable.
+- **Mitigazione (procedura):** confermare le modifiche backend con **import diretto** della funzione +
+  `curl` **dopo** un **riavvio pulito** del backend **senza `--reload`** (kill processo + relaunch).
+- **Rif.:** PROMPT_LOG Entry #007 (megaprompt #5, FASE 7), verifica.
+
 ---
 
 ## 🗄️ Eredità v1 (contesto — NON incidenti v2)
