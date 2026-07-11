@@ -5,9 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import GigiAvatar from "@/components/ui/GigiAvatar";
-import SessionHealth from "@/components/ui/SessionHealth";
+import HealthStatus from "@/components/ui/HealthStatus";
 import GigiAdvice from "@/components/ui/GigiAdvice";
-import AlertsFeed from "@/components/ui/AlertsFeed";
 import SidebarSection from "@/components/ui/SidebarSection";
 import MiniValues from "@/components/ui/MiniValues";
 import QuickNotes from "@/components/ui/QuickNotes";
@@ -105,8 +104,9 @@ export default function Sidebar() {
       {/* Mini values window: 3 valori chiave di sessione (FASE 6) */}
       {session && <MiniValues data={session} />}
 
-      {/* Salute sessione: semaforo aggregato (FASE 3), ora sezione comprimibile (FASE 5).
-          Il badge dello stato aggregato resta visibile anche a sezione compressa. */}
+      {/* Salute sessione + Avvisi FUSI (megaprompt #6, FASE 2): un solo modulo a due
+          stati (semaforo sempre, lista avvisi su richiesta). Il badge resta visibile
+          anche a sezione compressa: stato aggregato + conteggio avvisi se > 0. */}
       {session && health && (
         <SidebarSection
           id="health"
@@ -118,28 +118,11 @@ export default function Sidebar() {
             >
               <span className="h-1 w-1 rounded-full" style={{ background: HEALTH_COLOR[health.overall] }} />
               {HEALTH_LABEL[health.overall]}
+              {alertCount > 0 && <span style={{ color: HEALTH_COLOR.warn }}>· {alertCount}</span>}
             </span>
           }
         >
-          <SessionHealth data={session} />
-        </SidebarSection>
-      )}
-
-      {/* Avvisi rapidi: incongruenze dal cross-check (FASE 5). Badge = conteggio. */}
-      {session && (
-        <SidebarSection
-          id="alerts"
-          title="Avvisi"
-          badge={
-            <span
-              className="font-mono text-[0.5rem] uppercase tracking-widest"
-              style={{ color: alertCount > 0 ? HEALTH_COLOR.warn : HEALTH_COLOR.ok }}
-            >
-              {alertCount > 0 ? `${alertCount} attivi` : "0"}
-            </span>
-          }
-        >
-          <AlertsFeed data={session} />
+          <HealthStatus data={session} />
         </SidebarSection>
       )}
 
