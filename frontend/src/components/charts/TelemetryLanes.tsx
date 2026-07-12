@@ -14,6 +14,7 @@ import { COLORS } from "@/lib/theme";
 import { INSTRUMENT, STATE, STROKE } from "@/lib/instrument";
 import TyreSnapshotGrid from "@/components/charts/TyreSnapshotGrid";
 import { formatLapTime, TYRE_SERIES, type SessionData } from "@/lib/telemetry";
+import { DEMO_TANK_CAPACITY_L } from "@/lib/catalog";
 
 const SYNC_ID = "pw-lanes";
 
@@ -132,6 +133,10 @@ export default function TelemetryLanes({ data }: { data: SessionData }) {
           const best = times.length > 0 ? Math.min(...times) : null;
           const isPB = tSel != null && best != null && tSel === best;
           const fuel = data.fuel_per_lap?.[lapIdx];
+          // Residuo stimato al giro attivo (FASE 9 #7): capacità − consumo
+          // cumulato fino al giro. Assunzione DEMO dichiarata: pieno al via.
+          const used = (data.fuel_per_lap ?? []).slice(0, lapIdx + 1).reduce((s, v) => s + v, 0);
+          const remaining = fuel != null ? DEMO_TANK_CAPACITY_L - used : null;
           if (tSel == null && fuel == null) return null;
           return (
             <div className="mt-2 flex flex-col gap-1">
@@ -154,6 +159,17 @@ export default function TelemetryLanes({ data }: { data: SessionData }) {
                 <div className="flex items-center justify-between rounded-md border border-line px-2 py-1.5 font-mono text-[0.62rem]">
                   <span className="text-subtle">Consumo</span>
                   <span className="text-white">{fuel.toFixed(1)} L</span>
+                </div>
+              )}
+              {remaining != null && (
+                <div className="rounded-md border border-line px-2 py-1.5 font-mono text-[0.62rem]">
+                  <div className="flex items-center justify-between">
+                    <span className="text-subtle">Residuo stimato</span>
+                    <span className="text-white">~{remaining.toFixed(1)} L</span>
+                  </div>
+                  <div className="mt-0.5 text-[0.5rem] uppercase tracking-widest text-muted">
+                    serbatoio {DEMO_TANK_CAPACITY_L} L · pieno al via (demo)
+                  </div>
                 </div>
               )}
             </div>

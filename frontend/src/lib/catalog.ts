@@ -33,3 +33,9 @@ export const CONDITIONS = ["Asciutto", "Umido", "Bagnato"];
 export const DEFAULT_CAR = "BMW M4 GT3";
 export const DEFAULT_TRACK = "Monza";
 export const DEFAULT_CONDITIONS = "Asciutto";
+
+// Capacità serbatoio BMW M4 GT3 in ACC (megaprompt #7, FASE 9): costante DEMO
+// lato frontend — /api/session non la espone e demo_data.py (protetto) resta
+// intatto. Usata SOLO per il "residuo stimato" (assunzione dichiarata in UI:
+// serbatoio pieno al via). Un punto solo da cui correggere il valore.
+export const DEMO_TANK_CAPACITY_L = 125;
