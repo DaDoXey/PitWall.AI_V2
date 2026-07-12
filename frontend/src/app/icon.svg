@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Favicon PitWall: bandiera a scacchi 4x4 a tutto canvas (leggibile anche a 16px) -->
+  <defs>
+    <clipPath id="r"><rect width="32" height="32" rx="7"/></clipPath>
+  </defs>
+  <g clip-path="url(#r)">
+    <rect width="32" height="32" fill="#101014"/>
+    <g fill="#F4F4F5">
+      <rect x="0" y="0" width="8" height="8"/><rect x="16" y="0" width="8" height="8"/>
+      <rect x="8" y="8" width="8" height="8"/><rect x="24" y="8" width="8" height="8"/>
+      <rect x="0" y="16" width="8" height="8"/><rect x="16" y="16" width="8" height="8"/>
+      <rect x="8" y="24" width="8" height="8"/><rect x="24" y="24" width="8" height="8"/>
+    </g>
+  </g>
+</svg>
