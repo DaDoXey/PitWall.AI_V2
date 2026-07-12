@@ -318,7 +318,7 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 | Data | 11/07/2026 |
 | Agente dev | Claude Code (`claude-opus-4-8`) |
 | Area | BLOCCO A Sidebar (fusione salute+avvisi) · BLOCCO B Telemetria (tab, corsie i2 Pro) · BLOCCO C Login/Google Sign-In |
-| Commit | non ancora committato |
+| Commit | `48105ef` (auth/route group) · `6ab4097` (docs entry + chiusura INC-V2-004) — retro-compilato il 13/07 |
 | Contesto | Sesto megaprompt: la Telemetria post-#5 è troppo densa ("PC della NASA", stesso dato gomme fino a 8 forme). Principio guida: checklist semplicità Jobs/Apple a ogni STOP gate + rigore MoTeC invariato. |
 
 **Catalogo messaggi:**
@@ -372,7 +372,7 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 | Data | 11/07/2026 |
 | Agente dev | Claude Code (`claude-fable-5`) |
 | Area | root (LICENSE, README) · login page · Sidebar footer |
-| Commit | non ancora committato |
+| Commit | `47ac309` — retro-compilato il 13/07 |
 | Contesto | Igiene pre-"post building": la v1 Streamlit aveva la MIT, la v2 no. |
 
 **Catalogo messaggi:**
@@ -395,7 +395,7 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 | Data | 12/07/2026 |
 | Agente dev | Claude Code (`claude-fable-5`) |
 | Area | Sidebar (2 zone + consolidamento) · nav icons · tab Analisi (Istogramma→Scatter) · Confronto sessioni · TODO carburante |
-| Commit | non ancora committato |
+| Commit | `c1e8059` (F5–F6) · `9047005` (F2–F4, F7–F8) · `b3dc71d` (F9) · `4398c79` (docs) · licenza in `47ac309` — retro-compilato il 13/07 |
 | Contesto | Settimo megaprompt (F0–F10). Estende la checklist Jobs/Apple del #6 alla Sidebar; scatter i2 Pro al posto dell'istogramma; chiude il TODO carburante residuo. Deadline 15/07 → robustezza sopra ambizione. |
 
 **Catalogo messaggi:**
@@ -440,7 +440,7 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 | Data | 12/07/2026 |
 | Agente dev | Claude Code (`claude-fable-5`) |
 | Area | `frontend/src/app/icon.svg` (nuovo) |
-| Commit | `feat(ui): favicon bandiera a scacchi` |
+| Commit | `5960cda` |
 | Contesto | Fix al volo richiesto da Edoardo mentre prepara gli screenshot: favicon nella tab del browser accanto al nome PitWall. |
 
 **Catalogo messaggi:**
@@ -462,7 +462,7 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 | Data | 12/07/2026 |
 | Agente dev | Claude Code (`claude-fable-5`) |
 | Area | Dati demo pressioni (protetti, sbloccati per la FASE 0) + finestra Setup e scala gauge frontend |
-| Commit | non ancora committato |
+| Commit | `adabee2` |
 | Contesto | Megaprompt #8, FASE 0 isolata. La finestra 28.5–30.0 psi a caldo era obsoleta: ACC v1.9 (dry DHF) usa 26.0–27.0 per tutte le GT, salita freddo→caldo ~1.5–2.0 psi (non 2.5–3.5). |
 
 *(Commit: `fix(demo): pressioni ACC v1.9 — shift -2.5, finestra caldo 26.0-27.0` — include SPEC_ERRATA.md e questa entry.)*
@@ -499,7 +499,7 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 | Data | 12/07/2026 |
 | Agente dev | Claude Code (`claude-fable-5`) |
 | Area | Nuova sezione /lezioni (indice + dettaglio) · Sidebar/NavIcons · lib/lessons.ts |
-| Commit | `3377440` (F1) · `138da5a` (F2) · `ed56bdc` (F3) · F4 = questo commit docs |
+| Commit | `3377440` (F1) · `138da5a` (F2) · `ed56bdc` (F3) · `8dca0c0` (F4, docs) |
 | Contesto | Megaprompt #8, feature dopo la FASE 0 (Entry #012). 8 mini-guide sim-racing: Gigi ti fa capire, non guida al posto tuo. Fonte testi: `docs/A_Lezione_con_Gigi_ContentPack_v1.md`. |
 
 **Catalogo messaggi:**
