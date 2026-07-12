@@ -64,3 +64,6 @@ Rework #4–#8 → auth reale (Google OAuth) → storico sessioni SQLite → dep
 
 ## Deploy (previsto)
 Frontend su **Vercel**, backend su **Render/Railway/Fly** (free tier). Vedi i doc di planning in `docs/`.
+
+## Licenza
+Distribuito con licenza **MIT** — vedi [LICENSE](LICENSE).

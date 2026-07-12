@@ -91,7 +91,7 @@ export default function LoginPage() {
         </motion.p>
 
         <motion.p variants={fadeInUp} className="mt-5 text-center text-[0.7rem] text-muted">
-          Progetto d&apos;esame · Edoardo Ferlito
+          Progetto d&apos;esame · © 2026 Edoardo Ferlito · Licenza MIT
         </motion.p>
       </motion.div>
     </div>
