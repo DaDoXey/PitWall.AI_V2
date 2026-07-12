@@ -365,6 +365,74 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 
 ---
 
+## Entry #009 — Licenza MIT + copyright in UI
+
+| Campo | Valore |
+|---|---|
+| Data | 11/07/2026 |
+| Agente dev | Claude Code (`claude-fable-5`) |
+| Area | root (LICENSE, README) · login page · Sidebar footer |
+| Commit | non ancora committato |
+| Contesto | Igiene pre-"post building": la v1 Streamlit aveva la MIT, la v2 no. |
+
+**Catalogo messaggi:**
+1. Richiesta licenza MIT come sulla v1.
+2. Richiesta copyright nella pagina di login "e dove pensi sia migliore".
+
+**Modifica:** NEW `LICENSE` (testo MIT identico alla v1, © 2026 Edoardo Ferlito) · MOD `README.md` (sezione "Licenza" finale) · MOD `(auth)/login/page.tsx` (riga footer card → "Progetto d'esame · © 2026 Edoardo Ferlito · Licenza MIT") · MOD `ui/Sidebar.tsx` (footer, sotto "v0.1.0 · v2 scaffold": riga "© 2026 Edoardo Ferlito · MIT", visibile su tutte le pagine dell'app).
+**Motivazione:** repo pubblica senza licenza = tutti i diritti riservati di default; copyright visibile in UI su ingresso (login) e su ogni vista (Sidebar).
+**Risultato osservato:** riga copyright nella card login e nel footer Sidebar, stesso stile mono/muted esistente.
+**Verifica:** `tsc --noEmit` 0 err · `/` e `/login` 200 · backend/file protetti non toccati.
+**File protetti:** ☑ nessuno toccato
+**Decisione:** ☑ Mantenuto · in attesa di «ok push»
+
+---
+
+## Entry #010 — MEGAPROMPT #7: Sidebar sticky+snellita · icone nav · Scatter · Confronto sessioni · carburante residuo ✅ COMPLETO (F0–F10)
+
+| Campo | Valore |
+|---|---|
+| Data | 12/07/2026 |
+| Agente dev | Claude Code (`claude-fable-5`) |
+| Area | Sidebar (2 zone + consolidamento) · nav icons · tab Analisi (Istogramma→Scatter) · Confronto sessioni · TODO carburante |
+| Commit | non ancora committato |
+| Contesto | Settimo megaprompt (F0–F10). Estende la checklist Jobs/Apple del #6 alla Sidebar; scatter i2 Pro al posto dell'istogramma; chiude il TODO carburante residuo. Deadline 15/07 → robustezza sopra ambizione. |
+
+**Catalogo messaggi:**
+1. Incollato MEGAPROMPT #7 (FASI 0–10).
+2. `procedi` sul report FASE 0.
+3. `ok procedi, ricordati la documentazione` sulla diagnosi FASE 1.
+
+**Modifica (per FASE):**
+- **F0** — Audit read-only: (1) fusione Salute/Avvisi **già reale** nel #6 (`HealthStatus.tsx` unico componente a 2 stati; SessionHealth/AlertsFeed solo interni); (2) nav DENTRO la zona scrollabile → F2 necessaria; (3) **nessun secondo dataset demo** (demo_data.py = solo Monza asciutto 8 giri; demo_responses.py = solo markdown console) → F7 orienta al fallback giri 1–4 vs 5–8; (4) capacità serbatoio assente ovunque → costante frontend (proposta: `lib/catalog.ts`, 125 L BMW M4 GT3 in ACC), **niente STOP gate protetti**; (5) istogramma = `charts/ChannelHistogram.tsx` montato in tab Analisi (sopra il radar, ordine: corsie→istogramma→radar→channel report). Extra: `lucide-react` NON è dipendenza.
+- **F1** — Diagnosi Sidebar con checklist Jobs per blocco. Proposta approvata: nav → header fisso; **rimossi** MiniValues (Δ giro placeholder morto, Giro statico, Consumo già in Dashboard), card "Sessioni recenti" (duplicato esatto di Sessione corrente; resta la riga Storico·prossimamente), widget Gigi dal footer (badge online migra sulla sezione Gigi consiglia); "Ultimi consigli" 3 voci → 1 CTA + link "vedi tutti → Console". Bilancio corpo: 6 blocchi → 3 + 1 riga.
+- **F2** — MOD `ui/Sidebar.tsx`: `<nav>` spostato dal corpo scrollabile all'header fisso (dopo UserChip). I 4 tasti restano visibili a qualunque scroll. Diff 36+/30− (solo spostamento + commenti). **Confermato a schermo da Edoardo.**
+- **F3** — Consolidamento come da diagnosi F1 approvata. MOD `ui/Sidebar.tsx`: rimossi il blocco MiniValues, la card "Sessioni recenti" (duplicato di Sessione corrente; la riga "Storico sessioni · prossimamente" resta, standalone dopo Gigi consiglia) e il widget Gigi dal footer; badge `● online` migrato sulla sezione "Gigi consiglia"; import GigiAvatar/MiniValues rimossi. MOD `ui/GigiAdvice.tsx`: rimosso il mini-elenco "Ultimi consigli" (3 voci → tutte puntavano a /console), resta la CTA "Prossima azione" + link "vedi tutti →". Corpo sidebar: **6 blocchi → 3 + 1 riga**. **Confermato a schermo da Edoardo** → `MiniValues.tsx` orfano cancellato (prassi F5 del #6).
+- **F4** — NEW `ui/NavIcons.tsx`: 4 icone SVG line-style (`IconDashboard` griglia card · `IconConsole` eco dell'headset GigiAvatar · `IconTelemetry` traccia su assi · `IconSetup` slider verticali) — mono-linea `currentColor`, stroke 1.6/24, cap/join round, zero fill: stessa famiglia dell'headset di Gigi (lucide-react non è dipendenza → SVG custom come da megaprompt). MOD `ui/Sidebar.tsx`: NAV usa i componenti icona; stato attivo ridisegnato da pillola piena `bg-accent` → **barra accent sinistra** (motion.span `layoutId` conservato: la barra scivola tra le voci) + `bg-raised` + icona `text-accent` (hover `accent-hover` #CC0028), pattern coerente col filetto sinistro di Sessione corrente/Gigi consiglia; `aria-current="page"` aggiunto. Route e testi invariati.
+
+- **F5** — MOD `telemetry/page.tsx`: rimossa la card "Distribuzione (istogramma)" dalla tab Analisi (import incluso); Bilanciamento/Radar e Channel report intatti. **Confermato a schermo da Edoardo** → `ChannelHistogram.tsx` orfano cancellato.
+- **F6** — NEW `charts/ScatterPlot.tsx` ("Correlazione canali", stile i2 Pro), montato nello slot dell'istogramma (tab Analisi, sopra il radar). Un punto = un giro; selettori chip X/Y su **10 canali già esposti** (Tempo giro, Consumo, Temp×4, Press×4 — zero canali nuovi); giro PB in fucsia `STATE.best` (Cell dedicata + legenda minima + "· PB" nel tooltip); tooltip = giro + valori X/Y esatti (tempo giro in `formatLapTime`); assi `domain=[dataMin,dataMax]` (min/max reali, no padding), hairline grid, tick monospace, didascalie unità in HTML orizzontale (lezione F10-fix #5), zero glow, `isAnimationActive={false}`. Default didattico: X=Temp Post.DX · Y=Tempo giro (la storia demo: surriscaldamento → degrado).
+
+- **F7** — Diagnosi confronto (no codice). Scoperta: "⇄ Confronto" non era un placeholder ma apriva `QuickCompare`, mini-tabella con sessione "precedente" **statica finta** hardcoded client-side (`PREV`). Proposta approvata da Edoardo: **opzione A** (fallback giri 1–4 vs 5–8 della sessione corrente, zero dati nuovi/protetti — scelta di scope dichiarabile all'esame) + **rimozione di QuickCompare/PREV** (via 4 numeri inventati; un solo "confronto" sotto il bottone).
+- **F8** — NEW `charts/StintCompare.tsx` (`StintCompareModal`): modal overlay (pattern KpiModal: Esc/click-fuori, raggiungibile da ogni pagina) col confronto metà stint — corsia unica 2 serie sovrapposte su giro relativo 1–4 (metà 1 blu / metà 2 ambra = identità serie, idioma TYRE_SERIES), selettore canale chip sui **10 canali riusati** via `buildChannels` **esportata da ScatterPlot** (zero duplicazione), tooltip muto + cursore, sintesi sotto: media metà 1 · media metà 2 · **Δ colorato** (verde/rosso per tempo/consumo/temp; neutro per pressioni, idioma QuickCompare); etichetta onesta "stessa sessione · demo". MOD `ui/Sidebar.tsx`: bottone ⇄ da toggle pannello footer a **launcher del modal** (`aria-haspopup="dialog"`, AnimatePresence); `footerPanel` ridotto a `"notes" | null`. `QuickCompare.tsx` orfano, **su disco finché Edoardo non conferma**, poi rimozione.
+
+- **F9** — Carburante residuo (chiude il TODO aperto dal #5/F6). MOD `lib/catalog.ts`: NEW costante `DEMO_TANK_CAPACITY_L = 125` (serbatoio BMW M4 GT3 in ACC; demo, frontend-only — `demo_data.py` protetto INTATTO, un punto solo da cui correggere). MOD `charts/TelemetryLanes.tsx` (box "Valori", posizione scelta: accanto a Consumo): riga "Residuo stimato ~X L" = capacità − consumo **cumulato fino al giro attivo** (segue il cursore come le altre statistiche); assunzione dichiarata in UI: "serbatoio 125 L · pieno al via (demo)". Nessuna cifra duplicata (il residuo non esiste altrove; Consumo resta il per-giro). `QuickCompare.tsx` orfano cancellato dopo conferma F8.
+
+- **F10** — Verifica finale + documentazione (nessuna modifica di codice). Nota richiesta dal megaprompt: la fusione Salute/Avvisi dichiarata nel #6 era **già completa** (accertato in F0) → **niente da annotare** su INCIDENTS/SPEC_ERRATA; la F3 ha fatto solo consolidamenti ulteriori.
+
+**Motivazione:** la nav spariva scrollando la sidebar; il corpo sidebar duplicava dati (stessa sessione in 2 card, consumo in 3 posti, Gigi rappresentato 2 volte, Δ giro placeholder mai riempito); le icone nav erano emoji miste; l'istogramma distribuiva un canale solo senza mostrare relazioni tra canali; il "confronto" usava una sessione precedente finta hardcoded; il residuo carburante era un TODO aperto dal #5.
+
+**Risultato osservato:** nav sempre visibile (header fisso a 2 zone); corpo sidebar 6 blocchi → 3 + 1 riga; 4 icone line-style famiglia GigiAvatar con barra accent scorrevole sull'attiva; tab Analisi con "Correlazione canali" (scatter XY, PB fucsia) al posto dell'istogramma; "⇄ Confronto" apre il modal metà stint (giri 1–4 blu vs 5–8 ambra, Δ colorati) su dati reali; box Valori con "Residuo stimato" che segue il cursore (125 L − cumulato, assunzione dichiarata). Ogni fase verificata a schermo da Edoardo.
+
+**Bilancio semplicità (numeri prima→dopo):** blocchi corpo sidebar **6 → 3+1 riga** · rappresentazioni di Gigi in sidebar **2 → 1** · card sessione duplicate **2 → 1** · numeri demo inventati client-side (PREV QuickCompare) **4 → 0** · file componenti: −3 cancellati (MiniValues, ChannelHistogram, QuickCompare) +3 nuovi (NavIcons, ScatterPlot, StintCompare) con `buildChannels` condivisa.
+
+**Verifica finale (F10):** `npx tsc --noEmit` **0 errori** · rotte `/ /console /telemetry /setup /login` **tutte 200** · backend `test_parser` **12/12** · **file protetti tutti intatti** (`git diff --quiet` su agent/csv_parser/setup_params/vision_parser/demo_data/demo_responses/car_setup_ranges/prompts/ + `lib/motion.ts`). Diff totale: **11 file modificati (193+/295−, netto −102 righe) + 4 nuovi** (LICENSE, NavIcons, ScatterPlot, StintCompare), 3 cancellati.
+
+**File protetti:** ☑ nessuno toccato in tutto il megaprompt #7.
+**Decisione:** ☑ Megaprompt #7 **COMPLETO e verificato** (F0–F10). **NON committato/pushato**: in attesa dell'«ok push» esplicito di Edoardo. Include anche Entry #009 (LICENSE+copyright) nel working tree.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
