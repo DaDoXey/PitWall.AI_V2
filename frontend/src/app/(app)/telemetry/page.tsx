@@ -10,7 +10,7 @@ import TyreHeatmap from "@/components/charts/TyreHeatmap";
 import ChannelReport from "@/components/charts/ChannelReport";
 import LapTimesTable from "@/components/charts/LapTimesTable";
 import LapDeltaChart from "@/components/charts/LapDeltaChart";
-import ChannelHistogram from "@/components/charts/ChannelHistogram";
+import ScatterPlot from "@/components/charts/ScatterPlot";
 import SetupRadar from "@/components/charts/SetupRadar";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { getSession } from "@/lib/api";
@@ -125,9 +125,10 @@ export default function TelemetryPage() {
                     <div className="mb-3 font-mono text-xs uppercase tracking-wider text-subtle">Andamento gomme · {s.laps} giri</div>
                     <TelemetryLanes data={data} />
                   </div>
+                  {/* Scatter XY (FASE 6 #7): sostituisce l'istogramma distribuzione */}
                   <div className="rounded-xl border border-line bg-surface p-4">
-                    <div className="mb-3 font-mono text-xs uppercase tracking-wider text-subtle">Distribuzione (istogramma)</div>
-                    <ChannelHistogram data={data} />
+                    <div className="mb-3 font-mono text-xs uppercase tracking-wider text-subtle">Correlazione canali</div>
+                    <ScatterPlot data={data} />
                   </div>
                   <div className="rounded-xl border border-line bg-surface p-4">
                     <div className="mb-3 font-mono text-xs uppercase tracking-wider text-subtle">Bilanciamento (radar)</div>
