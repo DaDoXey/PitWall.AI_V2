@@ -65,7 +65,8 @@ export default function Sidebar() {
             Sessione corrente / Gigi consiglia — via la pillola piena. */}
         <nav className="mt-3 flex flex-col gap-1">
           {NAV.map((n) => {
-            const active = path === n.href;
+            // Match anche le sotto-rotte (es. /lezioni/[slug]); "/" resta esatto.
+            const active = n.href === "/" ? path === "/" : path === n.href || path.startsWith(`${n.href}/`);
             const Icon = n.icon;
             return (
               <motion.div key={n.href} whileHover={{ x: active ? 0 : 2 }} whileTap={{ scale: 0.98 }}>
