@@ -46,6 +46,17 @@ export function IconTelemetry({ size = 17 }: IconProps) {
   );
 }
 
+// Lezioni: lampadina (i fondamentali che "accendono" il pilota)
+export function IconLessons({ size = 17 }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" {...base}>
+      <path d="M9.5 18 v-1.8 C7.6 15 6.5 13.1 6.5 11 a5.5 5.5 0 0 1 11 0 c0 2.1-1.1 4-3 5.2 V18" />
+      <path d="M9.5 18 H14.5" />
+      <path d="M10.5 21 H13.5" />
+    </svg>
+  );
+}
+
 // Setup: slider verticali (i parametri ACC della pagina)
 export function IconSetup({ size = 17 }: IconProps) {
   return (

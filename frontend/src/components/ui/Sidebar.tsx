@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import UserChip from "@/components/ui/UserChip";
-import { IconConsole, IconDashboard, IconSetup, IconTelemetry } from "@/components/ui/NavIcons";
+import { IconConsole, IconDashboard, IconLessons, IconSetup, IconTelemetry } from "@/components/ui/NavIcons";
 import HealthStatus from "@/components/ui/HealthStatus";
 import GigiAdvice from "@/components/ui/GigiAdvice";
 import SidebarSection from "@/components/ui/SidebarSection";
@@ -23,6 +23,7 @@ const NAV = [
   { href: "/console", label: "Engineer Console", icon: IconConsole },
   { href: "/telemetry", label: "Telemetria", icon: IconTelemetry },
   { href: "/setup", label: "Setup", icon: IconSetup },
+  { href: "/lezioni", label: "Lezioni", icon: IconLessons },
 ];
 
 export default function Sidebar() {
