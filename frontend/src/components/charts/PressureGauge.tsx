@@ -7,8 +7,8 @@
 import CountUp from "@/components/ui/CountUp";
 import { INSTRUMENT, STATE, STROKE } from "@/lib/instrument";
 
-const MIN = 27.0;
-const MAX = 30.5;
+const MIN = 24.5;
+const MAX = 28.0;
 const TICK_STEP = 0.5;
 const NEAR = 0.5; // banda "al limite" (scelta di presentazione, NON una soglia dati)
 

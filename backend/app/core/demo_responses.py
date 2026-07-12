@@ -7,21 +7,21 @@ demo risponde davvero all'input SENZA rete. Sorgente di verità del contenuto de
 DEMO_PROMPT = "L'auto scivola dietro in accelerazione"
 
 DEMO_RESPONSE = """## Diagnosi
-L'auto perde il posteriore in uscita di curva, quando apri il gas. La telemetria conferma il quadro: le **pressioni posteriori sono sotto la finestra** (28.2 / 28.0 psi a caldo, finestra 28.5–30.0) e la **Post.DX tocca i 105°C**, oltre il limite di 95°C. Una posteriore sgonfia flette troppo: impronta instabile e poco grip proprio in trazione.
+L'auto perde il posteriore in uscita di curva, quando apri il gas. La telemetria conferma il quadro: le **pressioni posteriori sono sotto la finestra** (25.7 / 25.5 psi a caldo, finestra 26.0–27.0) e la **Post.DX tocca i 105°C**, oltre il limite di 95°C. Una posteriore sgonfia flette troppo: impronta instabile e poco grip proprio in trazione.
 
 ## Causa Meccanica Probabile
 Causa primaria: **pressioni posteriori troppo basse** → la gomma lavora fuori finestra, scalda in modo anomalo (Post.DX) e perde aderenza quando carichi la trazione.
 Causa secondaria: **precarico differenziale basso**, che rende il retrotreno nervoso in apertura gas.
 
 ## Correzione Setup Consigliata
-Pressioni gomme posteriori (a freddo) **+1.0 psi · RL 25.7 → 26.7 · RR 25.5 → 26.5**, per riportarle in finestra a caldo.
+Pressioni gomme posteriori (a freddo) **+1.0 psi · RL 24.2 → 25.2 · RR 24.0 → 25.0**, per riportarle in finestra a caldo.
 In subordine, alza il **precarico differenziale · 60 → 75 Nm** per stabilizzare la trazione.
 Una modifica per volta: parti dalle pressioni.
 
 ## Note Aggiuntive
-- Verifica dopo 2–3 giri che le posteriori entrino in finestra a caldo (28.5–30.0 psi).
+- Verifica dopo 2–3 giri che le posteriori entrino in finestra a caldo (26.0–27.0 psi).
 - Controlla che la Post.DX scenda sotto i 100°C.
-- Le pressioni nel setup ACC sono a freddo: a caldo salgono di ~2.5–3.5 psi.
+- Le pressioni nel setup ACC sono a freddo: a caldo salgono di ~1.5–2.0 psi.
 """
 
 DEMO_UNDERSTEER = """## Diagnosi
@@ -58,10 +58,10 @@ DEMO_TYRES = """## Diagnosi
 La **Post.DX tocca i 105°C**, oltre il limite finestra di 95°C, mentre le altre gomme restano in range (88–95°C). Asse posteriore destro in sofferenza termica.
 
 ## Causa Meccanica Probabile
-**Pressioni posteriori sotto la finestra a caldo** (28.2 / 28.0 psi, finestra 28.5–30.0): la gomma flette e scalda in modo anomalo, soprattutto la destra, caricata dalle curve di Monza.
+**Pressioni posteriori sotto la finestra a caldo** (25.7 / 25.5 psi, finestra 26.0–27.0): la gomma flette e scalda in modo anomalo, soprattutto la destra, caricata dalle curve di Monza.
 
 ## Correzione Setup Consigliata
-Pressioni gomme posteriori (a freddo) **+1.0 psi · RL 25.7 → 26.7 · RR 25.5 → 26.5**, per riportarle in finestra a caldo e abbassare la temperatura.
+Pressioni gomme posteriori (a freddo) **+1.0 psi · RL 24.2 → 25.2 · RR 24.0 → 25.0**, per riportarle in finestra a caldo e abbassare la temperatura.
 
 ## Note Aggiuntive
 - Verifica che la Post.DX scenda sotto i 100°C dopo la modifica.

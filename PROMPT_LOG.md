@@ -433,6 +433,65 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 
 ---
 
+## Entry #011 — Favicon bandiera a scacchi
+
+| Campo | Valore |
+|---|---|
+| Data | 12/07/2026 |
+| Agente dev | Claude Code (`claude-fable-5`) |
+| Area | `frontend/src/app/icon.svg` (nuovo) |
+| Commit | `feat(ui): favicon bandiera a scacchi` |
+| Contesto | Fix al volo richiesto da Edoardo mentre prepara gli screenshot: favicon nella tab del browser accanto al nome PitWall. |
+
+**Catalogo messaggi:**
+1. «piccolo fix al volo: mi aggiungeresti il favicon […] di una bandiera a scacchi»
+
+**Modifica:**            NEW `src/app/icon.svg` — bandiera a scacchi 4×4 a tutto canvas (celle `#F4F4F5` su `#101014`, angoli arrotondati via clipPath), leggibile anche a 16px. Nessun altro file toccato: Next App Router rileva `app/icon.svg` automaticamente (zero modifiche a `layout.tsx`).
+**Motivazione:**         La tab del browser non aveva icona (nessun favicon nel progetto, `public/` assente).
+**Risultato osservato:** `GET /icon.svg` → 200 `image/svg+xml`; link `icon.svg?<hash>` presente nel `<head>`. **Confermato a schermo da Edoardo** («si vede, mi piace così»).
+**Verifica:**            rotta `/icon.svg` 200 · `/` 200 · nessun file TS toccato (tsc non applicabile)
+**File protetti:**       ☑ nessuno toccato
+**Decisione:**           ☑ Mantenuto
+
+---
+
+## Entry #012 — MEGAPROMPT #8 · FASE 0: fix pressioni ACC v1.9 (shift −2.5, finestra caldo 26.0–27.0)
+
+| Campo | Valore |
+|---|---|
+| Data | 12/07/2026 |
+| Agente dev | Claude Code (`claude-fable-5`) |
+| Area | Dati demo pressioni (protetti, sbloccati per la FASE 0) + finestra Setup e scala gauge frontend |
+| Commit | non ancora committato |
+| Contesto | Megaprompt #8, FASE 0 isolata. La finestra 28.5–30.0 psi a caldo era obsoleta: ACC v1.9 (dry DHF) usa 26.0–27.0 per tutte le GT, salita freddo→caldo ~1.5–2.0 psi (non 2.5–3.5). |
+
+*(Commit: `fix(demo): pressioni ACC v1.9 — shift -2.5, finestra caldo 26.0-27.0` — include SPEC_ERRATA.md e questa entry.)*
+
+**Catalogo messaggi:**
+1. Incollato MEGAPROMPT #8 (FASE 0 + feature "A Lezione con Gigi", FASI 1–4).
+2. Al gate parametri: scelta salita **+1.5 uniforme** (opzione consigliata, csv_parser intatto) + extra scope prompt v4/chat e esempio vision_parser.
+3. «ok va tutto bene ma aspettiamo» → applicazione rimandata a sessione fresca.
+4. «ok riprendiamo il lavoro. procedi con la fase 0.»
+
+**Modifica (proposta solo-diff approvata al gate, poi applicata):**
+- **`demo_data.py`** 🔓 — `HOT_PRESSURES` 29.0/29.2/28.2/28.0 → **26.5/26.7/25.7/25.5**; `HOT_PRESS_WINDOW` (28.5,30.0) → **(26.0,27.0)**; `HOT_PRESS_SERIES` −2.5 su tutti i 32 valori; `COLD_PRESSURES` 26.5/26.5/25.7/25.5 → **25.0/25.2/24.2/24.0** (delta uniformato a +1.5: prima la fr era +2.7); `COLD_PRESS_WINDOW` (26.0,27.0) → **(24.5,25.5)**; `PRESS_AVG_HOT` derivato 28.6 → 26.1; commenti riscritti (rif. ERR-02).
+- **`demo_responses.py`** 🔓 — 6 righe: valori a caldo 28.2/28.0 → 25.7/25.5, finestra → 26.0–27.0 (righe 10/22/61), correzione «+1.0 · RL 24.2→25.2 · RR 24.0→25.0» (righe 17/64), nota salita «~2.5–3.5» → «~1.5–2.0» (riga 24). Narrazione INVARIATA.
+- **`setup_params.py`** 🔓 — default slider pressioni: fl/fr 26.5 → 25.0, rl/rr 26.8 → 25.3 (min/max/step invariati).
+- **`prompts/system_prompt_v4.txt`** 🔓 — righe 38/102/103/104: range freddo 24.5–25.5, salita 1.5–2.0, target freddo 25.0, target caldo 26.5 range 26.0–27.0. **`prompts/chat_system_prompt.txt`** 🔓 — riga 16 idem. **`vision_parser.py`** 🔓 — esempio JSON 26.5 → 25.0.
+- **Frontend** — `lib/setup.ts` `COLD_PRESS_WINDOW` → [24.5, 25.5] (speculare a demo_data); `PressureGauge.tsx` scala MIN/MAX 27.0/30.5 → **24.5/28.0** (stessa traslazione −2.5: senza, la lancetta finiva a fondo scala).
+- **Non toccati** (verificato in inventario): `csv_parser.py` (range 24.0–30.0 inclusivo, RR a freddo 24.0 ci sta), `car_setup_ranges.json` (non contiene pressioni), resto del frontend (legge tutto dall'API, media Dashboard inclusa).
+- **NEW `SPEC_ERRATA.md`** alla radice (era citato da demo_data.py ma non esisteva nella v2): ERR-01 (eredità v1) + ERR-02 (questa correzione).
+
+**Motivazione:** precisione tecnica non negoziabile per l'esame: i numeri pressione erano da ACC pre-1.9. La traslazione uniforme preserva per costruzione delta, spread e la storia demo (posteriori basse → Post.DX surriscalda → «alza le posteriori»).
+
+**Risultato osservato:** gauge Telemetria su 26.5/26.7 (in finestra) e 25.7/25.5 (bassa, ambra/rossa come prima); KPI Dashboard media 26.1, «2 gomme fuori finestra · retrotreno basso» invariato; Setup coi 4 default verdi nella nuova finestra 24.5–25.5; Console con la nuova finestra e correzione +1.0 coerente.
+
+**Verifica:** 11/11 invarianti FASE 0 OK (script dedicato: anteriori in finestra, 2/4 fuori, freddo<caldo per giro, salita +1.5 uniforme, serie coerenti coi gauge, correzione +1.0 rientra a caldo E a freddo, media 26.1, temp intatte, posteriori ambra nel Setup) · `tsc --noEmit` 0 err · rotte 5/5 200 · `test_parser` 12/12 · API verificata post-riavvio backend (hot/cold/finestre/default nuovi).
+**File protetti:** ☑ sbloccati con «ok procedi» al gate solo-diff → demo_data, demo_responses, setup_params, prompts v4+chat, vision_parser (solo esempio)
+**Decisione:** ☑ Mantenuto — **verificato a schermo da Edoardo** («verificato a schermo, tutto ok»)
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]

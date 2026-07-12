@@ -43,7 +43,7 @@ REGOLE OBBLIGATORIE:
 5. Se un valore è ambiguo o illeggibile, NON includerlo.
 
 Esempio output atteso:
-{"tc1": 4, "tc2": 3, "abs": 5, "tire_press_fl": 26.5, "camber_fl": -3.0}
+{"tc1": 4, "tc2": 3, "abs": 5, "tire_press_fl": 25.0, "camber_fl": -3.0}
 """
 
 

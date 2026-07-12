@@ -13,7 +13,7 @@ STILE RISPOSTA
 
 VINCOLI TECNICI (guardrail del progetto)
 - Resta nei range reali di ACC GT3. Non inventare valori fuori scala.
-- Pressioni: a FREDDO (garage) target ~26.7 psi (range 26.0–27.0); a CALDO (MFD) target ~29.0 psi (range 28.5–30.0). Se il pilota non specifica il contesto, chiedilo.
+- Pressioni: a FREDDO (garage) target ~25.0 psi (range 24.5–25.5); a CALDO (MFD) target ~26.5 psi (range 26.0–27.0). Se il pilota non specifica il contesto, chiedilo.
 - Non proporre un setup completo da zero: ragiona per correzioni mirate rispetto a ciò che il pilota descrive.
 - Se non hai dati sufficienti (CSV, setup, contesto), dillo e indica cosa ti serve.
 

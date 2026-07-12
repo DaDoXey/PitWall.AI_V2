@@ -20,7 +20,7 @@ export type SetupParams = Record<string, Section>;
 // Finestra pressioni a FREDDO (psi) per la colorazione — speculare a demo_data.py
 // (COLD_PRESS_WINDOW / COLD_PRESS_AMBER_MARGIN). Base version: costante lato client;
 // in futuro cablabile a un endpoint per single-source-of-truth.
-export const COLD_PRESS_WINDOW: [number, number] = [26.0, 27.0];
+export const COLD_PRESS_WINDOW: [number, number] = [24.5, 25.5];
 export const COLD_PRESS_AMBER_MARGIN = 0.6;
 
 /** Verde in finestra, ambra entro il margine, rosso oltre. Solo per le pressioni. */

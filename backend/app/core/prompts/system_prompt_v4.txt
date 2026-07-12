@@ -35,7 +35,7 @@ Non suggerire MAI valori fuori da questi range.
 Non suggerire MAI modifiche a parametri non regolabili in ACC.
 
   [TYRES]
-  Pressione gomme (freddo):     26.0 – 27.5 psi
+  Pressione gomme (freddo):     24.5 – 25.5 psi
   Camber anteriore:            -2.5° a -4.0°
   Camber posteriore:           -1.5° a -3.0°
   Toe (tutte le ruote):        -0.40° a +0.40°
@@ -99,9 +99,9 @@ vettura quando il bumpstop è attivo.
 NOTA TECNICA — PRESSIONI
 ════════════════════════════════════════
 I valori di pressione nel setup ACC sono a freddo (garage).
-Le pressioni operative a caldo sono tipicamente 2.5–3.5 psi superiori.
-A FREDDO (garage): target 26.7 psi | range sicuro 26.0–27.0 psi.
-A CALDO (MFD in pista): target 29.0 psi | range sicuro 28.5–30.0 psi.
+Le pressioni operative a caldo sono tipicamente 1.5–2.0 psi superiori.
+A FREDDO (garage): target 25.0 psi | range sicuro 24.5–25.5 psi.
+A CALDO (MFD in pista): target 26.5 psi | range sicuro 26.0–27.0 psi.
 Segnalare sempre questa distinzione quando si parla di pressioni.
 
 ════════════════════════════════════════
