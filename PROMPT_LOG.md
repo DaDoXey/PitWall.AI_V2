@@ -492,6 +492,39 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 
 ---
 
+## Entry #013 — MEGAPROMPT #8 · FASI 1–4: feature "A Lezione con Gigi" ✅ COMPLETA
+
+| Campo | Valore |
+|---|---|
+| Data | 12/07/2026 |
+| Agente dev | Claude Code (`claude-fable-5`) |
+| Area | Nuova sezione /lezioni (indice + dettaglio) · Sidebar/NavIcons · lib/lessons.ts |
+| Commit | `3377440` (F1) · `138da5a` (F2) · `ed56bdc` (F3) · F4 = questo commit docs |
+| Contesto | Megaprompt #8, feature dopo la FASE 0 (Entry #012). 8 mini-guide sim-racing: Gigi ti fa capire, non guida al posto tuo. Fonte testi: `docs/A_Lezione_con_Gigi_ContentPack_v1.md`. |
+
+**Catalogo messaggi:**
+1. Megaprompt #8, FASI 1–4 (dopo il gate FASE 0).
+2. Scelte al gate F1: label nav **"Lezioni"** (consigliata) + icona **lampadina**; posizione dopo Setup.
+3. Content pack consegnato alla radice → spostato in `docs/`.
+4. Al gate F3: «cambia le x di errori comuni... rosso pitwall» → ✕ da `text-warn` a `text-accent`.
+5. Conferme a schermo di Edoardo a ogni gate (F1, F2, F3+fix).
+
+**Modifica (per FASE):**
+- **F1** (`3377440`) — NEW `IconLessons` in `ui/NavIcons.tsx` (lampadina mono-linea, famiglia line-style 1.6/24); voce "Lezioni" dopo Setup nell'header fisso della Sidebar (idioma completo: barra accent `layoutId`, `aria-current`); rotta `/lezioni` placeholder con PageHeader.
+- **F2** (`138da5a`) — NEW `lib/lessons.ts`: le 8 lezioni trascritte fedelmente dal content pack (tipo `Lesson` del megaprompt; `whenToUse` opzionale perché la Lezione 7 non lo definisce; la "NOTA DI ALLINEAMENTO" della Lezione 6 è omessa: risolta dalla FASE 0 con l'opzione (a), demo e lezione ora dicono entrambe 26.0–27.0). Indice `/lezioni`: griglia 8 card (numero mono + titolo + sintesi 1 riga + tag "aggancio PitWall" solo su 06/08 — disclosure progressiva, niente contenuto in lista). Content pack committato in `docs/`.
+- **F3** (`ed56bdc`) — NEW `/lezioni/[slug]`: template unico (Sintesi lead · Perché conta · Quando usarla condizionale · Come si fa numerato · Errori comuni con ✕ · Aggancio PitWall condizionale con filetto accent · Approfondisci). Video card senza iframe: thumbnail statica `img.youtube.com/vi/{id}/hqdefault.jpg` + titolo + canale, `target="_blank" rel="noopener noreferrer"`; con `videoId="TODO"` → box tratteggiato "video in arrivo" (tutte e 8, in attesa degli URL di Edoardo). Slug ignoto → not-found. `Sidebar.tsx`: stato attivo esteso alle sotto-rotte (`startsWith`, "/" resta esatto — fix annunciato al gate F1). Fix su richiesta: ✕ errori comuni in rosso PitWall (`text-accent`).
+- **F4** (questo commit) — Agganci verificati: Gomme→`/telemetry`, LiCo→`/console` vivono nei DATI (lib/lessons.ts) e nel template, **le pagine Telemetria/Console non sono mai state toccate** (verificato su `git diff --name-only` dell'intera feature). Micro-coerenza nav/icone ok. Entry di log.
+
+**Motivazione:** ultima funzione pre-consegna: PitWall non solo monitora ma insegna i fondamentali (filosofia "Gigi ti fa capire"). Read-only, zero stato, zero storage, zero file protetti in tutta la feature.
+
+**Risultato osservato:** quinta voce "Lezioni" (lampadina) con barra accent che scivola; `/lezioni` con 8 card; dettaglio con template a sezioni, agganci accent su Gomme/LiCo, video card "in arrivo"; voce nav evidenziata anche dentro un dettaglio.
+
+**Verifica:** `tsc --noEmit` 0 errori · rotte `/ /console /telemetry /setup /login /lezioni /lezioni/[slug]` **8/8 200** · `test_parser` 12/12 · protetti: nessuna modifica non committata (`git diff --quiet HEAD` sull'elenco protetto) · feature: `/telemetry` e `/console` mai toccate.
+**File protetti:** ☑ nessuno toccato (FASI 1–4)
+**Decisione:** ☑ Mantenuto — ogni fase verificata a schermo da Edoardo. **Resta aperto:** incollare i VIDEO_ID confermati in `lib/lessons.ts` (8 × `"TODO"`).
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
