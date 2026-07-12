@@ -1,9 +1,11 @@
 "use client";
 
-// Blocco "Gigi consiglia" per la Sidebar (megaprompt #5, FASE 4): CTA sulla
-// prossima azione + mini-elenco degli ultimi consigli (non più una sola riga).
-// I consigli vengono dai suggested_params reali (vedi lib/advice.ts). Tutto punta
-// alla Console per l'analisi completa. Colore accent solo sulla CTA (azione), niente glow.
+// Blocco "Gigi consiglia" per la Sidebar (megaprompt #7, FASE 3): SOLO la
+// prossima azione (CTA) + link "vedi tutti" → Console. Il mini-elenco "Ultimi
+// consigli" è stato rimosso: le voci puntavano tutte alla Console, dove i
+// consigli vivono già per intero (una rappresentazione per dato).
+// I consigli vengono dai suggested_params reali (vedi lib/advice.ts).
+// Colore accent solo sulla CTA (azione), niente glow.
 import Link from "next/link";
 import { buildAdvice } from "@/lib/advice";
 import type { SessionData } from "@/lib/telemetry";
@@ -11,7 +13,6 @@ import type { SessionData } from "@/lib/telemetry";
 export default function GigiAdvice({ data }: { data: SessionData }) {
   const advice = buildAdvice(data);
   const top = advice[0];
-  const recent = advice.slice(0, 3);
 
   return (
     <div>
@@ -34,24 +35,13 @@ export default function GigiAdvice({ data }: { data: SessionData }) {
         </div>
       )}
 
-      {/* Mini-elenco: ultimi consigli (fino a 3), non solo l'ultimo */}
-      {recent.length > 0 && (
-        <div className="mt-2 flex flex-col gap-1">
-          <div className="font-mono text-[0.5rem] uppercase tracking-widest text-muted">Ultimi consigli</div>
-          {recent.map((a) => (
-            <Link
-              key={a.key}
-              href="/console"
-              className="flex items-center gap-2 font-mono text-[0.58rem] text-subtle transition hover:text-white"
-              title={`${a.label} · vai alla Console`}
-            >
-              <span className="h-1 w-1 shrink-0 rounded-full bg-line-strong" />
-              <span className="truncate">{a.label}</span>
-              <span className="ml-auto shrink-0 text-[0.5rem] uppercase tracking-widest text-muted">{a.group}</span>
-            </Link>
-          ))}
-        </div>
-      )}
+      {/* Tutti i consigli vivono nella Console: qui solo il rimando */}
+      <Link
+        href="/console"
+        className="mt-1.5 flex items-center justify-end gap-1 font-mono text-[0.58rem] text-subtle transition hover:text-white"
+      >
+        vedi tutti <span aria-hidden>→</span>
+      </Link>
     </div>
   );
 }
