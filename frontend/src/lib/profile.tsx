@@ -32,6 +32,11 @@ type ProfileCtx = {
   startOnboarding: () => void; // replay: riparte dallo step 1 (il profilo resta finché non salvi)
   closeOnboarding: () => void;
   saveProfile: (p: Omit<DriverProfile, "completedAt">) => void;
+  // Azzera profilo salvato + stato in memoria (e tour). Usato dall'ingresso in
+  // modalità demo (postazione condivisa: ogni tester riparte da zero) e da
+  // "Riparti da zero" nel wizard. Il provider è globale e sopravvive alla
+  // navigazione login→app: pulire solo localStorage non basterebbe.
+  resetProfile: () => void;
   // Tour schermate (FASE 6): indice step attivo o null. Vive QUI e non nel
   // componente perché deve sopravvivere alla navigazione tra le pagine.
   tourStep: number | null;
@@ -75,6 +80,16 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const resetProfile = () => {
+    setProfile(null);
+    setTourStep(null); // un tour a metà del tester precedente non deve riprendere
+    try {
+      localStorage.removeItem(KEY);
+    } catch {
+      /* no-op */
+    }
+  };
+
   return (
     <Ctx.Provider
       value={{
@@ -84,6 +99,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         startOnboarding: () => setOnboardingOpen(true),
         closeOnboarding: () => setOnboardingOpen(false),
         saveProfile,
+        resetProfile,
         tourStep,
         startTour: () => setTourStep(0),
         setTourStep,

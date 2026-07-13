@@ -95,6 +95,7 @@ export default function OnboardingFlow() {
     startOnboarding,
     closeOnboarding,
     saveProfile,
+    resetProfile,
     startTour: startTourCtx,
   } = useProfile();
 
@@ -127,6 +128,17 @@ export default function OnboardingFlow() {
 
   const toggleWeak = (w: WeakArea) =>
     setWeakAreas((prev) => (prev.includes(w) ? prev.filter((x) => x !== w) : [...prev, w]));
+
+  // "Riparti da zero" (replay): butta profilo salvato e bozza precompilata.
+  // Il trigger `ready && !profile` rivaluta ma il wizard è già aperto: no-op.
+  const restartBlank = () => {
+    resetProfile();
+    setStep(0);
+    setLevel(null);
+    setGoal(null);
+    setWeakAreas([]);
+    setSetupFam(null);
+  };
 
   // Avanti abilitato: step 1/2/4 vogliono una scelta; i punti deboli possono
   // restare vuoti (la FASE 3 ha un default di lezioni consigliate).
@@ -229,6 +241,19 @@ export default function OnboardingFlow() {
                       className="rounded-md px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted transition hover:text-white"
                     >
                       ← Indietro
+                    </button>
+                  )}
+
+                  {/* Riparti da zero: solo nel replay (c'è un profilo salvato da
+                      buttare) e sul primo step — per il pilota che vuole rifare
+                      la profilazione pulita, Google incluso. */}
+                  {step === 0 && profile && (
+                    <button
+                      type="button"
+                      onClick={restartBlank}
+                      className="rounded-md px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted transition hover:text-accent"
+                    >
+                      ↺ Riparti da zero
                     </button>
                   )}
 

@@ -12,10 +12,12 @@ import { motion } from "framer-motion";
 import { GoogleLogin } from "@react-oauth/google";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { useAuth } from "@/lib/auth";
+import { useProfile } from "@/lib/profile";
 
 export default function LoginPage() {
   const router = useRouter();
   const { user, ready, signInWithGoogle, enterDemo } = useAuth();
+  const { resetProfile } = useProfile();
 
   // Già dentro (Google o demo, stessa tab)? Niente doppio login: si va all'app.
   useEffect(() => {
@@ -23,6 +25,10 @@ export default function LoginPage() {
   }, [ready, user, router]);
 
   function handleDemo() {
+    // Demo = postazione condivisa: ogni ingresso azzera profilo e tutorial,
+    // così il wizard "Conosci il pilota" riparte in bianco per ogni tester.
+    // Il login Google invece ritrova il proprio profilo salvato.
+    resetProfile();
     enterDemo();
     router.push("/");
   }
