@@ -638,6 +638,38 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 
 ---
 
+## Entry #018 — Delta in sync col toggle + suggeriti di Gigi nel Setup: applica al click, scroll al parametro, ● rosso sul target
+
+| Campo | Valore |
+|---|---|
+| Data | 13/07/2026 |
+| Agente dev | Claude Code (`claude-fable-5`) |
+| Area | `charts/LapDeltaChart.tsx` · `lib/setup.ts` · `(app)/setup/page.tsx` · `setup_params.py` (gate) |
+| Commit | `485807d` (delta) · `304d62f` (setup + preload step) — retro-compilati dopo l'«ok push» · log in questo commit |
+| Contesto | Coda della bonifica #017: ok di Edoardo sui 2 punti delta + dettatura dell'"accorgimento sui consigli di Gigi" per la pagina Setup. |
+
+**Catalogo messaggi:**
+1. «sistema pure i 2 punti del delta giro-su-giro».
+2. Accorgimento Setup (verbatim, in sintesi): i parametri suggeriti hanno solo il tag GIGI ma nessuna modifica suggerita; il click sui suggeriti porta al tab ma poi «devo scorrere io fino giù e cambiare effettivamente il valore»; «vorrei che cliccando sui suggeriti i parametri si cambiassero da soli ed inoltre che siano segnati sugli slider con dei "punti rossi"».
+3. Feedback sul primo giro: i pallini «sembrano messi lì per un errore del css» → «una sorta di striscia verticale dentro lo slider che lo prende in pienezza» — marker rifatto come **tacca verticale** a tutta altezza della traccia (3px, accent, stessa compensazione thumb).
+4. Alla ripresa (sessione successiva, scelta tra 4 varianti proposte): **"tick da strumento"** — la tacca ora sporge ~3px sopra e sotto la traccia (`h-3.5` su traccia `h-2`), come le tacche di riferimento dei gauge.
+5. «fixiamo l'assegnazione dei valori nel precarico, non fa impostare i 75 Nm» → **gate solo-diff** con 2 opzioni (step 10→5 vs narrazione 75→80): scelta **step 10→5**, narrazione INVARIATA.
+
+**Modifica:**
+- **LapDeltaChart** — (1) la tabella dei delta ora **segue il toggle** giro precedente/media stint (prima restava sempre vs precedente senza dichiararlo) + didascalia "Δ vs …" sopra la tabella; in "media stint" anche il giro 1 ha un Δ (vs media). (2) Più lento/più consumo = **ambra anche in tabella** (`STATE.warn`, era `alarm` rosso): è uno scostamento dal riferimento, non una soglia violata — stesso token del grafico.
+- **lib/setup.ts** — NEW `GIGI_TARGETS`: i valori-obiettivo dei 3 suggeriti demo, **le stesse cifre della Console** (demo_responses: RL 24.2→**25.2** · RR 24.0→**25.0** psi freddo · precarico 60→**75** Nm). L'API espone solo le chiavi (`suggested_params`): i target vivono lato client come `DEMO_TANK_CAPACITY` (un punto solo da cui correggere). Protetti INTATTI.
+- **setup/page.tsx** — chip "Suggeriti da Gigi": il click ora **applica il valore consigliato** (clamp nel range), cambia tab e **scrolla allo slider** (`scrollIntoView`, con retry perché AnimatePresence monta il tab in ritardo; deadline 1.5s); il chip mostra "→ 25.2 psi" accanto al nome. Slider: NEW **tacca rossa verticale** a tutta altezza della traccia alla posizione del target di Gigi (3px, compensazione corsa thumb 16px, `title` col valore; prima iterazione a pallino scartata su feedback), `id="param-<key>"` come ancora; didascalia banner aggiornata.
+- **setup_params.py** 🔓 (gate solo-diff alla ripresa, opzione scelta da Edoardo) — `preload` **step 10 → 5**: con step 10 il 75 Nm della narrazione non era impostabile né dal chip né a mano. Min/max/default INTATTI, narrazione Console INVARIATA. Backend riavviato pulito (kill + relaunch senza `--reload`, HAZARD-V2-B); API verificata: `preload: 20 200 5 60`.
+- **NOTA residua dichiarata:** i default slider RL/RR (25.3) non coincidono coi valori "attuali" della narrazione (24.2/24.0) — preesistente, fuori scope.
+
+**Motivazione:** il collegamento Console↔Setup era solo informativo: tag e cambio tab, nessuna azione. Ora il consiglio di Gigi è actionable con un click e visibile sulla traccia (● rosso = "dove vuole Gigi"), coerente con la filosofia "ti faccio capire e ti porto lì".
+**Risultato osservato:** click su "Precarico Differenziale" nel banner → tab Meccanica, scroll fino al Differenziale, valore 75 Nm applicato, tacca rossa verticale sulla traccia al target; idem pressioni RL/RR (25.2/25.0, valore verde in finestra); tabella delta coerente col toggle e ambra come il grafico.
+**Verifica:**            `tsc --noEmit` 0 err · `/setup` `/telemetry` 200 · `test_parser` 12/12 post-riavvio · API `preload` step 5 · in attesa verifica a schermo di Edoardo.
+**File protetti:**       ☑ sbloccato con gate solo-diff → `setup_params.py` (SOLO step preload 10→5); il resto intatto
+**Decisione:**           ☑ Mantenuto — «ok tutto a posto» + «ok push» di Edoardo dopo verifica a schermo (tick, chip, 75 Nm impostabile, delta)
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
