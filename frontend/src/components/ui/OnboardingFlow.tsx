@@ -88,8 +88,15 @@ function Chip({
 }
 
 export default function OnboardingFlow() {
-  const { ready, profile, onboardingOpen, startOnboarding, closeOnboarding, saveProfile } =
-    useProfile();
+  const {
+    ready,
+    profile,
+    onboardingOpen,
+    startOnboarding,
+    closeOnboarding,
+    saveProfile,
+    startTour: startTourCtx,
+  } = useProfile();
 
   // Trigger primo accesso: nessun profilo completato → wizard (anche in demo).
   useEffect(() => {
@@ -133,8 +140,9 @@ export default function OnboardingFlow() {
   };
 
   const startTour = () => {
-    // FASE 6: qui parte il tour pagina per pagina. Per ora chiude soltanto.
+    // FASE 6: chiude il wizard e avvia il tour pagina per pagina (GigiTour).
     closeOnboarding();
+    startTourCtx();
   };
 
   const summary = step === 4;

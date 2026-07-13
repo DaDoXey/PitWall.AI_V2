@@ -2,6 +2,7 @@ import Sidebar from "@/components/ui/Sidebar";
 import MotionProvider from "@/components/ui/MotionProvider";
 import AuthGate from "@/components/ui/AuthGate";
 import OnboardingFlow from "@/components/ui/OnboardingFlow";
+import GigiTour from "@/components/ui/GigiTour";
 
 // Layout dell'app "loggata" (megaprompt #6, FASE 8): Sidebar + area contenuti.
 // Vive nel route group (app) — /login (gruppo (auth)) resta fuori e non eredita
@@ -17,6 +18,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </main>
       </div>
       <OnboardingFlow />
+      <GigiTour />
     </AuthGate>
   );
 }

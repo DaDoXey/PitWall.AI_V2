@@ -32,6 +32,11 @@ type ProfileCtx = {
   startOnboarding: () => void; // replay: riparte dallo step 1 (il profilo resta finché non salvi)
   closeOnboarding: () => void;
   saveProfile: (p: Omit<DriverProfile, "completedAt">) => void;
+  // Tour schermate (FASE 6): indice step attivo o null. Vive QUI e non nel
+  // componente perché deve sopravvivere alla navigazione tra le pagine.
+  tourStep: number | null;
+  startTour: () => void;
+  setTourStep: (s: number | null) => void;
 };
 
 const Ctx = createContext<ProfileCtx | null>(null);
@@ -53,6 +58,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<DriverProfile | null>(null);
   const [ready, setReady] = useState(false);
   const [onboardingOpen, setOnboardingOpen] = useState(false);
+  const [tourStep, setTourStep] = useState<number | null>(null);
 
   useEffect(() => {
     setProfile(readStored());
@@ -78,6 +84,9 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         startOnboarding: () => setOnboardingOpen(true),
         closeOnboarding: () => setOnboardingOpen(false),
         saveProfile,
+        tourStep,
+        startTour: () => setTourStep(0),
+        setTourStep,
       }}
     >
       {children}
