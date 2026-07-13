@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -34,6 +35,12 @@ export default function Sidebar() {
   const [footerPanel, setFooterPanel] = useState<"notes" | null>(null);
   // Modal confronto metà stint (FASE 8 #7): il bottone ⇄ è un launcher, non un toggle.
   const [compareOpen, setCompareOpen] = useState(false);
+  // Portale del modal su document.body (INC-V2-006): l'aside è sticky e uno sticky
+  // crea SEMPRE uno stacking context → uno z-50 interno perde contro le card
+  // `relative` della Dashboard, che nel DOM vengono dopo. `mounted` evita di
+  // toccare `document` durante l'SSR.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   // Replay onboarding (megaprompt #9, FASE 1): rilancia wizard → tour per la demo.
   const { startOnboarding } = useProfile();
 
@@ -227,10 +234,16 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* Modal confronto metà stint (overlay full-screen, raggiungibile da ogni pagina) */}
-      <AnimatePresence>
-        {compareOpen && session && <StintCompareModal data={session} onClose={() => setCompareOpen(false)} />}
-      </AnimatePresence>
+      {/* Modal confronto metà stint (overlay full-screen, raggiungibile da ogni pagina).
+          Renderizzato in portale su body: fuori dallo stacking context dell'aside
+          sticky, così z-50 vale davvero a livello viewport (INC-V2-006). */}
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {compareOpen && session && <StintCompareModal data={session} onClose={() => setCompareOpen(false)} />}
+          </AnimatePresence>,
+          document.body
+        )}
     </aside>
   );
 }

@@ -71,6 +71,33 @@ Per ognuno: **ID · Data · Severità · Stato · Area · Sintomo · Causa radic
 
 ## ✅ Incidenti RISOLTI
 
+### INC-V2-006 — Modal "Confronto metà stint" coperto dalle card KPI in Dashboard
+| | |
+|---|---|
+| **Data** | rilevato 13/07/2026 (screenshot 10:53) · risolto 13/07/2026 · **Stato:** 🟡 Medio · `RISOLTO` |
+| **Area** | Frontend / Sidebar + overlay (stacking context) |
+
+- **Sintomo:** aprendo "⇄ Confronto" dalla Dashboard, il modal (`fixed inset-0 z-50`) veniva
+  **sovrapposto dalle card KPI** (grafico visibile solo nei varchi tra le card); sulle altre
+  pagine il modal appariva integro. Anche il backdrop non copriva davvero la pagina.
+- **Causa radice:** il modal era montato **dentro** `<aside className="sticky …">` della Sidebar.
+  `position: sticky` crea **sempre** uno stacking context (spec CSS) → lo `z-50` del modal valeva
+  solo all'interno dell'aside, che nel contesto radice sta a livello `auto` e viene dipinta
+  **prima** del `<main>` (ordine DOM). Le card KPI della Dashboard hanno il wrapper
+  `position: relative` (drag&drop) → da elementi posizionati successivi nel DOM passavano sopra
+  l'intero subtree della Sidebar, modal incluso. Solo in Dashboard perché è l'unica pagina con
+  card posizionate nell'area del modal; il KpiModal (stesso idioma `z-50`) non soffre perché è
+  montato nel `main`, **dopo** le card.
+- **Impatto:** funzione Confronto inutilizzabile dalla Dashboard (la pagina di partenza tipica);
+  nessun dato errato.
+- **Workaround (pre-fix):** aprire il confronto da un'altra pagina.
+- **Risoluzione:** RISOLTO — il blocco `AnimatePresence` + modal è renderizzato in **portale React
+  su `document.body`** (`createPortal`, guard `mounted` anti-SSR): fuori dallo stacking context
+  dell'aside lo `z-50` torna a valere a livello viewport su tutte le pagine, e il backdrop copre
+  anche la Sidebar (comportamento modale corretto).
+- **File:** `frontend/src/components/ui/Sidebar.tsx` (solo; `StintCompare.tsx` intatto).
+- **Rif.:** PROMPT_LOG Entry #015 · screenshot `Screenshot 2026-07-13 105342.png`.
+
 ### INC-V2-004 — Login espone la Sidebar dell'app (manca auth-gate reale)
 | | |
 |---|---|
