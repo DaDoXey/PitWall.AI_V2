@@ -36,6 +36,19 @@ export function isPressure(key: string): boolean {
   return key.startsWith("tire_press_");
 }
 
+// Valori-obiettivo dei parametri suggeriti da Gigi nello scenario demo — le
+// STESSE cifre della "Correzione Setup Consigliata" della Console
+// (demo_responses.py: RL 24.2→25.2 · RR 24.0→25.0 psi a freddo · precarico
+// 60→75 Nm). L'API espone solo le CHIAVI (suggested_params): i target vivono
+// qui lato client, come DEMO_TANK_CAPACITY — un punto solo da cui correggere.
+// Preload 75 è sul passo dello slider (step 10→5 da gate, Entry #018: con
+// step 10 il 75 risultava non impostabile).
+export const GIGI_TARGETS: Record<string, number> = {
+  tire_press_rl: 25.2,
+  tire_press_rr: 25.0,
+  preload: 75,
+};
+
 /** Formatta il valore: interi senza decimali, altrimenti 1 decimale (step≥0.1) o 2. */
 export function formatValue(p: Param, v: number): string {
   const decimals = Number.isInteger(p.step) ? 0 : p.step >= 0.1 ? 1 : 2;

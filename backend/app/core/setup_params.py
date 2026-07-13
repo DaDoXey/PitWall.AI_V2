@@ -203,7 +203,7 @@ SETUP_SECTIONS = {
             },
             "preload": {
                 "label": "Precarico Differenziale",
-                "min": 20, "max": 200, "step": 10,
+                "min": 20, "max": 200, "step": 5,
                 "unit": "Nm", "default": 60,
                 "tip": "Resistenza minima del differenziale. Valori alti = più stabilità in accelerazione, meno rotazione."
             },

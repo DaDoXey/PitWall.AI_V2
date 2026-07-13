@@ -23,6 +23,7 @@ import {
 import {
   COLD_PRESS_WINDOW,
   formatValue,
+  GIGI_TARGETS,
   groupsFor,
   isPressure,
   pressureStatusColor,
@@ -47,6 +48,28 @@ export default function SetupPage() {
   const [err, setErr] = useState<string | null>(null);
   // Parametri suggeriti da Gigi (dallo scenario di sessione): evidenziati sugli slider.
   const [suggested, setSuggested] = useState<Set<string>>(new Set());
+  // Parametro da portare a schermo dopo il cambio tab (click su un chip suggerito):
+  // lo slider monta con un piccolo ritardo (AnimatePresence mode="wait") → si
+  // riprova finché l'elemento non esiste, con deadline di sicurezza.
+  const [scrollTo, setScrollTo] = useState<string | null>(null);
+  useEffect(() => {
+    if (!scrollTo) return;
+    const poll = setInterval(() => {
+      const el = document.getElementById(`param-${scrollTo}`);
+      if (!el) return;
+      clearInterval(poll);
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      setScrollTo(null);
+    }, 100);
+    const deadline = setTimeout(() => {
+      clearInterval(poll);
+      setScrollTo(null);
+    }, 1500);
+    return () => {
+      clearInterval(poll);
+      clearTimeout(deadline);
+    };
+  }, [scrollTo]);
 
   // Input sessione (Fase 7): default nascosto → demo pulita.
   const [showInputs, setShowInputs] = useState(false);
@@ -155,19 +178,36 @@ export default function SetupPage() {
             🔧 Suggeriti da Gigi
           </div>
           <div className="flex flex-wrap gap-2">
-            {suggestedItems.map((it) => (
-              <button
-                key={it.key}
-                onClick={() => setActive(it.section)}
-                title={`Vai al tab ${params[it.section].label}`}
-                className="rounded-md border border-accent/40 bg-accent/10 px-2.5 py-1 text-[0.78rem] text-white transition hover:border-accent"
-              >
-                {it.label}
-              </button>
-            ))}
+            {suggestedItems.map((it) => {
+              const target = GIGI_TARGETS[it.key];
+              const p = findParam(it.key);
+              return (
+                <button
+                  key={it.key}
+                  onClick={() => {
+                    // Applica il consiglio di Gigi e porta lo slider a schermo
+                    // (prima: solo cambio tab, poi scroll e valore a mano).
+                    setActive(it.section);
+                    if (target !== undefined && p) setVal(it.key, clamp(target, p.min, p.max));
+                    setScrollTo(it.key);
+                  }}
+                  title={
+                    target !== undefined && p
+                      ? `Applica ${formatValue(p, target)} e vai al parametro`
+                      : `Vai al tab ${params[it.section].label}`
+                  }
+                  className="rounded-md border border-accent/40 bg-accent/10 px-2.5 py-1 text-[0.78rem] text-white transition hover:border-accent"
+                >
+                  {it.label}
+                  {target !== undefined && p && (
+                    <span className="ml-1.5 font-mono text-[0.68rem] text-accent">→ {formatValue(p, target)}</span>
+                  )}
+                </button>
+              );
+            })}
           </div>
           <div className="mt-2 text-[0.7rem] text-muted">
-            Parametri evidenziati dallo scenario analizzato nella Console.
+            Un click applica il valore consigliato da Gigi e porta al parametro (tacca rossa sullo slider).
           </div>
         </motion.div>
       )}
@@ -261,6 +301,7 @@ export default function SetupPage() {
                       param={p}
                       value={values[key] ?? p.default}
                       suggested={suggested.has(key)}
+                      gigiTarget={suggested.has(key) ? GIGI_TARGETS[key] : undefined}
                       onChange={(v) => setVal(key, v)}
                     />
                   );
@@ -611,12 +652,14 @@ function Slider({
   param,
   value,
   suggested,
+  gigiTarget,
   onChange,
 }: {
   paramKey: string;
   param: Param;
   value: number;
   suggested?: boolean;
+  gigiTarget?: number; // valore consigliato da Gigi → tacca rossa verticale sulla traccia
   onChange: (v: number) => void;
 }) {
   // Pressioni: colore-stato vs finestra. Altri suggeriti da Gigi: valore accent.
@@ -625,8 +668,13 @@ function Slider({
     : suggested
       ? COLORS.accent
       : COLORS.text;
+  // Posizione del marker sulla traccia: percentuale + compensazione della corsa
+  // del thumb nativo (16px), stesso trucco dei range stilizzati.
+  const targetPct =
+    gigiTarget === undefined ? null : (clamp(gigiTarget, param.min, param.max) - param.min) / (param.max - param.min);
   return (
     <div
+      id={`param-${paramKey}`}
       className={`py-2 ${suggested ? "border-l-2 border-accent pl-2.5" : ""}`}
       title={param.tip || undefined}
     >
@@ -644,16 +692,28 @@ function Slider({
           {isPressure(paramKey) && <span className="ml-1 text-[0.7rem]">●</span>}
         </span>
       </div>
-      <input
-        type="range"
-        min={param.min}
-        max={param.max}
-        step={param.step}
-        value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-        className="pw-range mt-1.5 h-2 w-full cursor-pointer rounded-full border border-line-strong bg-[#2a2a2a]"
-        aria-label={param.label}
-      />
+      <div className="relative mt-1.5">
+        <input
+          type="range"
+          min={param.min}
+          max={param.max}
+          step={param.step}
+          value={value}
+          onChange={(e) => onChange(Number(e.target.value))}
+          className="pw-range h-2 w-full cursor-pointer rounded-full border border-line-strong bg-[#2a2a2a]"
+          aria-label={param.label}
+        />
+        {targetPct !== null && (
+          // Tick da strumento: attraversa la traccia (h-2 = 8px) sporgendo ~3px
+          // sopra e sotto, come le tacche di riferimento dei gauge.
+          <span
+            aria-hidden="true"
+            title={`Gigi consiglia ${formatValue(param, gigiTarget as number)}`}
+            className="pointer-events-none absolute top-1/2 h-3.5 w-[3px] -translate-x-1/2 -translate-y-1/2 rounded-[1px] bg-accent"
+            style={{ left: `calc(${targetPct * 100}% + ${(0.5 - targetPct) * 16}px)` }}
+          />
+        )}
+      </div>
     </div>
   );
 }
