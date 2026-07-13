@@ -25,10 +25,18 @@ export default function LoginPage() {
   }, [ready, user, router]);
 
   function handleDemo() {
-    // Demo = postazione condivisa: ogni ingresso azzera profilo e tutorial,
-    // così il wizard "Conosci il pilota" riparte in bianco per ogni tester.
-    // Il login Google invece ritrova il proprio profilo salvato.
+    // Demo = postazione condivisa: ogni ingresso azzera TUTTO lo stato
+    // persistito dell'app (profilo/tour via resetProfile + ordine/taglie card
+    // Dashboard, note rapide, sezioni sidebar: tutte le chiavi `pw_*` in
+    // localStorage) → la demo parte sempre da manuale, nessun residuo dei
+    // test precedenti (richiesta pre-esame). Il login Google invece ritrova
+    // il proprio profilo salvato.
     resetProfile();
+    try {
+      for (const k of Object.keys(localStorage)) if (k.startsWith("pw_")) localStorage.removeItem(k);
+    } catch {
+      /* no-op: localStorage non disponibile */
+    }
     enterDemo();
     router.push("/");
   }
