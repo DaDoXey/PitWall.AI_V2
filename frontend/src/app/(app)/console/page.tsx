@@ -7,6 +7,7 @@ import PageHeader from "@/components/ui/PageHeader";
 import GigiAvatar from "@/components/ui/GigiAvatar";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { postAnalysis } from "@/lib/api";
+import { profileContextLine, useProfile } from "@/lib/profile";
 import {
   CHIPS,
   DEMO_QUESTION,
@@ -24,6 +25,9 @@ export default function ConsolePage() {
   const [err, setErr] = useState<string | null>(null);
   const [typed, setTyped] = useState("");
   const busy = useRef(false); // evita fetch sovrapposte (chip cliccati in serie)
+  // Profilo pilota dal wizard (megaprompt #9, FASE 5): allegato a ogni analisi
+  // come campo separato — usato dal ramo LLM reale, ignorato dalla demo-cache.
+  const { profile, ready: profileReady } = useProfile();
 
   // Analizza un prompt via backend (demo-cache / LLM gated: la logica sta lì).
   async function analyze(prompt: string) {
@@ -33,7 +37,7 @@ export default function ConsolePage() {
     setLoading(true);
     setErr(null);
     try {
-      const res = await postAnalysis(p);
+      const res = await postAnalysis(p, profile ? profileContextLine(profile) : undefined);
       setData(res);
     } catch {
       setErr("Backend non raggiungibile — avvia FastAPI su :8000 (vedi README).");
@@ -44,10 +48,12 @@ export default function ConsolePage() {
   }
 
   // Stato iniziale: console SEMPRE popolata con lo scenario demo (mai vuota).
+  // Aspetta la lettura del profilo da localStorage (F5-fix #9): senza, la
+  // richiesta di mount partiva prima del provider e usciva senza profilo.
   useEffect(() => {
-    analyze(DEMO_QUESTION);
+    if (profileReady) analyze(DEMO_QUESTION);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [profileReady]);
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();

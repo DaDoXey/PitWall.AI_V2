@@ -90,3 +90,23 @@ export function useProfile(): ProfileCtx {
   if (!v) throw new Error("useProfile va usato dentro <ProfileProvider>");
   return v;
 }
+
+// Riga "Profilo pilota: …" per il contesto di Gigi (megaprompt #9, FASE 5).
+// Frasi in italiano piano: la legge un LLM, non una UI.
+const GOAL_PHRASE: Record<DriverProfile["goal"], string> = {
+  divertimento: "divertirmi",
+  tempi: "migliorare i tempi",
+  competere: "competere online",
+  endurance: "endurance e gestione",
+};
+
+export function profileContextLine(p: DriverProfile): string {
+  const weak =
+    p.weakAreas.length > 0
+      ? p.weakAreas.map((w) => w.replace("-", " ")).join(", ").replace(/, ([^,]*)$/, " e $1")
+      : "nessuno indicato";
+  return (
+    `Profilo pilota: livello ${p.level}, obiettivo ${GOAL_PHRASE[p.goal]}, ` +
+    `punti deboli ${weak}, setup: ${p.setupFamiliarity}.`
+  );
+}

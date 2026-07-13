@@ -20,11 +20,14 @@ export function getSetupParams(car?: string, track?: string) {
   return getJSON(`/api/setup-params?${q.toString()}`);
 }
 
-export async function postAnalysis(prompt: string) {
+// `profile` (opzionale): riga "Profilo pilota: …" dal wizard (megaprompt #9,
+// FASE 5). Viaggia in un campo separato dal prompt: il routing keyword della
+// demo-cache lato server deve vedere solo le parole dell'utente.
+export async function postAnalysis(prompt: string, profile?: string) {
   const res = await fetch(`${API_BASE}/api/analysis`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ prompt }),
+    body: JSON.stringify(profile ? { prompt, profile } : { prompt }),
   });
   if (!res.ok) throw new Error(`POST /api/analysis → ${res.status}`);
   return res.json() as Promise<{ question: string; text: string; source: string }>;

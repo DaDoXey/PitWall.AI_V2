@@ -18,12 +18,19 @@ _REQUIRED = ["## Diagnosi", "## Causa Meccanica", "## Correzione Setup", "## Not
 
 class AnalysisRequest(BaseModel):
     prompt: str
+    # Profilo pilota dal wizard "Conosci il pilota" (megaprompt #9, FASE 5).
+    # Opzionale e usato SOLO nel ramo LLM reale: nel ramo demo/cache viene
+    # ignorato, così il routing per keyword di pick_demo_response (protetto)
+    # continua a vedere il prompt puro dell'utente.
+    profile: str | None = None
 
 
-def _context(prompt: str) -> str:
+def _context(prompt: str, profile: str | None = None) -> str:
+    profile_line = f"{profile.strip()}\n\n" if profile and profile.strip() else ""
     return (
         f"Auto: {dd.SESSION['car']}\nTracciato: {dd.SESSION['track']}\n"
         f"Condizioni: {dd.SESSION['stint']}\n\n"
+        f"{profile_line}"
         f"Telemetria (a caldo): temperature gomme max "
         f"FL {dd.TYRE_TEMP_MAX['fl']}°C, FR {dd.TYRE_TEMP_MAX['fr']}°C, "
         f"RL {dd.TYRE_TEMP_MAX['rl']}°C, RR {dd.TYRE_TEMP_MAX['rr']}°C; "
@@ -49,7 +56,7 @@ def post_analysis(req: AnalysisRequest):
         from app.core.agent import get_ai_response
 
         resp = get_ai_response(
-            user_input=_context(prompt), api_key=api_key,
+            user_input=_context(prompt, req.profile), api_key=api_key,
             auto=dd.SESSION["car"], tracciato=dd.SESSION["track"],
         )
         ok = all(s in (resp or "") for s in _REQUIRED)
