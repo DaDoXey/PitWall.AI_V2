@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import PageHeader from "@/components/ui/PageHeader";
+import { IconConsole, IconSetup, IconTelemetry } from "@/components/ui/NavIcons";
 import CountUp from "@/components/ui/CountUp";
 import Sparkline from "@/components/charts/Sparkline";
 import { fadeInUp, staggerContainer, useReducedMotion } from "@/lib/motion";
@@ -389,11 +390,12 @@ function buildKpis(d: SessionData): Kpi[] {
   ];
 }
 
-// Shortcut di navigazione (icone coerenti con la Sidebar).
+// Shortcut di navigazione — stesse icone line-style della Sidebar (NavIcons,
+// emoji sostituite su richiesta: coerenza col resto della nav).
 const ACTIONS = [
-  { href: "/console", icon: "🎧", label: "Engineer Console", hint: "Chiedi a Gigi un'analisi" },
-  { href: "/telemetry", icon: "📈", label: "Telemetria", hint: "Dati gomme e consumo per-giro" },
-  { href: "/setup", icon: "🔧", label: "Setup", hint: "Regola i 49 parametri ACC" },
+  { href: "/console", icon: IconConsole, label: "Engineer Console", hint: "Chiedi a Gigi un'analisi" },
+  { href: "/telemetry", icon: IconTelemetry, label: "Telemetria", hint: "Dati gomme e consumo per-giro" },
+  { href: "/setup", icon: IconSetup, label: "Setup", hint: "Regola i 49 parametri ACC" },
 ];
 
 function Stat({ label, value }: { label: string; value: string }) {
@@ -606,13 +608,15 @@ function KpiModal({ kpi, onClose }: { kpi: Kpi; onClose: () => void }) {
   );
 }
 
-function ActionCard({ href, icon, label, hint }: (typeof ACTIONS)[number]) {
+function ActionCard({ href, icon: Icon, label, hint }: (typeof ACTIONS)[number]) {
   return (
     <Link
       href={href}
       className="group flex items-center gap-3 rounded-xl border border-line bg-surface p-4 transition duration-200 hover:-translate-y-0.5 hover:border-accent/50"
     >
-      <span className="text-lg">{icon}</span>
+      <span className="text-muted transition-colors duration-200 group-hover:text-accent">
+        <Icon size={20} />
+      </span>
       <div className="flex-1">
         <div className="text-sm text-white">{label}</div>
         <div className="font-mono text-[0.62rem] text-muted">{hint}</div>
