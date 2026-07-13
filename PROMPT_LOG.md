@@ -525,6 +525,41 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 
 ---
 
+## Entry #014 — MEGAPROMPT #9 (FINALE DEMO): video lezioni · wizard "Conosci il pilota" · tour schermate ✅ COMPLETO (F0–F7)
+
+| Campo | Valore |
+|---|---|
+| Data | 13/07/2026 |
+| Agente dev | Claude Code (`claude-fable-5`) |
+| Area | lib/lessons.ts + dettaglio lezione · NEW lib/profile.tsx, OnboardingFlow, GigiTour · Console/api (iniezione profilo) · Sidebar footer |
+| Commit | `82ca4fd` (F0) · `f37f51a` (F1) · `3606919` (F2) · `ddc00bf` (F3) · `db07b6f` (F5) · `5b09be1` (F6) · docs in questo commit |
+| Contesto | Nono megaprompt — chiusura demo pre-esame: video card attive, wizard profilo pilota, tour guidato. Un gate per fase, un commit per fase. |
+
+**Catalogo messaggi:**
+1. Incollato MEGAPROMPT #9 (F0 video + wizard/tour F1–F7).
+2. «ok procedi» sul piano, poi conferma a schermo a ogni gate (F0, F1, F2, F3, F5+fix, F6+fix lessico).
+3. Al gate F5: «ok procedi» sull'iniezione via campo separato.
+4. F6: «rivedi il lessico di Gigi» → fix apici (caporali «» come da convenzione Console).
+
+**Modifica (per FASE):**
+- **F0** (`82ca4fd`) — `lib/lessons.ts`: 8 × `videoId` "TODO" → ID confermati; titoli/canali allineati ai video reali (i placeholder non coincidevano; scelte dichiarate: L6 resta Coach Dave Academy, L7 canale "F1 Crash Course", L8 → Driver61); NEW campo opzionale `videoNote` + nota F1 verbatim sulla Lezione 7; template `[slug]` rende la nota in corsivo muted sotto la video card. Verificate le 8 thumbnail YouTube (HEAD 200).
+- **F1** (`f37f51a`) — NEW `lib/profile.tsx` (tipi `WeakArea`/`DriverProfile` da megaprompt; `ProfileProvider`+`useProfile`; **localStorage** `pw_driver_profile` — sopravvive alle sessioni, a differenza del login) + NEW `OnboardingFlow.tsx` (guscio modal idioma StintCompare MA senza chiusura Esc/click-fuori: a metà wizard non si perdono risposte) montato SOLO nel layout `(app)` (mai su /login); trigger primo accesso (`completedAt` assente → wizard); Sidebar footer: bottone "↻ Rivedi tutorial" (replay NON azzera lo storage: riapre dallo step 1, il profilo resta finché non ricompleti — robustezza demo).
+- **F2** (`3606919`) — Wizard 4 step a tap: livello · obiettivo · punti deboli (multipla, griglia 2 col, anche vuota) · setup; "Passo X di 4" + barra progress accent; Avanti disabilitato senza scelta; Indietro conserva; "Salta per ora" solo sul primo step; "Fine" salva (`completedAt`=adesso). Replay precompilato dal profilo salvato.
+- **F3** (`ddc00bf`) — NEW `recommendLessons()` in lessons.ts (mappa punti deboli→slug della tabella; Costanza→2 lezioni; dedupe, max 3; default linea+frenata) + schermata finale "Ecco come guidi.": riepilogo 4 risposte, card lezioni → `/lezioni/[slug]` (click chiude e naviga), CTA "Fai il tour →" / "Salta".
+- **F5** (`db07b6f`) — Iniezione profilo nel contesto di Gigi **senza toccare protetti**: gate di fattibilità → punto trovato in `backend/app/api/analysis.py` (api/, NON in lista protetta). Insidia sventata: il routing keyword della demo-cache avrebbe letto "gomme"/"carburante" dal profilo → il profilo viaggia in un **campo `profile` separato**, ignorato dal ramo demo/cache e inserito in `_context()` solo nel ramo LLM reale. Frontend: `postAnalysis(prompt, profile?)`, `profileContextLine()`, Console allega da `useProfile`. **F5-fix** (trovato da Edoardo col network tab in Opera): la domanda demo di mount partiva prima della lettura del profilo → l'effect aspetta `profileReady`. Invariante verificata: stessa domanda con/senza profilo → risposte demo byte-identiche.
+- **F6** (`5b09be1`) — NEW `GigiTour.tsx`: fumetto FISSO basso-centro (mai ancorato → non si rompe), GigiAvatar + "Tour · X/5" + i 5 testi del megaprompt verbatim; Avanti naviga Dashboard→Console→Telemetria→Setup→Lezioni, Fine/Salta chiude; niente backdrop (accompagna, non blocca). `tourStep` nel ProfileProvider (sopravvive alla navigazione; push centralizzato al cambio step, non "strattona" se giri altrove). "Fai il tour →" del wizard cablato. **Fix lessico** su richiesta: apici dritti attorno a frase con apostrofo → caporali «l'auto scivola dietro» (convenzione del placeholder Console).
+- **F7** — Verifica finale + questa entry (nessuna modifica di codice).
+
+**Motivazione:** chiudere la demo: le 8 lezioni avevano il box "video in arrivo"; l'app non sapeva nulla del pilota (nessuna personalizzazione né onboarding); un visitatore nuovo non aveva una guida delle 5 pagine.
+
+**Risultato osservato:** lezioni con video card cliccabili (thumbnail reale, YouTube in nuova scheda) e nota F1 sulla Lezione 7; al primo accesso wizard 4 step → profilo salvato → lezioni consigliate coerenti coi punti deboli; payload `/api/analysis` con riga "Profilo pilota: …" (verificato da Edoardo nel network tab); tour di Gigi pagina per pagina; tutto ri-lanciabile da "↻ Rivedi tutorial". Ogni fase verificata a schermo.
+
+**Verifica:** `tsc --noEmit` 0 errori · rotte **8/8 200** (incluse `/lezioni/[slug]`) · `test_parser` **12/12** · thumbnail 8/8 · demo-cache invariante con profilo · **protetti: zero file toccati in tutto il megaprompt** (diff `origin/main..HEAD` sulla lista protetta = vuoto; `analysis.py` sta in `api/`, fuori lista, modificato con gate dedicato).
+**File protetti:** ☑ nessuno toccato
+**Decisione:** ☑ Megaprompt #9 **COMPLETO e verificato** (F0–F7). **NON pushato**: 7 commit locali in attesa di «ok push».
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
