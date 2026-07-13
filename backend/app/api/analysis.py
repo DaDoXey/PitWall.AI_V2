@@ -9,9 +9,36 @@ from pydantic import BaseModel
 
 from app import config
 from app.core import demo_data as dd
-from app.core.demo_responses import is_demo_prompt, pick_demo_response
+
+# _DEMO_ROUTES è privato del modulo protetto ma è l'unica fonte di verità delle
+# keyword: lo si legge (mai modificato) per capire se una domanda è nel perimetro
+# della demo, senza duplicare la lista qui.
+from app.core.demo_responses import _DEMO_ROUTES, is_demo_prompt, pick_demo_response
 
 router = APIRouter()
+
+
+def _in_scope(prompt: str) -> bool:
+    """True se la domanda matcha una route della cache (o è il prompt demo canonico)."""
+    p = (prompt or "").lower()
+    return is_demo_prompt(prompt) or any(any(k in p for k in keys) for keys, _ in _DEMO_ROUTES)
+
+
+def _off_topic_text() -> str:
+    """Risposta onesta per domande fuori perimetro: niente default sul sovrasterzo
+    (sembrerebbe un'allucinazione). Dati sessione letti da demo_data: coerenti
+    per costruzione."""
+    s = dd.SESSION
+    return (
+        f"Sono l'ingegnere di pista di questa sessione — {s['car']} a {s['track']}, "
+        f"stint {s['stint'].lower()}, {s['laps']} giri — e analizzo solo i suoi dati.\n\n"
+        "Chiedimi ad esempio di:\n"
+        "- **gomme** e temperature\n"
+        "- **pressioni** e finestra di lavoro\n"
+        "- **freni**, staccate e bilanciamento\n"
+        "- **carburante**, consumi e strategia\n"
+        "- comportamento in curva: «l'auto scivola dietro», «va larga davanti»…"
+    )
 
 _REQUIRED = ["## Diagnosi", "## Causa Meccanica", "## Correzione Setup", "## Note Aggiuntive"]
 
@@ -43,10 +70,13 @@ def _context(prompt: str, profile: str | None = None) -> str:
 def post_analysis(req: AnalysisRequest):
     prompt = req.prompt or ""
 
-    # 1) demo-mode o prompt = scenario demo → cache (sempre, niente rete)
+    # 1) demo-mode o prompt = scenario demo → cache (sempre, niente rete).
+    #    Fuori perimetro (nessuna keyword) → redirect onesto, NON il default
+    #    sovrasterzo della cache (blindatura anti-"allucinazione percepita").
     if config.demo_mode() or is_demo_prompt(prompt):
         source = "demo" if config.demo_mode() else "cache"
-        return {"question": prompt, "text": pick_demo_response(prompt), "source": source}
+        text = pick_demo_response(prompt) if _in_scope(prompt) else _off_topic_text()
+        return {"question": prompt, "text": text, "source": source}
 
     # 2) LLM reale con fallback alla cache
     api_key = config.ANTHROPIC_API_KEY
