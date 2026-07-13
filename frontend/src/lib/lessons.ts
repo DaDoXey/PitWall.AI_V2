@@ -4,6 +4,7 @@
 // stato, nessun quiz, nessuno storage.
 // videoId confermati (megaprompt #9, FASE 0). Il fallback UI "video in arrivo"
 // per `videoId === "TODO"` resta nel template come rete di sicurezza.
+import type { WeakArea } from "@/lib/profile";
 
 export type Lesson = {
   slug: string;
@@ -203,6 +204,30 @@ export const LESSONS: Lesson[] = [
     video: { channel: "Driver61", title: "How Racing Drivers Save Fuel (Whilst Driving FAST)", videoId: "j1u_Tb3X08I" },
   },
 ];
+
+// Lezioni consigliate dal profilo pilota (megaprompt #9, FASE 3): mappa punto
+// debole → slug. "Costanza" ne porta due (riferimenti + quali-vs-race). Output
+// dedupe, max 3 card; nessun punto debole → default didattico (linea + frenata).
+const WEAK_AREA_LESSONS: Record<WeakArea, string[]> = {
+  frenata: ["frenata-soglia"],
+  "trail-braking": ["trail-braking"],
+  trazione: ["trazione-in-uscita"],
+  costanza: ["punti-di-riferimento", "quali-vs-race"],
+  gomme: ["gomme-finestra"],
+  carburante: ["lift-and-coast"],
+  linea: ["linea-ideale"],
+};
+
+export function recommendLessons(weakAreas: WeakArea[]): Lesson[] {
+  const slugs =
+    weakAreas.length > 0
+      ? [...new Set(weakAreas.flatMap((w) => WEAK_AREA_LESSONS[w]))]
+      : ["linea-ideale", "frenata-soglia"];
+  return slugs
+    .slice(0, 3)
+    .map((s) => lessonBySlug(s))
+    .filter((l): l is Lesson => l !== undefined);
+}
 
 export function lessonBySlug(slug: string): Lesson | undefined {
   return LESSONS.find((l) => l.slug === slug);

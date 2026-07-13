@@ -3,17 +3,20 @@
 // Onboarding "Conosci il pilota" (megaprompt #9). FASE 1: host + trigger primo
 // accesso. FASE 2: wizard a 4 step a tap (livello · obiettivo · punti deboli ·
 // setup) con progress e avanti/indietro; al termine salva il profilo
-// (completedAt = adesso). Montato SOLO nel layout (app): su /login non esiste.
-// Il modal NON si chiude con Esc/click-fuori (a differenza di StintCompare):
-// a metà wizard un click accidentale non deve buttare via le risposte — si
-// esce solo dai bottoni ("Salta per ora" / fine wizard).
+// (completedAt = adesso). FASE 3: schermata finale con riepilogo + lezioni
+// consigliate (recommendLessons) + CTA tour/salta. Montato SOLO nel layout
+// (app): su /login non esiste. Il modal NON si chiude con Esc/click-fuori
+// (a differenza di StintCompare): a metà wizard un click accidentale non deve
+// buttare via le risposte — si esce solo dai bottoni.
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   useProfile,
   type DriverProfile,
   type WeakArea,
 } from "@/lib/profile";
+import { recommendLessons } from "@/lib/lessons";
 
 // ---- Opzioni dei 4 step (label UI → valore del profilo) ---------------------
 
@@ -52,6 +55,11 @@ const STEP_TITLES = [
   "Dove senti di perdere di più?",
   "Quanto mastichi i setup?",
 ];
+
+// Label UI di un valore del profilo (riepilogo FASE 3).
+function labelOf<T extends string>(options: { value: T; label: string }[], value: T): string {
+  return options.find((o) => o.value === value)?.label ?? value;
+}
 
 // Chip a tap: selezionata = bordo+testo accesi (colore = stato, niente glow).
 function Chip({
@@ -121,10 +129,16 @@ export default function OnboardingFlow() {
   const finish = () => {
     if (!level || !goal || !setupFam) return; // guardia: non dovrebbe accadere (bottone disabilitato)
     saveProfile({ level, goal, weakAreas, setupFamiliarity: setupFam });
-    // FASE 3: al posto della chiusura arriverà la schermata finale
-    // (riepilogo profilo + lezioni consigliate + CTA tour).
+    setStep(4); // schermata finale (FASE 3): riepilogo + lezioni consigliate
+  };
+
+  const startTour = () => {
+    // FASE 6: qui parte il tour pagina per pagina. Per ora chiude soltanto.
     closeOnboarding();
   };
+
+  const summary = step === 4;
+  const recommended = summary ? recommendLessons(weakAreas) : [];
 
   return (
     <AnimatePresence>
@@ -149,7 +163,7 @@ export default function OnboardingFlow() {
                 Conosci il pilota
               </div>
               <div className="font-mono text-[0.62rem] uppercase tracking-widest text-muted">
-                Passo {step + 1} di 4
+                {summary ? "Il tuo profilo" : `Passo ${step + 1} di 4`}
               </div>
             </div>
 
@@ -157,77 +171,149 @@ export default function OnboardingFlow() {
             <div className="mt-2 h-0.5 w-full rounded-full bg-inset">
               <motion.div
                 className="h-full rounded-full bg-accent"
-                animate={{ width: `${((step + 1) / 4) * 100}%` }}
+                animate={{ width: summary ? "100%" : `${((step + 1) / 4) * 100}%` }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
               />
             </div>
 
-            <h2 className="mt-4 font-display text-lg font-bold">{STEP_TITLES[step]}</h2>
-            {step === 2 && (
-              <p className="mt-1 text-xs text-muted">
-                Puoi sceglierne più d&apos;una (o nessuna).
-              </p>
+            {!summary && (
+              <>
+                <h2 className="mt-4 font-display text-lg font-bold">{STEP_TITLES[step]}</h2>
+                {step === 2 && (
+                  <p className="mt-1 text-xs text-muted">
+                    Puoi sceglierne più d&apos;una (o nessuna).
+                  </p>
+                )}
+
+                <div className={`mt-4 grid gap-2 ${step === 2 ? "grid-cols-2" : "grid-cols-1"}`}>
+                  {step === 0 &&
+                    LEVELS.map((o) => (
+                      <Chip key={o.value} label={o.label} selected={level === o.value} onClick={() => setLevel(o.value)} />
+                    ))}
+                  {step === 1 &&
+                    GOALS.map((o) => (
+                      <Chip key={o.value} label={o.label} selected={goal === o.value} onClick={() => setGoal(o.value)} />
+                    ))}
+                  {step === 2 &&
+                    WEAK_AREAS.map((o) => (
+                      <Chip key={o.value} label={o.label} selected={weakAreas.includes(o.value)} onClick={() => toggleWeak(o.value)} />
+                    ))}
+                  {step === 3 &&
+                    SETUP_LEVELS.map((o) => (
+                      <Chip key={o.value} label={o.label} selected={setupFam === o.value} onClick={() => setSetupFam(o.value)} />
+                    ))}
+                </div>
+
+                <div className="mt-6 flex items-center justify-between">
+                  {/* "Salta per ora" solo sul primo step; dopo, "Indietro". */}
+                  {step === 0 ? (
+                    <button
+                      type="button"
+                      onClick={closeOnboarding}
+                      className="rounded-md px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted transition hover:text-white"
+                    >
+                      Salta per ora
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setStep((s) => s - 1)}
+                      className="rounded-md px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted transition hover:text-white"
+                    >
+                      ← Indietro
+                    </button>
+                  )}
+
+                  {step < 3 ? (
+                    <button
+                      type="button"
+                      disabled={!canProceed}
+                      onClick={() => setStep((s) => s + 1)}
+                      className="rounded-md border border-accent px-4 py-2 font-mono text-xs uppercase tracking-wider text-white transition hover:border-accent-hover hover:bg-raised disabled:cursor-not-allowed disabled:border-line disabled:text-muted"
+                    >
+                      Avanti →
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled={!canProceed}
+                      onClick={finish}
+                      className="rounded-md border border-accent px-4 py-2 font-mono text-xs uppercase tracking-wider text-white transition hover:border-accent-hover hover:bg-raised disabled:cursor-not-allowed disabled:border-line disabled:text-muted"
+                    >
+                      Fine
+                    </button>
+                  )}
+                </div>
+              </>
             )}
 
-            <div className={`mt-4 grid gap-2 ${step === 2 ? "grid-cols-2" : "grid-cols-1"}`}>
-              {step === 0 &&
-                LEVELS.map((o) => (
-                  <Chip key={o.value} label={o.label} selected={level === o.value} onClick={() => setLevel(o.value)} />
-                ))}
-              {step === 1 &&
-                GOALS.map((o) => (
-                  <Chip key={o.value} label={o.label} selected={goal === o.value} onClick={() => setGoal(o.value)} />
-                ))}
-              {step === 2 &&
-                WEAK_AREAS.map((o) => (
-                  <Chip key={o.value} label={o.label} selected={weakAreas.includes(o.value)} onClick={() => toggleWeak(o.value)} />
-                ))}
-              {step === 3 &&
-                SETUP_LEVELS.map((o) => (
-                  <Chip key={o.value} label={o.label} selected={setupFam === o.value} onClick={() => setSetupFam(o.value)} />
-                ))}
-            </div>
+            {summary && level && goal && setupFam && (
+              <>
+                <h2 className="mt-4 font-display text-lg font-bold">Ecco come guidi.</h2>
 
-            <div className="mt-6 flex items-center justify-between">
-              {/* "Salta per ora" solo sul primo step; dopo, "Indietro". */}
-              {step === 0 ? (
-                <button
-                  type="button"
-                  onClick={closeOnboarding}
-                  className="rounded-md px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted transition hover:text-white"
-                >
-                  Salta per ora
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setStep((s) => s - 1)}
-                  className="rounded-md px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted transition hover:text-white"
-                >
-                  ← Indietro
-                </button>
-              )}
+                {/* Riepilogo: le 4 risposte, idioma etichetta mono + valore */}
+                <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 rounded-xl border border-line bg-inset p-4">
+                  {[
+                    ["Livello", labelOf(LEVELS, level)],
+                    ["Obiettivo", labelOf(GOALS, goal)],
+                    [
+                      "Punti deboli",
+                      weakAreas.length > 0
+                        ? weakAreas.map((w) => labelOf(WEAK_AREAS, w)).join(" · ")
+                        : "Nessuno indicato",
+                    ],
+                    ["Setup", labelOf(SETUP_LEVELS, setupFam)],
+                  ].map(([k, v]) => (
+                    <div key={k}>
+                      <div className="font-mono text-[0.55rem] uppercase tracking-widest text-muted">{k}</div>
+                      <div className="mt-0.5 text-sm text-white">{v}</div>
+                    </div>
+                  ))}
+                </div>
 
-              {step < 3 ? (
-                <button
-                  type="button"
-                  disabled={!canProceed}
-                  onClick={() => setStep((s) => s + 1)}
-                  className="rounded-md border border-accent px-4 py-2 font-mono text-xs uppercase tracking-wider text-white transition hover:border-accent-hover hover:bg-raised disabled:cursor-not-allowed disabled:border-line disabled:text-muted"
-                >
-                  Avanti →
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  disabled={!canProceed}
-                  onClick={finish}
-                  className="rounded-md border border-accent px-4 py-2 font-mono text-xs uppercase tracking-wider text-white transition hover:border-accent-hover hover:bg-raised disabled:cursor-not-allowed disabled:border-line disabled:text-muted"
-                >
-                  Fine
-                </button>
-              )}
-            </div>
+                {/* Lezioni consigliate dai punti deboli (default: linea + frenata) */}
+                <div className="mt-4 font-mono text-[0.62rem] uppercase tracking-widest text-muted">
+                  Lezioni che ti consiglio
+                </div>
+                <div className="mt-2 flex flex-col gap-2">
+                  {recommended.map((l) => (
+                    <Link
+                      key={l.slug}
+                      href={`/lezioni/${l.slug}`}
+                      onClick={closeOnboarding}
+                      className="group rounded-lg border border-line bg-inset p-3 transition hover:border-accent/50"
+                    >
+                      <div className="flex items-baseline gap-2">
+                        <span className="font-mono text-xs text-muted">
+                          {String(l.number).padStart(2, "0")}
+                        </span>
+                        <span className="text-sm font-semibold transition-colors group-hover:text-accent">
+                          {l.title}
+                        </span>
+                      </div>
+                      <p className="mt-1 line-clamp-1 text-xs text-subtle">{l.summary}</p>
+                    </Link>
+                  ))}
+                </div>
+
+                <div className="mt-6 flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={closeOnboarding}
+                    className="rounded-md px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted transition hover:text-white"
+                  >
+                    Salta
+                  </button>
+                  <button
+                    type="button"
+                    onClick={startTour}
+                    className="rounded-md border border-accent px-4 py-2 font-mono text-xs uppercase tracking-wider text-white transition hover:border-accent-hover hover:bg-raised"
+                  >
+                    Fai il tour →
+                  </button>
+                </div>
+              </>
+            )}
           </motion.div>
         </motion.div>
       )}
