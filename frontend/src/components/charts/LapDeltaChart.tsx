@@ -1,12 +1,14 @@
 "use client";
 
 // Delta giro-su-giro (megaprompt #5, FASE 9): variazione di ciascun giro rispetto al
-// giro precedente o alla media dello stint. Grafico a barre sul Δ TEMPO (toggle di
-// riferimento) + tabella dei delta cronometrici (tempo, consumo). Le colonne
-// temp/pressione sono state RIMOSSE (megaprompt #6 F7, decisione di Edoardo):
+// giro precedente o alla media dello stint. Grafico a barre sul Δ TEMPO + tabella dei
+// delta cronometrici (tempo, consumo). Il toggle di riferimento governa ENTRAMBI
+// (fix 13/07: prima la tabella restava vs giro precedente senza dichiararlo). Le
+// colonne temp/pressione sono state RIMOSSE (megaprompt #6 F7, decisione di Edoardo):
 // quei canali si analizzano nella tab Analisi — la tab Tempi resta sul cronometro.
-// Colore = stato (più veloce=verde / più lento=ambra); il giro più veloce usa il
-// token best-time FUCSIA. Solo presentazione, nessuna logica di dominio.
+// Colore = stato (più veloce=verde / più lento=AMBRA, stesso token su grafico e
+// tabella — fix 13/07); il giro più veloce usa il token best-time FUCSIA.
+// Solo presentazione, nessuna logica di dominio.
 import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { COLORS } from "@/lib/theme";
@@ -36,14 +38,21 @@ export default function LapDeltaChart({ data }: { data: SessionData }) {
     return INSTRUMENT.tick;
   };
 
-  // Canali cronometrici per la tabella dei delta (vs giro precedente).
+  // Canali cronometrici per la tabella dei delta (stesso riferimento del grafico).
+  const meanOf = (arr: number[]) => arr.reduce((a, b) => a + b, 0) / Math.max(1, arr.length);
   const chan = [
     { key: "time", label: "Tempo", arr: times, fmt: (v: number) => `${v > 0 ? "+" : ""}${v.toFixed(3)} s` },
     { key: "fuel", label: "Consumo", arr: data.fuel_per_lap, fmt: (v: number) => `${v > 0 ? "+" : ""}${v.toFixed(1)} L` },
   ];
+  // Δ della cella: segue il toggle. In "giro precedente" il giro 1 non ha
+  // riferimento (—); in "media stint" ce l'ha (la media).
+  const cellDelta = (arr: number[], i: number) =>
+    mode === "avg" ? arr[i] - meanOf(arr) : i === 0 ? null : arr[i] - arr[i - 1];
+  // Più lento/più consumo = AMBRA come nel grafico (warn, non alarm: è uno
+  // scostamento dal riferimento, non una soglia violata).
   const deltaColor = (v: number) => {
     if (Math.abs(v) < 1e-9) return COLORS.muted;
-    return v < 0 ? STATE.ok : STATE.alarm;
+    return v < 0 ? STATE.ok : STATE.warn;
   };
 
   return (
@@ -94,8 +103,11 @@ export default function LapDeltaChart({ data }: { data: SessionData }) {
       </ResponsiveContainer>
       <div className="mt-1 text-center font-mono text-[0.5rem] uppercase tracking-widest text-muted">Giro</div>
 
-      {/* Tabella delta multi-canale (vs giro precedente) */}
-      <div className="pw-scroll mt-4 overflow-x-auto">
+      {/* Tabella delta multi-canale — riferimento dichiarato, in sync col toggle */}
+      <div className="mt-4 font-mono text-[0.55rem] uppercase tracking-widest text-muted">
+        Δ vs {mode === "prev" ? "giro precedente" : "media stint"}
+      </div>
+      <div className="pw-scroll mt-1 overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="font-mono text-[0.6rem] uppercase text-muted">
@@ -119,7 +131,7 @@ export default function LapDeltaChart({ data }: { data: SessionData }) {
                   )}
                 </td>
                 {chan.map((c) => {
-                  const v = i === 0 ? null : c.arr[i] - c.arr[i - 1];
+                  const v = cellDelta(c.arr, i);
                   return (
                     <td key={c.key} className="px-3 text-right font-mono" style={{ color: v === null ? COLORS.muted : deltaColor(v) }}>
                       {v === null ? "—" : c.fmt(v)}
