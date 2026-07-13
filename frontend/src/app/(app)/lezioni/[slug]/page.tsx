@@ -146,6 +146,11 @@ export default function LezioneDettaglio() {
         <motion.section variants={fadeInUp} className="pb-8">
           <SectionTitle>Approfondisci</SectionTitle>
           <VideoCard video={lesson.video} />
+          {lesson.videoNote && (
+            <p className="mt-2 text-xs italic leading-relaxed text-muted">
+              {lesson.videoNote}
+            </p>
+          )}
         </motion.section>
       </motion.div>
     </div>

@@ -2,7 +2,8 @@
 // docs/A_Lezione_con_Gigi_ContentPack_v1.md — le correzioni si applicano QUI (o nel
 // content pack), mai nei componenti. File NON protetto, read-only per la UI: nessuno
 // stato, nessun quiz, nessuno storage.
-// `videoId === "TODO"` finché Edoardo non conferma gli URL: la UI mostra "video in arrivo".
+// videoId confermati (megaprompt #9, FASE 0). Il fallback UI "video in arrivo"
+// per `videoId === "TODO"` resta nel template come rete di sicurezza.
 
 export type Lesson = {
   slug: string;
@@ -21,8 +22,9 @@ export type Lesson = {
   video: {
     channel: string;
     title: string;
-    videoId: string; // "TODO" finché non confermato
+    videoId: string; // "TODO" = fallback "video in arrivo"
   };
+  videoNote?: string; // nota di contesto sotto la video card (solo Lezione 7: chiave F1)
 };
 
 export const LESSONS: Lesson[] = [
@@ -44,7 +46,7 @@ export const LESSONS: Lesson[] = [
       "Apex anticipato (early apex) → uscita larga, devi richiudere lo sterzo e perdi trazione; è l'errore classico del principiante.",
       "Guardare la curva invece del punto di uscita.",
     ],
-    video: { channel: "Driver61", title: "How to Drive the Perfect Racing Line", videoId: "TODO" },
+    video: { channel: "Driver61", title: "The Racing Line — How to Drive the Perfect Corner", videoId: "aZlOkt1oU2k" },
   },
   {
     slug: "punti-di-riferimento",
@@ -64,7 +66,7 @@ export const LESSONS: Lesson[] = [
       "Riferimenti troppo vicini alla curva.",
       "Non avere un riferimento di uscita.",
     ],
-    video: { channel: "Driver61", title: "Guida: imparare un tracciato nuovo", videoId: "TODO" },
+    video: { channel: "Driver61", title: "How to Learn a New Circuit, Fast", videoId: "vws09XZhiRc" },
   },
   {
     slug: "frenata-soglia",
@@ -85,7 +87,7 @@ export const LESSONS: Lesson[] = [
       "Rilascio \"a gradino\" invece che liscio.",
       "Usare l'ABS come muro.",
     ],
-    video: { channel: "Driver61", title: "Maximising the Braking Phase", videoId: "TODO" },
+    video: { channel: "Driver61", title: "Are You Braking Early? Find MASSIVE Lap Time on the Brakes", videoId: "sZG1P5hS5u4" },
   },
   {
     slug: "trail-braking",
@@ -107,7 +109,7 @@ export const LESSONS: Lesson[] = [
       "Farlo in curve veloci.",
       "Brake bias troppo arretrato (l'anteriore deve lavorare — se giri troppo, sposta il bias 1–2 click avanti).",
     ],
-    video: { channel: "Driver61", title: "How to Trail Brake", videoId: "TODO" },
+    video: { channel: "Driver61", title: "How to Trail Brake: A Step-by-Step Guide", videoId: "tvcuGoVhpxw" },
   },
   {
     slug: "trazione-in-uscita",
@@ -127,7 +129,7 @@ export const LESSONS: Lesson[] = [
       "Gas troppo presto/troppo pieno con sterzo ancora girato → pattinamento e taglio del TC.",
       "\"Kick\" del gas invece di un'apertura liscia.",
     ],
-    video: { channel: "Driver61", title: "The 6 Phases of a Corner (fasi 4–6)", videoId: "TODO" },
+    video: { channel: "Driver61", title: "The 6 Phases of a Corner", videoId: "bOw9nMbHDIQ" },
   },
   {
     slug: "gomme-finestra",
@@ -152,7 +154,7 @@ export const LESSONS: Lesson[] = [
       label: "Questa lezione è il \"perché\" dietro il cross-check gomme dell'app: guardala in Telemetria",
       href: "/telemetry",
     },
-    video: { channel: "Coach Dave Academy", title: "How to Set the Correct Tyre Pressures in ACC", videoId: "TODO" },
+    video: { channel: "Coach Dave Academy", title: "ACC 1.9 — What psi? What tyre temps?", videoId: "1f5sNSRkKd4" },
   },
   {
     slug: "quali-vs-race",
@@ -171,7 +173,9 @@ export const LESSONS: Lesson[] = [
       "In quali non scaldare le gomme sull'out-lap.",
       "Non ritarare i riferimenti col diverso carico di carburante (auto piena = frena prima).",
     ],
-    video: { channel: "Coach Dave / Driver61", title: "Race pace e consistenza", videoId: "TODO" },
+    video: { channel: "F1 Crash Course", title: "Quali Pace vs Race Pace: What Are the Differences?", videoId: "MPmdHctHQS8" },
+    videoNote:
+      "Il video spiega quali vs gara in Formula 1, ma il principio è identico in ACC/GT3: in qualifica cerchi il giro secco, in gara gestisci gomme, carburante e consistenza.",
   },
   {
     slug: "lift-and-coast",
@@ -196,7 +200,7 @@ export const LESSONS: Lesson[] = [
       label: "Si lega al calcolo strategia carburante dell'app: se il target dice \"−X L\", il LiCo è come lo ottieni in pista",
       href: "/console",
     },
-    video: { channel: "Coach Dave Academy", title: "Mastering Lift and Coast", videoId: "TODO" },
+    video: { channel: "Driver61", title: "How Racing Drivers Save Fuel (Whilst Driving FAST)", videoId: "j1u_Tb3X08I" },
   },
 ];
 
