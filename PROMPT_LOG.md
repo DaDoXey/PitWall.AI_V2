@@ -583,6 +583,61 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 
 ---
 
+## Entry #016 — Demo = postazione condivisa: wizard sempre da zero in demo + "Riparti da zero" per tutti
+
+| Campo | Valore |
+|---|---|
+| Data | 13/07/2026 |
+| Agente dev | Claude Code (`claude-fable-5`) |
+| Area | `lib/profile.tsx` · `(auth)/login/page.tsx` · `ui/OnboardingFlow.tsx` |
+| Commit | `e96ee70` — retro-compilato dopo l'«ok push» |
+| Contesto | Richiesta di Edoardo dopo i test con i compagni: il profilo wizard (localStorage) restava quello del tester precedente e la profilazione andava rilanciata a mano da "↻ Rivedi tutorial" (per giunta precompilata). |
+
+**Catalogo messaggi:**
+1. «vorrei che la profilazione del pilota col tutorial si ripetesse ogni volta che qualcuno si logga … con il profilo demo … rimaneva il profilo precedente salvato».
+2. «metti anche un'opzione per rifare il wizard … anche per chi logga da google … a prescindere per quelli che entrano in demo mode bisogna far azzerare ogni volta».
+
+**Modifica:**
+- MOD `lib/profile.tsx` — NEW `resetProfile()` nel ProfileProvider: azzera localStorage (`pw_driver_profile`) **e** lo stato in memoria (provider globale nel root layout: pulire solo lo storage non basterebbe) + `tourStep → null` (un tour a metà del tester precedente non deve riprendere).
+- MOD `(auth)/login/page.tsx` — `handleDemo()` chiama `resetProfile()` prima di `enterDemo()`: **ogni ingresso «🏁 Entra in modalità demo» riparte con wizard in bianco** (il trigger esistente `ready && !profile` di OnboardingFlow fa il resto, zero modifiche al trigger). Login Google INVARIATO: ritrova il proprio profilo.
+- MOD `ui/OnboardingFlow.tsx` — NEW bottone **"↺ Riparti da zero"** nel footer del primo step, visibile solo quando esiste un profilo salvato (cioè nel replay da "↻ Rivedi tutorial", Google incluso): `resetProfile()` + bozza locale svuotata; il bottone sparisce dopo il reset (condizione `profile`).
+
+**Motivazione:** demo mostrata su un solo PC/browser: il localStorage è per-postazione, non per-persona. Semantica scelta: demo = postazione condivisa (reset a ogni ingresso), account Google = personale (profilo persistente, reset solo su richiesta esplicita via "Riparti da zero").
+**Risultato osservato:** ogni ingresso demo → wizard "Conosci il pilota" da zero; «⏻ Esci → rientra demo» idem; "↻ Rivedi tutorial" → wizard precompilato con in più "↺ Riparti da zero" per svuotarlo. Un tester che fa "Salta per ora" in demo non lascia tracce al successivo.
+**Verifica:**            `tsc --noEmit` 0 err · `/` e `/login` 200 · file protetti non toccati.
+**File protetti:**       ☑ nessuno toccato
+**Decisione:**           ☑ Mantenuto — «ok push» di Edoardo (13/07)
+
+---
+
+## Entry #017 — Investigazione TODO aperti: INC-V2-002 falso positivo · fix DnD (INC-V2-005) · audit placeholder e delta
+
+| Campo | Valore |
+|---|---|
+| Data | 13/07/2026 |
+| Agente dev | Claude Code (`claude-fable-5`) |
+| Area | Dashboard DnD (`(app)/page.tsx`) · INCIDENTS.md · verifiche read-only su backend protetto |
+| Commit | `d3cf00e` — retro-compilato dopo l'«ok push» · log in questo commit |
+| Contesto | Richiesta di Edoardo: passare in rassegna tutti i TODO/fix in memoria prima del "lavorone" finale (test completi del sistema, anti-allucinazioni Gigi, controllo generale). |
+
+**Catalogo messaggi:**
+1. «manca qualcosa che hai ancora in memoria da fare? … inizia ad investigare tutto».
+2. Decisioni per punto: (1) icone Prossime azioni "già fatta" [NOTA: in realtà le emoji ci sono ancora, segnalato] · (2) mojibake «puoi fixarla» · (3) DnD «controlla bene … in caso fixalo» · (4) delta «ricontrolla» · (5) placeholder ranges «post esame» purché non crashino · (6) Setup post-esame + accorgimento sui consigli di Gigi da dettare.
+
+**Modifica:**
+- **INC-V2-002 → CHIUSO senza toccare file: FALSO POSITIVO.** Byte grezzi API = `Velocit\xc3\xa0` (UTF-8 corretto); riga mai modificata dallo scaffold (`git log -L`). Il mojibake era dello strumento: PowerShell 5.1 decodifica i JSON senza charset come ISO-8859-1. Nessun gate necessario (nessuna modifica al protetto). INCIDENTS aggiornato con lezione di procedura (verificare i byte, non il testo decodificato da PS 5.1).
+- **INC-V2-005 → FIX** in `(app)/page.tsx` (pointer-based, zero dipendenze): (a) drop = inserzione **prima/dopo il bersaglio** in base alla metà puntata (`clientX` vs centro card), non più "prendi l'indice del bersaglio" (asimmetrico); (b) **barra accent di inserzione** nel gap al posto del ring; (c) **fallback sul contenitore grid** per gap e buchi lasciati dalle card estese a capo (prima: no-op silenzioso, la card "tornava indietro" — probabile causa principale del sintomo); (d) indice corretto per lo shift post-rimozione. `stopPropagation` sulle card per non far scattare il fallback.
+- **Audit placeholder `car_setup_ranges.json` (read-only, INC-V2-003):** NON possono crashare — `DA_VERIFICARE` vive solo in `_status` (mai copiato: whitelist `min/max/step/default` + guard `isinstance(dict)`), override seed = no-op sui generici, vettura ignota → fallback, JSON rotto → `{}`. Confermato rinvio post-esame senza rischi.
+- **Ricontrollo "Delta giro-su-giro" (read-only):** 2 incoerenze reali trovate e RIPORTATE a Edoardo senza fixare (aveva detto "dovrebbe essere a posto"): il toggle riferimento cambia solo il grafico (tabella sempre vs precedente, non dichiarato); più lento = ambra nel grafico ma rosso in tabella. In attesa di sua decisione.
+
+**Motivazione:** bonifica della coda TODO prima della fase di test finale pre-esame (15/07).
+**Risultato osservato:** DnD Dashboard: barra rossa di inserzione che segue il puntatore (sinistra/destra del bersaglio), drop su gap/buchi = in fondo con barra sull'ultima card; nomi tracciato confermati corretti via byte.
+**Verifica:**            `tsc --noEmit` 0 err · `/` 200 · file protetti INTATTI (verifiche solo read-only).
+**File protetti:**       ☑ nessuno toccato
+**Decisione:**           ☑ Mantenuto — «ok push» di Edoardo (13/07) · INC-V2-002 chiuso · resta aperta la decisione sui 2 punti del Delta giro-su-giro
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
