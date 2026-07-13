@@ -670,6 +670,35 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 
 ---
 
+## Entry #019 — Certificazione demo pre-esame: test ×3 (243/243), blindatura off-topic, reset demo totale, icone azioni
+
+| Campo | Valore |
+|---|---|
+| Data | 14/07/2026 |
+| Agente dev | Claude Code (`claude-fable-5`) |
+| Area | `api/analysis.py` (off-topic guard) · `(auth)/login/page.tsx` (reset totale) · `(app)/page.tsx` (icone ACTIONS) · suite test (scratchpad) · NEW `DEMO_TEST_REPORT.md` (gitignorato) |
+| Commit | `58ecb3a` (off-topic) · `c191400` (reset totale) · `25e7f4e` (icone) — retro-compilati dopo l'«ok push» · log in questo commit |
+| Contesto | "Il lavorone": demo al 1000% per l'esame del 15/07. Domande preliminari poste a Edoardo (rete/dev-vs-build/reset/Gigi live) e risposte recepite. |
+
+**Catalogo messaggi:**
+1. «mettici le icone che ci stanno nella sidebar anche nelle 3 card infondo alla dashboard» · «per i test fai l'opzione A almeno 3 volte» · «finiti i test voglio un report completo .md … mini scaletta per lo speech» · invito a fare domande fuori dal quadro.
+2. Risposte alle 4 domande: rete = WiFi istituto (hotspot fallback) · demo in `npm run dev` com'è ora, «vorrei evitare il lag, dimmi come fare» · reset totale demo: SÌ · domande live a Gigi: improbabili ma possibili → «facciamo in modo che risponda solo a domande inerenti la sessione».
+
+**Modifica:**
+- **`(app)/page.tsx`** — ACTIONS: emoji → `IconConsole/IconTelemetry/IconSetup` (NavIcons); `ActionCard` rende il componente icona (muted → accent in hover).
+- **`(auth)/login/page.tsx`** — `handleDemo()`: azzera TUTTE le chiavi localStorage `pw_*` (profilo/tour già coperti da `resetProfile()` + ordine/taglie card `pw_dashboard_kpi_v1`, note `pw_quick_notes`, sezioni `pw_sb_*`) → demo sempre vergine, a prova di chiavi future.
+- **`api/analysis.py`** (NON protetto, precedente F5 #9) — blindatura off-topic: NEW `_in_scope()` (riusa `_DEMO_ROUTES` del modulo protetto in sola lettura, zero duplicazione keyword) + `_off_topic_text()` (redirect onesto costruito dai dati `SESSION` — coerente per costruzione). Nel ramo demo: nessuna keyword → redirect, NON più il default sovrasterzo ("allucinazione percepita" davanti a domande tipo «che tempo fa?»).
+- **NEW `DEMO_TEST_REPORT.md`** (gitignorato, `*_REPORT.md`): struttura demo, funzionamento demo-mode, le 4 garanzie di "infallibilità", tabella test, procedura giorno-esame (avvio, pre-warm anti-lag, rete, recovery), mini scaletta speech in 6 punti.
+- Suite `demo_test_suite.py` (scratchpad, riutilizzabile): T1 coerenza numeri (34 check: demo_data ↔ narrazione ↔ setup_params ↔ costanti frontend) · T2 batteria Console (28: routing, 5 trappole off-topic, invariante profilo byte-identica, profilo non inquina il routing, timing) · T3 robustezza API (9: mai 500 su input sporchi, demo_mode ON, live_allowed OFF, UTF-8) · T4 rotte 8/8 (16).
+
+**Motivazione:** certificare che in demo non possa accadere nulla di imprevisto: niente allucinazioni (per costruzione), niente numeri incoerenti (single source verificata), niente residui di test (reset totale), niente 500, niente lag reale.
+**Risultato osservato:** **3 run × 81 = 243/243 PASS** · `tsc` 0 err · `test_parser` 12/12 · protetti intatti (diff vuoto sull'intera lista). Falso "lag" 2s smascherato come artefatto IPv6 del client di test (API reale: 1–15 ms su 127.0.0.1). Off-topic: «che tempo fa a Roma?» → redirect onesto, mai più l'analisi sovrasterzo.
+**Verifica:**            vedi sopra (la verifica È l'oggetto dell'entry) + `/` e `/login` 200 dopo le modifiche frontend.
+**File protetti:**       ☑ nessuno toccato (`_DEMO_ROUTES` letto, mai modificato)
+**Decisione:**           ☑ Mantenuto — «ok push» di Edoardo (14/07). Demo certificata per l'esame del 15/07.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
