@@ -5,6 +5,29 @@
 > c'è `INCIDENTS.md`): qui si annota quando un *numero di riferimento* si scopre errato,
 > da dove veniva l'errore e come è stato corretto. Citato da `demo_data.py`.
 
+## Premessa — perché la v2 (migrazione da Streamlit, decisa l'08/07/2026)
+
+La **v1** di PitWall.AI era una web app **Streamlit** (Python monolitico: UI, logica di
+dominio e chiamate LLM nello stesso processo). Funzionava, ma Streamlit era il **collo di
+bottiglia sulla presentazione**: componenti in iframe, CSS non pienamente controllabile,
+rerun completo dell'app a ogni interazione, grafici SVG "stringati" dentro l'HTML — il
+livello di UI "da strumento di pit wall" (gauge animati, heatmap, micro-interazioni) non
+era raggiungibile.
+
+La decisione (documentata in `docs/01-target-stack.md`, con tabella comparativa dei
+criteri): **separare dominio e presentazione**.
+- **Backend FastAPI** che **riusa la logica di dominio Python della v1** — parser CSV,
+  vision, range setup ACC, agente Gigi: il valore del progetto è stato *portato*, non
+  riscritto.
+- **Frontend Next.js (App Router) + React + TypeScript + Tailwind + Framer Motion +
+  Recharts**: i componenti SVG fatti a mano nella v1 (gauge, heatmap, sparkline) sono
+  diventati componenti React riutilizzabili e animabili quasi 1:1.
+- **Invariante di sicurezza mantenuto:** la `ANTHROPIC_API_KEY` vive solo lato server;
+  il frontend parla solo con la nostra API; in demo pubblica risponde la cache validata.
+
+Questo registro esiste proprio perché la v2 tratta i **numeri ACC come dati di dominio
+verificabili** e ne traccia le correzioni nel tempo.
+
 ---
 
 ## ERR-01 — Distinzione pressioni a FREDDO vs a CALDO (ereditata dalla v1)
@@ -37,3 +60,16 @@
   (esempio) · `lib/setup.ts` · `PressureGauge.tsx`. **Non toccati:** `csv_parser.py`
   (range 24.0–30.0 inclusivo copre ancora tutti i valori demo), `car_setup_ranges.json`
   (non contiene pressioni).
+
+## ERR-03 — Passo del precarico differenziale: 10 → 5 Nm (13/07/2026 · gate Entry #018)
+
+- **Incoerenza:** la correzione demo di Gigi consiglia **precarico 60 → 75 Nm**
+  (fisicamente sensato), ma lo slider del Setup aveva **passo 10 Nm** (…60, 70, 80…):
+  il valore consigliato **non era impostabile** — né dal click sui suggeriti né a mano.
+- **Correzione applicata:** passo dello slider `preload` **10 → 5 Nm** in
+  `setup_params.py` (min/max/default intatti; narrazione Console invariata). Scelta al
+  gate tra due opzioni: cambiare il passo (applicata) o alzare il consiglio a 80 Nm
+  (scartata: avrebbe toccato la narrazione validata).
+- **Verifica:** 75 raggiungibile sul passo ((75−20) % 5 = 0); API `setup-params` →
+  `step: 5`; test parser 12/12; coerenza narrazione↔target verificata dalla suite demo
+  (243/243).

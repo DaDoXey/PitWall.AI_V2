@@ -311,7 +311,7 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 
 ---
 
-## Entry #008 — MEGAPROMPT #6: semplificazione UX (Sidebar + Telemetria) + Login/Google Sign-In 🔄 IN CORSO
+## Entry #008 — MEGAPROMPT #6: semplificazione UX (Sidebar + Telemetria) + Login/Google Sign-In ✅ COMPLETO (F0–F10)
 
 | Campo | Valore |
 |---|---|
@@ -674,7 +674,7 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 
 | Campo | Valore |
 |---|---|
-| Data | 14/07/2026 |
+| Data | 13/07/2026 (tarda sera) |
 | Agente dev | Claude Code (`claude-fable-5`) |
 | Area | `api/analysis.py` (off-topic guard) · `(auth)/login/page.tsx` (reset totale) · `(app)/page.tsx` (icone ACTIONS) · suite test (scratchpad) · NEW `DEMO_TEST_REPORT.md` (gitignorato) |
 | Commit | `58ecb3a` (off-topic) · `c191400` (reset totale) · `25e7f4e` (icone) — retro-compilati dopo l'«ok push» · log in questo commit |
@@ -695,7 +695,35 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 **Risultato osservato:** **3 run × 81 = 243/243 PASS** · `tsc` 0 err · `test_parser` 12/12 · protetti intatti (diff vuoto sull'intera lista). Falso "lag" 2s smascherato come artefatto IPv6 del client di test (API reale: 1–15 ms su 127.0.0.1). Off-topic: «che tempo fa a Roma?» → redirect onesto, mai più l'analisi sovrasterzo.
 **Verifica:**            vedi sopra (la verifica È l'oggetto dell'entry) + `/` e `/login` 200 dopo le modifiche frontend.
 **File protetti:**       ☑ nessuno toccato (`_DEMO_ROUTES` letto, mai modificato)
-**Decisione:**           ☑ Mantenuto — «ok push» di Edoardo (14/07). Demo certificata per l'esame del 15/07.
+**Decisione:**           ☑ Mantenuto — «ok push» di Edoardo (13/07 sera). Demo certificata per l'esame del 15/07.
+
+---
+
+## Entry #020 — Consegne finali per la prof: copie FINALE + completamento documentazione
+
+| Campo | Valore |
+|---|---|
+| Data | 13/07/2026 (notte) |
+| Agente dev | Claude Code (`claude-fable-5`) |
+| Area | SPEC_ERRATA.md · PROMPT_LOG.md (titolo #008) · NEW cartella Desktop "consegne pitwall" (fuori repo) |
+| Commit | non ancora committato |
+| Contesto | Consegna serale del materiale alla prof (pre-esame 15/07). Richiesto controllo di completezza PRIMA delle copie. |
+
+**Catalogo messaggi:**
+1. «cartella sul desktop "consegne pitwall" … copie di prompt_log, incidents e spec_errata … "FINALE" nel nome … prima controlla che ci sia TUTTO … nella spec errata spero ci sia anche il perché della migrazione … il template si interrompa a fine documento».
+
+**Modifica:**
+- **Controllo di completezza** (esito): PROMPT_LOG #001–#019 continuo ✓ · INCIDENTS completo (5 risolti + INC-V2-003 aperto per scope + 2 hazard) ✓ · trovate e sanate 3 lacune:
+  (a) MOD `PROMPT_LOG.md`: titolo Entry #008 «🔄 IN CORSO» → «✅ COMPLETO (F0–F10)» (il corpo lo diceva già);
+  (b) MOD `SPEC_ERRATA.md`: NEW **Premessa "perché la v2"** — migrazione da Streamlit (decisione 08/07, fonte `docs/01-target-stack.md`: Streamlit collo di bottiglia sulla presentazione; FastAPI riusa la logica di dominio Python; SVG v1 → componenti React; API key solo server);
+  (c) MOD `SPEC_ERRATA.md`: NEW **ERR-03** — passo precarico 10→5 Nm (incoerenza narrazione 75 Nm ↔ slider, gate Entry #018).
+- **NEW `Desktop/consegne pitwall/`** (fuori repo): `PROMPT_LOG_FINALE.md` · `INCIDENTS_FINALE.md` · `SPEC_ERRATA_FINALE.md` — copie integrali con **template di coda rimossi** e **chiusura formale** («DOCUMENTO FINALE — consegna del 13/07/2026», sintesi di stato, © Edoardo Ferlito). Verificato: nessun blocco `<!-- TEMPLATE`, nessun segnaposto Entry #XXX / INC-V2-00X residuo.
+
+**Motivazione:** i documenti consegnati devono leggersi come registri CHIUSI, completi e autoesplicativi (migrazione inclusa), senza scaffolding da lavoro-in-corso.
+**Risultato osservato:** cartella sul Desktop con i 3 file FINALE (UTF-8, footer di chiusura); originali in repo arricchiti (premessa migrazione + ERR-03 + titolo #008).
+**Verifica:**            script di controllo sulle copie (template assenti, footer presente) · originali: nessun file protetto toccato.
+**File protetti:**       ☑ nessuno toccato
+**Decisione:**           ☑ Consegna pronta — commit dei 2 file documentali dopo «ok push»
 
 ---
 
