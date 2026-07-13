@@ -560,6 +560,29 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 
 ---
 
+## Entry #015 — Fix INC-V2-006: modal Confronto coperto dalle card in Dashboard (portale)
+
+| Campo | Valore |
+|---|---|
+| Data | 13/07/2026 |
+| Agente dev | Claude Code (`claude-fable-5`) |
+| Area | `ui/Sidebar.tsx` (overlay Confronto metà stint) |
+| Commit | `cd82a30` (fix + INCIDENTS) · log in questo commit |
+| Contesto | Bug segnalato da Edoardo a fine sessione precedente (screenshot 10:53 da OneDrive/Catture di schermata); fix post-megaprompt #9. In sessione anche: scritto `MEGAPROMPT9_REPORT.md` (gitignorato). |
+
+**Catalogo messaggi:**
+1. Ripresa sessione + «procedi col report» (MEGAPROMPT9_REPORT.md, nessun codice).
+2. «procedi con la diagnosi del bug confronto in Dashboard … appena lo fixi mettilo negli incidents anche essendo un bug minore».
+
+**Modifica:**            MOD `ui/Sidebar.tsx` (unico file): il blocco `AnimatePresence`+`StintCompareModal` è ora renderizzato in **portale su `document.body`** (`createPortal` da `react-dom`, guard `mounted` via `useEffect` per non toccare `document` in SSR). `StintCompare.tsx` INTATTO.
+**Motivazione:**         Il modal era montato dentro l'`<aside sticky>`: `position: sticky` crea sempre uno stacking context, quindi lo `z-50` del modal valeva solo dentro la Sidebar (livello `auto`, dipinta prima del `main`). Le card KPI della Dashboard (wrapper `position: relative` per il DnD) passavano sopra. Solo in Dashboard perché unica pagina con card posizionate nell'area del modal; il KpiModal non soffre perché montato nel `main` dopo le card. Diagnosi confermata pixel-per-pixel dallo screenshot (card sopra, "Ultima sessione" non posizionata sotto, grafico visibile nei varchi).
+**Risultato osservato:** Modal Confronto sopra le card anche in Dashboard; backdrop che scurisce davvero tutta la pagina Sidebar inclusa; comportamento invariato altrove (Esc/click-fuori/exit animation conservati dall'AnimatePresence dentro il portale).
+**Verifica:**            `tsc --noEmit` 0 err · rotte `/ /console /telemetry /setup /login /lezioni` 6/6 200 (server rilanciati post-riavvio macchina: backend senza `--reload` come da HAZARD-V2-B) · backend health ok · nessun file protetto toccato. INCIDENTS.md: NEW **INC-V2-006** in RISOLTI (registrato su richiesta esplicita di Edoardo benché 🟡 minore).
+**File protetti:**       ☑ nessuno toccato
+**Decisione:**           ☑ Mantenuto — «ok push» di Edoardo: committato e pushato insieme ai 7 commit del megaprompt #9
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
