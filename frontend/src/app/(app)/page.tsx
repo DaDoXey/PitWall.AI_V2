@@ -29,6 +29,10 @@ export default function Dashboard() {
   const [selected, setSelected] = useState<string | null>(null); // KPI aperto nel modal
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [overIndex, setOverIndex] = useState<number | null>(null);
+  // Lato del bersaglio puntato dal cursore (fix INC-V2-005): il drop inserisce
+  // PRIMA o DOPO la card sorvolata, non "al suo indice" (che con le card estese
+  // e il reflow del grid produceva posizioni inattese e asimmetriche).
+  const [overSide, setOverSide] = useState<"before" | "after" | null>(null);
   const dragFrom = useRef<number | null>(null);
 
   useEffect(() => {
@@ -83,16 +87,21 @@ export default function Dashboard() {
     }
   }
 
-  // Riordino (persistito): sposta la card trascinata nella posizione di rilascio.
-  function reorder(to: number) {
+  // Riordino (persistito): `insert` è la posizione di INSERZIONE nell'array
+  // com'era prima della rimozione (bersaglio + eventuale +1 se lato "after");
+  // la rimozione della card trascinata fa scalare gli indici successivi.
+  function reorder(insert: number) {
     const from = dragFrom.current;
     dragFrom.current = null;
     setDraggingId(null);
     setOverIndex(null);
-    if (from === null || from === to) return;
+    setOverSide(null);
+    if (from === null) return;
+    if (from < insert) insert -= 1;
+    if (from === insert) return;
     const next = [...order];
     const [moved] = next.splice(from, 1);
-    next.splice(to, 0, moved);
+    next.splice(insert, 0, moved);
     setOrder(next);
     persist(next, sizes);
   }
@@ -138,6 +147,21 @@ export default function Dashboard() {
         initial="hidden"
         animate="visible"
         className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        // Fallback per gap e "buchi" del grid (le card estese che vanno a capo
+        // ne lasciano): prima il drop lì era un no-op silenzioso — la card
+        // tornava indietro (INC-V2-005). Ora = inserisci in fondo, con la barra
+        // visibile sull'ultima card prima di rilasciare. Le card gestiscono il
+        // proprio dragover/drop e fanno stopPropagation: qui arrivano solo i vuoti.
+        onDragOver={(e) => {
+          e.preventDefault();
+          if (draggingId === null) return;
+          setOverIndex(ordered.length - 1);
+          setOverSide("after");
+        }}
+        onDrop={(e) => {
+          e.preventDefault();
+          reorder(ordered.length);
+        }}
       >
         {ordered.map((k, i) => {
           const extended = sizes.has(k.id);
@@ -155,16 +179,34 @@ export default function Dashboard() {
               onDragEnd={() => {
                 setDraggingId(null);
                 setOverIndex(null);
+                setOverSide(null);
               }}
               onDragOver={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
+                const r = e.currentTarget.getBoundingClientRect();
                 setOverIndex(i);
+                setOverSide(e.clientX < r.left + r.width / 2 ? "before" : "after");
               }}
-              onDrop={() => reorder(i)}
+              onDrop={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                reorder(i + (overSide === "after" ? 1 : 0));
+              }}
               className={`relative rounded-xl transition ${extended ? "sm:col-span-2" : ""} ${
                 isDragging ? "scale-[0.98] opacity-50" : ""
-              } ${isTarget ? "ring-2 ring-accent ring-offset-2 ring-offset-bg" : ""}`}
+              }`}
             >
+              {/* Barra di inserzione nel gap (sostituisce il ring: dice DOVE
+                  finirà la card, non solo quale bersaglio stai sorvolando). */}
+              {isTarget && (
+                <span
+                  aria-hidden="true"
+                  className={`pointer-events-none absolute inset-y-1 w-0.5 rounded-full bg-accent ${
+                    overSide === "before" ? "-left-[9px]" : "-right-[9px]"
+                  }`}
+                />
+              )}
               <KpiCard kpi={k} extended={extended} onOpen={() => setSelected(k.id)} />
               <button
                 type="button"

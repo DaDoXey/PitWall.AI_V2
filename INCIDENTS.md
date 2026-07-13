@@ -20,22 +20,6 @@ Per ognuno: **ID · Data · Severità · Stato · Area · Sintomo · Causa radic
 
 ## 🔴🟠 Incidenti APERTI
 
-### INC-V2-002 — Mojibake `track_nick` servito da `GET /api/session`
-| | |
-|---|---|
-| **Data** | rilevato 09/07/2026 · **Stato:** 🟡 Medio · `APERTO` |
-| **Area** | Backend / dati demo (**file protetto**) |
-
-- **Sintomo:** `GET /api/session` ritorna `track_nick` = "Tempio della Velocità" **mal-codificato**
-  (doppia codifica UTF-8, byte verificati `ï¿½\xa0`).
-- **Causa radice:** stringa salvata con doppia codifica UTF-8 in `demo_data.py`.
-- **Impatto:** oggi il campo **non è renderizzato** in UI → nessun difetto visibile, ma l'API serve un
-  **dato corrotto**; diventerebbe visibile appena lo si mostrasse.
-- **Workaround:** nessuno necessario (campo inutilizzato).
-- **Risoluzione:** APERTA — richiede STOP gate + «ok procedi» (file protetto). Fix = ricodifica corretta della stringa.
-- **File:** `backend/app/core/demo_data.py`.
-- **Rif.:** MEGAPROMPT_STATE_REPORT §6 B1.
-
 ### INC-V2-003 — Override `car_setup_ranges.json` no-op (la vettura non cambia i 49 parametri)
 | | |
 |---|---|
@@ -51,25 +35,55 @@ Per ognuno: **ID · Data · Severità · Stato · Area · Sintomo · Causa radic
 - **File:** `backend/app/core/data/car_setup_ranges.json`.
 - **Rif.:** MEGAPROMPT_STATE_REPORT §6 B2.
 
-### INC-V2-005 — Dashboard: le card ingrandite non si riposizionano col drag&drop
-| | |
-|---|---|
-| **Data** | 10/07/2026 · **Stato:** 🟡 Medio · `IN LAVORAZIONE` (rework #8) |
-| **Area** | Frontend / Dashboard (DnD) |
-
-- **Sintomo:** ingrandendo una card a `col-span-2` e trascinandola, **non si sposta dove atteso**.
-- **Causa radice (diagnosticata):** il riordino usa l'**indice dell'array**; con card a span variabile la
-  **posizione visiva** nel grid non coincide con l'indice → il drop calcola una posizione errata.
-- **Impatto:** funzione drag&drop inaffidabile con layout a taglie miste.
-- **Workaround:** riordinare senza card estese.
-- **Risoluzione:** pianificata nel **megaprompt #3 (#8)** — DnD basato sulla **posizione del puntatore**
-  (insertion index dalle bounding box) o adozione di **`dnd-kit`**.
-- **File:** `frontend/src/app/page.tsx` (`onDragStart`/`onDragOver`/`onDrop`, `reorder`).
-- **Rif.:** REDESIGN_REWORK_REPORT §2 REWORK #8.
-
 ---
 
 ## ✅ Incidenti RISOLTI
+
+### INC-V2-005 — Dashboard: le card ingrandite non si riposizionano col drag&drop
+| | |
+|---|---|
+| **Data** | 10/07/2026 · risolto 13/07/2026 · **Stato:** 🟡 Medio · `RISOLTO` (in attesa di conferma a schermo) |
+| **Area** | Frontend / Dashboard (DnD) |
+
+- **Sintomo:** ingrandendo una card a `col-span-2` e trascinandola, **non si sposta dove atteso**;
+  a volte non si sposta affatto.
+- **Causa radice (confermata al fix, DUE difetti):** (1) il drop dava alla card l'**indice del
+  bersaglio** → semantica asimmetrica (in avanti atterrava *dopo* il bersaglio, all'indietro
+  *prima*), imprevedibile dopo il reflow del grid con span misti; (2) le card estese che vanno a
+  capo lasciano **buchi nel grid**, e il drop su buchi/gap **non aveva handler** → no-op silenzioso
+  (la card "tornava indietro").
+- **Impatto:** funzione drag&drop inaffidabile con layout a taglie miste.
+- **Risoluzione:** RISOLTO — DnD basato sulla **posizione del puntatore** (opzione consigliata dal
+  rework #8, zero dipendenze nuove): il drop inserisce **prima/dopo la card sorvolata** in base
+  alla metà puntata (`getBoundingClientRect` + `clientX`), con **barra accent di inserzione** nel
+  gap al posto del ring (dice *dove* finirà la card); **fallback sul contenitore** per gap e buchi
+  (= inserisci in fondo, barra sull'ultima card); indice corretto per lo shift post-rimozione
+  (`from < insert → insert−1`).
+- **File:** `frontend/src/app/(app)/page.tsx` (`reorder`, handler drag, barra inserzione).
+- **Rif.:** REDESIGN_REWORK_REPORT §2 REWORK #8 · PROMPT_LOG Entry #017.
+
+### INC-V2-002 — Mojibake `track_nick` servito da `GET /api/session` → **FALSO POSITIVO**
+| | |
+|---|---|
+| **Data** | rilevato 09/07/2026 · chiuso 13/07/2026 · **Stato:** 🟡 Medio · `RISOLTO` (falso positivo — nessun difetto) |
+| **Area** | Backend / dati demo — in realtà: strumento di verifica |
+
+- **Sintomo riportato:** `GET /api/session` sembrava ritornare `track_nick` = "Tempio della
+  Velocità" **mal-codificato** (byte letti come doppia codifica UTF-8).
+- **Verifica di chiusura (13/07):** i **byte grezzi** della risposta HTTP letti con
+  `urllib` Python sono `Velocit\xc3\xa0` = **UTF-8 corretto**; la stringa in `demo_data.py`
+  è corretta e **mai modificata** dallo scaffold (`git log -L` sulla riga: solo `336ec6a`).
+  Nessun file toccato per chiudere.
+- **Causa radice (dell'errore di diagnosi):** artefatto dello strumento di misura — Windows
+  PowerShell 5.1 (`Invoke-WebRequest`) decodifica le risposte `application/json` **senza
+  charset** come ISO-8859-1 invece che UTF-8 (il default JSON), producendo il mojibake
+  **lato client di test**; anche la console Windows (cp1252) contribuiva a mascherare.
+- **Impatto:** nessuno — l'API ha sempre servito il dato corretto; i browser decodificano il
+  JSON come UTF-8 e il campo (oggi non renderizzato) apparirebbe giusto.
+- **Lezione (procedura):** verificare le codifiche sui **byte grezzi** (`urllib`/`curl.exe`),
+  mai sul testo decodificato da PowerShell 5.1.
+- **File:** nessuno.
+- **Rif.:** MEGAPROMPT_STATE_REPORT §6 B1 (diagnosi originale) · PROMPT_LOG Entry #017.
 
 ### INC-V2-006 — Modal "Confronto metà stint" coperto dalle card KPI in Dashboard
 | | |
