@@ -1,10 +1,12 @@
 import Sidebar from "@/components/ui/Sidebar";
 import MotionProvider from "@/components/ui/MotionProvider";
 import AuthGate from "@/components/ui/AuthGate";
+import OnboardingFlow from "@/components/ui/OnboardingFlow";
 
 // Layout dell'app "loggata" (megaprompt #6, FASE 8): Sidebar + area contenuti.
 // Vive nel route group (app) — /login (gruppo (auth)) resta fuori e non eredita
 // la Sidebar (fix INC-V2-004). AuthGate (FASE 9): senza accesso → /login.
+// OnboardingFlow (megaprompt #9): wizard "Conosci il pilota" al primo accesso.
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <AuthGate>
@@ -14,6 +16,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <MotionProvider>{children}</MotionProvider>
         </main>
       </div>
+      <OnboardingFlow />
     </AuthGate>
   );
 }

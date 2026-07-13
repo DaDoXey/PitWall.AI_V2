@@ -12,6 +12,7 @@ import SidebarSection from "@/components/ui/SidebarSection";
 import QuickNotes from "@/components/ui/QuickNotes";
 import StintCompareModal from "@/components/charts/StintCompare";
 import { getSession } from "@/lib/api";
+import { useProfile } from "@/lib/profile";
 import { DEFAULT_CONDITIONS } from "@/lib/catalog";
 import { buildHealth, HEALTH_COLOR, HEALTH_LABEL } from "@/lib/health";
 import { buildAlerts } from "@/lib/crosscheck";
@@ -33,6 +34,8 @@ export default function Sidebar() {
   const [footerPanel, setFooterPanel] = useState<"notes" | null>(null);
   // Modal confronto metà stint (FASE 8 #7): il bottone ⇄ è un launcher, non un toggle.
   const [compareOpen, setCompareOpen] = useState(false);
+  // Replay onboarding (megaprompt #9, FASE 1): rilancia wizard → tour per la demo.
+  const { startOnboarding } = useProfile();
 
   useEffect(() => {
     getSession()
@@ -204,6 +207,19 @@ export default function Sidebar() {
             ✎ Note
           </button>
         </div>
+
+        {/* Replay onboarding (megaprompt #9): rilancia wizard "Conosci il pilota"
+            → tour. Serve per la demo d'esame; il profilo salvato resta finché
+            il wizard non viene ricompletato. */}
+        <button
+          type="button"
+          onClick={startOnboarding}
+          aria-haspopup="dialog"
+          title="Rifai il wizard Conosci il pilota e il tour delle schermate"
+          className="flex h-8 items-center justify-center gap-1 rounded-md border border-line font-mono text-[0.58rem] text-subtle transition hover:border-accent hover:text-white"
+        >
+          ↻ Rivedi tutorial
+        </button>
 
         <div className="font-mono text-[0.6rem] text-muted">
           v0.1.0 · v2 scaffold
