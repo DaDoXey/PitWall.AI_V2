@@ -7,6 +7,7 @@ import { CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Too
 import PageHeader from "@/components/ui/PageHeader";
 import { IconConsole, IconSetup, IconTelemetry } from "@/components/ui/NavIcons";
 import CountUp from "@/components/ui/CountUp";
+import { CarCard, TrackCard } from "@/components/ui/SessionBriefing";
 import Sparkline from "@/components/charts/Sparkline";
 import { fadeInUp, staggerContainer, useReducedMotion } from "@/lib/motion";
 import { getSession } from "@/lib/api";
@@ -136,6 +137,19 @@ export default function Dashboard() {
           <Stat label="Giri" value={`${s.laps} · best ${s.best_lap}`} />
           <Stat label="Consumo" value={`${s.fuel_avg_per_lap} L/giro · ${s.fuel_total} L`} />
         </div>
+      </motion.div>
+
+      {/* Schede di contesto dal catalogo ACC: chi è questa pista e questa
+          vettura. I nomi della sessione sono risolti dal backend (slug o
+          display), quindi si passano così come arrivano da /api/session. */}
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+        className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-2"
+      >
+        <TrackCard track={s.track} />
+        <CarCard car={s.car} />
       </motion.div>
 
       {/* KPI: ingresso a cascata; ogni card apre il dettaglio in-page e si può trascinare */}

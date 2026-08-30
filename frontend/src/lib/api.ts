@@ -51,6 +51,43 @@ export function getCatalog() {
   return getJSON("/api/catalog") as Promise<Catalog>;
 }
 
+// Schede complete (didascalie, specifiche, contesto di setup). `id` accetta
+// slug o nome di display: il backend risolve entrambi.
+export type CarSpecs = {
+  engine?: string | null;
+  power_hp?: number | null;
+  weight_kg?: number | null;
+  drivetrain?: string | null;
+  gearbox?: string | null;
+  bop_variable?: boolean;
+  /** "alta" | "media" | "da_verificare" — quanto è affidabile la specifica. */
+  confidence?: string;
+};
+
+export type CarSheet = CatalogCar & {
+  specs: CarSpecs;
+  caption_it: string;
+  has_tc?: boolean;
+  has_abs?: boolean;
+  specs_note?: string | null;
+};
+
+export type TrackSheet = CatalogTrack & {
+  description_it: string;
+  setup_focus_it?: string | null;
+  lap_record_real?: string | null;
+  grid_size?: number | null;
+  corners_confidence?: string;
+};
+
+export function getCatalogCar(id: string) {
+  return getJSON(`/api/catalog/car/${encodeURIComponent(id)}`) as Promise<CarSheet>;
+}
+
+export function getCatalogTrack(id: string) {
+  return getJSON(`/api/catalog/track/${encodeURIComponent(id)}`) as Promise<TrackSheet>;
+}
+
 export function getSetupParams(car?: string, track?: string) {
   const q = new URLSearchParams();
   if (car) q.set("car", car);

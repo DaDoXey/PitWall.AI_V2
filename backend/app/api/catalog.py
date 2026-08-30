@@ -36,4 +36,6 @@ def get_track(track_id: str):
     track = cat.resolve_track(track_id)
     if not track:
         raise HTTPException(status_code=404, detail=f"Circuito non trovato: {track_id}")
-    return track
+    # short_name non è nel JSON (è derivato): va aggiunto anche qui, non solo
+    # nell'indice, altrimenti il client lo riceve solo a volte.
+    return {**track, "short_name": cat.short_name_track(track)}

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import PageHeader from "@/components/ui/PageHeader";
+import { CarCard, TrackCard } from "@/components/ui/SessionBriefing";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import {
   ApiError,
@@ -274,6 +275,21 @@ export default function SetupPage() {
           onTempTrack={setTempTrack}
           onApplyVision={applyVisionParams}
         />
+      )}
+
+      {/* Contesto della combinazione scelta: qui il "focus setup" del tracciato
+          e l'indole della vettura sono azionabili — si leggono mentre si
+          muovono gli slider. Compaiono con i selettori aperti. */}
+      {showInputs && (
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+          className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2"
+        >
+          <TrackCard track={track} />
+          <CarCard car={car} />
+        </motion.div>
       )}
 
       {/* Tab */}
