@@ -33,19 +33,19 @@ SETUP_SECTIONS = {
             "tire_press_fr": {
                 "label": "Pressione FR",
                 "min": 20.0, "max": 35.0, "step": 0.1,
-                "unit": "psi", "default": 25.0,
+                "unit": "psi", "default": 25.2,
                 "tip": "Pressione gonfiaggio anteriore destra."
             },
             "tire_press_rl": {
                 "label": "Pressione RL",
                 "min": 20.0, "max": 35.0, "step": 0.1,
-                "unit": "psi", "default": 25.3,
+                "unit": "psi", "default": 24.2,
                 "tip": "Pressione gonfiaggio posteriore sinistra."
             },
             "tire_press_rr": {
                 "label": "Pressione RR",
                 "min": 20.0, "max": 35.0, "step": 0.1,
-                "unit": "psi", "default": 25.3,
+                "unit": "psi", "default": 24.0,
                 "tip": "Pressione gonfiaggio posteriore destra."
             },
             # Camber (°, negativo = inclinazione verso l'interno)
