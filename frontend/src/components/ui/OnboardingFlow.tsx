@@ -92,19 +92,23 @@ export default function OnboardingFlow() {
     ready,
     profile,
     onboardingOpen,
+    onboardingSkipped,
     startOnboarding,
     closeOnboarding,
+    dismissOnboarding,
     saveProfile,
     resetProfile,
     startTour: startTourCtx,
   } = useProfile();
 
-  // Trigger primo accesso: nessun profilo completato → wizard (anche in demo).
+  // Trigger primo accesso: nessun profilo completato E non già "saltato" → wizard
+  // (anche in demo). Senza il guard su onboardingSkipped, "Salta per ora" non
+  // reggeva: a ogni navigazione il wizard si riapriva.
   useEffect(() => {
-    if (ready && !profile) startOnboarding();
-    // startOnboarding è stabile (setState); il trigger deve valutare solo ready/profile.
+    if (ready && !profile && !onboardingSkipped) startOnboarding();
+    // startOnboarding è stabile (setState); il trigger valuta ready/profile/skipped.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ready, profile]);
+  }, [ready, profile, onboardingSkipped]);
 
   // Bozza risposte: prefill dal profilo esistente nel replay ("Rivedi tutorial").
   const [step, setStep] = useState(0);
@@ -229,7 +233,7 @@ export default function OnboardingFlow() {
                   {step === 0 ? (
                     <button
                       type="button"
-                      onClick={closeOnboarding}
+                      onClick={dismissOnboarding}
                       className="rounded-md px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted transition hover:text-white"
                     >
                       Salta per ora

@@ -27,10 +27,19 @@ export type DriverProfile = {
 type ProfileCtx = {
   profile: DriverProfile | null;
   ready: boolean; // true dopo la lettura iniziale di localStorage (evita flash)
-  // Wizard: aperto al primo accesso (nessun completedAt) o da "Rivedi tutorial".
+  // Wizard: aperto al primo accesso (nessun completedAt e non "saltato") o da
+  // "Rivedi tutorial".
   onboardingOpen: boolean;
+  // true se l'utente ha già scelto "Salta per ora" in questa installazione:
+  // sopprime l'apertura automatica del wizard (ma non "Rivedi tutorial").
+  onboardingSkipped: boolean;
   startOnboarding: () => void; // replay: riparte dallo step 1 (il profilo resta finché non salvi)
   closeOnboarding: () => void;
+  // "Salta per ora": chiude il wizard E persiste un flag così l'apertura
+  // automatica al primo accesso non si ripresenta a ogni navigazione (fix UX).
+  // Il flag `pw_onboarding_skipped` è ripulito dall'ingresso demo (tester fresco)
+  // e da resetProfile ("Riparti da zero").
+  dismissOnboarding: () => void;
   saveProfile: (p: Omit<DriverProfile, "completedAt">) => void;
   // Azzera profilo salvato + stato in memoria (e tour). Usato dall'ingresso in
   // modalità demo (postazione condivisa: ogni tester riparte da zero) e da
@@ -46,6 +55,7 @@ type ProfileCtx = {
 
 const Ctx = createContext<ProfileCtx | null>(null);
 const KEY = "pw_driver_profile";
+const SKIP_KEY = "pw_onboarding_skipped";
 
 function readStored(): DriverProfile | null {
   try {
@@ -63,12 +73,28 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<DriverProfile | null>(null);
   const [ready, setReady] = useState(false);
   const [onboardingOpen, setOnboardingOpen] = useState(false);
+  const [onboardingSkipped, setOnboardingSkipped] = useState(false);
   const [tourStep, setTourStep] = useState<number | null>(null);
 
   useEffect(() => {
     setProfile(readStored());
+    try {
+      setOnboardingSkipped(localStorage.getItem(SKIP_KEY) === "1");
+    } catch {
+      /* no-op: localStorage non disponibile → wizard mostrato (comportamento primo accesso) */
+    }
     setReady(true);
   }, []);
+
+  const dismissOnboarding = () => {
+    setOnboardingOpen(false);
+    setOnboardingSkipped(true);
+    try {
+      localStorage.setItem(SKIP_KEY, "1");
+    } catch {
+      /* no-op */
+    }
+  };
 
   const saveProfile = (p: Omit<DriverProfile, "completedAt">) => {
     const full: DriverProfile = { ...p, completedAt: new Date().toISOString() };
@@ -82,9 +108,11 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
 
   const resetProfile = () => {
     setProfile(null);
+    setOnboardingSkipped(false); // "Riparti da zero"/demo: il wizard torna a mostrarsi
     setTourStep(null); // un tour a metà del tester precedente non deve riprendere
     try {
       localStorage.removeItem(KEY);
+      localStorage.removeItem(SKIP_KEY);
     } catch {
       /* no-op */
     }
@@ -96,8 +124,10 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         profile,
         ready,
         onboardingOpen,
+        onboardingSkipped,
         startOnboarding: () => setOnboardingOpen(true),
         closeOnboarding: () => setOnboardingOpen(false),
+        dismissOnboarding,
         saveProfile,
         resetProfile,
         tourStep,
