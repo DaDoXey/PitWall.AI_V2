@@ -6,6 +6,7 @@ import PageHeader from "@/components/ui/PageHeader";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import {
   ApiError,
+  getCatalog,
   getSession,
   getSetupParams,
   postCsvParse,
@@ -13,12 +14,12 @@ import {
   type CsvResult,
 } from "@/lib/api";
 import {
-  CAR_LIST,
+  CAR_LIST_FALLBACK,
   CONDITIONS,
   DEFAULT_CAR,
   DEFAULT_CONDITIONS,
   DEFAULT_TRACK,
-  TRACK_LIST,
+  TRACK_LIST_FALLBACK,
 } from "@/lib/catalog";
 import {
   COLD_PRESS_WINDOW,
@@ -78,6 +79,45 @@ export default function SetupPage() {
   const [conditions, setConditions] = useState(DEFAULT_CONDITIONS);
   const [tempAmb, setTempAmb] = useState(20);
   const [tempTrack, setTempTrack] = useState(30);
+
+  // Catalogo ACC completo dal backend (31 vetture, 25 circuiti). Se la
+  // chiamata fallisce restano le liste storiche: i selettori non si svuotano.
+  const [carOptions, setCarOptions] = useState<SelectOption[]>(() =>
+    CAR_LIST_FALLBACK.map((value) => ({ value })),
+  );
+  const [trackOptions, setTrackOptions] = useState<SelectOption[]>(() =>
+    TRACK_LIST_FALLBACK.map((value) => ({ value })),
+  );
+
+  useEffect(() => {
+    let alive = true;
+    getCatalog()
+      .then((cat) => {
+        if (!alive) return;
+        // `badge` = pacchetto DLC: dice perché una vettura potrebbe non essere
+        // installata, senza nasconderla dalla lista.
+        setCarOptions(
+          cat.cars.map((c) => ({
+            value: c.display_name,
+            badge: c.dlc ? "DLC" : undefined,
+          })),
+        );
+        setTrackOptions(
+          cat.tracks.map((t) => ({
+            // short_name ("Monza"), non il nome ufficiale: coerente col resto
+            // dell'app e leggibile nel selettore. Il backend risolve entrambi.
+            value: t.short_name || t.name,
+            badge: t.dlc ? "DLC" : undefined,
+          })),
+        );
+      })
+      .catch(() => {
+        /* backend giù: restano le liste di fallback già impostate */
+      });
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   // Refetch dei range a ogni cambio vettura/circuito: applica gli override e
   // ri-clampa i valori correnti nei nuovi range (non li azzera), come la v1.
@@ -225,6 +265,8 @@ export default function SetupPage() {
           conditions={conditions}
           tempAmb={tempAmb}
           tempTrack={tempTrack}
+          carOptions={carOptions}
+          trackOptions={trackOptions}
           onCar={setCar}
           onTrack={setTrack}
           onConditions={setConditions}
@@ -334,12 +376,16 @@ function SessionInputs({
   onTempAmb,
   onTempTrack,
   onApplyVision,
+  carOptions,
+  trackOptions,
 }: {
   car: string;
   track: string;
   conditions: string;
   tempAmb: number;
   tempTrack: number;
+  carOptions: SelectOption[];
+  trackOptions: SelectOption[];
   onCar: (v: string) => void;
   onTrack: (v: string) => void;
   onConditions: (v: string) => void;
@@ -354,8 +400,8 @@ function SessionInputs({
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <PwSelect label="Auto" value={car} options={CAR_LIST} onChange={onCar} />
-        <PwSelect label="Tracciato" value={track} options={TRACK_LIST} onChange={onTrack} />
+        <PwSelect label="Auto" value={car} options={carOptions} onChange={onCar} />
+        <PwSelect label="Tracciato" value={track} options={trackOptions} onChange={onTrack} />
         <Segmented label="Condizioni" value={conditions} options={CONDITIONS} onChange={onConditions} />
       </div>
 
@@ -507,6 +553,10 @@ function Toggle({
 }
 
 // Dropdown custom coerente col design system (sostituisce il <select> grigio nativo).
+// Opzione di un selettore: il valore è la stringa inviata all'API; `badge` è
+// un'etichetta accessoria (es. "DLC") mostrata a destra nella tendina.
+type SelectOption = { value: string; badge?: string };
+
 function PwSelect({
   label,
   value,
@@ -515,7 +565,7 @@ function PwSelect({
 }: {
   label: string;
   value: string;
-  options: string[];
+  options: SelectOption[];
   onChange: (v: string) => void;
 }) {
   const [open, setOpen] = useState(false);
@@ -553,17 +603,24 @@ function PwSelect({
             >
               {options.map((o) => (
                 <button
-                  key={o}
+                  key={o.value}
                   type="button"
                   onClick={() => {
-                    onChange(o);
+                    onChange(o.value);
                     setOpen(false);
                   }}
-                  className={`block w-full rounded px-2.5 py-1.5 text-left text-sm transition ${
-                    o === value ? "bg-accent/15 text-accent" : "text-subtle hover:bg-surface hover:text-white"
+                  className={`flex w-full items-center justify-between gap-2 rounded px-2.5 py-1.5 text-left text-sm transition ${
+                    o.value === value
+                      ? "bg-accent/15 text-accent"
+                      : "text-subtle hover:bg-surface hover:text-white"
                   }`}
                 >
-                  {o}
+                  <span className="truncate">{o.value}</span>
+                  {o.badge && (
+                    <span className="shrink-0 rounded border border-line px-1 font-mono text-[0.5rem] uppercase tracking-wider text-muted">
+                      {o.badge}
+                    </span>
+                  )}
                 </button>
               ))}
             </motion.div>

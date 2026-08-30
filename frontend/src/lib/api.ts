@@ -13,6 +13,44 @@ export function getSession() {
   return getJSON("/api/session");
 }
 
+// ── Catalogo ACC (Lotto 1): anagrafica vetture e circuiti servita dal backend
+// (core/catalog.py). Sostituisce le liste hardcoded di lib/catalog.ts, che
+// restano come fallback se il backend non risponde.
+export type CatalogCar = {
+  id: string;
+  display_name: string;
+  brand: string;
+  model: string;
+  year: number;
+  category: string;
+  dlc: boolean;
+  dlc_pack: string | null;
+};
+
+export type CatalogTrack = {
+  id: string;
+  name: string;
+  /** Etichetta breve per la UI ("Monza"), il nome ufficiale è in `name`. */
+  short_name: string;
+  nick: string | null;
+  country: string;
+  length_km: number | null;
+  corners: number | null;
+  downforce_level: string | null;
+  dlc: boolean;
+  dlc_pack: string | null;
+};
+
+export type Catalog = {
+  cars: CatalogCar[];
+  tracks: CatalogTrack[];
+  counts: { cars: number; tracks: number; by_category: Record<string, number> };
+};
+
+export function getCatalog() {
+  return getJSON("/api/catalog") as Promise<Catalog>;
+}
+
 export function getSetupParams(car?: string, track?: string) {
   const q = new URLSearchParams();
   if (car) q.set("car", car);

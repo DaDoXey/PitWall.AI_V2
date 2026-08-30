@@ -1,8 +1,15 @@
 // Cataloghi UI per i selettori di sessione (Fase 7), portati da v1 (ui/catalog.py).
 // Liste di presentazione: i range setup reali arrivano comunque da
 // /api/setup-params (override per vettura nel DB JSON, fallback ai generici).
+//
+// ⚠️ NON sono più la fonte: dal Lotto 1 il catalogo completo (31 vetture GT3,
+// 25 circuiti) arriva da `GET /api/catalog` (backend `core/catalog.py`) via
+// `getCatalog()`. Queste liste restano come **fallback** se il backend non
+// risponde, così i selettori non si svuotano mai. Il backend risolve
+// indifferentemente slug o nomi di display: le stringhe qui sotto restano
+// valide come valore inviato a /api/setup-params.
 
-export const CAR_LIST = [
+export const CAR_LIST_FALLBACK = [
   "BMW M4 GT3",
   "Ferrari 296 GT3",
   "Ferrari 488 GT3 Evo",
@@ -20,7 +27,7 @@ export const CAR_LIST = [
   "Aston Martin V8 Vantage GT3",
 ];
 
-export const TRACK_LIST = [
+export const TRACK_LIST_FALLBACK = [
   "Monza", "Spa-Francorchamps", "Nürburgring GP", "Silverstone",
   "Misano", "Barcelona", "Hungaroring", "Zandvoort", "Imola",
   "Kyalami", "Mount Panorama", "Suzuka", "Zolder",
