@@ -20,7 +20,11 @@ SESSION = {
     "track": "Monza",
     "track_nick": "Tempio della Velocità",
     "car": "BMW M4 GT3",
-    "car_year": "2024",
+    # Anno del MODELLO, non della stagione: allineato al catalogo ACC
+    # (data/cars.json → bmw_m4_gt3.year = 2021). Prima era "2024", che in
+    # Dashboard finiva accanto alla scheda vettura del catalogo creando
+    # un'incoerenza visibile ("· 2024" nell'header, "2021" nella card).
+    "car_year": "2021",
     "laps": 8,
     "best_lap": "1:47.812",
     "stint": "Asciutto",
