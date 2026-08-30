@@ -229,7 +229,7 @@ export default function Sidebar() {
         </button>
 
         <div className="font-mono text-[0.6rem] text-muted">
-          v0.1.0 · v2 scaffold
+          v1.0.0 · post-esame
           <span className="block">© 2026 Edoardo Ferlito · MIT</span>
         </div>
       </div>
