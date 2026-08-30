@@ -727,6 +727,34 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 
 ---
 
+## Entry #021 — Build post-esame: primo blocco di fix UX/coerenza dopo verifica a schermo
+
+| Campo | Valore |
+|---|---|
+| Data | 30/08/2026 |
+| Agente dev | Claude Code (claude-sonnet-5) |
+| Area | Frontend (OnboardingFlow, profile, Sidebar) · Backend protetto (setup_params.py, con «ok procedi») |
+| Commit | non ancora committato |
+| Contesto | Ripartenza post-esame (15/07 superato). Apertura di PitWall in locale + tour a schermo delle 6 pagine per decidere cosa migliorare. Primo blocco: i fix emersi dal giro; le aggiunte arriveranno dopo. |
+
+**Catalogo messaggi:**
+1. «apri pitwall e verifica a schermo cosa vorrei cambiare» → tour completo (login/dashboard/console/telemetria/setup/lezioni).
+2. «inizia con i primi fix che hai suggerito e poi ti dirò cosa aggiungere».
+3. «ok procedi con il fix #2» (sblocco STOP gate su `setup_params.py`) + richiesta di riaprire la scheda Chrome (freeze lato estensione).
+
+**Modifica:**
+- **Fix #1 — Wizard "Conosci il pilota" che riappariva a ogni navigazione.** `lib/profile.tsx`: nuovo flag persistito `pw_onboarding_skipped` (stato `onboardingSkipped` + `dismissOnboarding()`; `resetProfile` lo azzera). `components/ui/OnboardingFlow.tsx`: il trigger di primo accesso ora è `ready && !profile && !onboardingSkipped`; "Salta per ora" chiama `dismissOnboarding()` invece di `closeOnboarding()`. Il flag ha prefisso `pw_` → ripulito dall'ingresso demo (tester sempre fresco) e da "Riparti da zero".
+- **Fix #2 — Slider pressioni Setup incoerenti con la storia demo.** `backend/app/core/setup_params.py` (PROTETTO, sbloccato con «ok procedi»): default `tire_press_fr` 25.0→**25.2**, `tire_press_rl` 25.3→**24.2**, `tire_press_rr` 25.3→**24.0** — allineati a `COLD_PRESSURES` di `demo_data.py`. Ora RL/RR partono sotto finestra (ambra) e i suggeriti Gigi (→25.2/25.0) le *alzano* dentro la finestra (prima erano 25.3 verdi e il consiglio le abbassava, controsenso).
+- **Fix #3 — Badge versione datato.** `components/ui/Sidebar.tsx`: `v0.1.0 · v2 scaffold` → `v1.0.0 · post-esame`.
+
+**Motivazione:** togliere la frizione UX del wizard ripetuto; rendere coerente la schermata Setup con la narrazione demo e con i consigli di Gigi; aggiornare l'etichetta di versione ora che l'app non è più uno scaffold.
+**Risultato osservato:** wizard NON riappare più dopo "Salta per ora" (verificato su Telemetria e Setup dopo ingresso demo); Setup mostra FL 25.0🟢 / FR 25.2🟢 / RL 24.2🟠 / RR 24.0🟠 con tacca rossa target a 25.2/25.0; badge aggiornato.
+**Verifica:**            `npx tsc --noEmit` 0 err · `test_parser` 12/12 (backend riavviato no-reload dopo il file protetto) · rotte `/ /login /telemetry /setup` 200 · verifica a schermo via Chrome.
+**File protetti:**       ☑ sbloccato con «ok procedi» → `backend/app/core/setup_params.py` (default 3 pressioni gomme)
+**Decisione:**           ☑ Mantenuto — in attesa di «ok push» per il commit
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
