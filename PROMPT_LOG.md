@@ -755,6 +755,42 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 
 ---
 
+## Entry #022 — Lotto 1 asset ACC: integrazione in 3 fasi (catalogo → selettori → schede)
+
+| Campo | Valore |
+|---|---|
+| Data | 30/08/2026 |
+| Agente dev | Claude Code (claude-opus-4-8) |
+| Area | NEW `core/catalog.py` + `api/catalog.py` + `data/{cars,tracks}.json` · frontend (api, catalog, setup, dashboard, NEW SessionBriefing) · `demo_data.py` (protetto, «ok procedi») |
+| Commit | `8c00304` · `67a9ef2` · +2 (anno demo, schede UI) |
+| Contesto | Primo lotto di asset consegnato da Claude Desktop (31 GT3 + 25 circuiti). Richiesta: capire **come** entra nel progetto prima di tutto il resto. |
+
+**Catalogo messaggi:**
+1. «partiamo dai problemi del lotto 1 … voglio capire come verrà introdotto tutto quanto dentro al progetto in primis» → piano a 5 fasi esposto e approvato.
+2. «procedi con la fase 1» · «procedi con la fase 2» · «ok push e poi procedi con la fase 3» · «ok procedi con l'anno e poi committa tutto».
+
+**Modifica:**
+- **Nodo architetturale individuato:** l'app identifica auto/piste con la **stringa di display** (`catalog.ts`, `car_setup_ranges.json`, `demo_data.SESSION`), il lotto con **slug**. Verifica: piste 15/15 combaciavano, **auto 4/15 no** (Porsche 992/991 II, Mercedes-AMG Evo, Huracán EVO2).
+- **FASE 1** — `data/cars.json` + `tracks.json` in `core/data/`. NEW **`core/catalog.py`** (non protetto): `resolve_car`/`resolve_track` accettano slug, acc_id, display, soprannome, nome breve o alias; normalizzazione accenti/punteggiatura; nessun match approssimativo (None se non trova). NEW **`GET /api/catalog`** + `/catalog/car/{id}` + `/catalog/track/{id}`. Pulito il record Jaguar ridondante. `SHORT_NAMES` curata a mano per i 25 circuiti (la UI dice "Monza", non "Autodromo Nazionale Monza").
+- **FASE 2** — i selettori del Setup si popolano da `/api/catalog` (**15→31 auto, 15→25 piste**); liste storiche degradate a `*_FALLBACK` (backend giù → non si svuotano); `PwSelect` accetta `SelectOption[]` e mostra il badge **DLC** (8 auto, 14 piste).
+- **FASE 3** — NEW **`SessionBriefing.tsx`**: card "Il tracciato" (nome ufficiale, soprannome, lunghezza/curve/deportanza, descrizione, riquadro *Focus setup*) e "La vettura" (anno + DLC, motore/potenza/peso, didascalia voce Gigi). In Dashboard raccontano la demo; nel Setup seguono i selettori. Aiuti segnalati **per assenza** (avviso se manca TC/ABS); provenienza esplicita quando `specs.confidence` non è "alta".
+- **`demo_data.py`** (PROTETTO, «ok procedi»): `car_year` "2024" → **"2021"** — allineato al catalogo, l'header Dashboard e la scheda mostravano due anni diversi per la stessa auto.
+
+**Bug trovati e risolti in corsa (nessuno preesistente in log):**
+1. **Alias inefficaci e dannosi:** gli alias puntavano allo slug con underscore mentre le chiavi di confronto sono normalizzate senza → non agganciavano e **rompevano** i match che riuscivano da soli (Spa, Barcelona). Fix: `_norm()` sul valore dell'alias.
+2. **Vetture irraggiungibili:** `Bentley Continental GT3` e `Nissan GT-R Nismo GT3` esistono in **due annate con nome identico** → stessa stringa all'API, `resolve_car` restituiva sempre la prima, la variante **2018 era inarrivabile** (oltre alle chiavi React duplicate viste in console). Fix: `display_names_by_id()` aggiunge l'anno dove il nome collide.
+3. **Tipo che mentiva:** `TrackSheet.short_name` dichiarato obbligatorio ma l'endpoint singolo restituiva il dict grezzo, senza. Fix: aggiunto anche lì.
+
+**Motivazione:** dare al catalogo un'identità unica (lo slug) prima di costruirci sopra, senza rompere le stringhe storiche; poi far arrivare i contenuti dove sono utili.
+**Risultato osservato:** selettori con l'intero roster + badge DLC e varianti distinte; Dashboard e Setup mostrano le schede; anni coerenti.
+**Verifica:**            `tsc --noEmit` 0 err · `test_parser` 12/12 · nomi storici 30/30 risolti · console browser **0 errori** · endpoint preesistenti 200 · verifica a schermo (Dashboard, Setup, cambio vettura → Porsche 992).
+**File protetti:**       ☑ sbloccato con «ok procedi» → `demo_data.py` (solo `car_year`)
+**Decisione:**           ☑ Mantenuto — pushato
+
+> **Nota aperta:** `data_lotti/lotto_1_ACC/` (consegna grezza: SCHEDE.md, README_DATI.md, `fetch_assets.py`, `build_schede.py`) è **fuori dal repo e non ignorato**. Da decidere se tracciarlo o gitignorarlo — `fetch_assets.py` servirà nella Fase 4 (immagini).
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
