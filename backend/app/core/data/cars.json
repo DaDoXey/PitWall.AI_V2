@@ -1,0 +1,1246 @@
+[
+  {
+    "id": "aston_martin_v12_vantage_gt3",
+    "acc_car_id": "amr_v12_vantage_gt3",
+    "brand": "Aston Martin",
+    "model": "V12 Vantage GT3",
+    "year": 2013,
+    "category": "GT3",
+    "gt3_generation": "2013",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "6.0L V12 aspirato",
+      "power_hp": 600,
+      "weight_kg": 1245,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "aston_martin_v12_vantage_gt3",
+    "caption_it": "Il V12 aspirato è il suo biglietto da visita: erogazione lineare, nessun buco turbo, ma tanta massa sull'anteriore. Ti dà una staccata prevedibile e un buon appoggio in curva veloce, mentre in inserimento lento tende a lavarti via l'avantreno. Occhio alle gomme anteriori sui long run: scaldano prima delle posteriori.",
+    "assets": {
+      "logo": {
+        "commons_query": "Aston Martin logo",
+        "commons_category": "Category:Aston Martin logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Aston Martin V12 Vantage GT3",
+        "commons_category": "Category:Aston Martin V12 Vantage GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "aston_martin_v8_vantage_gt3",
+    "acc_car_id": "amr_v8_vantage_gt3",
+    "brand": "Aston Martin",
+    "model": "V8 Vantage GT3",
+    "year": 2019,
+    "category": "GT3",
+    "gt3_generation": "2019",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "4.0L V8 biturbo (base AMG M177)",
+      "power_hp": 535,
+      "weight_kg": 1245,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "aston_martin_v8_vantage_gt3",
+    "caption_it": "Molto più agile della sorella V12 grazie al biturbo compatto e al peso meglio distribuito. Ruota bene in inserimento e perdona gli errori di trail braking, ma la coppia turbo richiede mano pulita in uscita: se apri troppo presto il posteriore parte. Auto consigliata a chi sta imparando la classe.",
+    "assets": {
+      "logo": {
+        "commons_query": "Aston Martin logo",
+        "commons_category": "Category:Aston Martin logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Aston Martin Vantage GT3 2019",
+        "commons_category": "Category:Aston Martin Vantage GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "audi_r8_lms_gt3",
+    "acc_car_id": "audi_r8_lms",
+    "brand": "Audi",
+    "model": "R8 LMS GT3",
+    "year": 2015,
+    "category": "GT3",
+    "gt3_generation": "2015",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "5.2L V10 aspirato",
+      "power_hp": 585,
+      "weight_kg": 1225,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "audi_r8_lms_gt3",
+    "caption_it": "La definizione di auto neutra: nessun vizio marcato, risposta immediata al volante e freni molto stabili. L'aspirato ti lascia dosare il gas al millimetro in uscita, prezioso quando cerchi trazione su pista sporca. Consuma le anteriori se abusi del trail braking.",
+    "assets": {
+      "logo": {
+        "commons_query": "Audi logo",
+        "commons_category": "Category:Audi logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Audi R8 LMS GT3 2015",
+        "commons_category": "Category:Audi R8 LMS",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "audi_r8_lms_evo_gt3",
+    "acc_car_id": "audi_r8_lms_evo",
+    "brand": "Audi",
+    "model": "R8 LMS Evo GT3",
+    "year": 2019,
+    "category": "GT3",
+    "gt3_generation": "2019",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "5.2L V10 aspirato",
+      "power_hp": 585,
+      "weight_kg": 1225,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "audi_r8_lms_evo_gt3",
+    "caption_it": "Evoluzione aerodinamica e di raffreddamento della R8 2015: stessa indole equilibrata, ma più appoggio in curva veloce e gestione termica migliore sui long run. È una delle vetture più facili da portare al limite senza setup estremi. Se hai sottosterzo, guarda prima le pressioni anteriori che l'ala.",
+    "assets": {
+      "logo": {
+        "commons_query": "Audi logo",
+        "commons_category": "Category:Audi logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Audi R8 LMS Evo",
+        "commons_category": "Category:Audi R8 LMS",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "audi_r8_lms_evo_ii_gt3",
+    "acc_car_id": "audi_r8_lms_evo_ii",
+    "brand": "Audi",
+    "model": "R8 LMS Evo II GT3",
+    "year": 2022,
+    "category": "GT3",
+    "gt3_generation": "2022",
+    "dlc": true,
+    "dlc_pack": "Challengers Pack",
+    "specs": {
+      "engine": "5.2L V10 aspirato",
+      "power_hp": 585,
+      "weight_kg": 1235,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "audi_r8_lms_evo_ii_gt3",
+    "caption_it": "L'ultima incarnazione della R8: ancora più stabile in staccata e con una finestra di setup molto tollerante. Rimane la vettura di riferimento per chi vuole consistenza sul passo gara più che il giro secco. Gestione gomme tra le migliori della classe.",
+    "assets": {
+      "logo": {
+        "commons_query": "Audi logo",
+        "commons_category": "Category:Audi logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Audi R8 LMS Evo II",
+        "commons_category": "Category:Audi R8 LMS",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "bentley_continental_gt3_2015",
+    "acc_car_id": "bentley_continental_gt3_2015",
+    "brand": "Bentley",
+    "model": "Continental GT3",
+    "year": 2015,
+    "category": "GT3",
+    "gt3_generation": "2015",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "4.0L V8 biturbo",
+      "power_hp": 600,
+      "weight_kg": 1300,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "bentley_continental_gt3_2015",
+    "caption_it": "La più pesante della griglia, e si sente: inerzia alta nei cambi di direzione e freni sotto stress nelle staccate ripetute. In compenso ha una trazione notevole in uscita e tiene bene le gomme posteriori. Va guidata pulita, con traiettorie larghe e frenate anticipate.",
+    "assets": {
+      "logo": {
+        "commons_query": "Bentley Motors logo",
+        "commons_category": "Category:Bentley logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Bentley Continental GT3",
+        "commons_category": "Category:Bentley Continental GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "bentley_continental_gt3_2018",
+    "acc_car_id": "bentley_continental_gt3_2018",
+    "brand": "Bentley",
+    "model": "Continental GT3",
+    "year": 2018,
+    "category": "GT3",
+    "gt3_generation": "2018",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "4.0L V8 biturbo",
+      "power_hp": 600,
+      "weight_kg": 1300,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "bentley_continental_gt3_2018",
+    "caption_it": "Versione aggiornata della Continental, con aerodinamica rivista e bilanciamento più gestibile della 2015. Resta un'auto da endurance: premia chi sa amministrare freni e gomme sulla distanza. Nel misto stretto paghi ancora la massa.",
+    "assets": {
+      "logo": {
+        "commons_query": "Bentley Motors logo",
+        "commons_category": "Category:Bentley logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Bentley Continental GT3 2018",
+        "commons_category": "Category:Bentley Continental GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "bmw_m6_gt3",
+    "acc_car_id": "bmw_m6_gt3",
+    "brand": "BMW",
+    "model": "M6 GT3",
+    "year": 2017,
+    "category": "GT3",
+    "gt3_generation": "2017",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "4.4L V8 biturbo",
+      "power_hp": 585,
+      "weight_kg": 1300,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "bmw_m6_gt3",
+    "caption_it": "Grande, potente e nervosa al posteriore: la M6 chiede rispetto in uscita di curva lenta. Ha una velocità di punta importante e regge bene le curve veloci, ma il retrotreno si scalda in fretta se forzi la trazione. Setup morbido dietro e TC un click più alto sono spesso la strada.",
+    "assets": {
+      "logo": {
+        "commons_query": "BMW logo",
+        "commons_category": "Category:BMW logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "BMW M6 GT3",
+        "commons_category": "Category:BMW M6 GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "bmw_m4_gt3",
+    "acc_car_id": "bmw_m4_gt3",
+    "brand": "BMW",
+    "model": "M4 GT3",
+    "year": 2021,
+    "category": "GT3",
+    "gt3_generation": "2022",
+    "dlc": false,
+    "dlc_pack": null,
+    "dlc_note": "Non compare nell'elenco DLC di Coach Dave Academy: probabile aggiunta con update gratuito. DA VERIFICARE su changelog ufficiale Kunos.",
+    "specs": {
+      "engine": "3.0L 6 cilindri in linea biturbo (P58)",
+      "power_hp": 590,
+      "weight_kg": 1300,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "alta"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "bmw_m4_gt3",
+    "caption_it": "La vettura di riferimento del programma GT di BMW e il banco di prova standard di PitWall. Motore elastico, freni potenti e un avantreno molto incisivo in inserimento; il rovescio è un posteriore che scalda facilmente, in particolare il posteriore destro sui circuiti a destra prevalenti come Monza. Il precarico differenziale è la leva più efficace per calmare la rotazione in uscita.",
+    "assets": {
+      "logo": {
+        "commons_query": "BMW logo",
+        "commons_category": "Category:BMW logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "BMW M4 GT3",
+        "commons_category": "Category:BMW M4 GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "emil_frey_jaguar_gt3",
+    "acc_car_id": "jaguar_g3",
+    "brand": "Jaguar",
+    "model": "Emil Frey G3",
+    "year": 2012,
+    "category": "GT3",
+    "gt3_generation": "2012",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "5.0L V8 aspirato",
+      "power_hp": 585,
+      "weight_kg": 1290,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "da_verificare"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "emil_frey_jaguar_gt3",
+    "caption_it": "Progetto artigianale di un team privato, ed è esattamente come si guida: carattere ruvido, poco appoggio aerodinamico e un posteriore che va tenuto con la mano destra. Non è competitiva ovunque, ma su piste a bassa deportanza sa sorprendere. Scelta per piloti esperti che cercano una sfida.",
+    "assets": {
+      "logo": {
+        "commons_query": "Jaguar Cars logo",
+        "commons_category": "Category:Jaguar Cars logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Emil Frey Jaguar G3 GT3",
+        "commons_category": "Category:Jaguar XK (X150) racing cars",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "ford_mustang_gt3",
+    "acc_car_id": "ford_mustang_gt3",
+    "brand": "Ford",
+    "model": "Mustang GT3",
+    "year": 2024,
+    "category": "GT3",
+    "gt3_generation": "2024",
+    "dlc": true,
+    "dlc_pack": "DA VERIFICARE",
+    "dlc_note": "Presente nel roster 2026 secondo Coach Dave Academy, che la indica come vettura più veloce della classe. Pacchetto DLC di appartenenza e anno modello non confermati dalla fonte: DA VERIFICARE su changelog ufficiale Kunos.",
+    "specs": {
+      "engine": "5.4L V8 aspirato",
+      "power_hp": 600,
+      "weight_kg": 1300,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "da_verificare"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "ford_mustang_gt3",
+    "caption_it": "L'ultima arrivata e, secondo i riferimenti di mercato, attualmente la più rapida della griglia ACC. V8 aspirato dalla risposta immediata e un'aerodinamica moderna che le dà appoggio in curva veloce. Da trattare con cautela finché non arriva un aggiornamento BoP.",
+    "assets": {
+      "logo": {
+        "commons_query": "Ford Motor Company logo",
+        "commons_category": "Category:Ford logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Ford Mustang GT3",
+        "commons_category": "Category:Ford Mustang GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "ferrari_488_gt3",
+    "acc_car_id": "ferrari_488_gt3",
+    "brand": "Ferrari",
+    "model": "488 GT3",
+    "year": 2018,
+    "category": "GT3",
+    "gt3_generation": "2018",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "3.9L V8 biturbo",
+      "power_hp": 600,
+      "weight_kg": 1260,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "ferrari_488_gt3",
+    "caption_it": "Avantreno chirurgico e rotazione facile: la 488 gira dove la punti. Il prezzo è un posteriore sensibile in uscita, dove la coppia turbo arriva tutta insieme. Tende a stressare le gomme posteriori sui long run, quindi occhio alle pressioni dopo il quinto giro.",
+    "assets": {
+      "logo": {
+        "commons_query": "Ferrari logo",
+        "commons_category": "Category:Ferrari logos",
+        "preferred_format": "svg",
+        "license_expected": "marchio registrato — verificare tag Commons",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Ferrari 488 GT3",
+        "commons_category": "Category:Ferrari 488 GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "ferrari_488_gt3_evo",
+    "acc_car_id": "ferrari_488_gt3_evo",
+    "brand": "Ferrari",
+    "model": "488 GT3 Evo",
+    "year": 2020,
+    "category": "GT3",
+    "gt3_generation": "2020",
+    "dlc": true,
+    "dlc_pack": "2020 GT World Challenge Pack",
+    "specs": {
+      "engine": "3.9L V8 biturbo",
+      "power_hp": 600,
+      "weight_kg": 1260,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "ferrari_488_gt3_evo",
+    "caption_it": "Aggiornamento aerodinamico e di bilanciamento della 488: stessa punta in inserimento, ma con un retrotreno più leggibile. È rimasta a lungo la scelta meta per il giro secco. Ottimo compromesso tra velocità e prevedibilità.",
+    "assets": {
+      "logo": {
+        "commons_query": "Ferrari logo",
+        "commons_category": "Category:Ferrari logos",
+        "preferred_format": "svg",
+        "license_expected": "marchio registrato — verificare tag Commons",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Ferrari 488 GT3 Evo",
+        "commons_category": "Category:Ferrari 488 GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "ferrari_296_gt3",
+    "acc_car_id": "ferrari_296_gt3",
+    "brand": "Ferrari",
+    "model": "296 GT3",
+    "year": 2023,
+    "category": "GT3",
+    "gt3_generation": "2023",
+    "dlc": true,
+    "dlc_pack": "2023 GT World Challenge Pack",
+    "specs": {
+      "engine": "3.0L V6 biturbo",
+      "power_hp": 600,
+      "weight_kg": 1300,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "ferrari_296_gt3",
+    "caption_it": "Salto generazionale rispetto alla 488: passo più lungo, aerodinamica ripensata e un V6 biturbo con erogazione molto più addomesticata. Estremamente stabile in staccata e gentile con le gomme, il che la rende una delle migliori scelte da endurance. In inserimento lento chiede un filo di aiuto dal differenziale.",
+    "assets": {
+      "logo": {
+        "commons_query": "Ferrari logo",
+        "commons_category": "Category:Ferrari logos",
+        "preferred_format": "svg",
+        "license_expected": "marchio registrato — verificare tag Commons",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Ferrari 296 GT3",
+        "commons_category": "Category:Ferrari 296 GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "honda_nsx_gt3",
+    "acc_car_id": "honda_nsx_gt3",
+    "brand": "Honda",
+    "model": "NSX GT3",
+    "year": 2017,
+    "category": "GT3",
+    "gt3_generation": "2017",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "3.5L V6 biturbo",
+      "power_hp": 550,
+      "weight_kg": 1250,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "honda_nsx_gt3",
+    "caption_it": "Motore centrale e baricentro basso: la NSX cambia direzione con una facilità che nessun'altra GT3 ti dà. Perde però in velocità di punta e in stabilità sotto vento. È l'auto giusta sui tracciati da misto stretto, meno su quelli da rettilineo.",
+    "assets": {
+      "logo": {
+        "commons_query": "Honda logo",
+        "commons_category": "Category:Honda logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Honda NSX GT3",
+        "commons_category": "Category:Honda NSX GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "honda_nsx_gt3_evo",
+    "acc_car_id": "honda_nsx_gt3_evo",
+    "brand": "Honda",
+    "model": "NSX GT3 Evo",
+    "year": 2019,
+    "category": "GT3",
+    "gt3_generation": "2019",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "3.5L V6 biturbo",
+      "power_hp": 550,
+      "weight_kg": 1250,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "honda_nsx_gt3_evo",
+    "caption_it": "Evoluzione della NSX con aerodinamica e raffreddamento rivisti: mantiene l'agilità del motore centrale ma con più appoggio in curva veloce. Rimane una delle vetture più intuitive da guidare al limite. Attenzione alle temperature gomme anteriori nelle sessioni calde.",
+    "assets": {
+      "logo": {
+        "commons_query": "Honda logo",
+        "commons_category": "Category:Honda logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Honda NSX GT3 Evo",
+        "commons_category": "Category:Honda NSX GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "lamborghini_huracan_gt3",
+    "acc_car_id": "lamborghini_huracan_gt3",
+    "brand": "Lamborghini",
+    "model": "Huracán GT3",
+    "year": 2015,
+    "category": "GT3",
+    "gt3_generation": "2015",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "5.2L V10 aspirato",
+      "power_hp": 585,
+      "weight_kg": 1240,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "lamborghini_huracan_gt3",
+    "caption_it": "Condivide il V10 con la R8 ma ha un carattere più aggressivo in inserimento. Ottima trazione in uscita grazie alla massa concentrata dietro, meno stabile in staccata forte. Va guidata con frenate decise e brevi, non trascinate.",
+    "assets": {
+      "logo": {
+        "commons_query": "Lamborghini logo",
+        "commons_category": "Category:Lamborghini logos",
+        "preferred_format": "svg",
+        "license_expected": "marchio registrato — verificare tag Commons",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Lamborghini Huracan GT3",
+        "commons_category": "Category:Lamborghini Huracán GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "lamborghini_huracan_gt3_evo",
+    "acc_car_id": "lamborghini_huracan_gt3_evo",
+    "brand": "Lamborghini",
+    "model": "Huracán GT3 Evo",
+    "year": 2019,
+    "category": "GT3",
+    "gt3_generation": "2019",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "5.2L V10 aspirato",
+      "power_hp": 585,
+      "weight_kg": 1240,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "lamborghini_huracan_gt3_evo",
+    "caption_it": "A lungo la vettura meta di ACC: aerodinamica efficiente, trazione eccellente e una finestra di setup ampia. Ti perdona molto in uscita e tiene le gomme meglio della media. Se cerchi consistenza sul passo gara, è un riferimento.",
+    "assets": {
+      "logo": {
+        "commons_query": "Lamborghini logo",
+        "commons_category": "Category:Lamborghini logos",
+        "preferred_format": "svg",
+        "license_expected": "marchio registrato — verificare tag Commons",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Lamborghini Huracan GT3 Evo",
+        "commons_category": "Category:Lamborghini Huracán GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "lamborghini_huracan_gt3_evo2",
+    "acc_car_id": "lamborghini_huracan_gt3_evo2",
+    "brand": "Lamborghini",
+    "model": "Huracán GT3 Evo2",
+    "year": 2023,
+    "category": "GT3",
+    "gt3_generation": "2023",
+    "dlc": true,
+    "dlc_pack": "2023 GT World Challenge Pack",
+    "specs": {
+      "engine": "5.2L V10 aspirato",
+      "power_hp": 585,
+      "weight_kg": 1250,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "lamborghini_huracan_gt3_evo2",
+    "caption_it": "Affina l'Evo con un frontale nuovo e una gestione aerodinamica più raffinata. Resta il V10 aspirato, quindi erogazione lineare e pieno controllo del gas in uscita. Un pelo più esigente sull'assetto rispetto all'Evo, ma con più potenziale sul giro secco.",
+    "assets": {
+      "logo": {
+        "commons_query": "Lamborghini logo",
+        "commons_category": "Category:Lamborghini logos",
+        "preferred_format": "svg",
+        "license_expected": "marchio registrato — verificare tag Commons",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Lamborghini Huracan GT3 Evo2",
+        "commons_category": "Category:Lamborghini Huracán GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "lexus_rc_f_gt3",
+    "acc_car_id": "lexus_rcf_gt3",
+    "brand": "Lexus",
+    "model": "RC F GT3",
+    "year": 2016,
+    "category": "GT3",
+    "gt3_generation": "2016",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "5.4L V8 aspirato",
+      "power_hp": 540,
+      "weight_kg": 1290,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "lexus_rc_f_gt3",
+    "caption_it": "Motore anteriore, indole stabile e prevedibile: la RC F è la GT3 che meno ti sorprende. Paga qualcosa in velocità di punta ma frena benissimo e regge le staccate ripetute. Buona scelta per chi arriva da vetture stradali e vuole confidenza subito.",
+    "assets": {
+      "logo": {
+        "commons_query": "Lexus logo",
+        "commons_category": "Category:Lexus logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Lexus RC F GT3",
+        "commons_category": "Category:Lexus RC F GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "mclaren_650s_gt3",
+    "acc_car_id": "mclaren_650s_gt3",
+    "brand": "McLaren",
+    "model": "650S GT3",
+    "year": 2015,
+    "category": "GT3",
+    "gt3_generation": "2015",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "3.8L V8 biturbo",
+      "power_hp": 550,
+      "weight_kg": 1250,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "mclaren_650s_gt3",
+    "caption_it": "Molto agile nei cambi di direzione ma con un retrotreno che avvisa poco: la 650S punisce il gas brusco in uscita. Freni ottimi e inserimento incisivo la rendono forte nel misto. Richiede pazienza e un TC un po' più conservativo.",
+    "assets": {
+      "logo": {
+        "commons_query": "McLaren logo",
+        "commons_category": "Category:McLaren logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "McLaren 650S GT3",
+        "commons_category": "Category:McLaren 650S GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "mclaren_720s_gt3",
+    "acc_car_id": "mclaren_720s_gt3",
+    "brand": "McLaren",
+    "model": "720S GT3",
+    "year": 2019,
+    "category": "GT3",
+    "gt3_generation": "2019",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "4.0L V8 biturbo",
+      "power_hp": 585,
+      "weight_kg": 1250,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "mclaren_720s_gt3",
+    "caption_it": "Passo avanti netto rispetto alla 650S: più appoggio, più stabilità e un motore con erogazione più piena. Rimane una vettura che chiede precisione in uscita, ma il margine d'errore è cresciuto. Ottima nelle curve veloci di raccordo.",
+    "assets": {
+      "logo": {
+        "commons_query": "McLaren logo",
+        "commons_category": "Category:McLaren logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "McLaren 720S GT3",
+        "commons_category": "Category:McLaren 720S GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "mclaren_720s_gt3_evo",
+    "acc_car_id": "mclaren_720s_gt3_evo",
+    "brand": "McLaren",
+    "model": "720S GT3 Evo",
+    "year": 2023,
+    "category": "GT3",
+    "gt3_generation": "2023",
+    "dlc": true,
+    "dlc_pack": "DA VERIFICARE",
+    "dlc_note": "Presente nel roster 2026 ma non elencata tra le aggiunte DLC citate dalla fonte. Pacchetto di appartenenza DA VERIFICARE.",
+    "specs": {
+      "engine": "4.0L V8 biturbo",
+      "power_hp": 585,
+      "weight_kg": 1250,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "da_verificare"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "mclaren_720s_gt3_evo",
+    "caption_it": "Ultima evoluzione della 720S, con aerodinamica e affidabilità termica migliorate. Conserva l'agilità McLaren aggiungendo stabilità in staccata. È la versione più completa della famiglia.",
+    "assets": {
+      "logo": {
+        "commons_query": "McLaren logo",
+        "commons_category": "Category:McLaren logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "McLaren 720S GT3 Evo",
+        "commons_category": "Category:McLaren 720S GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "mercedes_amg_gt3",
+    "acc_car_id": "mercedes_amg_gt3",
+    "brand": "Mercedes-AMG",
+    "model": "AMG GT3",
+    "year": 2015,
+    "category": "GT3",
+    "gt3_generation": "2015",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "6.3L V8 aspirato",
+      "power_hp": 550,
+      "weight_kg": 1285,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "mercedes_amg_gt3",
+    "caption_it": "Il V8 aspirato di grossa cilindrata ti dà una risposta al gas immediata e leggibilissima, perfetta per modulare la trazione. Il muso lungo la rende un po' pigra nei cambi di direzione rapidi. Stabile in staccata, ottima da endurance.",
+    "assets": {
+      "logo": {
+        "commons_query": "Mercedes-Benz logo",
+        "commons_category": "Category:Mercedes-Benz logos",
+        "preferred_format": "svg",
+        "license_expected": "marchio registrato — verificare tag Commons",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Mercedes-AMG GT3",
+        "commons_category": "Category:Mercedes-AMG GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "mercedes_amg_gt3_evo",
+    "acc_car_id": "mercedes_amg_gt3_evo",
+    "brand": "Mercedes-AMG",
+    "model": "AMG GT3 Evo",
+    "year": 2020,
+    "category": "GT3",
+    "gt3_generation": "2020",
+    "dlc": true,
+    "dlc_pack": "2020 GT World Challenge Pack",
+    "specs": {
+      "engine": "6.3L V8 aspirato",
+      "power_hp": 550,
+      "weight_kg": 1285,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "mercedes_amg_gt3_evo",
+    "caption_it": "Evoluzione 2020 con aerodinamica e raffreddamento aggiornati: più appoggio davanti e meno tendenza al sottosterzo in appoggio. Il V8 aspirato resta il suo punto di forza per la gestione della trazione. Una delle vetture più solide sulla lunga distanza.",
+    "assets": {
+      "logo": {
+        "commons_query": "Mercedes-Benz logo",
+        "commons_category": "Category:Mercedes-Benz logos",
+        "preferred_format": "svg",
+        "license_expected": "marchio registrato — verificare tag Commons",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Mercedes-AMG GT3 Evo",
+        "commons_category": "Category:Mercedes-AMG GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "nissan_gtr_nismo_gt3_2015",
+    "acc_car_id": "nissan_gt_r_gt3_2015",
+    "brand": "Nissan",
+    "model": "GT-R Nismo GT3",
+    "year": 2015,
+    "category": "GT3",
+    "gt3_generation": "2015",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "3.8L V6 biturbo",
+      "power_hp": 550,
+      "weight_kg": 1300,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "nissan_gtr_nismo_gt3_2015",
+    "caption_it": "Pesante e con motore anteriore: la GT-R chiede frenate anticipate e traiettorie pulite. In compenso la trazione in uscita è tra le migliori della griglia. Le anteriori lavorano tanto, controlla temperature e pressioni dopo pochi giri.",
+    "assets": {
+      "logo": {
+        "commons_query": "Nissan logo",
+        "commons_category": "Category:Nissan logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Nissan GT-R Nismo GT3",
+        "commons_category": "Category:Nissan GT-R Nismo GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "nissan_gtr_nismo_gt3_2018",
+    "acc_car_id": "nissan_gt_r_gt3_2018",
+    "brand": "Nissan",
+    "model": "GT-R Nismo GT3",
+    "year": 2018,
+    "category": "GT3",
+    "gt3_generation": "2018",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "3.8L V6 biturbo",
+      "power_hp": 550,
+      "weight_kg": 1300,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "nissan_gtr_nismo_gt3_2018",
+    "caption_it": "Versione aggiornata con aerodinamica e sospensioni riviste, più equilibrata della 2015. Resta un'auto da guidare con anticipo, non di reazione. Ottima trazione, freni da amministrare con attenzione nelle gare lunghe.",
+    "assets": {
+      "logo": {
+        "commons_query": "Nissan logo",
+        "commons_category": "Category:Nissan logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Nissan GT-R Nismo GT3 2018",
+        "commons_category": "Category:Nissan GT-R Nismo GT3",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "porsche_911_gt3_r_991",
+    "acc_car_id": "porsche_991_gt3_r",
+    "brand": "Porsche",
+    "model": "911 GT3 R (991)",
+    "year": 2018,
+    "category": "GT3",
+    "gt3_generation": "2018",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "4.0L 6 cilindri boxer aspirato",
+      "power_hp": 500,
+      "weight_kg": 1220,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "porsche_911_gt3_r_991",
+    "caption_it": "Motore posteriore a sbalzo: tutta la fisica della 911 in versione da gara. Trazione fenomenale in uscita, ma l'inserimento va costruito con il trail braking o l'avantreno scivola via. Non è la più immediata, è però una delle più gratificanti.",
+    "assets": {
+      "logo": {
+        "commons_query": "Porsche logo",
+        "commons_category": "Category:Porsche logos",
+        "preferred_format": "svg",
+        "license_expected": "marchio registrato — verificare tag Commons",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Porsche 911 GT3 R 991",
+        "commons_category": "Category:Porsche 911 GT3 R",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "porsche_911_ii_gt3_r_991",
+    "acc_car_id": "porsche_991ii_gt3_r",
+    "brand": "Porsche",
+    "model": "911 II GT3 R (991.2)",
+    "year": 2019,
+    "category": "GT3",
+    "gt3_generation": "2019",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "4.2L 6 cilindri boxer aspirato",
+      "power_hp": 550,
+      "weight_kg": 1220,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "porsche_911_ii_gt3_r_991",
+    "caption_it": "Cilindrata cresciuta e aerodinamica affinata rispetto alla 991.1, con un avantreno finalmente più incisivo. Mantiene la trazione superiore tipica della 911 senza chiedere altrettanti compromessi in inserimento. Molto forte sui tracciati con uscite lente.",
+    "assets": {
+      "logo": {
+        "commons_query": "Porsche logo",
+        "commons_category": "Category:Porsche logos",
+        "preferred_format": "svg",
+        "license_expected": "marchio registrato — verificare tag Commons",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Porsche 911 GT3 R 991.2",
+        "commons_category": "Category:Porsche 911 GT3 R",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "porsche_992_gt3_r",
+    "acc_car_id": "porsche_992_gt3_r",
+    "brand": "Porsche",
+    "model": "911 GT3 R (992)",
+    "year": 2023,
+    "category": "GT3",
+    "gt3_generation": "2023",
+    "dlc": true,
+    "dlc_pack": "2023 GT World Challenge Pack",
+    "specs": {
+      "engine": "4.2L 6 cilindri boxer aspirato",
+      "power_hp": 565,
+      "weight_kg": 1250,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "porsche_992_gt3_r",
+    "caption_it": "La 911 più equilibrata mai portata in ACC: motore arretrato, ripartizione pesi migliorata e un avantreno che finalmente risponde in inserimento. Resta la trazione da riferimento in uscita di curva lenta. Sensibile alle pressioni posteriori, tienile sotto controllo sui long run.",
+    "assets": {
+      "logo": {
+        "commons_query": "Porsche logo",
+        "commons_category": "Category:Porsche logos",
+        "preferred_format": "svg",
+        "license_expected": "marchio registrato — verificare tag Commons",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Porsche 911 GT3 R 992",
+        "commons_category": "Category:Porsche 911 GT3 R (992)",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "reiter_engineering_r_ex_gt3",
+    "acc_car_id": "reiter_engineering_r_ex_gt3",
+    "brand": "Reiter Engineering",
+    "model": "R-EX GT3",
+    "year": 2017,
+    "category": "GT3",
+    "gt3_generation": "2017",
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "V8 aspirato",
+      "power_hp": null,
+      "weight_kg": null,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "da_verificare"
+    },
+    "specs_note": "Vettura da costruttore indipendente con documentazione pubblica scarsa. Potenza e peso non confermati da fonte affidabile: DA VERIFICARE prima di esporli in UI.",
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "reiter_engineering_r_ex_gt3",
+    "caption_it": "Progetto indipendente di Reiter Engineering, fuori dagli schemi dei costruttori ufficiali. Carattere grezzo e aerodinamica meno raffinata della concorrenza moderna. È una curiosità più che una scelta competitiva, ma ha un seguito affezionato.",
+    "assets": {
+      "logo": {
+        "commons_query": "Reiter Engineering",
+        "commons_category": null,
+        "preferred_format": "svg",
+        "license_expected": "probabile assenza su Commons — DA VERIFICARE",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Reiter Engineering R-EX GT3",
+        "commons_category": null,
+        "preferred_format": "jpg",
+        "license_expected": "probabile assenza su Commons — DA VERIFICARE",
+        "status": "da_risolvere"
+      }
+    }
+  }
+]
