@@ -231,6 +231,11 @@ export default function Sidebar() {
         <div className="font-mono text-[0.6rem] text-muted">
           v1.0.0 · post-esame
           <span className="block">© 2026 Edoardo Ferlito · MIT</span>
+          {/* Attribuzione asset: le licenze CC BY/BY-SA la vogliono
+              raggiungibile dall'utente, non solo nel repo. */}
+          <Link href="/crediti" className="mt-1 block transition hover:text-white">
+            Crediti immagini
+          </Link>
         </div>
       </div>
 
