@@ -1,0 +1,227 @@
+[
+  {
+    "id": "barcelona_catalunya",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:F1_circuits_2014-2018_-_Circuit_de_Barcelona-Catalunya_(version_2).svg",
+    "license": "CC0",
+    "author": "Firkin",
+    "sha1": "367bc91b7a4adf392ba1776b2cfe0c657bb326a3"
+  },
+  {
+    "id": "brands_hatch",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Brands_Hatch_Indy_2003.svg",
+    "license": "CC BY-SA 4.0",
+    "author": "John Chapman",
+    "sha1": "5d4c462d06adb256b1c9ba8104a0af08a559e6a3"
+  },
+  {
+    "id": "cota",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:F1_circuits_2014-2018_-_Circuit_of_the_Americas_(version_2).svg",
+    "license": "CC0",
+    "author": "Firkin",
+    "sha1": "17f4bc32a69f18fa863cdbfe37b2e711388ed304"
+  },
+  {
+    "id": "donington_park",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Donington_Park_short.svg",
+    "license": "CC BY-SA 3.0",
+    "author": "Donington as of 2006.svg: Will Pittenger derivative work: Gpmat",
+    "sha1": "27fdcdb9e0d27527a3456be464fb7bf293354954"
+  },
+  {
+    "id": "hungaroring",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Hungaroring_circuit_1989-2002.svg",
+    "license": "CC BY-SA 3.0",
+    "author": "Restu20",
+    "sha1": "7a7274302dac3845be8b86094b3c9a4d5c4cb83f"
+  },
+  {
+    "id": "imola",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_Imola_1992_Tamburello_(vectorized).svg",
+    "license": "Public domain",
+    "author": "Alexander Jones",
+    "sha1": "6ff1c1909a1b258a8eb0599424e5ae1452037699"
+  },
+  {
+    "id": "indianapolis",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Indianapolis_Motor_Speedway_Road_Course_2024.svg",
+    "license": "CC BY-SA 4.0",
+    "author": "Stl66dmk",
+    "sha1": "3a924139a93d94d5424dceb01a4fb8e1bbabebe1"
+  },
+  {
+    "id": "kyalami",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Kyalami_1968layout.svg",
+    "license": "Public domain",
+    "author": "Alexander Jones",
+    "sha1": "7284c46ae402d466488140001f6b787ed85abd7d"
+  },
+  {
+    "id": "laguna_seca",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Laguna_seca_layout.svg",
+    "license": "Public domain",
+    "author": "Alexander Jones",
+    "sha1": "7f7749e095459fc3182fa82325a52d7ebbf4203a"
+  },
+  {
+    "id": "misano",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Misano_World_Circuit_2007.svg",
+    "license": "CC BY-SA 3.0",
+    "author": "Misano_World_Circuit.svg: Will Pittenger derivative work: Gpmat",
+    "sha1": "2b6dfe85a9b5c3ea320e56438ee18424069a0cf9"
+  },
+  {
+    "id": "monza",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Monza_track_map.svg",
+    "license": "CC BY-SA 3.0",
+    "author": "Will Pittenger",
+    "sha1": "050c7e28d3d84205e4571156af1931db89d63185"
+  },
+  {
+    "id": "mount_panorama",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Mount_Panorama_street_racing_circuit_in_Australia.svg",
+    "license": "CC BY-SA 3.0",
+    "author": "Will Pittenger",
+    "sha1": "4680a01d7bb0c35aa2be61b4ec6b48b7971dbdf9"
+  },
+  {
+    "id": "nurburgring_gp",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_N%C3%BCrburgring-1995-GP.svg",
+    "license": "CC BY-SA 3.0",
+    "author": "Pitlane02",
+    "sha1": "0ab78b7c8459a232e59a59a173d0992362a51ac7"
+  },
+  {
+    "id": "nurburgring_nordschleife",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_N%C3%BCrburgring-2013-Nordschleife.svg",
+    "license": "CC BY-SA 3.0",
+    "author": "Pitlane02",
+    "sha1": "125918931c7dc42a0586b141b6c285ff4def198a"
+  },
+  {
+    "id": "oulton_park",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Oulton_Park_Circuit_Map_2013.svg",
+    "license": "CC BY-SA 3.0",
+    "author": "Will Pittenger",
+    "sha1": "9f782451336e754435b0ea54572121b227e6785b"
+  },
+  {
+    "id": "paul_ricard",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_Paul_Ricard_2020_layout_map.svg",
+    "license": "CC BY-SA 4.0",
+    "author": "Antonsusi (talk)",
+    "sha1": "aa572a793d40b06dc95d60e82346cfa2e38540d0"
+  },
+  {
+    "id": "red_bull_ring",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_Red_Bull_Ring.svg",
+    "license": "CC BY-SA 3.0",
+    "author": "Pitlane02",
+    "sha1": "e62723f547f89950d21ba0e254c5997be2b1c7e0"
+  },
+  {
+    "id": "silverstone",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_Silverstone_2011.svg",
+    "license": "CC0",
+    "author": "AlexJ",
+    "sha1": "9461164651087efeb9374187b5e9ecd08de3a835"
+  },
+  {
+    "id": "snetterton",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Snetterton_circuit_layout.svg",
+    "license": "Public domain",
+    "author": "Alexander Jones",
+    "sha1": "fd6cb66d81757146972221f94a07ad7f4e475efe"
+  },
+  {
+    "id": "spa_francorchamps",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_of_Spa-Francorchamps_-_Rallycross.svg",
+    "license": "CC BY-SA 4.0",
+    "author": "Jorjum",
+    "sha1": "91226f00403b6a0741882bc7a12c3abc9c604cd4"
+  },
+  {
+    "id": "suzuka",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Suzuka_circuit_map--2005.svg",
+    "license": "CC BY-SA 3.0",
+    "author": "Will Pittenger",
+    "sha1": "a990d3115ba63b7e464dac23745df95f92614182"
+  },
+  {
+    "id": "valencia_ricardo_tormo",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Ricardo_Tormo_(Proposed_F1)_track_map.svg",
+    "license": "CC BY-SA 4.0",
+    "author": "Sentoan",
+    "sha1": "059254d1b9ba59066b61d54efd9be5a009bf2b02"
+  },
+  {
+    "id": "watkins_glen",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Watkins_Glen_International_Long_Circuit_2024.svg",
+    "license": "CC BY-SA 4.0",
+    "author": "Stl66dmk",
+    "sha1": "5282150cb917e888fcedc2cee29f74b0421ac917"
+  },
+  {
+    "id": "zandvoort",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_Park_Zandvoort-1989.svg",
+    "license": "CC BY-SA 3.0",
+    "author": "Pitlane02",
+    "sha1": "fce51c7504d39abdfebb8940321f6fedb2d08a9e"
+  },
+  {
+    "id": "zolder",
+    "kind": "track",
+    "role": "map",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_Zolder-1963-1972.svg",
+    "license": "CC BY-SA 3.0",
+    "author": "Pitlane02",
+    "sha1": "22e6a7c248b6cec1f58557d9ae925191f828fec3"
+  }
+]
