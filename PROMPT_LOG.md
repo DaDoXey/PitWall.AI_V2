@@ -791,6 +791,45 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 
 ---
 
+## Entry #023 — Fase 4/5 asset: foto verificate a occhio, ritaglio scelto a mano, crediti
+
+| Campo | Valore |
+|---|---|
+| Data | 03/09/2026 |
+| Agente dev | Claude Code (claude-opus-5) |
+| Area | NEW `backend/scripts/{apply_photos,build_crop_tool}.py` + `{photos,maps,crops}.json` · NEW `/crediti` · `SessionBriefing.tsx` · `Sidebar.tsx` · `.gitignore` |
+| Commit | `chore(assets)` · `feat(assets)` ×2 · `feat(ui)` ×2 · questo log |
+| Contesto | Ripresa dopo il 30/08: le foto scaricate in automatico erano piene di errori (modellino BMW 1:32, 911 stradali, monumento di Snetterton). Il materiale di correzione era già pronto ma mai applicato. |
+
+**Catalogo messaggi:**
+1. «riprendiamo il lavoro dell'altra volta … vediamo cosa ci sta da fare» → status esposto, piano approvato.
+2. «ok procedi, e gitignora i 33 MB» + «fai runnare in background e fammi vedere a schermo».
+3. «alcune non vengono allineate bene … fai in modo che non vengano tagliate del tutto».
+4. «torniamo ai formati di prima … fammi utilizzare quel tool per ritagliare meglio le foto e fai in modo anche che possa zoommarle».
+5. «ok tutto a posto» dopo la verifica dei 53 ritagli a schermo.
+
+**Modifica:**
+- **Foto verificate.** `photos (1).json` (export del provino `provino_foto_v3.html`, 53 foto scelte cliccandole una per una) promosso a `backend/scripts/photos.json`. NEW `apply_photos.py`: scarica le miniature a 1400px via `Special:FilePath` (non gli originali da 12-16 MB), sostituisce anche a estensione diversa, **rimuove** le foto delle entità senza candidato approvato, rigenera `manifest.json` e `ATTRIBUTIONS.md`. 53 applicate; 3 entità restano senza foto apposta (`audi_r8_lms_evo_ii_gt3`, `reiter_engineering_r_ex_gt3`, `valencia_ricardo_tormo`).
+- **Attribuzione dei layout SVG recuperata.** `ATTRIBUTIONS.md` viene riscritto per intero, quindi i 25 layout scaricati da `fetch_assets.py` (registro mai persistito) sarebbero spariti dai crediti. Ricostruiti interrogando Commons con lo **SHA-1** dei file a disco — identificazione esatta, non per nome — e salvati in `maps.json` (`--riscopri-mappe`).
+- **Ritaglio scelto a mano.** NEW `build_crop_tool.py` genera un tool: foto grande, riquadro reale sovrapposto, trascinamento e zoom, anteprima a dimensione vera, cursore per l'altezza della banda, salvataggio in localStorage, import/export. Export = `crops.json` (53 voci, banda **540×280**), copiato fra gli asset da `apply_photos.py`. `SessionBriefing.Hero` applica quattro percentuali già pronte dentro una banda a **rapporto fisso**; senza ritaglio ricade su `object-cover` centrato.
+- **`.gitignore`**: `/frontend/public/assets/` (33 MB). Le sorgenti versionate sono `photos.json` (scelta umana), `maps.json`, `crops.json` (scelta umana) e gli script che le applicano.
+
+**Motivazione:** il filtro automatico giudicava dal NOME DEL FILE, non dal contenuto; nessuna euristica testuale chiude quel buco, l'ultimo giudice deve essere un occhio umano. Stessa logica per l'inquadratura: la banda è molto più larga che alta, e il centro geometrico quasi mai coincide col soggetto.
+
+**Risultato osservato:** vetture riconoscibili e circuiti che mostrano il tracciato in Dashboard e Setup; `/crediti` elenca 78 asset (53 foto + 25 layout).
+
+**Bug trovati e risolti in corsa:**
+1. **Pagina `/crediti` vuota:** avevo aggiunto una colonna "Confidenza" alla tabella; il parser cerca 6 colonne con una regex ancorata, con 7 non aggancia più nulla e la pagina si svuota **senza errori**. Tornato a 6 colonne, con un commento che avvisa in entrambi i file.
+2. **Preesistente — 26 righe su 78 invisibili:** le parentesi negli URL Commons (`..._(DSC02308).jpg`) chiudevano il link markdown in anticipo e la riga non veniva riconosciuta. Ora sono percent-encoded: 78/78.
+
+**Verifica:**            `tsc --noEmit` 0 err · `test_parser` 12/12 · 53/53 foto e 53/53 ritagli rivisti a schermo uno per uno · Dashboard, Setup e `/crediti` verificate.
+**File protetti:**       ☐ nessuno toccato
+**Decisione:**           ☑ Mantenuto — pushato
+
+> **Note aperte:** i 25 **layout SVG** sono a disco, nel manifest e nei crediti ma **nessuna pagina li mostra** — prossimo passo. · `red_bull_ring` e `suzuka` restano deboli come contenuto (di meglio su Commons non c'era). · Con gli asset gitignorati, un eventuale **deploy** parte senza foto finché non gira `apply_photos.py`: da decidere se committarli o eseguire lo script in build.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
