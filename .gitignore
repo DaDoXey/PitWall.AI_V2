@@ -35,3 +35,18 @@ frontend/.env.local
 Thumbs.db
 .idea/
 .vscode/
+
+# ── Consegne grezze dei lotti asset (input di lavoro, non sorgente) ──
+# I dati validi vivono in backend/app/core/data/; gli script utili sono
+# stati promossi in backend/scripts/.
+/data_lotti/
+
+# -- Asset immagini scaricati da Wikimedia Commons (33 MB) --
+# Non versionati: sono ricreabili e la loro sorgente di verita e versionata
+#   backend/scripts/photos.json  = la selezione verificata a occhio nel provino
+#   backend/scripts/apply_photos.py = la applica
+# Per rigenerarli dopo un clone:  python backend/scripts/apply_photos.py
+# manifest.json e ATTRIBUTIONS.md sono generati dagli asset a disco, quindi
+# seguono la stessa sorte: senza asset la UI non mostra la banda foto e
+# /crediti dice "asset non ancora scaricati", invece di mostrare img rotte.
+/frontend/public/assets/
