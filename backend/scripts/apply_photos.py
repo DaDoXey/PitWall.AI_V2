@@ -129,6 +129,16 @@ def riscopri_mappe() -> list[dict]:
     Serve per non perdere l'attribuzione delle mappe scaricate da
     fetch_assets.py, il cui registro non e' persistito da nessuna parte.
     """
+    # Si PARTE dal registro esistente invece che da zero. La riscoperta per
+    # sha1 funziona solo sui file scaricati interi (il byte a disco e' quello di
+    # Commons); i raster sono miniature scalate, il loro sha1 non corrisponde a
+    # nulla, e una ricostruzione da zero li cancellerebbe dai crediti senza dare
+    # errore. Chi si riconosce aggiorna la propria voce, gli altri restano.
+    esistenti: dict[str, dict] = {}
+    if MAPS_DEFAULT.exists():
+        esistenti = {m["id"]: m for m in
+                     json.loads(MAPS_DEFAULT.read_text(encoding="utf-8"))}
+
     trovate: list[dict] = []
     for f in sorted((OUT_DIR / "tracks").glob("*_map.svg")):
         ent_id = f.stem[: -len("_map")]
@@ -152,10 +162,13 @@ def riscopri_mappe() -> list[dict]:
             "sha1": sha1,
         })
         print(f"[maps] {ent_id}: {img.get('title')} ({trovate[-1]['license']})")
-    MAPS_DEFAULT.write_text(json.dumps(trovate, ensure_ascii=False, indent=2) + "\n",
+    fusi = {**esistenti, **{t['id']: t for t in trovate}}
+    ordinato = [fusi[k] for k in sorted(fusi)]
+    MAPS_DEFAULT.write_text(json.dumps(ordinato, ensure_ascii=False, indent=2) + "\n",
                             encoding="utf-8")
-    print(f"Scritto {MAPS_DEFAULT} ({len(trovate)} layout)")
-    return trovate
+    print(f"Scritto {MAPS_DEFAULT} ({len(ordinato)} layout, "
+          f"{len(trovate)} riconosciuti adesso per sha1)")
+    return ordinato
 
 
 def scrivi_attribuzioni(voci: list[dict], scoperte: dict[str, list[str]],
@@ -207,7 +220,10 @@ def scrivi_attribuzioni(voci: list[dict], scoperte: dict[str, list[str]],
         righe.append(riga(v["file"], v["id"], "photo", v.get("author"),
                           v.get("license"), v["source_page"]))
     for m in sorted(mappe, key=lambda x: x["id"]):
-        percorso = f"frontend/public/assets/tracks/{m['id']}_map.svg"
+        # Il percorso arriva dal registro quando c'e' (lo scrive apply_maps.py):
+        # i layout scelti a occhio nel provino sono spesso PNG, e l'estensione
+        # ".svg" scritta a mano qui indicava nei crediti un file inesistente.
+        percorso = m.get("file") or f"frontend/public/assets/tracks/{m['id']}_map.svg"
         righe.append(riga(percorso, m["id"], "map", m.get("author"),
                           m.get("license"), m["source_page"]))
 
