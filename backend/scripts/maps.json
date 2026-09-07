@@ -48,10 +48,11 @@
     "id": "imola",
     "kind": "track",
     "role": "map",
-    "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_Imola_1992_Tamburello_(vectorized).svg",
-    "license": "Public domain",
-    "author": "Alexander Jones",
-    "sha1": "6ff1c1909a1b258a8eb0599424e5ae1452037699"
+    "file": "frontend/public/assets/tracks/imola_map.png",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Autodromo_Enzo_e_Dino_Ferrari_2022.png",
+    "license": "CC BY-SA 4.0",
+    "author": "Juan2910",
+    "sha1": null
   },
   {
     "id": "indianapolis",
@@ -66,10 +67,11 @@
     "id": "kyalami",
     "kind": "track",
     "role": "map",
-    "source_page": "https://commons.wikimedia.org/wiki/File:Kyalami_1968layout.svg",
-    "license": "Public domain",
-    "author": "Alexander Jones",
-    "sha1": "7284c46ae402d466488140001f6b787ed85abd7d"
+    "file": "frontend/public/assets/tracks/kyalami_map.png",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Kyalami_Track_Map_2016.png",
+    "license": "CC BY-SA 4.0",
+    "author": "Dr Enslin",
+    "sha1": null
   },
   {
     "id": "laguna_seca",
@@ -174,10 +176,11 @@
     "id": "spa_francorchamps",
     "kind": "track",
     "role": "map",
-    "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_of_Spa-Francorchamps_-_Rallycross.svg",
-    "license": "CC BY-SA 4.0",
-    "author": "Jorjum",
-    "sha1": "91226f00403b6a0741882bc7a12c3abc9c604cd4"
+    "file": "frontend/public/assets/tracks/spa_francorchamps_map.png",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Spa-Francorchamps-2007-v2.png",
+    "license": "CC BY-SA 3.0",
+    "author": "No machine-readable author provided. Mateusz assumed (based on copyright claims).",
+    "sha1": null
   },
   {
     "id": "suzuka",
@@ -210,18 +213,20 @@
     "id": "zandvoort",
     "kind": "track",
     "role": "map",
-    "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_Park_Zandvoort-1989.svg",
-    "license": "CC BY-SA 3.0",
-    "author": "Pitlane02",
-    "sha1": "fce51c7504d39abdfebb8940321f6fedb2d08a9e"
+    "file": "frontend/public/assets/tracks/zandvoort_map.png",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Zandvoort_Circuit.png",
+    "license": "CC BY-SA 4.0",
+    "author": "Anthony Alessio Tralongo",
+    "sha1": null
   },
   {
     "id": "zolder",
     "kind": "track",
     "role": "map",
-    "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_Zolder-1963-1972.svg",
+    "file": "frontend/public/assets/tracks/zolder_map.svg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_Zolder-2002.svg",
     "license": "CC BY-SA 3.0",
     "author": "Pitlane02",
-    "sha1": "22e6a7c248b6cec1f58557d9ae925191f828fec3"
+    "sha1": "66631cfaddea2460441e8728c9c44d6123bfe25c"
   }
 ]

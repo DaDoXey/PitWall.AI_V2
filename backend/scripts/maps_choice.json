@@ -1,0 +1,69 @@
+{
+  "_meta": {
+    "generato_da": "_provino_mappe.html",
+    "nota": "Layout scelti guardando l'immagine, uno per uno. Le piste assenti da `mappe` sono assenti apposta: vedi `senza_mappa`.",
+    "senza_mappa": []
+  },
+  "mappe": [
+    {
+      "id": "spa_francorchamps",
+      "titolo_file": "File:Spa-Francorchamps-2007-v2.png",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/50/Spa-Francorchamps-2007-v2.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Spa-Francorchamps-2007-v2.png",
+      "license": "CC BY-SA 3.0",
+      "author": "No machine-readable author provided. Mateusz assumed (based on copyright claims).",
+      "width": 1244,
+      "height": 880,
+      "format": "png",
+      "note": "scelto a occhio nel provino; passato alla versione -v2 dello stesso file (identico layout 2007, orizzontale invece che verticale)"
+    },
+    {
+      "id": "imola",
+      "titolo_file": "File:Autodromo Enzo e Dino Ferrari 2022.png",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/9/97/Autodromo_Enzo_e_Dino_Ferrari_2022.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Autodromo_Enzo_e_Dino_Ferrari_2022.png",
+      "license": "CC BY-SA 4.0",
+      "author": "Juan2910",
+      "width": 1183,
+      "height": 672,
+      "format": "png",
+      "note": "scelto a occhio nel provino (candidato Claude Desktop)"
+    },
+    {
+      "id": "zandvoort",
+      "titolo_file": "File:Zandvoort Circuit.png",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/78/Zandvoort_Circuit.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Zandvoort_Circuit.png",
+      "license": "CC BY-SA 4.0",
+      "author": "Anthony Alessio Tralongo",
+      "width": 18989,
+      "height": 17338,
+      "format": "png",
+      "note": "scelto a occhio nel provino (candidato Claude Desktop)"
+    },
+    {
+      "id": "zolder",
+      "titolo_file": "File:Circuit Zolder-2002.svg",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Circuit_Zolder-2002.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_Zolder-2002.svg",
+      "license": "CC BY-SA 3.0",
+      "author": "Pitlane02",
+      "width": 512,
+      "height": 503,
+      "format": "svg",
+      "note": "scelto a occhio nel provino (candidato Claude Desktop)"
+    },
+    {
+      "id": "kyalami",
+      "titolo_file": "File:Kyalami Track Map 2016.png",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/6/69/Kyalami_Track_Map_2016.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Kyalami_Track_Map_2016.png",
+      "license": "CC BY-SA 4.0",
+      "author": "Dr Enslin",
+      "width": 1330,
+      "height": 706,
+      "format": "png",
+      "note": "scelto a occhio nel provino (candidato Claude Desktop)"
+    }
+  ]
+}
