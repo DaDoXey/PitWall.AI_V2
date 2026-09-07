@@ -830,6 +830,163 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 
 ---
 
+## Entry #024 — Guide dei tracciati, blocco 1: provino delle mappe + validatore delle guide
+
+| Campo | Valore |
+|---|---|
+| Data | 07/09/2026 |
+| Agente dev | Claude Code (claude-opus-5) |
+| Area | NEW `backend/scripts/build_maps_proof.py` · NEW `backend/scripts/check_track_knowledge.py` · NEW `backend/app/core/data/tracks_knowledge/` · NEW `backend/scripts/maps_candidates.json` |
+| Commit | non ancora committato |
+| Contesto | Primo blocco della fase "guide dei tracciati" consegnato da Claude Desktop (`files_nuovi.zip`). Le mappe a disco sono in gran parte layout storici sbagliati: stesso errore delle foto, scelta fatta sul nome del file. |
+
+**Catalogo messaggi:**
+1. «riprendiamo il lavoro dell'ultima volta, leggi la memoria e partiamo» → status esposto, consegna non ancora arrivata.
+2. «ok appena scaricato il nuovo lotto … cercalo in download» → letto e giudicato tutto il blocco 1.
+3. «ok fai il provino delle mappe, ricontrolla tutto poi inizia a buttare giù quel che serve per lavorare».
+4. «sì applica La Source e prepara il prompt di sollecito».
+5. «aspetta prima uso il tool poi vedi te dopo» → provino usato da Edoardo.
+6. «ok ho esportato il json ora procedi».
+7. «facciamo in modo di avere solamente il layout della pista esatto ed aggiornato invece di
+   cercare per forza quello con le curve numerate» → **cambio di criterio**, vedi sotto.
+8. «sì è sopraelevata, correggi il catalogo a 4.259» → verifica in gioco fatta da Edoardo.
+
+**Consegna ricevuta (parziale):** `maps_candidates.json` **5/5** circuiti · `tracks_knowledge_*.json`
+**2/5** (spa, imola) · `REPORT.md` parziale. Mancano zandvoort (che lui dichiara bloccato su una
+discordanza), zolder, kyalami.
+
+**Modifica:**
+- NEW **`build_maps_proof.py`** → `frontend/public/assets/_provino_mappe.html`. Risolve i candidati
+  contro l'API di Commons e li mette a schermo come immagini vere, su **placca avorio** (come li
+  vedrà la UI), con sotto la *prova* e il *rischio* scritti da Claude Desktop, l'**impronta del
+  catalogo** (km + curve) come metro di paragone, badge `trappola`/`dubbio`/`probabile`, zoom a
+  tutto schermo, `Nessuna adatta`, localStorage, export **`maps_choice.json`**.
+- NEW **`check_track_knowledge.py`**: controlla le guide consegnate (schema, numerazione contigua,
+  numero di curve contro `tracks.json`, vocabolario di `freni.stress`/`track_limits.rischio`,
+  fonti, stime marcate) e soprattutto la **coerenza del lato gomma**: in curva a destra si carica
+  il lato sinistro. Riconosce un campo `direzione` per curva, se c'è.
+- I due knowledge file promossi in `backend/app/core/data/tracks_knowledge/`. Unica modifica alla
+  consegna, su ok esplicito: **Spa T1 La Source**, `gomme.stress` «anteriore **destro** in ingresso»
+  → «anteriore **sinistro** in ingresso» (tornante destro ⇒ carica il lato sinistro). Verificato per
+  confronto campo per campo con il file consegnato: **1 solo campo cambiato**, tutto il resto
+  identico.
+
+**Motivazione:** stessa lezione delle foto un giro dopo — su un circuito è peggio, perché due
+layout dello stesso autodromo a trent'anni di distanza hanno lo stesso nome, lo stesso stile e la
+stessa dimensione, e differiscono per un tratto di pista. E sul testo: il blocco 1 sono 38 curve e
+le ho lette a mano, ma 25 circuiti sono ~450 — serve una macchina che faccia i controlli
+meccanici e dica a voce alta cosa *non* può controllare.
+
+**Risultato osservato:** provino con **130 candidati su 5 circuiti** (27 proposti da Claude Desktop
++ il resto delle categorie Commons). Verificato a schermo: immagini, scelta, banner verde con
+`annulla`, contatore, persistenza. Il ripescaggio dalla categoria ha già ripagato: su **Kyalami**,
+dato nel REPORT come "un solo candidato utilizzabile", la categoria contiene `Kyalami 16.png`
+(2560×1577, CC BY-SA 4.0, con nomi e numeri di curva) — molto meglio del PNG 1330×706 proposto.
+
+**Trovato leggendo (non è nel REPORT di Desktop):**
+1. **Spa T1 La Source**: `gomme.stress` = «anteriore destro in ingresso» su un tornante **destro** —
+   in curva a destra si carica l'anteriore **sinistro**. Unico caso su 38 curve: le altre 37 sono
+   corrette. È il campo che Gigi userebbe per leggere le temperature.
+2. **Spa T3 Raidillon**: il testo dice «gira ancora a sinistra» e il carico è coerente con una
+   sinistra, ma in gran parte dei riferimenti Raidillon è la **salita a destra**. Da incrociare con
+   la mappa scelta (il REPORT ammette che a Spa l'abbinamento nome↔numero è la parte debole).
+3. **Imola: zero errori** su 19 curve.
+4. I 27 titoli di file esistono **tutti** su Commons: niente inventato. Tre "candidati" di
+   Zandvoort sono lo **stesso file** via redirect.
+5. Le `commons_category` in `tracks.json` sono in gran parte **inesistenti** (`Category:Maps of …`):
+   le categorie vere si chiamano `Category:<circuito> circuit maps`. Lo script le ricava dai file.
+
+**Verifica:** `tsc --noEmit` 0 err · `test_parser` **12/12** · provino verificato a schermo
+(spa, kyalami) e localStorage riazzerato dopo la prova · prova del nove del validatore: aggiungendo
+`direzione: "destra"` a La Source l'errore esce come ERRORE, poi file ripristinato identico.
+
+**Seconda parte (stessa iterazione) — la scelta applicata:**
+- Edoardo ha scelto **5/5** nel provino (Zandvoort inclusa) ed esportato `maps_choice.json`.
+- NEW **`apply_maps.py`**: porta a disco i layout approvati. Tre differenze dalle foto, tutte
+  obbligate: gli **SVG si scaricano interi** (su un SVG `Special:FilePath?width=` restituisce un
+  PNG renderizzato, che salvato `.svg` sarebbe un file rotto); il **vecchio file va cancellato**
+  e non sovrascritto (le mappe nuove sono PNG, le vecchie SVG: con entrambi a disco il manifest
+  indicizza due file sotto il ruolo `map` e vince l'ultimo in ordine alfabetico, cioe' proprio
+  quello sbagliato); via anche i **`_layout.svg`** di `clean_maps.py`, che erano ricavati dai file
+  vecchi e quindi sbagliati uguale.
+- MOD **`apply_photos.py`**, due correzioni necessarie prima di applicare:
+  (a) `scrivi_attribuzioni` scriveva a mano `..._map.svg` per i layout — con le mappe PNG i crediti
+  avrebbero indicato un file inesistente; ora usa il percorso vero dal registro;
+  (b) `--riscopri-mappe` ricostruiva `maps.json` **da zero** per sha1: i raster sono miniature
+  scalate e il loro sha1 non corrisponde a nulla su Commons, quindi sarebbero spariti dai crediti
+  in silenzio. Ora il registro si **fonde** invece di essere riscritto.
+
+**Risultato osservato (parte 2):** 5 layout a disco — `imola_map.png` (1183×672, 19 curve
+numerate), `zandvoort_map.png` (1920×1753, 14 numerate + nomi + settori a colori),
+`kyalami_map.png` (1330×706, 16 numerate + nomi), `zolder_map.svg` (13 KB, nomi + numeri),
+`spa_francorchamps_map.png` (880×1244). `maps.json` 25 layout (5 aggiornati), `manifest.json`
+25/25 piste, `ATTRIBUTIONS.md` **78/78 righe** a 6 colonne, nessuna parentesi non codificata.
+
+**Verifica incrociata mappa ↔ catalogo (fatta guardando le mappe scaricate):**
+| pista | numeri sulla mappa | `corners` nel catalogo | |
+|---|---|---|---|
+| imola | 19 | 19 | ✓ |
+| zandvoort | 14 | 14 | ✓ |
+| kyalami | 16 | 16 | ✓ |
+| zolder | **11** | 10 | ✗ da sciogliere |
+| spa | **nessuno** (mappa muta) | 19 | ✗ da sciogliere |
+
+> Sciolto un dubbio del REPORT: `Spa-Francorchamps of Belgium.svg` **e' il layout attuale** — la
+> Bus Stop e' la chicane corta post-2007, guardata a schermo. Ma numera fino a **20**, mentre il
+> catalogo e la guida dicono 19.
+
+**Cambio di criterio deciso in corsa (messaggio 7): conta solo che il layout sia esatto e
+aggiornato, i numeri di curva sulla mappa non sono piu' un requisito.** Supera la decisione del
+03/09. Motivo di Edoardo: pretendere le curve numerate restringe il campo al punto da rendere
+impossibile trovare le mappe giuste. Conseguenza: i due disallineamenti qui sopra (Spa 20 vs 19,
+Zolder 11 vs 10) **non arrivano piu' a schermo**, perche' la mappa non mostrera' numeri che
+contraddicono la guida. Memoria `pitwall-guide-tracciati` aggiornata di conseguenza.
+
+**Verifica del layout col criterio nuovo** — la descrizione del file su Commons, non il nome:
+| pista | file scelto | dichiarazione su Commons |
+|---|---|---|
+| spa | `Spa-Francorchamps-2007-v2.png` | "2007 layout of Spa-Francorchamps circuit" ✓ |
+| imola | `Autodromo Enzo e Dino Ferrari 2022.png` | "Trazado de Imola", 2022 ✓ |
+| zandvoort | `Zandvoort Circuit.png` | **"Zandvoort Circuit Layout (2020–present)"** ✓ |
+| zolder | `Circuit Zolder-2002.svg` | "Circuit Zolder-2002 until today" ✓ |
+| kyalami | `Kyalami Track Map 2016.png` | "Track layout from 2016-present" ✓ |
+
+**Unica modifica alla scelta di Edoardo:** Spa passato da `Spa-Francorchamps-2007.png` a
+`-v2.png`. **Non e' un cambio di layout**: Commons dichiara il secondo come "Other version" del
+primo, stessa descrizione, stesso autore, stessa licenza — cambia solo che e' **1244×880 invece
+di 880×1244**, cioe' orizzontale, e la banda della scheda e' 540×280. In verticale sarebbe
+comparso minuscolo. Reversibile rimettendo il titolo in `maps_choice.json` e rilanciando lo script.
+
+**Zandvoort CHIUSA (messaggio 8).** Edoardo ha verificato in gioco: **l'ultima curva e'
+sopraelevata**, quindi ACC ha il layout 2020 e la mappa scelta e' quella giusta. MOD `tracks.json`,
+4 righe su 666 (modifica chirurgica sul testo: le sezioni `assets` stanno su una riga sola e un
+round-trip JSON avrebbe riformattato tutte e 25 le voci):
+- `zandvoort.length_km` **4.307 → 4.259** (4.307 era la lunghezza del pre-2020);
+- `zandvoort.corners_confidence` `da_verificare` → `alta`;
+- `zandvoort.corners_note` **riscritta**: diceva il contrario di quello che si e' visto in gioco —
+  «ACC riproduce il layout precedente al riprofilamento del 2020». Era quella nota a giustificare
+  i 4.307 km. Adesso dichiara il layout 2020 e da' conto della correzione;
+- `kyalami.corners_confidence` `da_verificare` → `alta`: la mappa "2016-present" numera 16 curve,
+  quante ne porta il catalogo. La differenza di 7 m sulla lunghezza (4.522 contro i 4.529 di
+  Wikipedia) resta aperta e `length_confidence` resta `da_verificare`.
+
+> **Nota di metodo:** il campo `corners_note` di Zandvoort e' un caso da ricordare. Non era un
+> dato mancante ma un dato **sbagliato e assertivo**, che aveva gia' prodotto un secondo dato
+> sbagliato (la lunghezza) e che avrebbe fatto scartare la mappa giusta. Un `DA_VERIFICARE` in
+> fondo a una nota non protegge da niente se nessuno va a verificare.
+
+**File protetti:** ☐ nessuno toccato
+**Decisione:** ☐ Mantenuto — **non ancora committato, in attesa di «ok push»**
+
+> **Note aperte:** `maps_choice.json` NON si chiama `maps.json` apposta — quel nome è già il
+> registro delle attribuzioni letto da `apply_photos.py`, e due schemi con lo stesso nome
+> avrebbero svuotato `/crediti` in silenzio (stessa classe della trappola regex a 6 colonne).
+> · Manca ancora `apply_maps.py` (porta a disco la scelta e rigenera il registro): si scrive dopo
+> la scelta di Edoardo. · **Zandvoort resta bloccato** finché non si verifica in gioco se l'ultima
+> curva è sopraelevata (layout 2020, 4.259 km) o no (pre-2020, 4.307 km come dice il catalogo).
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
