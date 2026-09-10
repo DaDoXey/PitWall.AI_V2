@@ -1,0 +1,138 @@
+[English](README.md) | **Italiano**
+
+# PitWall.AI_V2
+
+Un Virtual Race Engineer per Assetto Corsa Competizione (ACC). Usa gli LLM per trasformare la
+telemetria e il feedback del pilota in consigli concreti di setup e strategia di gara. Pensato per
+colmare la distanza fra dati complessi e prestazione in pista per i sim-racer. Sviluppato per il
+corso AI & Digital Innovation Specialist.
+
+> **v2** della webapp PitWall.AI: migrazione da Streamlit a **Next.js + FastAPI**. Riusa la logica
+> di dominio della v1 (client LLM, parser CSV, range ACC, vision) dietro un'API pulita, con una UI
+> React ricca.
+
+## Stato attuale
+**Esame del 15/07/2026 superato**, con la demo in demo-mode. Ora è in corso la **build vera e
+propria**: portare PitWall dalla demo al prodotto, con l'LLM reale sotto.
+
+Il client LLM è già implementato (analisi a 4 sezioni validate, con retry e cascata di modelli, e
+chat di Gigi) e si accende con `PITWALL_ALLOW_LIVE=1` + `PITWALL_DEMO_MODE=0` + la chiave. **Resta
+spento di default** finché non sono pronti osservabilità e modello di costo (vedi Roadmap).
+
+Cronologia delle iterazioni → `PROMPT_LOG.md` · malfunzionamenti gravi → `INCIDENTS.md`.
+
+## Struttura
+
+```
+backend/       FastAPI
+  app/
+    main.py      # app + CORS + router sotto /api
+    config.py    # env server-side (API key MAI nel client), flag demo/live
+    api/         # endpoint (elenco sotto)
+    core/        # logica di dominio: agent, csv_parser, setup_params, vision_parser, demo, prompts,
+                 # data/ (catalogo ACC e guide dei tracciati)
+    tests/       # test_parser (baseline 12/12)
+  scripts/       # pipeline delle immagini (foto, ritagli, mappe) e validatore delle guide
+frontend/      Next.js 15.5 (App Router) + TypeScript + Tailwind + Recharts + Framer Motion
+  src/
+    app/         # layout + pagine (elenco sotto)
+    components/  # UI e grafici
+    lib/         # client API, token di design, logica delle pagine
+docs/          # planning storico (00-02) e architettura V2 as-built (03)
+```
+Dettaglio in [`docs/03-v2-architecture.md`](docs/03-v2-architecture.md).
+
+### Pagine
+| Rotta | Pagina |
+|---|---|
+| `/` | Dashboard |
+| `/telemetry` | Telemetria |
+| `/console` | Console (analisi del race engineer) |
+| `/setup` | Setup |
+| `/lezioni` · `/lezioni/[slug]` | A Lezione con Gigi |
+| `/crediti` | Crediti delle immagini (Wikimedia Commons) |
+| `/login` | Accesso (Google oppure modalità demo) |
+
+### API
+| Metodo | Rotta | Cosa fa |
+|---|---|---|
+| GET | `/api/session` | Sessione corrente |
+| POST | `/api/analysis` | Analisi del race engineer |
+| GET | `/api/setup-params` | Parametri di setup e relativi range |
+| POST | `/api/csv/parse` | Import di un CSV di telemetria |
+| POST | `/api/setup/from-image` | Lettura del setup da uno screenshot |
+| GET | `/api/catalog` | Catalogo vetture e circuiti |
+| GET | `/api/catalog/car/{car_id}` | Scheda di una vettura |
+| GET | `/api/catalog/track/{track_id}` | Scheda di un circuito |
+
+## Avvio in locale
+
+### Backend (FastAPI, porta 8000)
+```bash
+cd backend
+python -m venv .venv && source .venv/Scripts/activate   # Windows Git Bash
+pip install -r requirements.txt
+cp .env.example .env        # opzionale: senza chiave gira in demo-mode
+python -m uvicorn app.main:app
+```
+Health check: <http://localhost:8000/> · API demo: <http://localhost:8000/api/session>
+
+> **Niente `--reload`:** su Windows continua a servire il codice vecchio dopo una modifica al
+> backend (HAZARD-V2-B in `INCIDENTS.md`). Dopo aver toccato il backend, fermalo e rilancialo.
+
+### Frontend (Next.js, porta 3000)
+```bash
+cd frontend
+cp .env.local.example .env.local
+npm install
+npm run dev
+```
+Apri <http://localhost:3000>. Senza un Client ID Google si entra con **«Entra in modalità demo»**.
+
+> **Mai `npm run build` con `npm run dev` acceso:** corrompe `.next` (HAZARD-V2-A). Con il dev
+> attivo, per controllare i tipi usa `npx tsc --noEmit`.
+
+### Test
+```bash
+cd backend
+./.venv/Scripts/python app/tests/test_parser.py    # baseline 12/12
+```
+
+### Immagini (foto e mappe)
+Le immagini arrivano da Wikimedia Commons (~33 MB) e **non sono nel repo**: `frontend/public/assets/`
+è gitignorata. Dopo un clone l'app funziona lo stesso, ma senza foto nelle schede e con `/crediti`
+che segnala gli asset come non ancora scaricati. Nel repo è versionata la selezione fatta a mano;
+per scaricarla, dalla radice del repo:
+```bash
+backend/.venv/Scripts/python backend/scripts/apply_photos.py   # foto (photos.json) + ritagli + crediti
+backend/.venv/Scripts/python backend/scripts/apply_maps.py     # layout dei circuiti (maps_choice.json)
+```
+
+## Variabili d'ambiente e presidio API key
+Tutte le variabili, con i valori di default, sono documentate in `backend/.env.example` e
+`frontend/.env.local.example`.
+
+La `ANTHROPIC_API_KEY` vive **solo nel backend**. Con `PITWALL_ALLOW_LIVE=0` (default) la demo-mode
+è forzata qualunque cosa dica il resto: si serve la **cache demo**, senza rete, e la chiave non si
+consuma. L'LLM reale richiede **entrambi** `PITWALL_ALLOW_LIVE=1` e `PITWALL_DEMO_MODE=0`, più la
+chiave nei secret del server.
+
+## Roadmap
+1. **Osservabilità del ramo LLM**: logging con livelli su un percorso dedicato. Oggi un guasto del
+   ramo reale non lascia traccia.
+2. **Modello di costo** prima dell'accensione: la cascata di modelli moltiplica la spesa proprio
+   quando qualcosa si guasta, e non ha un tetto.
+3. **Accensione e stress test dell'LLM reale.**
+4. **Guide dei tracciati** per tutti i 25 circuiti ACC: settori e curva per curva.
+5. **Mappe dei circuiti**: 5 layout su 25 verificati. Restano da sostituire gli altri 20, e manca
+   ancora la pagina che le mostri.
+6. **Lotto 2 del catalogo**: 23 vetture GT4, GT2, GTC e TCX.
+7. **Range di setup per vettura** (INC-V2-003): oggi cambiare vettura non cambia i 49 parametri.
+8. **Deploy**.
+
+## Deploy
+Piattaforma **da decidere**. Da tenere presente: le immagini non sono versionate, quindi un deploy
+parte senza foto finché non si esegue `apply_photos.py`.
+
+## Licenza
+Distribuito con licenza **MIT** — vedi [LICENSE](LICENSE).
