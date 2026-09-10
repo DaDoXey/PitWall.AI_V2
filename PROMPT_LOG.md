@@ -987,6 +987,105 @@ round-trip JSON avrebbe riformattato tutte e 25 le voci):
 
 ---
 
+## Entry #025 — Regole del blocco 2, guide zolder e zandvoort, pulizia `clean_maps.py`, README bilingue
+
+| Campo | Valore |
+|---|---|
+| Data | 08/09/2026 (seconda metà) · 10/09/2026 |
+| Agente dev | Claude Code (claude-opus-5) |
+| Area | MOD `backend/scripts/check_track_knowledge.py` · MOD `build_maps_proof.py` · NEW `tracks_knowledge/{zolder,zandvoort}.json` · DEL `backend/scripts/clean_maps.py` · `README.md` + NEW `README.it.md` · MOD `backend/.env.example` · MOD `frontend/.env.local.example` |
+| Commit | `802d841` (validatore) · `2bb38c6` (guide) · `d20da60` (README) · questo log |
+| Contesto | L'08/09, dopo la consegna della PRR, la sessione è andata avanti ma si è chiusa per l'utilizzo residuo senza commit né entry. Il 10/09 si riparte dalla memoria, che era rimasta indietro rispetto al repo. |
+
+**Catalogo messaggi (10/09):**
+1. «leggi la memoria e riprendiamo il lavoro lasciato in sospeso» → status ricostruito dai file
+   (date, diff, session-cache): la memoria diceva «guide 2/5» e «sei domande senza risposta», il
+   repo aveva già 4 guide e le risposte trasformate in controlli.
+2. «fuori dal repo la prr checklist, invece dimmi in breve che cosa ti è arrivato nell'ultimo file
+   zip e che cosa ti manca» → `PRR_CHECKLIST_PitWall.md` resta **non tracciata**; riepilogo di
+   `files.zip` riletto dal file, non a memoria.
+3. «allora procedi con la coda leggera, parti da clean_maps» → scelte di Edoardo: cancellare
+   `clean_maps.py` e i 20 `_layout.svg` residui.
+4. Sei risposte sul README: esame superato e build vera e propria · roadmap sostituita dal
+   backlog · deploy «da decidere» · variabili mancanti aggiunte · lingua da chiarire · elenchi
+   ridotti alle cartelle.
+5. «1 va bene, 2 ok push. per il read me fallo sia in inglese che in italiano» → due file
+   (`README.md` inglese, `README.it.md` italiano).
+
+La seconda metà dell'08/09 non ha un catalogo messaggi: è ricostruita da `.claude/session-cache.md`
+e dal prompt di sollecito sul Desktop.
+
+**Modifica — A) 08/09, regole del blocco 2 e guide (`802d841`, `2bb38c6`):**
+- Le sei domande rimaste aperte nella #024 hanno avuto risposta e sono diventate controlli in
+  `check_track_knowledge.py`: **`direzione` obbligatoria** su ogni curva (una guida intera senza =
+  1 errore «in attesa del retrofit», non N); 4 campi di pista raccomandati (`senso_marcia`,
+  `dislivello_m`, `rettilineo_piu_lungo_m`, `variante_acc`) come «da controllare», non errori;
+  regola su `gt3_ref_lap_time` (o fonte, o stima di mestiere con confidence non alta).
+  `build_maps_proof.py`: solo la docstring (consegna mappe = intera categoria Commons).
+- Consegna dell'08/09 (`files.zip`): **zolder** e **zandvoort** accettate; **kyalami scartata**
+  (troncata, curve 7-16 con `tipo`/`origine`/`confidence` a null); spa e imola riscritte **non
+  applicate**; `maps_candidates.json` non serviva. Nessuna delle 5 guide aveva `direzione`.
+- Correzioni su zandvoort, su ok di Edoardo: **T1 Tarzanbocht** «anteriore destro» → «anteriore
+  sinistro» (curva a destra ⇒ carica il sinistro), trovata dal validatore; `verifica_catalogo`
+  riscritta, perché dava ancora aperto il dubbio sul layout chiuso il 07/09.
+- Girato a Claude Desktop `PROMPT_sollecito_guide_blocco1.txt`: chiede `direzioni_retrofit.json`
+  (62 curve su spa, imola, zolder, zandvoort), kyalami rifatta da sola e un REPORT dei null.
+  **Al 10/09 la risposta non è arrivata.**
+
+**Modifica — B) 10/09, `clean_maps.py` e i `_layout.svg`:**
+- DEL `backend/scripts/clean_maps.py` (mai committato, nessun chiamante; la sua docstring
+  descriveva il filtro invert abbandonato il 07/09 per la placca chiara).
+- DEL i **20 `{id}_layout.svg`** rimasti in `frontend/public/assets/tracks/`, ricavati dalle mappe
+  vecchie. Non erano innocui: `fetch_assets.scrivi_manifest` indicizza tutto ciò che sta nella
+  cartella, quindi il manifest li offriva come ruolo `layout` — il campo che una futura pagina
+  mappe avrebbe usato, con 20 tracciati sbagliati. Il ruolo giusto è `map`; `SessionBriefing.tsx`
+  oggi legge solo `photo`.
+- Rigenerati manifest e crediti con `apply_photos.py --no-download` (prima un `--dry-run`: nulla
+  da scaricare, nessuna foto da rimuovere). Nessuna traccia in git: file non tracciati e asset
+  gitignorati.
+
+**Modifica — C) 10/09, README e `.env.example` (`d20da60`):**
+- `README.md` in inglese e `README.it.md` in italiano, con link reciproco e stessi contenuti.
+  Stato attuale (esame superato, build in corso), 7 pagine e 8 rotte, avvio **senza `--reload`**,
+  avviso su `npm run build`, sezione Test, come riscaricare le immagini, roadmap = backlog vero,
+  deploy «da decidere».
+- Chiesto «LLM funzionante»: **non scritto così**, perché il ramo è implementato ma spento di
+  default e mai messo sotto carico. Il README dice come si accende e perché resta spento.
+- **Errore del vecchio README trovato durante la verifica:** per l'LLM reale non basta
+  `PITWALL_ALLOW_LIVE=1`; `config.py` richiede anche `PITWALL_DEMO_MODE=0` (default 1).
+- `.env.example`: aggiunte le 4 variabili lette dal codice e assenti negli esempi
+  (`PITWALL_CHAT_MAX_TOKENS`, `PITWALL_PROMPT_LOG_PATH`, `PITWALL_INCIDENTS_PATH`,
+  `NEXT_PUBLIC_GOOGLE_CLIENT_ID`). Nella PRR ne erano state contate 3. Le due dei registri sono
+  commentate: i default hanno lo stesso nome di `PROMPT_LOG.md` e `INCIDENTS.md`, percorso relativo
+  alla cartella di avvio, e `open()` non crea cartelle.
+
+**Verifica:**
+- `test_parser` **12/12**, lanciato col comando scritto nel README.
+- `check_track_knowledge.py`: 4 guide, **4 errori, tutti «manca `direzione`»**, nessuno di contenuto.
+- Manifest **98 → 78** voci: tolte solo le 20 `layout`, nessuna aggiunta o cambiata.
+  `ATTRIBUTIONS.md` **identico riga per riga** (108 righe), quindi `/crediti` invariata.
+- Variabili d'ambiente: **12** lette dal codice, **12** negli esempi, nessuna in più o in meno.
+- README: le due lingue hanno 14 titoli, 19 righe di tabella, 5 blocchi di codice, nessun link
+  locale rotto. `apply_maps.py --dry-run` funziona lanciato dalla radice, come dice il README.
+- Nessun file di `frontend/src` toccato: `tsc --noEmit` non necessario.
+
+> **Nota di metodo (commit):** il primo commit di questa entry non è partito. PowerShell 5.1 passa
+> male a git le virgolette doppie dentro un here-string (`"in attesa del retrofit"` → pathspec
+> separati); il `git add` successivo ha trovato gli script ancora in stage e il commit delle guide li
+> ha inglobati, sotto il messaggio sbagliato. Intercettato prima del push e diviso con un
+> `reset --soft` del solo commit locale, con controllo che il precedente fosse `origin/main`.
+> **Regola:** messaggi di commit da file (`git commit -F`) o da heredoc in Bash, mai inline in
+> PowerShell.
+
+**File protetti:** ☑ nessuno toccato
+**Decisione:** ☑ Mantenuto — committato e pushato su «ok push»
+
+> **Note aperte:** in attesa della risposta al sollecito (retrofit `direzione` + kyalami). Nel
+> PROMPT_LOG, la sezione «Contesto tecnico rapido» in testa insegna ancora `--reload` all'avvio.
+> Prossimo della coda: **MUST #1, logging del ramo LLM**, da proporre prima di scrivere codice.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
