@@ -14,8 +14,13 @@ Perche' esiste:
     occhio umano che guarda il disegno.
 
     Da qui il provino: Claude Desktop (che ha la ricerca web) consegna
-    `maps_candidates.json` — 3-5 candidati per pista, con prova e rischio
-    scritti a parole, mai una scelta secca. Questo script li risolve contro
+    `maps_candidates.json` — con prova e rischio scritti a parole, mai una
+    scelta secca. Dal blocco 2 in poi la consegna chiesta e' l'INTERA categoria
+    Commons con un verdetto per riga (`corrisponde_ad_acc` + `prova`), non piu'
+    3-5 candidati preselezionati: sceglieva senza vedere le immagini, e su
+    Kyalami il file migliore era rimasto fuori dalla sua lista. Lo script regge
+    la lista lunga senza modifiche (i titoli si risolvono a blocchi di 40).
+    Questo script li risolve contro
     l'API di Commons, li mette a schermo come immagini vere affiancate, e
     lascia scegliere a mano. Il suo export e' `maps_choice.json`, cioe' la lista
     dei layout GUARDATI UNO PER UNO.

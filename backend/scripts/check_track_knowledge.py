@@ -53,7 +53,21 @@ RISCHI = {"basso", "medio", "alto"}
 # a schermo mostrera' un buco, e Gigi non avra' niente da dire su quella curva.
 CAMPI_CURVA = ["n", "nome", "tipo", "marcia_indicativa", "riferimento_frenata",
                "insidia", "costo_errore", "sorpasso", "gomme", "freni",
-               "track_limits", "differenza_gara_qualifica", "origine", "confidence"]
+               "track_limits", "differenza_gara_qualifica", "origine", "confidence",
+               "direzione"]
+
+# `direzione` e' l'ultimo arrivato ed e' obbligatorio dal blocco 2 in poi: senza,
+# il controllo del lato gomma resta cieco su piu' di meta' delle curve (16 su 38
+# verificabili nel blocco 1). Valori ammessi sotto; `null` e' lecito solo per le
+# sequenze che girano nei due sensi.
+DIREZIONI = {"destra", "sinistra"}
+
+# Sezioni di pista chieste dal blocco 2 in poi. NON sono errori se mancano: le
+# guide del blocco 1 sono arrivate prima che le chiedessimo, e non si invalida
+# all'indietro una consegna che era conforme quando e' stata fatta.
+CAMPI_PISTA_RACCOMANDATI = ["senso_marcia", "dislivello_m",
+                            "rettilineo_piu_lungo_m", "variante_acc"]
+SENSI_MARCIA = {"orario", "antiorario"}
 
 CAMPI_PISTA = ["id", "verifica_catalogo", "settori", "curve", "track_limits_generale",
                "pit", "traffico_multiclass", "meteo_e_luce", "gomme_e_freni_pista",
@@ -121,11 +135,18 @@ def controlla_lato_gomma(cid: str, curva: dict, e: Esito) -> None:
                        f"in curva a {senso} si carica l'anteriore {atteso}")
 
 
-def controlla_curva(cid: str, curva: dict, e: Esito) -> None:
+def controlla_curva(cid: str, curva: dict, e: Esito, salta_direzione: bool = False) -> None:
     dove = f"{cid} T{curva.get('n')}"
     for campo in CAMPI_CURVA:
+        if campo == "direzione" and salta_direzione:
+            continue          # gia' segnalato una volta sola per l'intera guida
         if campo not in curva:
             e.errore(dove, f"manca il campo `{campo}`")
+    if "direzione" in curva and curva["direzione"] is not None:
+        if str(curva["direzione"]).strip().lower() not in DIREZIONI:
+            e.errore(dove, f"direzione «{curva['direzione']}» fuori da "
+                           f"{sorted(DIREZIONI)} (oppure null se la curva e' una "
+                           f"sequenza che gira nei due sensi)")
     if curva.get("tipo") not in TIPI:
         e.errore(dove, f"tipo «{curva.get('tipo')}» fuori da {sorted(TIPI)}")
     if curva.get("confidence") not in CONFIDENZE:
@@ -163,6 +184,12 @@ def controlla_pista(percorso: Path, tracks: dict, e: Esito) -> None:
     for campo in CAMPI_PISTA:
         if campo not in dati:
             e.errore(cid, f"manca la sezione `{campo}`")
+    mancanti_racc = [c for c in CAMPI_PISTA_RACCOMANDATI if c not in dati]
+    if mancanti_racc:
+        e.controlla(cid, "campi chiesti dal blocco 2 in poi non presenti: "
+                         + ", ".join(f"`{c}`" for c in mancanti_racc))
+    if dati.get("senso_marcia") and str(dati["senso_marcia"]).lower() not in SENSI_MARCIA:
+        e.errore(cid, f"senso_marcia «{dati['senso_marcia']}» fuori da {sorted(SENSI_MARCIA)}")
 
     # --- curve: quante, numerate come, senza buchi
     curve = dati.get("curve") or []
@@ -172,8 +199,19 @@ def controlla_pista(percorso: Path, tracks: dict, e: Esito) -> None:
     numeri = [c.get("n") for c in curve]
     if numeri != list(range(1, len(curve) + 1)):
         e.errore(cid, f"numerazione non contigua da 1: {numeri}")
+    # Una guida intera senza `direzione` e' una consegna vecchia, non 19 errori
+    # distinti: si segnala una volta e si dice cosa serve per chiuderla.
+    cieche = [c for c in curve if "direzione" not in c]
+    retrofit = bool(curve) and len(cieche) == len(curve)
+    if retrofit:
+        e.errore(cid, f"nessuna delle {len(curve)} curve ha `direzione`: guida "
+                      f"consegnata prima che il campo fosse obbligatorio, "
+                      f"in attesa del retrofit")
+    elif cieche:
+        e.errore(cid, f"`direzione` manca su {len(cieche)} curve su {len(curve)}: "
+                      f"T{', T'.join(str(c.get('n')) for c in cieche)}")
     for curva in curve:
-        controlla_curva(cid, curva, e)
+        controlla_curva(cid, curva, e, salta_direzione=bool(cieche))
 
     # --- settori
     settori = dati.get("settori") or []
@@ -199,6 +237,21 @@ def controlla_pista(percorso: Path, tracks: dict, e: Esito) -> None:
                 e.errore(cid, f"{campo}: stima senza `confidence`")
             if not blocco.get("nota"):
                 e.errore(cid, f"{campo}: stima senza `nota` che dica che e' una stima")
+    # Regola sul tempo di riferimento: un numero o ha una fonte, o dichiara di
+    # essere una stima di mestiere con confidence non alta e una nota che lo dica.
+    # Un tempo sul giro assertivo e senza provenienza e' lo stesso errore della
+    # `corners_note` di Zandvoort: plausibile, sbagliato, e nessuno lo verifica.
+    ref = dati.get("gt3_ref_lap_time") or {}
+    if ref.get("valore") is not None and not ref.get("fonte"):
+        if ref.get("origine") != "mestiere":
+            e.errore(cid, "gt3_ref_lap_time: valore senza `fonte` e senza "
+                          "`origine: mestiere` — o si cita la fonte, o si dichiara "
+                          "che e' una stima, o il valore va a null")
+        elif ref.get("confidence") == "alta":
+            e.errore(cid, "gt3_ref_lap_time: stima di mestiere dichiarata con "
+                          "`confidence: alta` ma senza fonte: l'alta confidenza "
+                          "richiede una fonte")
+
     fuel = dati.get("gt3_fuel_per_lap_l") or {}
     if fuel.get("valore") is not None and fuel.get("origine") == "mestiere":
         stato = tracks[cid].get("fuel_status")
