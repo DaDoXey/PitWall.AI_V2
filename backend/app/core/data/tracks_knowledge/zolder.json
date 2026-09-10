@@ -1,0 +1,270 @@
+{
+  "id": "zolder",
+
+  "verifica_catalogo": {
+    "lunghezza_confermata": true,
+    "curve_confermate": true,
+    "note": "Zolder e' il circuito piu' pulito del blocco: Wikipedia attribuisce alla configurazione '2002-present' 4.010 km e 10 curve, contro i 4.011 km e 10 curve del catalogo. Coincide. La differenza di 1 m e' arrotondamento (la voce Wikipedia usa 4.011 km nel testo e 4.010 nell'infobox). Avvertenza sulla NUMERAZIONE: le fonti nominano piu' punti di quanti siano i 10 numeri ufficiali, perche' contano le chicane come una curva sola. LapMeta arriva addirittura a contare 16 turns per lo stesso tracciato. Ho quindi mappato 10 voci a complessi, non a singoli apici, e lasciato nome: null dove l'abbinamento numero-nome non era verificabile."
+  },
+
+  "settori": [
+    {
+      "n": 1,
+      "carattere": "Rettilineo dei box, poi la staccata dell'Eerste e l'anello iniziale fino alla Lucien Bianchi.",
+      "cosa_decide": "La staccata iniziale. L'Eerste e' a raggio decrescente: si sbaglia entrando ottimisti.",
+      "errore_costoso": "Mancare l'Eerste al primo giro. E' storicamente il punto di caos della partenza."
+    },
+    {
+      "n": 2,
+      "carattere": "Rettilineo posteriore, chicane, poi il tratto ondulato in salita e discesa fino alla Villeneuve.",
+      "cosa_decide": "La stabilita' sui cordoli delle chicane e la gestione dei dislivelli.",
+      "errore_costoso": "Aggredire i cordoli della Kleine Chicane: la macchina rimbalza e perdi l'allungo."
+    },
+    {
+      "n": 3,
+      "carattere": "Terlamen, il tornante del Bolderberg, Jochen Rindt e la chicane finale.",
+      "cosa_decide": "La trazione in uscita dal tornante e la pulizia nell'ultima chicane.",
+      "errore_costoso": "Uscire male dalla chicane finale: perdi tutto il rettilineo del traguardo."
+    }
+  ],
+
+  "curve": [
+    {
+      "n": 1,
+      "nome": "Eerste",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Cartelli sulla sinistra alla fine del rettilineo dei box (circa mezzo chilometro di allungo).",
+      "insidia": "Sinistra a RAGGIO DECRESCENTE di circa 135 gradi. Si stringe mentre sei dentro: se imposti il volante una volta sola, vai lungo.",
+      "costo_errore": "Alto in gara, medio in qualifica.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "Staccata all'interno sinistro dopo il rettilineo dei box. E' uno dei due punti di sorpasso veri.",
+        "come_ci_si_difende": "Interno e frenata anticipata. Attenzione: difendere qui costa moltissimo in uscita perche' la curva si chiude."
+      },
+      "gomme": { "stress": "anteriore destro", "note": null },
+      "freni": { "stress": "alto", "note": null },
+      "track_limits": { "rischio": "medio", "note": null },
+      "differenza_gara_qualifica": "Alla partenza e' il punto di massimo caos: e' documentato come la curva piu' interessante del tracciato proprio per questo. Primo giro: sopravvivi.",
+      "origine": "mestiere",
+      "confidence": "alta"
+    },
+    {
+      "n": 2,
+      "nome": "Sterrenwachtbocht",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Alleggerimento dopo un tratto breve. Non c'e' il tempo di respirare dopo l'Eerste.",
+      "insidia": "Destra a DOPPIO APICE, piu' larga dell'Eerste. Se punti il primo apice come se fosse una curva normale, il secondo ti arriva addosso.",
+      "costo_errore": "Medio.",
+      "sorpasso": { "possibile": false, "come": null, "come_ci_si_difende": null },
+      "gomme": { "stress": "lato sinistro", "note": null },
+      "freni": { "stress": "medio", "note": null },
+      "track_limits": { "rischio": "medio", "note": null },
+      "differenza_gara_qualifica": null,
+      "origine": "mestiere",
+      "confidence": "media"
+    },
+    {
+      "n": 3,
+      "nome": "Kanaalbocht",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": null,
+      "insidia": "Curva breve che segue subito la precedente: il tratto rettilineo in mezzo e' cosi' corto che la macchina non si raddrizza mai davvero.",
+      "costo_errore": "Medio.",
+      "sorpasso": { "possibile": false, "come": null, "come_ci_si_difende": null },
+      "gomme": { "stress": null, "note": null },
+      "freni": { "stress": "medio", "note": null },
+      "track_limits": { "rischio": "medio", "note": null },
+      "differenza_gara_qualifica": null,
+      "origine": "mestiere",
+      "confidence": "media"
+    },
+    {
+      "n": 4,
+      "nome": "Lucien Bianchibocht",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Riferimento utile: il cartello dei 100 m sulla sinistra.",
+      "insidia": "Destra a 90 gradi in fondo a un allungo. Frenata pesantissima e la stabilita' della macchina in staccata dritta e' tutto.",
+      "costo_errore": "Alto: da qui parte il rettilineo posteriore, l'errore te lo porti per centinaia di metri.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "Punto di sorpasso principale. Frenata al 100% in linea retta, poi rilascio progressivo entrando in curva.",
+        "come_ci_si_difende": "Coprire l'interno destro presto e frenare dritti."
+      },
+      "gomme": { "stress": "anteriore sinistro", "note": null },
+      "freni": { "stress": "molto alto", "note": "La frenata piu' impegnativa del giro." },
+      "track_limits": { "rischio": "medio", "note": null },
+      "differenza_gara_qualifica": "In gara l'uscita conta piu' dell'ingresso: lancia verso la Kleine Chicane, dove ti riprendono se hai forzato.",
+      "origine": "mestiere",
+      "confidence": "alta"
+    },
+    {
+      "n": 5,
+      "nome": "Kleine Chicane",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a-3a",
+      "riferimento_frenata": "Staccata in fondo al rettilineo posteriore.",
+      "insidia": "Chicane lenta con cordoli interni molto sfruttabili. E' il classico punto in cui si guadagna raddrizzando la traiettoria sui cordoli, ma la macchina rimbalza.",
+      "costo_errore": "Medio-alto.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "E' storicamente una delle principali occasioni di sorpasso del circuito.",
+        "come_ci_si_difende": "Interno e uscita pulita. Non entrare aggressivo sui cordoli mentre ti difendi: la macchina salta."
+      },
+      "gomme": { "stress": "alternato", "note": null },
+      "freni": { "stress": "alto", "note": null },
+      "track_limits": { "rischio": "alto", "note": "I cordoli interni si possono 'abusare' per raddrizzare la traiettoria: attenzione a dove il gioco taglia il limite." },
+      "differenza_gara_qualifica": null,
+      "origine": "mestiere",
+      "confidence": "media"
+    },
+    {
+      "n": 6,
+      "nome": null,
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna: e' la salita ripida della Sacramentshelling e poi la sinistra veloce del Butte.",
+      "insidia": "Salita ripida seguita da una picchiata. La macchina si scarica in cima proprio dove la pista piega. E' il punto piu' alto del giro.",
+      "costo_errore": "Alto.",
+      "sorpasso": { "possibile": false, "come": null, "come_ci_si_difende": null },
+      "gomme": { "stress": null, "note": null },
+      "freni": { "stress": "basso", "note": null },
+      "track_limits": { "rischio": "medio", "note": null },
+      "differenza_gara_qualifica": null,
+      "origine": "mestiere",
+      "confidence": "media"
+    },
+    {
+      "n": 7,
+      "nome": "Villeneuvebocht",
+      "tipo": "lenta",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Staccata decisa subito dopo il tratto veloce del Butte.",
+      "insidia": "Chicane destra-sinistra stretta, con cordoli interni molto aggredibili. Arrivi lanciato dal Butte e devi piantare tutto.",
+      "costo_errore": "Alto.",
+      "sorpasso": { "possibile": false, "come": null, "come_ci_si_difende": null },
+      "gomme": { "stress": "alternato", "note": null },
+      "freni": { "stress": "alto", "note": null },
+      "track_limits": { "rischio": "alto", "note": "Cordoli interni sfruttabili ma punitivi." },
+      "differenza_gara_qualifica": null,
+      "origine": "mestiere",
+      "confidence": "media"
+    },
+    {
+      "n": 8,
+      "nome": "Terlamenbocht",
+      "tipo": "veloce",
+      "marcia_indicativa": "4a",
+      "riferimento_frenata": "Nessuna frenata: destra in pieno.",
+      "insidia": "Non e' difficile in se'. E' facile prenderla stretta e arrivare male al tornante che segue.",
+      "costo_errore": "Medio.",
+      "sorpasso": { "possibile": false, "come": null, "come_ci_si_difende": null },
+      "gomme": { "stress": "lato sinistro", "note": null },
+      "freni": { "stress": "nullo", "note": null },
+      "track_limits": { "rischio": "medio", "note": null },
+      "differenza_gara_qualifica": null,
+      "origine": "mestiere",
+      "confidence": "media"
+    },
+    {
+      "n": 9,
+      "nome": "Bolderbergbocht",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a-3a",
+      "riferimento_frenata": "Staccata dopo il breve tratto in pendenza che segue Terlamen.",
+      "insidia": "Tornante destro molto chiuso, la curva piu' lenta del giro. Si sbaglia entrando forte e perdendo l'uscita.",
+      "costo_errore": "Alto: e' il punto di trazione piu' importante del giro.",
+      "sorpasso": { "possibile": true, "come": "Interno, ma serve arrivarci gia' accostati da Terlamen.", "come_ci_si_difende": "Interno e uscita paziente." },
+      "gomme": { "stress": "posteriori in uscita", "note": "E' qui che si legge il degrado posteriore in gara lunga." },
+      "freni": { "stress": "alto", "note": null },
+      "track_limits": { "rischio": "medio", "note": null },
+      "differenza_gara_qualifica": null,
+      "origine": "mestiere",
+      "confidence": "media"
+    },
+    {
+      "n": 10,
+      "nome": null,
+      "tipo": "lenta",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Alleggerimento per la Jochen Rindt, poi staccata per la chicane finale.",
+      "insidia": "La Jochen Rindtbocht e' formalmente una sinistra-destra ma con la traiettoria giusta la sinistra quasi sparisce. Poi arriva la chicane finale: e' l'ultimo punto in cui butti via il giro.",
+      "costo_errore": "Il piu' alto del giro in termini di tempo: da qui parte il rettilineo dei box.",
+      "sorpasso": { "possibile": false, "come": null, "come_ci_si_difende": "Non si passa, ma da qui si prepara l'attacco all'Eerste." },
+      "gomme": { "stress": "posteriori", "note": null },
+      "freni": { "stress": "medio", "note": null },
+      "track_limits": { "rischio": "alto", "note": "La chicane finale e' un punto classico di taglio e invalidazione." },
+      "differenza_gara_qualifica": "In gara: uscita pulita sempre, anche a costo di entrare piano. Il rettilineo che segue e' lungo mezzo chilometro.",
+      "origine": "mestiere",
+      "confidence": "media"
+    }
+  ],
+
+  "track_limits_generale": "Zolder e' un circuito di chicane, e le chicane hanno cordoli interni che invitano a raddrizzare la traiettoria. E' la caratteristica riconosciuta della pista: i cordoli si possono sfruttare parecchio. Ma e' anche il modo piu' facile per prendersi un'invalidazione o per far rimbalzare la macchina proprio dove serve trazione. Regola pratica: sfrutta i cordoli della Kleine Chicane e della Villeneuve solo quando sei sicuro del riferimento, mai in lotta.",
+
+  "pit": {
+    "tempo_perso_s": null,
+    "limite_kmh": 50,
+    "lato_box": null,
+    "note": "Limite standard ACC. Il paddock di Zolder e' notoriamente stretto: aspettati una pit lane corta ma con poco margine. Tempo perso non verificato.",
+    "fonte": "https://trinacriasimracing.wordpress.com/assetto-corsa-competition-how-to-make-a-perfect-pit-stop/"
+  },
+
+  "traffico_multiclass": "Il rettilineo dei box e quello posteriore sono gli unici posti sensati per far passare. Nelle chicane e nel tratto ondulato del Butte non c'e' spazio per due traiettorie. In qualifica, il traffico nella sequenza curve 1-2-3 ti rovina il giro perche' quelle tre sono di fatto un'unica curva lunga.",
+
+  "meteo_e_luce": {
+    "condizioni_tipiche": null,
+    "sul_bagnato": "I dislivelli diventano il problema: la salita della Sacramentshelling e la discesa verso la Villeneuve tolgono e rimettono carico continuamente.",
+    "punti_acqua": null,
+    "di_notte": null,
+    "al_tramonto": null
+  },
+
+  "gomme_e_freni_pista": "Zolder e' una pista start-and-stop: alterna staccate pesanti (Lucien Bianchi, Kleine Chicane, Bolderberg) a tratti brevi. E' un circuito da freni e da trazione, non da gomme. La lunghezza contenuta impedisce velocita' molto alte, quindi il carico laterale prolungato e' poco: le gomme soffrono piu' per i cicli di trazione che per la percorrenza. Assetto tipico GT3: carico medio-alto, priorita' alla stabilita' in staccata e alla trazione fuori dai tornanti, non alla velocita' di punta.",
+
+  "errore_del_principiante": "Impostare l'Eerste come una curva normale. E' a raggio decrescente: se dai un solo colpo di volante in ingresso, ti trovi a chiudere il volante a meta' curva e vai lungo. Entra piu' piano di quanto vorresti e chiudi progressivamente. Secondo errore classico: aggredire i cordoli delle chicane fin dal primo giro perche' 'a Zolder si fa cosi'. Si fa cosi' quando conosci esattamente dove sono, altrimenti la macchina salta e perdi piu' di quanto guadagni.",
+
+  "gt3_ref_lap_time": {
+    "valore": null,
+    "contesto": null,
+    "fonte": null
+  },
+
+  "gt3_fuel_per_lap_l": {
+    "valore": null,
+    "contesto": null,
+    "fonte": null
+  },
+
+  "chicche": [
+    {
+      "testo": "La Kanaalbocht si chiama cosi' perche' in quel punto il tracciato costeggia il Canale Alberto.",
+      "perche_interessa_al_pilota": "Serve poco in staccata, ma e' il riferimento visivo piu' affidabile del primo settore: se vedi il canale, sei alla 3.",
+      "fonte": "https://f1.fandom.com/wiki/Circuit_Zolder"
+    },
+    {
+      "testo": "La Villeneuvebocht non e' una curva progettata: e' la chicane costruita nel 1986 nel punto dove Gilles Villeneuve mori' nelle qualifiche del 1982, sulla cresta del Butte. Prima li' c'era il tratto veloce.",
+      "perche_interessa_al_pilota": "Spiega perche' il ritmo del circuito si spezza proprio li' in modo cosi' innaturale: quella chicane e' un innesto, non fa parte del disegno originale. E ti dice perche' le mappe pre-1986 non ti servono a niente.",
+      "fonte": "https://trackdaytickets.com/tracks/zolder"
+    },
+    {
+      "testo": "Zolder fu il primo circuito permanente costruito in Belgio, e ospito' il GP del Belgio dal 1973 al 1984 quando Spa era considerata troppo pericolosa.",
+      "perche_interessa_al_pilota": "Contesto: e' una pista nata come alternativa 'sicura' a Spa, ed e' per questo che ha quattro chicane su appena quattro chilometri.",
+      "fonte": "https://en.wikipedia.org/wiki/Circuit_Zolder"
+    }
+  ],
+
+  "fonti": [
+    "https://en.wikipedia.org/wiki/Circuit_Zolder",
+    "https://f1.fandom.com/wiki/Circuit_Zolder",
+    "https://projectcars.fandom.com/wiki/Circuit_Zolder",
+    "https://trackdaytickets.com/tracks/zolder",
+    "https://www.rwmgaming.ca/motorsport-academy/track-guides/europe/zolder",
+    "https://www.racingcircuits.info/europe/belgium/zolder.html",
+    "https://commons.wikimedia.org/wiki/Category:Circuit_Zolder_circuit_maps",
+    "https://trinacriasimracing.wordpress.com/assetto-corsa-competition-how-to-make-a-perfect-pit-stop/"
+  ]
+}
