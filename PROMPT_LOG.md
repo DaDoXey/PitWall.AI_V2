@@ -1293,7 +1293,7 @@ e dal prompt di sollecito sul Desktop.
   piccoli comparivano come «$0.00», ora `%g`.
 
 **File protetti:** ☑ sbloccati con «ok procedi» → `agent.py`, `vision_parser.py` (solo aggancio, +27 −3)
-**Decisione:** ☑ Mantenuto — committato e pushato l'11/09 su «ok push»
+**Decisione:** ☑ Mantenuto — committato e pushato l'11/09 su «ok push» (`7fa6d37` · `ae07561` · `fd852ba`)
 
 > **Note aperte:** (1) `agent.py` crea il client con `timeout=30.0` e l'SDK ripete da solo fino a 2
 > volte: una risposta sonnet da 2500 token può sforare i 30 s. Il tetto conta ogni tentativo al
@@ -1301,6 +1301,86 @@ e dal prompt di sollecito sul Desktop.
 > stress test. (2) Il listino in `budget.py` va aggiornato a mano se cambiano i prezzi. (3) Con più
 > worker uvicorn il `threading.Lock` non basta: servirebbe un lock su file. (4) La Console, a tetto
 > raggiunto, mostra «fallback» senza dire che è il tetto: il motivo sta solo nel log.
+
+---
+
+## Entry #029 — Primo stress test dell'LLM reale + `docs/03` riallineato al codice
+
+| Campo | Valore |
+|---|---|
+| Data | 11/09/2026 |
+| Agente dev | Claude Code (claude-opus-5) |
+| Area | NEW `backend/scripts/stress_llm.py` · MOD `docs/03-v2-architecture.md` · NEW `backend/.env` (locale, gitignorato) |
+| Commit | `5293574` (docs/03) · `c14813d` (stress_llm.py) · questo log |
+| Contesto | Primo punto della roadmap dopo il tetto di spesa: accendere l'LLM reale e metterlo sotto stress. Prime chiamate reali della V2 in assoluto. |
+
+**Catalogo messaggi:**
+1. «la chat sarebbe meglio farla anche se limitata comunque sempre in quello scope, cioè essere ingegnere
+   di pista. vedi se si può fare ma ci lavoreremo dopo» → fattibilità verificata e messa in memoria, nessun codice.
+2. Risposte alle domande sullo stress test: «ok push» (Entry #028) · «la chiave api stava già nell'env» ·
+   screenshot reali «li cercherò quando servirà» · tetto $1 «va bene» · `docs/03` «correggi tutto quel che ti serve».
+
+**Preparazione:**
+- La chiave **non** stava nel `.env` della V2 (non esisteva) né nelle variabili di Windows: stava nel `.env`
+  della **v1** (`Desktop/PitWall.AI/.env`). Creato `backend/.env` copiando **solo** quella riga da file a
+  file (il valore non è mai passato a schermo), `LLM_MODEL=claude-haiku-4-5`, **live spento**
+  (`ALLOW_LIVE=0`, `DEMO_MODE=1`) e tetti per il test: analisi $1/giorno, mese **$1**. Verificato che
+  `backend/.env` è gitignorato. Il live si accende solo nell'ambiente del processo uvicorn del test.
+- NEW `stress_llm.py`: interroga il backend vero via HTTP e incrocia ogni risposta con le righe di
+  `pitwall.log` dello stesso request-id (fonte, motivo, modello, token, costo). Si rifiuta di partire se
+  il backend non è in live. Provato prima a vuoto contro la demo (18 richieste, zero chiamate).
+
+**Risultati** (dati in `backend/logs/stress/`, gitignorata):
+
+| Prova | Esito |
+|---|---|
+| **A** 12 domande nel perimetro (1 con profilo) | **12/12 `source=api`**, tutte con le 4 sezioni, sempre haiku al primo tentativo · 2615–2662 token in, 1049–1943 out · **$0,0079–0,0124** (media ~$0,009) · **12–24 s** |
+| **B** 4 domande fuori tema | 4/4 `api`: il modello resta nel ruolo e rifiuta, ma **dentro le 4 sezioni** («## Diagnosi — Il tuo messaggio contiene una richiesta fuori scopo…»). In 2 casi su 4 la prima risposta era senza sezioni → **ripetuta**, costo doppio (~$0,01) |
+| **C1** testo da 3900 caratteri | `api`, haiku, 3934/2105 token, $0,0145, **25,2 s** |
+| **C2** testo da 4200 caratteri | `fallback` in 12 ms, nessuna chiamata (limite dell'Entry #028) |
+| **D** 3 analisi in contemporanea | 3/3 `api` in **16,9 s** complessivi (come una sola); health interrogato 66 volte durante l'attesa, **max 9 ms** |
+| **Sonnet**, domanda normale | `api` in **29,0 s** (1354 token out, $0,0282): a un secondo dal timeout di 30 s |
+| **Sonnet**, testo da 3900 caratteri | **3 timeout di fila** (log dell'SDK: due «Retrying request»), `fallback` dopo **93 s** |
+| Screenshot | **non provato**: nessuno screenshot reale disponibile |
+
+**Spesa:** registro del tetto **$0,2845** su $1. Somma dei costi reali nel log $0,2078; la differenza
+($0,0768) è la prenotazione della chiamata sonnet andata in timeout, rimasta al massimo come da progetto.
+
+**Cosa ha trovato — da decidere con Edoardo:**
+1. **Il timeout di 30 s di `agent.py` è il difetto principale.** Sonnet, cioè il modello di riserva
+   della cascata, sta a ridosso del limite anche con una domanda normale e lo supera con un testo lungo.
+   Ogni timeout l'SDK lo **ripete da solo 2 volte** (`max_retries` di default): 3× il tempo, e **una
+   sola prenotazione del tetto per tre richieste**. Se Anthropic fattura le richieste interrotte (non
+   verificabile da qui) il tetto conta per difetto. Proposta: in `agent.py` (protetto) timeout più
+   ampio e `max_retries=0`, visto che la cascata è già il meccanismo di ripetizione.
+2. **Fuori tema in live.** Il filtro per parole chiave della demo **non è riusabile**: nella prova a
+   vuoto ha classificato «fuori perimetro» 5 domande della fase A su 11 perfettamente legittime (A1
+   Parabolica, A2, A4, A6, A10). La risposta del modello è corretta nel merito ma forzata nel formato a
+   4 sezioni, e a volte costa doppio. Da decidere come trattarla (prompt, formato, UI).
+3. **Il contesto del ramo reale è sempre la sessione demo** (`_context()` di `analysis.py`: Monza,
+   BMW M4 GT3, Post.DX a 105°C, pressioni fisse). Le risposte si ancorano a quei dati anche quando la
+   domanda non c'entra: alla domanda sul carburante (A7) Gigi apre con «Prima di calcolare il
+   carburante, stabilizza il profilo termico posteriore». Per un prodotto vero servono i dati del
+   pilota (CSV, setup) nel contesto.
+4. **Da giudicare nel merito (dominio di Edoardo):** A7 calcola «60 min ÷ 1.80 min/giro ≈ 33 giri × 3.2 =
+   105.6 L» senza il giro in corso allo scadere del tempo né un margine. Le pressioni citate in tutte le
+   risposte stanno fra 24,0 e 27,2 psi, coerenti con i range del progetto.
+
+**`docs/03` riallineato** (era fermo al 10/07, megaprompt #2): route group `(app)`/`(auth)` e 8 pagine con le
+API che chiamano, componenti e `lib/` reali, 6 router, `catalog`, logging e tetto di spesa, contratto API
+completo (health, catalogo, `lap_times`, `profile`, 429/500), **pressioni demo corrette** (caldo 26.0–27.0,
+freddo 24.5–25.5, delta +1.5: il documento diceva 28.5–30.0 / 26.0–27.0 / +2.5), avvio senza `--reload`,
+deploy «da decidere» con le variabili vere e il rischio del registro della spesa su disco effimero, note
+aperte (INC-V2-002/004/005 erano già risolti). Ogni voce verificata sui file. Stessa correzione nel
+`CLAUDE.md` locale (avvio con `--reload`, 5 pagine, 5 endpoint).
+
+**Verifica:** `test_parser` 12/12 · `test_observability` 24/24 · `test_budget` 30/30 con il `.env` vero presente ·
+backend spento a fine prova.
+
+**File protetti:** ☑ nessuno toccato
+**Decisione:** ☑ Mantenuto — committato e pushato l'11/09 su «ok push». Decisioni di Edoardo sui 4 punti: (1) «ok
+procedi» su `agent.py` → Entry #030 · (2) in perimetro «robe sempre riguardanti la pista e acc» · (3) dati reali del
+pilota nel contesto «appena possibile» · (4) carburante «sembra di sì ma dipende dalle condizioni ed altri fattori»
 
 ---
 
