@@ -15,9 +15,10 @@ corso AI & Digital Innovation Specialist.
 **Esame del 15/07/2026 superato**, con la demo in demo-mode. Ora è in corso la **build vera e
 propria**: portare PitWall dalla demo al prodotto, con l'LLM reale sotto.
 
-Il client LLM è già implementato (analisi a 4 sezioni validate, con retry e cascata di modelli, e
-chat di Gigi) e si accende con `PITWALL_ALLOW_LIVE=1` + `PITWALL_DEMO_MODE=0` + la chiave. **Resta
-spento di default** finché non sono pronti osservabilità e modello di costo (vedi Roadmap).
+Il client LLM è già implementato: un'analisi a 4 sezioni validate, con retry e cascata di modelli,
+che si accende con `PITWALL_ALLOW_LIVE=1` + `PITWALL_DEMO_MODE=0` + la chiave. Il client contiene
+anche una chat di Gigi in streaming, non ancora collegata a nessuna rotta. **L'LLM reale resta
+spento di default** finché non è pronto il modello di costo (vedi Roadmap).
 
 Cronologia delle iterazioni → `PROMPT_LOG.md` · malfunzionamenti gravi → `INCIDENTS.md`.
 
@@ -28,6 +29,7 @@ backend/       FastAPI
   app/
     main.py      # app + CORS + router sotto /api
     config.py    # env server-side (API key MAI nel client), flag demo/live
+    logging_config.py  # log rotante con request-id (backend/logs/)
     api/         # endpoint (elenco sotto)
     core/        # logica di dominio: agent, csv_parser, setup_params, vision_parser, demo, prompts,
                  # data/ (catalogo ACC e guide dei tracciati)
@@ -95,8 +97,18 @@ Apri <http://localhost:3000>. Senza un Client ID Google si entra con **«Entra i
 ### Test
 ```bash
 cd backend
-./.venv/Scripts/python app/tests/test_parser.py    # baseline 12/12
+./.venv/Scripts/python app/tests/test_parser.py          # baseline 12/12
+./.venv/Scripts/python app/tests/test_observability.py   # log e request-id, offline
 ```
+
+### Log
+Il backend scrive in `backend/logs/` (gitignorata):
+- `pitwall.log`: log dell'app, rotante (1 MB × 3), con in ogni riga un request-id che torna al
+  client anche nell'header `X-Request-ID`. Avvisi ed errori compaiono anche in console. Ogni analisi
+  registra la sua fonte e, quando ripiega sulla cache, il motivo. Quello che scrive il pilota non
+  finisce mai nel log, solo la sua lunghezza.
+- `llm_token_log.md` e `llm_incidents.md`: token stimati per chiamata e chiamate fallite, scritti
+  dal client LLM quando l'LLM reale è acceso.
 
 ### Immagini (foto e mappe)
 Le immagini arrivano da Wikimedia Commons (~33 MB) e **non sono nel repo**: `frontend/public/assets/`
@@ -118,17 +130,16 @@ consuma. L'LLM reale richiede **entrambi** `PITWALL_ALLOW_LIVE=1` e `PITWALL_DEM
 chiave nei secret del server.
 
 ## Roadmap
-1. **Osservabilità del ramo LLM**: logging con livelli su un percorso dedicato. Oggi un guasto del
-   ramo reale non lascia traccia.
-2. **Modello di costo** prima dell'accensione: la cascata di modelli moltiplica la spesa proprio
-   quando qualcosa si guasta, e non ha un tetto.
-3. **Accensione e stress test dell'LLM reale.**
-4. **Guide dei tracciati** per tutti i 25 circuiti ACC: settori e curva per curva.
-5. **Mappe dei circuiti**: 5 layout su 25 verificati. Restano da sostituire gli altri 20, e manca
+1. **Modello di costo** prima dell'accensione: la cascata di modelli moltiplica la spesa proprio
+   quando qualcosa si guasta, e non ha un tetto. Deve coprire anche la lettura del setup da
+   screenshot, che chiama il modello con la sola chiave, senza passare dal flag live.
+2. **Accensione e stress test dell'LLM reale.**
+3. **Guide dei tracciati** per tutti i 25 circuiti ACC: settori e curva per curva.
+4. **Mappe dei circuiti**: 5 layout su 25 verificati. Restano da sostituire gli altri 20, e manca
    ancora la pagina che le mostri.
-6. **Lotto 2 del catalogo**: 23 vetture GT4, GT2, GTC e TCX.
-7. **Range di setup per vettura** (INC-V2-003): oggi cambiare vettura non cambia i 49 parametri.
-8. **Deploy**.
+5. **Lotto 2 del catalogo**: 23 vetture GT4, GT2, GTC e TCX.
+6. **Range di setup per vettura** (INC-V2-003): oggi cambiare vettura non cambia i 49 parametri.
+7. **Deploy**.
 
 ## Deploy
 Piattaforma **da decidere**. Da tenere presente: le immagini non sono versionate, quindi un deploy

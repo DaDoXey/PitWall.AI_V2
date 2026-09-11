@@ -15,10 +15,10 @@ Digital Innovation Specialist course.
 **Final exam passed on 15/07/2026**, with the demo running in demo mode. The **full build** is now
 under way: taking PitWall from a demo to a product, with a real LLM underneath.
 
-The LLM client is already implemented (4-section validated analysis, with retries and a model
-cascade, plus Gigi's chat) and is switched on with `PITWALL_ALLOW_LIVE=1` + `PITWALL_DEMO_MODE=0` +
-the API key. **It stays off by default** until observability and a cost model are in place (see
-Roadmap).
+The LLM client is already implemented: a 4-section validated analysis, with retries and a model
+cascade, switched on with `PITWALL_ALLOW_LIVE=1` + `PITWALL_DEMO_MODE=0` + the API key. The client
+also contains a streaming chat for Gigi, which is not wired to any route yet. **The real LLM stays
+off by default** until a cost model is in place (see Roadmap).
 
 Iteration history → `PROMPT_LOG.md` · serious malfunctions → `INCIDENTS.md` (both in Italian).
 
@@ -29,6 +29,7 @@ backend/       FastAPI
   app/
     main.py      # app + CORS + routers under /api
     config.py    # server-side env (API key NEVER in the client), demo/live flags
+    logging_config.py  # rotating log with a request id (backend/logs/)
     api/         # endpoints (listed below)
     core/        # domain logic: agent, csv_parser, setup_params, vision_parser, demo, prompts,
                  # data/ (ACC catalogue and track guides)
@@ -97,8 +98,18 @@ Open <http://localhost:3000>. Without a Google Client ID, sign in with **«Entra
 ### Tests
 ```bash
 cd backend
-./.venv/Scripts/python app/tests/test_parser.py    # baseline 12/12
+./.venv/Scripts/python app/tests/test_parser.py          # baseline 12/12
+./.venv/Scripts/python app/tests/test_observability.py   # logs and request id, offline
 ```
+
+### Logs
+The backend writes to `backend/logs/` (gitignored):
+- `pitwall.log`: application log, rotating (1 MB × 3), with a request id on every line that is also
+  returned to the client in the `X-Request-ID` header. Warnings and errors show up in the console
+  too. Every analysis logs its source and, when it falls back to the cache, the reason. What the
+  driver writes is never logged, only its length.
+- `llm_token_log.md` and `llm_incidents.md`: estimated tokens per call and failed calls, written by
+  the LLM client when the real LLM is on.
 
 ### Images (photos and maps)
 Images come from Wikimedia Commons (~33 MB) and are **not in the repo**: `frontend/public/assets/`
@@ -120,17 +131,16 @@ calls, and the key is never used. The real LLM requires **both** `PITWALL_ALLOW_
 `PITWALL_DEMO_MODE=0`, plus the key in the server's secrets.
 
 ## Roadmap
-1. **Observability of the LLM path**: levelled logging to a dedicated location. Today a failure on
-   the real path leaves no trace.
-2. **Cost model** before switching it on: the model cascade multiplies spending exactly when
-   something fails, and has no cap.
-3. **Switch-on and stress test of the real LLM.**
-4. **Track guides** for all 25 ACC circuits: sectors and corner by corner.
-5. **Track maps**: 5 of 25 layouts verified. The other 20 still need replacing, and no page shows
+1. **Cost model** before switching it on: the model cascade multiplies spending exactly when
+   something fails, and has no cap. It must also cover the screenshot setup reading, which calls
+   the model whenever a key is present, without going through the live flag.
+2. **Switch-on and stress test of the real LLM.**
+3. **Track guides** for all 25 ACC circuits: sectors and corner by corner.
+4. **Track maps**: 5 of 25 layouts verified. The other 20 still need replacing, and no page shows
    the maps yet.
-6. **Catalogue batch 2**: 23 GT4, GT2, GTC and TCX cars.
-7. **Per-car setup ranges** (INC-V2-003): changing car does not change the 49 parameters yet.
-8. **Deployment**.
+5. **Catalogue batch 2**: 23 GT4, GT2, GTC and TCX cars.
+6. **Per-car setup ranges** (INC-V2-003): changing car does not change the 49 parameters yet.
+7. **Deployment**.
 
 ## Deployment
 Platform **to be decided**. Keep in mind: images are not versioned, so a deployment starts without
