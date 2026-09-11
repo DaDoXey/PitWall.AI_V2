@@ -102,8 +102,12 @@ class _StreamFinto:
         return SimpleNamespace(usage=_usage(900, 40))
 
 
+CLIENT = []                                    # argomenti con cui viene creato ogni client
+
+
 class AnthropicFinto:
     def __init__(self, **kwargs):
+        CLIENT.append(kwargs)
         self.messages = self
 
     def create(self, **kwargs):
@@ -331,6 +335,10 @@ try:
          testo == SEZIONI_OK and [c["model"] for c in CREATE] == ["claude-haiku-4-5"] * 2 + ["claude-sonnet-4-6"]
          and abs(stato()["spesa_giorno"]["analisi"] - atteso) < 1e-5, f"{stato()} atteso {atteso}")
 
+    test("B21b client di agent.py: timeout di PITWALL_LLM_TIMEOUT_S (90 s) e nessuna ripetizione dell'SDK (una prenotazione = "
+         "una richiesta)", len(CLIENT) >= 3 and all(c.get("timeout") == agent.LLM_TIMEOUT_S and c.get("max_retries") == 0
+                                                    for c in CLIENT[-3:]), str(CLIENT[-3:]))
+
     azzera(analisi=0)
     testo = agent.get_ai_response(user_input="sottosterzo", api_key="chiave-finta", show_warning=False)
     test("B22 cascata a tetto esaurito: nessuna chiamata, agent risponde 'non disponibile'",
@@ -354,8 +362,9 @@ try:
 
     azzera()
     pezzi = list(agent.chat_with_gigi([{"role": "user", "content": "ciao"}], api_key="chiave-finta"))
-    test("B25 chat con margine: testo in streaming e saldo al reale",
-         "".join(pezzi) == "Ciao pilota" and len(CREATE) == 1
+    test("B25 chat con margine: testo in streaming e saldo al reale, client con timeout 90 s e senza "
+         "ripetizioni", "".join(pezzi) == "Ciao pilota" and len(CREATE) == 1
+         and CLIENT[-1].get("timeout") == agent.LLM_TIMEOUT_S and CLIENT[-1].get("max_retries") == 0
          and circa(stato()["spesa_giorno"]["chat"],
                    round(budget.costo_reale(agent.CLAUDE_MODEL, _usage(900, 40)), 6)), str(stato()))
 

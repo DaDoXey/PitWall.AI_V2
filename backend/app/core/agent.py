@@ -36,6 +36,13 @@ INCIDENT_PATH = get_env_var("PITWALL_INCIDENTS_PATH", "INCIDENTS.md")
 
 CLAUDE_MODEL = get_env_var("LLM_MODEL", "claude-haiku-4-5")
 
+# Client Anthropic (Entry #030, dallo stress test dell'Entry #029). Con 30 s sonnet andava in timeout
+# gia' con una domanda normale (29,0 s) e l'SDK ripeteva da solo ogni timeout 2 volte: 3x il tempo e
+# una sola prenotazione del tetto di spesa per tre richieste. 90 s coprono 2500 token di sonnet; zero
+# ripetizioni dell'SDK perche' il secondo tentativo lo fa gia' la cascata, passando dal tetto.
+LLM_TIMEOUT_S = float(get_env_var("PITWALL_LLM_TIMEOUT_S", "90"))
+LLM_MAX_RETRIES = 0
+
 
 
 def estimate_tokens(text: str) -> int:
@@ -111,7 +118,8 @@ def call_claude(user_input: str, api_key: str, model_name: str) -> str:
     system_prompt = load_system_prompt()
     # Solleva budget.BudgetEsaurito se il tetto non regge: get_ai_response lo tratta come un modello fallito.
     prenotazione = budget.prenota("analisi", model_name, system_prompt + user_input, MAX_OUTPUT_TOKENS)
-    client = anthropic.Anthropic(api_key=api_key, base_url="https://api.anthropic.com", timeout=30.0)
+    client = anthropic.Anthropic(api_key=api_key, base_url="https://api.anthropic.com",
+                                 timeout=LLM_TIMEOUT_S, max_retries=LLM_MAX_RETRIES)
     message = client.messages.create(
 
         model=model_name,
@@ -229,7 +237,8 @@ def chat_with_gigi(messages: list, api_key: str, context: str = "", model_name: 
     if context.strip():
         system_prompt += f"\n\n[CONTESTO SESSIONE]\n{context.strip()}"
 
-    client = anthropic.Anthropic(api_key=api_key, base_url="https://api.anthropic.com", timeout=30.0)
+    client = anthropic.Anthropic(api_key=api_key, base_url="https://api.anthropic.com",
+                                 timeout=LLM_TIMEOUT_S, max_retries=LLM_MAX_RETRIES)
     try:
         prenotazione = budget.prenota(
             "chat", model, system_prompt + "".join(str(m.get("content", "")) for m in messages),
