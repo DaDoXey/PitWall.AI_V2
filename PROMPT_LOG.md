@@ -1215,6 +1215,95 @@ e dal prompt di sollecito sul Desktop.
 
 ---
 
+## Entry #028 — MUST #2 della PRR: tetto di spesa del ramo LLM
+
+| Campo | Valore |
+|---|---|
+| Data | 11/09/2026 |
+| Agente dev | Claude Code (claude-opus-5) |
+| Area | NEW `backend/app/budget.py` · MOD ⚠️`backend/app/core/agent.py` · MOD ⚠️`backend/app/core/vision_parser.py` · MOD `backend/app/api/{analysis,vision}.py` · NEW `backend/app/tests/test_budget.py` · MOD `backend/app/tests/test_observability.py` · MOD `backend/.env.example` · MOD `README.md` + `README.it.md` · MOD `docs/03-v2-architecture.md` |
+| Commit | `7fa6d37` (backend + test) · `ae07561` (README + docs) · questo log |
+| Contesto | Secondo MUST del Product Backlog uscito dalla PRR. Entry #027 pushata subito prima (`ff5ff89` · `d9c9d34`). |
+
+**Catalogo messaggi:**
+1. Tre domande poste (tetto in chiamate o in token/euro? su che periodo? blocco screenshot subito?).
+   Risposta: «scegli il migliore (il più efficiente e meno costoso sennò vedi tu)» · «vedi il migliore
+   che ovviamente dipende dai modi di utilizzo e forse sarebbe meglio categorizzarli» · screenshot
+   subito (→ Entry #027).
+2. Proposta esposta con i conti; «ok push e procedi» = push dell'Entry #027 + **«ok procedi»** sui
+   due file protetti.
+
+**Le scelte e perché:**
+- **Tetto in dollari sul costo reale, non in numero di chiamate.** Conti con i listini verificati
+  sulla documentazione (haiku-4-5 $1/$5, sonnet-4-6 $3/$15 per milione di token): un'analisi tipica
+  costa ~1 centesimo, quella peggiore (haiku×2 + sonnet×2) ~13. Un tetto a chiamate va prezzato sul
+  caso peggiore e bloccherebbe l'app 13 volte prima del necessario.
+- **Prenotazione + saldo.** Prima di ogni chiamata si prenota il costo massimo (byte di input, perché
+  un token non è mai più corto di un byte, + margine + tutti i `max_tokens`); dopo si salda con
+  `message.usage`. Il tetto non si supera nemmeno con richieste concorrenti. Serve `usage`, che
+  `agent.py` e `vision_parser.py` non restituivano: da qui l'aggancio nei due protetti.
+- **Categorie = modi di utilizzo:** `analisi` · `screenshot` · `chat` (tetto 0: nessuna rotta).
+  **Periodi:** giornaliero per categoria + mensile complessivo. **Niente tetto per sessione:** senza un
+  login vero lato server non si potrebbe far rispettare. Default: $0,50 · $0,25 · $0 · mese $5.
+- **Sempre per eccesso:** chiamata fallita = resta il massimo; modello fuori listino = listino più
+  caro; `.env` non valido = 0; stato illeggibile = chiamate bloccate (non si riparte da zero); a
+  cavallo di mezzanotte il costo reale va nel giorno nuovo.
+- **Scartati:** caching del prompt (su haiku-4-5 servono ≥ 4096 token, il system prompt v4 è ~7200
+  caratteri) · passaggio a `claude-sonnet-5` ($2/$10, −33%): thinking adattivo attivo di default e
+  immagini fino a ~3× i token, da valutare con lo stress test.
+
+**Modifica:**
+- NEW **`budget.py`**: `prenota()` / `salda()` / `disponibile()`, listino, tetti da env letti a ogni
+  chiamata, stato in `backend/logs/llm_spesa.json` con scrittura atomica e `threading.Lock`. Riga INFO
+  per ogni saldo con **modello, token e costo** — chiude la nota aperta dell'Entry #026 («quale
+  modello ha risposto non arriva a `pitwall.log`»). WARNING a ogni rifiuto.
+- ⚠️ **`agent.py`** (sbloccato con «ok procedi»): `call_claude` prenota «analisi» prima e salda dopo
+  (il system prompt letto una volta sola invece che dentro la chiamata, stesso contenuto);
+  `chat_with_gigi` prenota «chat» dentro il `try` e salda con `stream.get_final_message()`. Un rifiuto
+  dentro la cascata è un'eccezione come le altre: `get_ai_response` passa al modello successivo, che
+  viene rifiutato a sua volta, e il registro guasti scrive «tetto di spesa raggiunto».
+- ⚠️ **`vision_parser.py`** (sbloccato con «ok procedi»): costanti `VISION_MODEL` / `VISION_MAX_TOKENS`
+  al posto dei letterali (stessi valori), prenotazione «screenshot» con un'immagine, saldo.
+  **Nessuna logica di parsing toccata.**
+- **`analysis.py`**: nel ramo reale, prima di chiamare, testo oltre **4000** caratteri (prompt) o
+  **1000** (profilo) → fallback con motivo; categoria senza margine → fallback con motivo. Contratto
+  invariato. Effetto collaterale utile: l'input massimo (~5400 caratteri) resta lontano dai ~32.000
+  che fanno scattare l'`import streamlit` di `agent.py:134`, ora **irraggiungibile dall'API**.
+- **`vision.py`**: `BudgetEsaurito` → **429** «Tetto di spesa raggiunto per la lettura screenshot.»
+  (il frontend mostra il `detail` così com'è); stato illeggibile → 503.
+- `test_observability`: stato della spesa in cartella temporanea; T09 ora è il testo oltre il limite
+  (modello mai chiamato), T10 l'eccezione nel ramo LLM con la privacy nel traceback.
+- `.env.example` (4 variabili), README EN+IT (sezione *Tetto di spesa* con tabella, log, test,
+  struttura, roadmap: tolto il modello di costo, primo punto ora lo stress test), `docs/03`.
+
+**Verifica:**
+- NEW `test_budget.py` offline con client Anthropic finto: **30/30** — conti (byte, fuori listino,
+  cache), prenotazione e saldo, tetti giornaliero/mensile/categorie indipendenti, `.env` non valido,
+  giorno e mese nuovi, mezzanotte, stato illeggibile, **20 thread con un tetto da 5 → passano
+  esattamente 5**, cascata haiku×2→sonnet con spesa = somma dei costi reali, chat, endpoint in live.
+- **Controprova:** con `agent.py` e `vision_parser.py` di HEAD falliscono 10 test su 30 (tutti quelli
+  che attraversano le chiamate reali); ripristinati, 30/30.
+- `test_observability` **24/24** · `test_parser` **12/12** · `py_compile` · variabili d'ambiente: 14
+  lette = 14 dichiarate.
+- **Backend reale** avviato staccato in **live** con chiave finta e tetti a $0,001, cioè sotto ogni
+  prenotazione: **nessuna richiesta di rete**. `POST /api/analysis` → 200 `source=fallback`, due
+  WARNING (haiku prenotazione $0,0217, sonnet $0,0652) con lo stesso request-id; `POST
+  /api/setup/from-image` → **429** con il messaggio (prenotazione $0,0249). Backend spento; cancellato
+  il `llm_incidents.md` nato dalla prova (prima non esisteva). Visto nel log e corretto: i tetti
+  piccoli comparivano come «$0.00», ora `%g`.
+
+**File protetti:** ☑ sbloccati con «ok procedi» → `agent.py`, `vision_parser.py` (solo aggancio, +27 −3)
+**Decisione:** ☑ Mantenuto — committato e pushato l'11/09 su «ok push»
+
+> **Note aperte:** (1) `agent.py` crea il client con `timeout=30.0` e l'SDK ripete da solo fino a 2
+> volte: una risposta sonnet da 2500 token può sforare i 30 s. Il tetto conta ogni tentativo al
+> massimo, ma **se Anthropic fatturi le richieste interrotte non è verificato**: da misurare nello
+> stress test. (2) Il listino in `budget.py` va aggiornato a mano se cambiano i prezzi. (3) Con più
+> worker uvicorn il `threading.Lock` non basta: servirebbe un lock su file. (4) La Console, a tetto
+> raggiunto, mostra «fallback» senza dire che è il tetto: il motivo sta solo nel log.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
