@@ -43,7 +43,7 @@ Per ogni iterazione (megaprompt, FASE, fix o richiesta dell'utente) crea una nuo
   Backend FastAPI 0.115 / Uvicorn (invariato, fuori scope UI).
 - **LLM di Gigi:** default `claude-haiku-4-5` (env `LLM_MODEL`), fallback `claude-sonnet-4-6`. In demo-mode risponde la cache.
 - **Agente di sviluppo:** Claude Code (`claude-opus-4-8`).
-- **Avvio dev:** `cd backend && ./.venv/Scripts/python -m uvicorn app.main:app --reload` (:8000) +
+- **Avvio dev:** `cd backend && ./.venv/Scripts/python -m uvicorn app.main:app` (:8000, **niente `--reload`**: HAZARD-V2-B) +
   `cd frontend && npm run dev` (:3000). Health `GET :8000/` → `{status:"ok", demo_mode:true}`.
 - **Token estetici:** `frontend/src/lib/instrument.ts` (STATE ok/warn/alarm/cold, INSTRUMENT grid/track/tick/ink,
   STROKE hairline/tick/needle, glow off) · `frontend/src/lib/motion.ts` (durate/easing approvati). **Riusare, non reinventare.**
@@ -1083,6 +1083,84 @@ e dal prompt di sollecito sul Desktop.
 > **Note aperte:** in attesa della risposta al sollecito (retrofit `direzione` + kyalami). Nel
 > PROMPT_LOG, la sezione «Contesto tecnico rapido» in testa insegna ancora `--reload` all'avvio.
 > Prossimo della coda: **MUST #1, logging del ramo LLM**, da proporre prima di scrivere codice.
+
+---
+
+## Entry #026 — MUST #1 della PRR: il ramo LLM diventa osservabile (log rotante + request-id)
+
+| Campo | Valore |
+|---|---|
+| Data | 10/09/2026 |
+| Agente dev | Claude Code (claude-opus-5) |
+| Area | NEW `backend/app/logging_config.py` · MOD `backend/app/{config,main}.py` · MOD `backend/app/api/{analysis,vision}.py` · NEW `backend/app/tests/test_observability.py` · MOD `.gitignore` · MOD `backend/.env.example` · MOD `README.md` + `README.it.md` · MOD testata del PROMPT_LOG |
+| Commit | `4ae01b2` (backend + test) · `0f0a74f` (README) · questo log |
+| Contesto | Primo MUST del Product Backlog uscito dalla PRR dell'08/09. Scelte già fatte l'08/09: rotante 1 MB × 3 in `backend/logs/pitwall.log`, percorso da `__file__`, request-id, `agent.py` non si tocca. |
+
+**Catalogo messaggi:**
+1. «procedi» → proposta esposta prima del codice, dopo aver tracciato il percorso reale in V2.
+2. Quattro risposte: nel log **solo la lunghezza** del testo del pilota · includere **anche
+   `vision.py`** · registri di `agent.py` **in `backend/logs/`** · ritocchi collegati tutti e tre
+   (README sulla chat, `--reload` nei commenti, `.env.example` dei registri).
+
+**Il percorso tracciato in V2 — due correzioni alla PRR:**
+- La PRR diceva che «ogni guasto del ramo reale non lascia traccia». **Era esagerato.** Gli errori
+  delle chiamate ad Anthropic e le risposte malformate li registra `agent.log_incident()` in un
+  markdown, con percorso relativo alla cartella di avvio (cioè `backend/INCIDENTS.md`, non il
+  registro della radice). Senza traccia restavano: le eccezioni che escono da `get_ai_response`,
+  inghiottite da `analysis.py:98` (caso reale: sopra gli 8000 token la funzione importa
+  `streamlit`, **che non è installato**); la chiave mancante (fallback muto); la risposta non
+  valida vista dall'endpoint; latenza e correlazione; ogni guasto di `vision.py` (500 al client,
+  niente sul server).
+- **Le chiamate reali al modello sono due, non una.** `/api/setup/from-image` usa
+  `claude-sonnet-4-6` e **non guarda `PITWALL_ALLOW_LIVE`**: le basta la chiave. Con una chiave nel
+  `.env` ogni screenshot la consuma anche in demo-mode. Non corretto qui: è un dato per il
+  **modello di costo** (MUST #2), scritto nella roadmap dei README.
+- `chat_with_gigi()` esiste in `agent.py` ma **nessuna rotta la chiama**: i README la davano per
+  implementata senza dirlo. Precisato.
+
+**Modifica:**
+- NEW **`logging_config.py`**: logger `pitwall`, `RotatingFileHandler` su `backend/logs/pitwall.log`
+  (1 MB × 3, UTF-8, da INFO), console da WARNING, request-id da `ContextVar` inserito da un filtro
+  **sugli handler** (i filtri del logger non valgono per i figli), `propagate = False`.
+  Richiamabile: sostituisce gli handler invece di duplicarli.
+- MOD **`config.py`**: `LOG_DIR` da `__file__`; `os.environ.setdefault` per
+  `PITWALL_PROMPT_LOG_PATH` / `PITWALL_INCIDENTS_PATH` → `backend/logs/llm_token_log.md` e
+  `llm_incidents.md`. Sposta i registri di `agent.py` **senza toccarlo**: `agent.py` legge
+  l'ambiente all'import, e lo importano solo gli endpoint. Un `.env` vince sempre.
+- MOD **`main.py`**: middleware HTTP con request-id (quello del client solo se
+  `[A-Za-z0-9._-]{1,64}`, altrimenti generato), durata, header `X-Request-ID` in risposta,
+  `log.exception` sulle eccezioni non gestite. Docstring senza `--reload`.
+- MOD **`analysis.py`**: ogni ramo registra `source` e, in fallback, **il motivo** (chiave
+  assente · eccezione con traceback · tutti i modelli falliti · risposta senza le 4 sezioni) e la
+  durata. Del testo del pilota solo lunghezza e presenza del profilo. **Contratto e testo restituito
+  invariati.**
+- MOD **`vision.py`**: WARNING sul 503, ERROR con traceback prima del 500, INFO con durata; nel log
+  byte e tipo del file (`%r`, perché il tipo arriva dal client).
+- `.gitignore` → `/backend/logs/`. `.env.example` → commento dei registri col default nuovo.
+- README (EN + IT): chat di Gigi dichiarata **non collegata**, sezione **Log**, voce
+  «Osservabilità» tolta dalla roadmap (fatta), costo esteso alla lettura screenshot, `logging_config.py`
+  nella struttura. Testata del PROMPT_LOG: tolto l'ultimo `--reload`.
+
+**Verifica:**
+- NEW `test_observability.py` (offline, rete bloccata stubbando `call_claude`, log in cartella
+  temporanea): **22/22**. Il caso dell'eccezione usa la `get_ai_response` **vera** con un input da
+  33.000 caratteri e registra `ModuleNotFoundError: No module named 'streamlit'`. Verificato anche
+  che il request-id arriva nella riga scritta dal thread dell'endpoint sincrono.
+- `test_parser` **12/12** · `py_compile` dei 6 file · variabili d'ambiente 12 lette = 12 dichiarate ·
+  README EN e IT con 15 titoli, 19 righe di tabella e 5 blocchi di codice ciascuno.
+- **Backend reale** avviato staccato: health 200; `POST /api/analysis` → 200 `source=demo`, stesso
+  request-id nell'header e nelle due righe di log; screenshot senza chiave → 503 con WARNING anche
+  nella console di uvicorn; marcatore del prompt **assente** dal log; `git check-ignore` conferma
+  `backend/logs/`. Backend spento dopo la prova, com'era all'inizio.
+
+**File protetti:** ☑ nessuno toccato (`agent.py` e `vision_parser.py` solo letti)
+**Decisione:** ☑ Mantenuto — committato e pushato l'11/09 su «ok push»
+
+> **Note aperte:** quale modello ha risposto in cascata non arriva a `pitwall.log`: `agent.py` non lo
+> restituisce, lo scrive solo nel suo `llm_token_log.md`. `vision.py` è `async` ma chiama il parser
+> sincrono, che blocca l'event loop per tutta la chiamata al modello: da valutare con lo stress test.
+> L'`import streamlit` a `agent.py:134` ora almeno **si vede**; toglierlo resta un intervento su file
+> protetto.
 
 ---
 
