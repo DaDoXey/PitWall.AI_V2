@@ -1164,6 +1164,57 @@ e dal prompt di sollecito sul Desktop.
 
 ---
 
+## Entry #027 — La lettura screenshot passa dal presidio della demo-mode
+
+| Campo | Valore |
+|---|---|
+| Data | 11/09/2026 |
+| Agente dev | Claude Code (claude-opus-5) |
+| Area | MOD `backend/app/api/vision.py` · MOD `backend/app/tests/test_observability.py` · MOD `README.md` + `README.it.md` · MOD `docs/03-v2-architecture.md` · MOD `backend/.env.example` |
+| Commit | `ff5ff89` (codice + test + documentazione) · questo log |
+| Contesto | Primo passo del MUST #2 (modello di costo), chiesto come intervento a sé: «fai subito ma prima fai tutti i controlli necessari». Entry #026 pushata in apertura di sessione (`4ae01b2` · `0f0a74f` · `d839d97`). |
+
+**Catalogo messaggi:**
+1. «leggi la memoria e riprendiamo il lavoro di ieri» → status: allineato a `origin`, Entry #026 non committata, test 12/12 e 22/22, nessuna consegna nuova da Claude Desktop.
+2. «ok push» → tre commit dell'Entry #026 e push.
+3. Risposte alle tre domande sul costo: tetto e periodo li scelgo io («il più efficiente e meno costoso»,
+   categorizzando i modi di utilizzo); il blocco sugli screenshot subito, dopo i controlli.
+
+**Controlli fatti prima di toccare il codice:**
+- Chiamate reali al modello in `backend/app`: **tre**. `agent.call_claude` (analisi, dietro il presidio),
+  `agent.chat_with_gigi` (nessuna rotta la chiama), `vision_parser.parse_setup_from_image` — l'unica
+  raggiungibile **senza** presidio.
+- Il README diceva «con `PITWALL_ALLOW_LIVE=0` la chiave non si consuma mai»: per gli screenshot **era
+  falso**. `docs/02-repo-strategy.md` pianificava la rotta come «feature-flag»: il presidio mancante era
+  una deviazione dal progetto, non una scelta.
+- Frontend (`setup/page.tsx:497`): un 503 mostra già «🔒 Richiede la chiave server (in demo non è
+  attiva)». Il blocco non richiede modifiche all'interfaccia.
+- `backend/.env` assente su questo PC: oggi nessuno spendeva, nessuna regressione possibile in locale.
+
+**Modifica:**
+- `vision.py`: prima di tutto, anche della chiave, `if config.demo_mode()` → **503** «Lettura screenshot
+  disattivata in demo-mode» + WARNING nel log con i due flag necessari. Scelto `demo_mode()` e non
+  `allow_live()`: è la stessa regola della Console e del README (servono **entrambi**
+  `ALLOW_LIVE=1` e `DEMO_MODE=0`), e `demo_mode()` è documentata come «nessuna rete». Il file caricato
+  non viene nemmeno letto.
+- README EN+IT: il presidio vale anche per gli screenshot; tolta dalla roadmap la frase sul flag
+  aggirato. `docs/03`: 503 in demo-mode nel contratto API. `.env.example`: commento del flag.
+
+**Verifica:**
+- `test_observability` **24/24** (+2: T14 demo-mode con chiave presente → 503 e parser **mai chiamato**,
+  contato con una spia; T15 `ALLOW_LIVE=1` ma `DEMO_MODE=1` → 503). Numerazione T16–T24 slittata.
+- **Controprova:** con il `vision.py` di HEAD i due test nuovi **falliscono** (22/24), quindi misurano
+  davvero il difetto.
+- `test_parser` **12/12** · `py_compile` ok.
+- **Backend reale** avviato staccato (demo-mode, senza `.env`): `POST /api/setup/from-image` → `503`
+  `{"detail":"Lettura screenshot disattivata in demo-mode"}`, riga WARNING con lo stesso request-id
+  dell'header. Backend spento dopo la prova, com'era all'inizio.
+
+**File protetti:** ☑ nessuno toccato (`vision_parser.py` e `agent.py` solo letti)
+**Decisione:** ☑ Mantenuto — committato e pushato l'11/09 su «ok push»
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
