@@ -127,12 +127,12 @@ Tutte le variabili, con i valori di default, sono documentate in `backend/.env.e
 La `ANTHROPIC_API_KEY` vive **solo nel backend**. Con `PITWALL_ALLOW_LIVE=0` (default) la demo-mode
 è forzata qualunque cosa dica il resto: si serve la **cache demo**, senza rete, e la chiave non si
 consuma. L'LLM reale richiede **entrambi** `PITWALL_ALLOW_LIVE=1` e `PITWALL_DEMO_MODE=0`, più la
-chiave nei secret del server.
+chiave nei secret del server. Lo stesso presidio vale per la **lettura del setup da screenshot**: in
+demo-mode risponde `503` senza chiamare il modello.
 
 ## Roadmap
 1. **Modello di costo** prima dell'accensione: la cascata di modelli moltiplica la spesa proprio
-   quando qualcosa si guasta, e non ha un tetto. Deve coprire anche la lettura del setup da
-   screenshot, che chiama il modello con la sola chiave, senza passare dal flag live.
+   quando qualcosa si guasta, e non ha un tetto.
 2. **Accensione e stress test dell'LLM reale.**
 3. **Guide dei tracciati** per tutti i 25 circuiti ACC: settori e curva per curva.
 4. **Mappe dei circuiti**: 5 layout su 25 verificati. Restano da sostituire gli altri 20, e manca

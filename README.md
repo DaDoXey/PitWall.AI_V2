@@ -128,12 +128,12 @@ Every variable, with its default, is documented in `backend/.env.example` and
 The `ANTHROPIC_API_KEY` lives **only in the backend**. With `PITWALL_ALLOW_LIVE=0` (the default),
 demo mode is forced whatever the other settings say: the **demo cache** is served, with no network
 calls, and the key is never used. The real LLM requires **both** `PITWALL_ALLOW_LIVE=1` and
-`PITWALL_DEMO_MODE=0`, plus the key in the server's secrets.
+`PITWALL_DEMO_MODE=0`, plus the key in the server's secrets. The same protection applies to the
+**screenshot setup reading**: in demo mode it answers `503` without calling the model.
 
 ## Roadmap
 1. **Cost model** before switching it on: the model cascade multiplies spending exactly when
-   something fails, and has no cap. It must also cover the screenshot setup reading, which calls
-   the model whenever a key is present, without going through the live flag.
+   something fails, and has no cap.
 2. **Switch-on and stress test of the real LLM.**
 3. **Track guides** for all 25 ACC circuits: sectors and corner by corner.
 4. **Track maps**: 5 of 25 layouts verified. The other 20 still need replacing, and no page shows

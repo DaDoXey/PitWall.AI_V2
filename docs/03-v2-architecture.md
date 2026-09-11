@@ -47,7 +47,7 @@
 - `POST /api/analysis` body `{prompt}` → `{question, text(4 sezioni md), source: demo|cache|api|fallback}`. In demo-mode: sempre cache, routing per keyword.
 - `GET /api/setup-params?car&track` → 5 sezioni / 49 `Param{label,min,max,step,unit,default,tip}`.
 - `POST /api/csv/parse` (multipart) → `CsvResult` (400 se CSV invalido).
-- `POST /api/setup/from-image` (multipart) → `{params,summary}` (503 se manca la key server).
+- `POST /api/setup/from-image` (multipart) → `{params,summary}` (503 in demo-mode, 503 se manca la key server).
 
 ## 5 · Presidio API key
 `ANTHROPIC_API_KEY` vive **solo lato server**. Con `PITWALL_ALLOW_LIVE=0` (default, e forzato sul deploy

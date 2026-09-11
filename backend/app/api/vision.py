@@ -1,11 +1,12 @@
 """POST /api/setup/from-image — lettura setup da screenshot ACC (core/vision_parser).
 
-Richiede la chiave lato server; è una feature "reale" (non demo). In deploy pubblico
-senza chiave risponde 503.
+È una feature "reale" (non demo): non esiste una cache, ogni screenshot è una chiamata
+a claude-sonnet-4-6. Per questo passa dallo stesso presidio della Console (Entry #027):
+risponde 503 in demo-mode, cioè se non ci sono sia PITWALL_ALLOW_LIVE=1 sia
+PITWALL_DEMO_MODE=0, e 503 se manca la chiave. Prima bastava la chiave, e con una
+chiave nel .env ogni screenshot la consumava anche in demo.
 
-Attenzione al costo: è l'unica chiamata reale al modello che NON passa dal flag
-PITWALL_ALLOW_LIVE, le basta la chiave. Per questo ogni esito, con la durata, lascia
-una riga in backend/logs/pitwall.log (Entry #026).
+Ogni esito, con la durata, lascia una riga in backend/logs/pitwall.log (Entry #026).
 """
 
 import logging
@@ -21,6 +22,11 @@ log = logging.getLogger("pitwall.vision")
 
 @router.post("/setup/from-image")
 async def setup_from_image(file: UploadFile = File(...)):
+    # Il presidio viene prima di tutto, anche della chiave: in demo-mode nessuna rete.
+    if config.demo_mode():
+        log.warning("503: lettura screenshot richiesta in demo-mode (servono "
+                    "PITWALL_ALLOW_LIVE=1 e PITWALL_DEMO_MODE=0)")
+        raise HTTPException(status_code=503, detail="Lettura screenshot disattivata in demo-mode")
     if not config.ANTHROPIC_API_KEY:
         log.warning("503: lettura screenshot richiesta ma ANTHROPIC_API_KEY assente")
         raise HTTPException(status_code=503, detail="ANTHROPIC_API_KEY non configurata lato server")

@@ -192,10 +192,34 @@ try:
     # -----------------------------------------------------------------------
     PNG = {"file": ("setup.png", b"\x89PNG finto", "image/png")}
 
+    # Presidio (Entry #027): con la chiave presente, la demo-mode deve bastare a fermare
+    # la chiamata. La spia conta le volte in cui si arriva al parser, cioe' al modello.
+    chiamate_parser = []
+    vision_parser.parse_setup_from_image = lambda *a, **k: chiamate_parser.append(1) or {}
+    config.ANTHROPIC_API_KEY = "chiave-finta-mai-usata"
+
+    modalita(live=False)
+    r = client.post("/api/setup/from-image", files=PNG)
+    righe = nuove_righe()
+    test("T14 vision in demo-mode con la chiave: 503, WARNING, modello mai chiamato",
+         r.status_code == 503 and "WARNING" in righe and "demo-mode" in righe
+         and not chiamate_parser, f"status {r.status_code}, chiamate {len(chiamate_parser)}, "
+         f"{righe.strip()}")
+
+    os.environ["PITWALL_ALLOW_LIVE"] = "1"      # live consentito ma demo-mode lasciata a 1
+    os.environ["PITWALL_DEMO_MODE"] = "1"
+    r = client.post("/api/setup/from-image", files=PNG)
+    righe = nuove_righe()
+    test("T15 vision con ALLOW_LIVE=1 ma DEMO_MODE=1: 503, servono entrambi i flag",
+         r.status_code == 503 and "demo-mode" in righe and not chiamate_parser,
+         f"status {r.status_code}, chiamate {len(chiamate_parser)}")
+    vision_parser.parse_setup_from_image = ORIGINALI["parse"]
+
+    modalita(live=True)
     config.ANTHROPIC_API_KEY = ""
     r = client.post("/api/setup/from-image", files=PNG)
     righe = nuove_righe()
-    test("T14 vision senza chiave: 503 + WARNING", r.status_code == 503 and "WARNING" in righe
+    test("T16 vision senza chiave: 503 + WARNING", r.status_code == 503 and "WARNING" in righe
          and "ANTHROPIC_API_KEY assente" in righe, righe.strip())
 
     config.ANTHROPIC_API_KEY = "chiave-finta-mai-usata"
@@ -206,7 +230,7 @@ try:
     vision_parser.parse_setup_from_image = _parser_rotto
     r = client.post("/api/setup/from-image", files=PNG)
     righe = nuove_righe()
-    test("T15 vision guasta: 500 + ERROR con traceback e dimensione del file",
+    test("T17 vision guasta: 500 + ERROR con traceback e dimensione del file",
          r.status_code == 500 and "ERROR" in righe and "Traceback" in righe
          and "lettura screenshot fallita" in righe and "byte" in righe, righe.strip())
 
@@ -214,7 +238,7 @@ try:
     vision_parser.summarize_parsed_setup = lambda r: "ok"
     r = client.post("/api/setup/from-image", files=PNG)
     righe = nuove_righe()
-    test("T16 vision riuscita: 200 + INFO con la durata",
+    test("T18 vision riuscita: 200 + INFO con la durata",
          r.status_code == 200 and "screenshot letto in" in righe, righe.strip())
 
     # -----------------------------------------------------------------------
@@ -226,19 +250,19 @@ try:
     fastapi_app.add_api_route("/__test_boom", _boom)
     r = client.get("/__test_boom")
     righe = nuove_righe()
-    test("T17 eccezione non gestita: 500 + ERROR con traceback nel log",
+    test("T19 eccezione non gestita: 500 + ERROR con traceback nel log",
          r.status_code == 500 and "eccezione non gestita" in righe and "Traceback" in righe,
          righe.strip()[-300:])
 
     # -----------------------------------------------------------------------
     print("\n── Configurazione ────────────────────────────────────────────────")
     # -----------------------------------------------------------------------
-    test("T18 file rotante: un solo handler, 1 MB x 3 copie",
+    test("T20 file rotante: un solo handler, 1 MB x 3 copie",
          len(file_handlers) == 1 and file_handlers[0].maxBytes == 1_000_000
          and file_handlers[0].backupCount == 3)
-    test("T19 console solo da WARNING in su", livello_console == logging.WARNING,
+    test("T21 console solo da WARNING in su", livello_console == logging.WARNING,
          f"livello {livello_console}")
-    test("T20 cartella di default = backend/logs/, ricavata dal file",
+    test("T22 cartella di default = backend/logs/, ricavata dal file",
          config.LOG_DIR == BACKEND / "logs", str(config.LOG_DIR))
 
     from dotenv import dotenv_values
@@ -246,16 +270,16 @@ try:
     sovrascritti = env_file.exists() and bool(
         {"PITWALL_PROMPT_LOG_PATH", "PITWALL_INCIDENTS_PATH"} & set(dotenv_values(env_file)))
     if sovrascritti:
-        test("T21 registri di agent.py in backend/logs/ (saltato: il .env li imposta)", True)
+        test("T23 registri di agent.py in backend/logs/ (saltato: il .env li imposta)", True)
     else:
-        test("T21 registri di agent.py in backend/logs/, con agent.py intatto",
+        test("T23 registri di agent.py in backend/logs/, con agent.py intatto",
              agent.LOG_PATH == str(config.LOG_DIR / "llm_token_log.md")
              and agent.INCIDENT_PATH == str(config.LOG_DIR / "llm_incidents.md"),
              f"{agent.LOG_PATH} · {agent.INCIDENT_PATH}")
 
     logging.getLogger("pitwall.test").info("riga prima della rotazione")
     file_handlers[0].doRollover()
-    test("T22 rotazione reale: nasce pitwall.log.1",
+    test("T24 rotazione reale: nasce pitwall.log.1",
          (LOG_TMP / f"{logging_config.LOG_FILE_NAME}.1").exists())
 
 finally:
