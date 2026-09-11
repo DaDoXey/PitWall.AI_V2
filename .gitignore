@@ -50,3 +50,8 @@ Thumbs.db
 # seguono la stessa sorte: senza asset la UI non mostra la banda foto e
 # /crediti dice "asset non ancora scaricati", invece di mostrare img rotte.
 /frontend/public/assets/
+
+# -- Log del backend (Entry #026) --
+# pitwall.log rotante + i due registri markdown di agent.py (token stimati e
+# guasti). Percorso fissato in backend/app/config.py.
+/backend/logs/

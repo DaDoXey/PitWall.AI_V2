@@ -2,7 +2,13 @@
 
 Replica get_console_analysis della v1: demo-cache (nessuna rete) o LLM reale gated,
 con fallback alla cache. La chiave resta lato server (app.config).
+
+Ogni esito lascia una riga in backend/logs/pitwall.log con la fonte e, quando si
+ripiega sulla cache, il motivo (Entry #026). Mai il testo del pilota: solo lunghezze.
 """
+
+import logging
+import time
 
 from fastapi import APIRouter
 from pydantic import BaseModel
@@ -16,6 +22,13 @@ from app.core import demo_data as dd
 from app.core.demo_responses import _DEMO_ROUTES, is_demo_prompt, pick_demo_response
 
 router = APIRouter()
+log = logging.getLogger("pitwall.analysis")
+
+# Testo con cui agent.py (protetto) risponde quando tutti i modelli della cascata
+# hanno fallito. Letto e mai modificato, come _DEMO_ROUTES: serve solo a scrivere nel
+# log PERCHE' si è finiti in fallback. I dettagli del guasto li scrive agent.py nel
+# suo registro dei guasti (default backend/logs/llm_incidents.md).
+_AGENT_TUTTI_FALLITI = "Servizio temporaneamente non disponibile"
 
 
 def _in_scope(prompt: str) -> bool:
@@ -52,6 +65,17 @@ class AnalysisRequest(BaseModel):
     profile: str | None = None
 
 
+def _descrivi(req: AnalysisRequest) -> str:
+    """La richiesta come appare nel log: lunghezza e presenza, MAI il testo del
+    pilota né il profilo (decisione del 10/09)."""
+    profilo = "si" if req.profile and req.profile.strip() else "no"
+    return f"prompt {len(req.prompt or '')} caratteri, profilo {profilo}"
+
+
+def _ms(inizio: float) -> float:
+    return (time.perf_counter() - inizio) * 1000
+
+
 def _context(prompt: str, profile: str | None = None) -> str:
     profile_line = f"{profile.strip()}\n\n" if profile and profile.strip() else ""
     return (
@@ -75,13 +99,20 @@ def post_analysis(req: AnalysisRequest):
     #    sovrasterzo della cache (blindatura anti-"allucinazione percepita").
     if config.demo_mode() or is_demo_prompt(prompt):
         source = "demo" if config.demo_mode() else "cache"
-        text = pick_demo_response(prompt) if _in_scope(prompt) else _off_topic_text()
+        in_scope = _in_scope(prompt)
+        text = pick_demo_response(prompt) if in_scope else _off_topic_text()
+        log.info("source=%s, %s, %s", source,
+                 "in perimetro" if in_scope else "fuori perimetro", _descrivi(req))
         return {"question": prompt, "text": text, "source": source}
 
     # 2) LLM reale con fallback alla cache
     api_key = config.ANTHROPIC_API_KEY
     if not api_key:
+        log.warning("source=fallback: live consentito ma ANTHROPIC_API_KEY assente, %s",
+                    _descrivi(req))
         return {"question": prompt, "text": pick_demo_response(prompt), "source": "fallback"}
+
+    inizio = time.perf_counter()
     try:
         from app.core.agent import get_ai_response
 
@@ -89,11 +120,23 @@ def post_analysis(req: AnalysisRequest):
             user_input=_context(prompt, req.profile), api_key=api_key,
             auto=dd.SESSION["car"], tracciato=dd.SESSION["track"],
         )
-        ok = all(s in (resp or "") for s in _REQUIRED)
-        return {
-            "question": prompt,
-            "text": resp if ok else pick_demo_response(prompt),
-            "source": "api" if ok else "fallback",
-        }
     except Exception:
+        log.exception("source=fallback: eccezione nel ramo LLM dopo %.0f ms, %s",
+                      _ms(inizio), _descrivi(req))
         return {"question": prompt, "text": pick_demo_response(prompt), "source": "fallback"}
+
+    ok = all(s in (resp or "") for s in _REQUIRED)
+    if ok:
+        log.info("source=api in %.0f ms, risposta %d caratteri, %s",
+                 _ms(inizio), len(resp), _descrivi(req))
+    elif _AGENT_TUTTI_FALLITI in (resp or ""):
+        log.warning("source=fallback: tutti i modelli della cascata hanno fallito dopo %.0f ms "
+                    "(dettagli nel registro guasti di agent.py), %s", _ms(inizio), _descrivi(req))
+    else:
+        log.warning("source=fallback: risposta senza le 4 sezioni obbligatorie (%d caratteri) "
+                    "dopo %.0f ms, %s", len(resp or ""), _ms(inizio), _descrivi(req))
+    return {
+        "question": prompt,
+        "text": resp if ok else pick_demo_response(prompt),
+        "source": "api" if ok else "fallback",
+    }
