@@ -1384,6 +1384,74 @@ pilota nel contesto «appena possibile» · (4) carburante «sembra di sì ma di
 
 ---
 
+## Entry #030 — Timeout del client LLM: 90 s e nessuna ripetizione dell'SDK
+
+| Campo | Valore |
+|---|---|
+| Data | 11/09/2026 |
+| Agente dev | Claude Code (claude-opus-5) |
+| Area | MOD ⚠️`backend/app/core/agent.py` · MOD `backend/app/tests/test_budget.py` · MOD `backend/.env.example` |
+| Commit | `d4ac3c4` (agent.py + test + .env.example) · questo log |
+| Contesto | Punto 1 dello stress test (Entry #029). Entry #029 pushata (`5293574` · `c14813d` · `c3c45e3`). |
+
+**Catalogo messaggi:**
+1. «ok push. 1 ok procedi. 2 robe sempre riguardanti la pista e acc. 3 appena possibile. 4 sembra di sì ma
+   dipende dalle condizioni ed altri fattori.»
+
+**Modifica** (⚠️ `agent.py` sbloccato con «ok procedi»):
+- Costanti `LLM_TIMEOUT_S = PITWALL_LLM_TIMEOUT_S` (default **90**) e `LLM_MAX_RETRIES = 0`, usate dai due
+  client (`call_claude` e `chat_with_gigi`) al posto di `timeout=30.0` e delle 2 ripetizioni di default dell'SDK.
+- **Perché 90:** sonnet ha prodotto ~47 token/s (1354 in 29,0 s; 2188 in 51 s): i 2500 token di `max_tokens`
+  stanno in ~55 s, con margine. **Perché zero ripetizioni:** la cascata è già il secondo tentativo, e ogni suo
+  passaggio prenota nel tetto; le ripetizioni interne dell'SDK erano invisibili al tetto (una prenotazione
+  per fino a tre richieste).
+- **Rovescio accettato:** un errore passeggero (429/529) non viene più ripetuto su haiku e la cascata passa
+  subito a sonnet, che costa di più. Nello stress test non se n'è visto nessuno.
+- `.env.example`: `PITWALL_LLM_TIMEOUT_S=90` documentata. `vision_parser.py` **non toccato** (usa ancora i
+  default dell'SDK: 10 minuti e 2 ripetizioni): da rivedere con il test dello screenshot.
+
+**Verifica:**
+- `test_budget` **31/31** (+B21b: i client di `agent.py` nascono con il timeout configurato e `max_retries=0`;
+  B25 lo controlla anche per la chat) · `test_observability` 24/24 · `test_parser` 12/12.
+- **Backend reale, il caso che falliva:** sonnet come modello principale, testo da 3900 caratteri. Prima
+  (Entry #029): 3 timeout, `fallback` dopo 93 s. Ora: **`source=api` in 51,0 s**, 3935/2188 token, $0,0446,
+  **una sola richiesta HTTP** nel log dell'SDK, nessun «Retrying». Backend spento dopo la prova.
+- Spesa registrata a settembre: $0,3292 su $1.
+
+**File protetti:** ☑ sbloccato con «ok procedi» → `agent.py` (solo configurazione del client)
+**Decisione:** ☑ Mantenuto — committato e pushato l'11/09 su «ok push»
+
+> **Note dalle risposte di Edoardo:** (2) il perimetro di Gigi è «robe sempre riguardanti la pista e acc» —
+> da tradurre nel prompt; (4) il conto del carburante regge ma «dipende dalle condizioni ed altri fattori»:
+> il prompt dovrebbe chiedere o dichiarare le condizioni prima di dare un numero secco.
+
+**Scope in definizione — dati reali del pilota nel contesto di Gigi (nessun codice scritto, si riprende dopo).**
+Com'è oggi: il Setup tiene vettura, circuito, condizioni, temperature, i 49 valori e il CSV solo nello stato del
+componente; la Console manda solo prompt e profilo; `_context()` aggiunge sempre la sessione demo; il system
+prompt v4 ha già la sezione «UTILIZZO DATI CSV E SETUP (se forniti)».
+
+Risposte di Edoardo (catalogo messaggi):
+1. Live senza dati del pilota: «fai la seconda» → Gigi risponde in generale e dice quali dati servono; la
+   sessione demo solo in demo-mode.
+2. «solo cose tecnica per la risposta dell'LLM, le guide devono essere del testo messo dentro alle descrizioni
+   dei tracciati» → all'LLM solo dati tecnici; le guide dei tracciati non vanno nel contesto.
+3. Persistenza come il profilo (`localStorage`, cancellata entrando in modalità demo): «va bene la proposta».
+4. Dashboard e Telemetria: «devono essere disponibili pure con LLM vero alla fine sono dati già analizzati e
+   messi a schermo, come un report nulla di più. sono delle corrispondenze o sbaglio?» → sì: in demo schermate e
+   Gigi leggono la stessa fonte; con i dati veri devono leggere gli stessi dati di Gigi.
+5. Risposta fuori tema senza le 4 sezioni, con il ritocco a `agent.py`: «ok procedi».
+6. «continua a fare le domande finché non hai uno scope ancora più definito e preciso. pulizia totale.»
+
+Domande aperte, poste l'11/09: (1) con un CSV caricato le schermate mostrano quello e la demo solo in sua
+assenza? (2) campi che il CSV non ha (tempi sul giro, pressioni giro per giro: il parser dà solo media/min/max)
+→ card «dato non presente», nascosta, o formato CSV esteso (`csv_parser.py` protetto)? (3) pressioni del CSV a
+caldo o a freddo (`demo_data.py` le dice «a freddo, da CSV/garage»)? (4) setup mandato a Gigi solo se toccato o
+caricato da screenshot? (5) profilo pilota ancora a Gigi? (6) guide = testo nella scheda del circuito, senza LLM?
+(7) testo fuori tema fisso o scritto dal modello? (8) «pulizia totale» = scope senza pezzi a metà, o anche
+rimozione dei residui v1 (`import streamlit`, «ANALIZZA SESSIONE», «st.write_stream»)?
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
