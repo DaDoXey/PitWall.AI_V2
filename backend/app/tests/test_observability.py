@@ -32,7 +32,7 @@ sys.path.insert(0, str(BACKEND))  # -> backend/
 
 from fastapi.testclient import TestClient  # noqa: E402
 
-from app import config, logging_config  # noqa: E402
+from app import budget, config, logging_config  # noqa: E402
 from app.main import app as fastapi_app  # noqa: E402
 import app.core.agent as agent  # noqa: E402
 import app.core.vision_parser as vision_parser  # noqa: E402
@@ -62,6 +62,7 @@ def test(name: str, passed: bool, detail: str = ""):
 LOG_TMP = pathlib.Path(tempfile.mkdtemp(prefix="pitwall_log_"))
 logger = logging_config.setup_logging(LOG_TMP)
 LOG_FILE = LOG_TMP / logging_config.LOG_FILE_NAME
+budget.STATO_PATH = LOG_TMP / "llm_spesa.json"   # la spesa vera non si tocca
 
 file_handlers = [h for h in logger.handlers if isinstance(h, RotatingFileHandler)]
 console_handlers = [h for h in logger.handlers if type(h) is logging.StreamHandler]
@@ -160,13 +161,24 @@ try:
          and "ANTHROPIC_API_KEY assente" in righe, righe.strip())
 
     config.ANTHROPIC_API_KEY = "chiave-finta-mai-usata"
+    # Fino all'Entry #027 questo caso mandava 33.000 caratteri e registrava l'eccezione
+    # vera dell'`import streamlit`. Dall'Entry #028 un testo cosi' lungo si ferma prima.
+    chiamate_agent = []
+    agent.get_ai_response = lambda **kw: chiamate_agent.append(1) or SEZIONI_OK
     r, body, rid, righe = analisi(MARCATORE + " " + "a" * 33_000)
-    test("T09 eccezione VERA nel ramo LLM (oltre 8000 token): fallback + ERROR con traceback",
+    test("T09 testo oltre il limite: fallback + WARNING col motivo, modello mai chiamato",
+         body.get("source") == "fallback" and "WARNING" in righe and "oltre il limite" in righe
+         and not chiamate_agent and MARCATORE not in righe, righe.strip())
+
+    def _ramo_rotto(**kw):
+        raise RuntimeError("guasto finto del ramo LLM")
+
+    agent.get_ai_response = _ramo_rotto
+    r, body, rid, righe = analisi(f"sottosterzo {MARCATORE}")
+    test("T10 eccezione nel ramo LLM: fallback + ERROR con traceback, senza il testo del pilota",
          body.get("source") == "fallback" and "ERROR" in righe and "Traceback" in righe
-         and "eccezione nel ramo LLM" in righe, riga_con(righe, "Error"))
-    print(f"        (causa registrata: {riga_con(righe, 'Error').strip()})")
-    test("T10 privacy anche nel traceback: il testo del pilota non compare",
-         MARCATORE not in righe)
+         and "eccezione nel ramo LLM" in righe and MARCATORE not in righe,
+         riga_con(righe, "Error"))
 
     agent.get_ai_response = lambda **kw: "risposta senza le sezioni"
     r, body, rid, righe = analisi("sottosterzo in uscita")

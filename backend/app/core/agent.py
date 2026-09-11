@@ -10,6 +10,9 @@ from pathlib import Path
 
 import anthropic
 
+# Tetto di spesa (MUST #2, Entry #028): ogni chiamata prenota il costo massimo prima e salda il reale dopo.
+from app import budget
+
 
 # ─────────────────────────────────────────────
 # COSTANTI
@@ -105,14 +108,18 @@ def validate_output(response: str) -> bool:
 
 def call_claude(user_input: str, api_key: str, model_name: str) -> str:
     """Chiamata a Claude con un modello specifico."""
+    system_prompt = load_system_prompt()
+    # Solleva budget.BudgetEsaurito se il tetto non regge: get_ai_response lo tratta come un modello fallito.
+    prenotazione = budget.prenota("analisi", model_name, system_prompt + user_input, MAX_OUTPUT_TOKENS)
     client = anthropic.Anthropic(api_key=api_key, base_url="https://api.anthropic.com", timeout=30.0)
     message = client.messages.create(
 
         model=model_name,
         max_tokens=MAX_OUTPUT_TOKENS,
-        system=load_system_prompt(),
+        system=system_prompt,
         messages=[{"role": "user", "content": user_input}],
     )
+    budget.salda(prenotazione, message.usage)
     return message.content[0].text
 
 
@@ -224,6 +231,10 @@ def chat_with_gigi(messages: list, api_key: str, context: str = "", model_name: 
 
     client = anthropic.Anthropic(api_key=api_key, base_url="https://api.anthropic.com", timeout=30.0)
     try:
+        prenotazione = budget.prenota(
+            "chat", model, system_prompt + "".join(str(m.get("content", "")) for m in messages),
+            CHAT_MAX_OUTPUT_TOKENS,
+        )
         with client.messages.stream(
             model=model,
             max_tokens=CHAT_MAX_OUTPUT_TOKENS,
@@ -232,6 +243,7 @@ def chat_with_gigi(messages: list, api_key: str, context: str = "", model_name: 
         ) as stream:
             for text in stream.text_stream:
                 yield text
+            budget.salda(prenotazione, stream.get_final_message().usage)
     except Exception as exc:
         log_incident(f"Errore chat Gigi ({model}): {exc}")
         yield (

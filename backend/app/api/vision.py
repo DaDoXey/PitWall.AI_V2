@@ -6,6 +6,9 @@ risponde 503 in demo-mode, cioè se non ci sono sia PITWALL_ALLOW_LIVE=1 sia
 PITWALL_DEMO_MODE=0, e 503 se manca la chiave. Prima bastava la chiave, e con una
 chiave nel .env ogni screenshot la consumava anche in demo.
 
+Tetto di spesa (Entry #028): la chiamata passa da app.budget, categoria "screenshot".
+A tetto raggiunto risponde 429, e il frontend mostra il messaggio cosi' com'e'.
+
 Ogni esito, con la durata, lascia una riga in backend/logs/pitwall.log (Entry #026).
 """
 
@@ -14,7 +17,7 @@ import time
 
 from fastapi import APIRouter, File, HTTPException, UploadFile
 
-from app import config
+from app import budget, config
 
 router = APIRouter()
 log = logging.getLogger("pitwall.vision")
@@ -40,6 +43,13 @@ async def setup_from_image(file: UploadFile = File(...)):
         result = parse_setup_from_image(raw, api_key=config.ANTHROPIC_API_KEY,
                                         media_type=file.content_type)
         result["summary"] = summarize_parsed_setup(result)
+    except budget.BudgetEsaurito:
+        log.warning("429: lettura screenshot rifiutata dal tetto di spesa, %s", descrizione)
+        raise HTTPException(status_code=429,
+                            detail="Tetto di spesa raggiunto per la lettura screenshot.")
+    except budget.StatoSpesaIllegibile:
+        log.exception("503: lettura screenshot bloccata, stato della spesa illeggibile")
+        raise HTTPException(status_code=503, detail="Registro della spesa illeggibile lato server")
     except Exception as e:  # noqa: BLE001
         log.exception("500: lettura screenshot fallita dopo %.0f ms, %s",
                       (time.perf_counter() - inizio) * 1000, descrizione)

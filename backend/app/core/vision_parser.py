@@ -11,6 +11,12 @@ import anthropic
 from pathlib import Path
 from .setup_params import get_all_params_flat, validate_setup
 
+# Tetto di spesa (MUST #2, Entry #028): la chiamata prenota il costo massimo prima e salda il reale dopo.
+from app import budget
+
+VISION_MODEL = "claude-sonnet-4-6"
+VISION_MAX_TOKENS = 1000
+
 
 # ─────────────────────────────────────────────
 # PROMPT SPECIFICO PER LETTURA SCREENSHOT ACC
@@ -103,10 +109,15 @@ def parse_setup_from_image(
     else:
         image_data, media_type = image_to_base64(image_source)
 
+    # Solleva budget.BudgetEsaurito se il tetto non regge: la chiamata non parte.
+    # L'istruzione testuale breve sotto sta dentro il margine di budget.MARGINE_TOKEN.
+    prenotazione = budget.prenota("screenshot", VISION_MODEL, VISION_SYSTEM_PROMPT,
+                                  VISION_MAX_TOKENS, immagini=1)
+
     # Chiamata API con Vision
     message = client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=1000,
+        model=VISION_MODEL,
+        max_tokens=VISION_MAX_TOKENS,
         system=VISION_SYSTEM_PROMPT,
         messages=[
             {
@@ -131,6 +142,7 @@ def parse_setup_from_image(
             }
         ],
     )
+    budget.salda(prenotazione, message.usage)
 
     raw_response = message.content[0].text.strip()
 
