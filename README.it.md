@@ -17,8 +17,9 @@ propria**: portare PitWall dalla demo al prodotto, con l'LLM reale sotto.
 
 Il client LLM è già implementato: un'analisi a 4 sezioni validate, con retry e cascata di modelli,
 che si accende con `PITWALL_ALLOW_LIVE=1` + `PITWALL_DEMO_MODE=0` + la chiave. Il client contiene
-anche una chat di Gigi in streaming, non ancora collegata a nessuna rotta. **L'LLM reale resta
-spento di default** finché non è pronto il modello di costo (vedi Roadmap).
+anche una chat di Gigi in streaming, non ancora collegata a nessuna rotta. Ogni chiamata al modello
+passa da un **tetto di spesa** giornaliero e mensile. **L'LLM reale resta spento di default** finché
+non è stato messo sotto stress (vedi Roadmap).
 
 Cronologia delle iterazioni → `PROMPT_LOG.md` · malfunzionamenti gravi → `INCIDENTS.md`.
 
@@ -30,10 +31,11 @@ backend/       FastAPI
     main.py      # app + CORS + router sotto /api
     config.py    # env server-side (API key MAI nel client), flag demo/live
     logging_config.py  # log rotante con request-id (backend/logs/)
+    budget.py    # tetto di spesa del ramo LLM, per categoria e per mese
     api/         # endpoint (elenco sotto)
     core/        # logica di dominio: agent, csv_parser, setup_params, vision_parser, demo, prompts,
                  # data/ (catalogo ACC e guide dei tracciati)
-    tests/       # test_parser (baseline 12/12)
+    tests/       # test_parser (baseline 12/12), test_observability, test_budget
   scripts/       # pipeline delle immagini (foto, ritagli, mappe) e validatore delle guide
 frontend/      Next.js 15.5 (App Router) + TypeScript + Tailwind + Recharts + Framer Motion
   src/
@@ -99,6 +101,7 @@ Apri <http://localhost:3000>. Senza un Client ID Google si entra con **«Entra i
 cd backend
 ./.venv/Scripts/python app/tests/test_parser.py          # baseline 12/12
 ./.venv/Scripts/python app/tests/test_observability.py   # log e request-id, offline
+./.venv/Scripts/python app/tests/test_budget.py          # tetto di spesa, offline (client finto)
 ```
 
 ### Log
@@ -106,7 +109,9 @@ Il backend scrive in `backend/logs/` (gitignorata):
 - `pitwall.log`: log dell'app, rotante (1 MB × 3), con in ogni riga un request-id che torna al
   client anche nell'header `X-Request-ID`. Avvisi ed errori compaiono anche in console. Ogni analisi
   registra la sua fonte e, quando ripiega sulla cache, il motivo. Quello che scrive il pilota non
-  finisce mai nel log, solo la sua lunghezza.
+  finisce mai nel log, solo la sua lunghezza. Ogni chiamata reale al modello lascia una riga con
+  modello, token e costo, oppure il motivo per cui il tetto di spesa l'ha rifiutata.
+- `llm_spesa.json`: la spesa del giorno per categoria e quella del mese (vedi *Tetto di spesa*).
 - `llm_token_log.md` e `llm_incidents.md`: token stimati per chiamata e chiamate fallite, scritti
   dal client LLM quando l'LLM reale è acceso.
 
@@ -130,16 +135,34 @@ consuma. L'LLM reale richiede **entrambi** `PITWALL_ALLOW_LIVE=1` e `PITWALL_DEM
 chiave nei secret del server. Lo stesso presidio vale per la **lettura del setup da screenshot**: in
 demo-mode risponde `503` senza chiamare il modello.
 
+### Tetto di spesa
+Con l'LLM reale acceso, ogni chiamata al modello **prenota il suo costo massimo** prima di partire
+(token di input stimati per eccesso più tutti i token di output consentiti) e, a risposta arrivata,
+lo sostituisce con il **costo reale**. Se il tetto non regge la prenotazione, la chiamata non parte:
+il tetto non si supera nemmeno con più richieste insieme. Importi in dollari, la valuta in cui
+Anthropic fattura.
+
+| Categoria | Uso | Tetto giornaliero (default) |
+|---|---|---|
+| `analisi` | Console, `POST /api/analysis` | `PITWALL_BUDGET_ANALISI_GIORNO=0.50` |
+| `screenshot` | Setup, `POST /api/setup/from-image` | `PITWALL_BUDGET_SCREENSHOT_GIORNO=0.25` |
+| `chat` | chat di Gigi (non collegata) | `PITWALL_BUDGET_CHAT_GIORNO=0` |
+
+Sopra le tre categorie c'è un tetto **mensile** complessivo, `PITWALL_BUDGET_MESE=5.00`. Il giorno si
+azzera a mezzanotte (ora del server). A tetto raggiunto l'analisi risponde dalla cache con
+`source: "fallback"` e lo screenshot risponde `429`. In più il ramo reale dell'analisi accetta al
+massimo 4000 caratteri di domanda e 1000 di profilo. Nel dubbio si conta per eccesso: una chiamata
+fallita resta al costo massimo, un modello fuori listino si paga al listino più caro, un registro
+della spesa illeggibile blocca le chiamate.
+
 ## Roadmap
-1. **Modello di costo** prima dell'accensione: la cascata di modelli moltiplica la spesa proprio
-   quando qualcosa si guasta, e non ha un tetto.
-2. **Accensione e stress test dell'LLM reale.**
-3. **Guide dei tracciati** per tutti i 25 circuiti ACC: settori e curva per curva.
-4. **Mappe dei circuiti**: 5 layout su 25 verificati. Restano da sostituire gli altri 20, e manca
+1. **Accensione e stress test dell'LLM reale**, con il tetto di spesa già in funzione.
+2. **Guide dei tracciati** per tutti i 25 circuiti ACC: settori e curva per curva.
+3. **Mappe dei circuiti**: 5 layout su 25 verificati. Restano da sostituire gli altri 20, e manca
    ancora la pagina che le mostri.
-5. **Lotto 2 del catalogo**: 23 vetture GT4, GT2, GTC e TCX.
-6. **Range di setup per vettura** (INC-V2-003): oggi cambiare vettura non cambia i 49 parametri.
-7. **Deploy**.
+4. **Lotto 2 del catalogo**: 23 vetture GT4, GT2, GTC e TCX.
+5. **Range di setup per vettura** (INC-V2-003): oggi cambiare vettura non cambia i 49 parametri.
+6. **Deploy**.
 
 ## Deploy
 Piattaforma **da decidere**. Da tenere presente: le immagini non sono versionate, quindi un deploy

@@ -37,6 +37,8 @@
 
 ## 3 · Backend (`backend/app/`)
 - **`main.py`** — FastAPI, CORS, 5 router `/api`. **`config.py`** — env server-side + presidio chiave (flag demo/live).
+  **`logging_config.py`** — log rotante con request-id (Entry #026). **`budget.py`** — tetto di spesa del ramo LLM:
+  prenotazione al costo massimo e saldo al reale, per categoria (analisi/screenshot/chat) e per mese (Entry #028).
 - **`api/`**: `session.py`, `analysis.py`, `setup.py`, `csv.py`, `vision.py`.
 - **`core/`** (⚠️ = protetto): ⚠️`agent.py`, ⚠️`csv_parser.py`, ⚠️`setup_params.py`, ⚠️`vision_parser.py`,
   `demo_data.py`, `demo_responses.py`, `prompts/*` (⚠️ system prompt v4), `data/car_setup_ranges.json`,
@@ -44,15 +46,17 @@
 
 ## 4 · Contratto API
 - `GET /api/session` → `{ session, tyre_labels, temp{series,max,limit,scale}, pressure{hot,hot_window,hot_series,cold,cold_window,cold_amber_margin,avg_hot}, fuel_per_lap, laps, suggested_params }`.
-- `POST /api/analysis` body `{prompt}` → `{question, text(4 sezioni md), source: demo|cache|api|fallback}`. In demo-mode: sempre cache, routing per keyword.
+- `POST /api/analysis` body `{prompt}` → `{question, text(4 sezioni md), source: demo|cache|api|fallback}`. In demo-mode: sempre cache, routing per keyword. In live: `fallback` anche a tetto di spesa raggiunto o con testo oltre 4000/1000 caratteri (prompt/profilo).
 - `GET /api/setup-params?car&track` → 5 sezioni / 49 `Param{label,min,max,step,unit,default,tip}`.
 - `POST /api/csv/parse` (multipart) → `CsvResult` (400 se CSV invalido).
-- `POST /api/setup/from-image` (multipart) → `{params,summary}` (503 in demo-mode, 503 se manca la key server).
+- `POST /api/setup/from-image` (multipart) → `{params,summary}` (503 in demo-mode, 503 se manca la key server, 429 a tetto di spesa raggiunto).
 
 ## 5 · Presidio API key
 `ANTHROPIC_API_KEY` vive **solo lato server**. Con `PITWALL_ALLOW_LIVE=0` (default, e forzato sul deploy
 pubblico) si serve la **cache demo** offline → la chiave non si consuma mai e non finisce nel bundle JS.
-La LLM reale si abilita con `PITWALL_ALLOW_LIVE=1` + chiave nei secret del server.
+La LLM reale si abilita con `PITWALL_ALLOW_LIVE=1` + `PITWALL_DEMO_MODE=0` + chiave nei secret del server.
+Acceso il live, ogni chiamata passa da `budget.prenota()` / `budget.salda()` (agganci in `agent.py` e
+`vision_parser.py`): tetti `PITWALL_BUDGET_{ANALISI,SCREENSHOT,CHAT}_GIORNO` + `PITWALL_BUDGET_MESE`.
 
 ## 6 · Invarianti dati demo (`core/demo_data.py`) — da preservare
 Sorgente unica dei numeri per la coerenza cross-schermata:
@@ -62,7 +66,8 @@ Sorgente unica dei numeri per la coerenza cross-schermata:
 
 ## 7 · Verifica
 - Frontend: `npx tsc --noEmit` **0 err** + rotte `/ /console /telemetry /setup /login` **200**.
-- Backend: `./.venv/Scripts/python app/tests/test_parser.py` → **12/12**.
+- Backend: `./.venv/Scripts/python app/tests/test_parser.py` → **12/12** · `test_observability.py` → **24/24** ·
+  `test_budget.py` → **30/30** (tutti offline).
 - **Mai** `npm run build` con `npm run dev` attivo (corrompe `.next`).
 
 ## 8 · Deploy (previsto)
