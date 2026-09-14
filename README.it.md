@@ -8,7 +8,7 @@ colmare la distanza fra dati complessi e prestazione in pista per i sim-racer. S
 corso AI & Digital Innovation Specialist.
 
 > **v2** della webapp PitWall.AI: migrazione da Streamlit a **Next.js + FastAPI**. Riusa la logica
-> di dominio della v1 (client LLM, parser CSV, range ACC, vision) dietro un'API pulita, con una UI
+> di dominio della v1 (client LLM, range ACC, vision) dietro un'API pulita, con una UI
 > React ricca.
 
 ## Stato attuale
@@ -33,9 +33,9 @@ backend/       FastAPI
     logging_config.py  # log rotante con request-id (backend/logs/)
     budget.py    # tetto di spesa del ramo LLM, per categoria e per mese
     api/         # endpoint (elenco sotto)
-    core/        # logica di dominio: agent, csv_parser, setup_params, vision_parser, demo, prompts,
+    core/        # logica di dominio: agent, setup_params, vision_parser, demo, prompts,
                  # data/ (catalogo ACC e guide dei tracciati)
-    tests/       # test_parser (baseline 12/12), test_observability, test_budget
+    tests/       # test_observability (24/24), test_budget (31/31)
   scripts/       # pipeline delle immagini (foto, ritagli, mappe) e validatore delle guide
 frontend/      Next.js 15.5 (App Router) + TypeScript + Tailwind + Recharts + Framer Motion
   src/
@@ -45,6 +45,8 @@ frontend/      Next.js 15.5 (App Router) + TypeScript + Tailwind + Recharts + Fr
 docs/          # planning storico (00-02) e architettura V2 as-built (03)
 ```
 Dettaglio in [`docs/03-v2-architecture.md`](docs/03-v2-architecture.md).
+Il rework della logica dati in corso (fonti native ACC, formato canonico, motore di analisi) è
+specificato in [`docs/04-rework-dati.md`](docs/04-rework-dati.md).
 
 ### Pagine
 | Rotta | Pagina |
@@ -63,7 +65,6 @@ Dettaglio in [`docs/03-v2-architecture.md`](docs/03-v2-architecture.md).
 | GET | `/api/session` | Sessione corrente |
 | POST | `/api/analysis` | Analisi del race engineer |
 | GET | `/api/setup-params` | Parametri di setup e relativi range |
-| POST | `/api/csv/parse` | Import di un CSV di telemetria |
 | POST | `/api/setup/from-image` | Lettura del setup da uno screenshot |
 | GET | `/api/catalog` | Catalogo vetture e circuiti |
 | GET | `/api/catalog/car/{car_id}` | Scheda di una vettura |
@@ -99,7 +100,6 @@ Apri <http://localhost:3000>. Senza un Client ID Google si entra con **«Entra i
 ### Test
 ```bash
 cd backend
-./.venv/Scripts/python app/tests/test_parser.py          # baseline 12/12
 ./.venv/Scripts/python app/tests/test_observability.py   # log e request-id, offline
 ./.venv/Scripts/python app/tests/test_budget.py          # tetto di spesa, offline (client finto)
 ```

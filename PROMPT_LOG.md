@@ -1450,6 +1450,82 @@ caricato da screenshot? (5) profilo pilota ancora a Gigi? (6) guide = testo nell
 (7) testo fuori tema fisso o scritto dal modello? (8) «pulizia totale» = scope senza pezzi a metà, o anche
 rimozione dei residui v1 (`import streamlit`, «ANALIZZA SESSIONE», «st.write_stream»)?
 
+
+## Entry #031 — L0 del REWORK DATI: pulizia totale (CSV eliminato, residui Streamlit, codice morto)
+
+| Campo | Valore |
+|---|---|
+| Data | 14/09/2026 |
+| Agente dev | Claude Code (claude-opus-5) |
+| Area | DEL ⚠️`core/csv_parser.py` · DEL `api/csv.py` · DEL `tests/test_parser.py` · MOD ⚠️`core/agent.py` · MOD ⚠️`core/vision_parser.py` (commenti) · MOD `main.py` `api/analysis.py` `tests/test_budget.py` `tests/test_observability.py` · MOD `setup/page.tsx` `lib/api.ts` `lib/instrument.ts` `lib/motion.ts` · NEW `docs/04-rework-dati.md` · MOD `README.md` `README.it.md` `docs/03-v2-architecture.md` |
+| Commit | (da fare, in attesa di «ok push») |
+| Contesto | Edoardo apre un **rework della logica dati**: «i csv limitano troppo la raccolta dei dati e anche l'elaborazione poi con le interfacce… fai in modo che l'analisi sia ancora più accurata, precisa e spietata». Ricerca sui concorrenti fatta online. 9 domande poste, 9 risposte, gate ricevuti. |
+
+**Catalogo messaggi:**
+1. «leggi la memoria e riprendiamo il lavoro dell'ultima volta»
+2. «secondo me toccherebbe ristrutturare un po' tutta la logica per pitwall … i csv limitano troppo la raccolta dei dati … inizia a propormi delle idee o nuovi formati … se vuoi cerca online con chrome … per la pulizia totale intendevo tutti i residui di codice morto che ci sono e di streamlit, quindi da eliminare.»
+3. «ok va tutto benissimo per la struttura ma ci sta un problema: i software che operano a livello kernel di norma vengono identificati come malware…» + le 9 risposte (vedi `docs/04-rework-dati.md` §5) + «vediamo di non perdere alcun progresso … tenere gli step importanti sotto memoria».
+4. «va benissimo così, ok procedi e va bene tutto. iniziamo il lavoro.»
+
+**Equivoco chiarito:** «kernel di analisi» significava *nucleo* software, non kernel di Windows →
+rinominato **motore di analisi**. La shared memory di ACC è **user-space** (file mappato che Kunos
+espone per le app di terze parti). Il rischio reale e residuo è un domani un `.exe` non firmato
+(SmartScreen + euristiche AV): mitigato by design tenendo il registratore **dentro il backend FastAPI**,
+senza processi né eseguibili nuovi da distribuire.
+
+**Modifica — A. CSV eliminato** (⚠️ `csv_parser.py` sbloccato con «ok procedi»):
+- Cancellati `core/csv_parser.py`, `api/csv.py`, `tests/test_parser.py`; rotta `/api/csv/parse`
+  sfilata da `main.py` (import + tupla dei router).
+- Frontend: via `postCsvParse`, `CsvResult` (`lib/api.ts`) e il componente `CsvUpload`
+  (`setup/page.tsx`, ~60 righe); la griglia a 2 colonne degli upload diventa il solo `ScreenshotUpload`;
+  l'etichetta del toggle non promette più il CSV.
+
+**B. Residui Streamlit (eredità v1):**
+- `agent.py`: rimosso il blocco `import streamlit as st` + `st.warning(...)` dentro `get_ai_response`
+  → ora il contesto sovradimensionato si **annota nel log** (`log = logging.getLogger("pitwall.agent")`,
+  nuovo); di conseguenza il parametro `show_warning`, che esisteva solo per quel blocco, è sparito
+  dalla firma e dalle 2 chiamate in `test_budget`.
+- `agent.py`: docstring di `get_env_var` non cita più `st.secrets`; via il riferimento a
+  `st.write_stream` nella docstring di `chat_with_gigi`; via i riferimenti al CSV nelle docstring.
+- ⚠️`vision_parser.py`: 3 commenti che citavano `Streamlit file_uploader` / `UploadedFile.type`
+  riscritti sulla realtà v2 (rotta FastAPI). **Solo commenti, nessuna logica toccata.**
+- `api/analysis.py` e `tests/test_observability.py`: commenti che citavano l'`import streamlit`.
+
+**C. Codice morto:**
+- `agent.py`: costante `MAX_RETRIES = 1` mai usata da nessuno (il riprovare lo fa la cascata dei modelli).
+- `lib/instrument.ts`: `NO_GLOW`, `alarmGlow`, `MONO_CLASS` (zero riferimenti in tutto il frontend) →
+  la regola estetica che documentavano resta come commento guardrail.
+- `lib/motion.ts`: `cardHover`, `baseTransition` (zero riferimenti) + import `Transition` diventato inutile.
+- Verificato che **non** ci sono altri file orfani (nessun modulo backend mai importato, nessun file
+  frontend mai importato) e nessun `.csv` di esempio nel repo.
+
+**D. Documentazione:**
+- **Nuovo `docs/04-rework-dati.md`**: la specifica viva del rework (fonti ACC, formato canonico
+  «session bundle», motore di analisi, le 9 decisioni chiuse, lotti L0–L5, baseline, posizionamento
+  rispetto ai concorrenti). È la fonte di verità da aggiornare a ogni lotto, linkata da entrambi i README.
+- README e `docs/03` riallineati: via il CSV da struttura, tabella rotte e comandi di test; corretto
+  `test_budget` 30/30 → **31/31** (era rimasto indietro dall'Entry #030).
+
+**Nuova baseline di verifica** (`test_parser` non esiste più): `test_observability` **24/24** +
+`test_budget` **31/31** + `npx tsc --noEmit` **0 err**. I test del nuovo formato entrano con L1.
+
+**Verifica:**
+- `py_compile` su `main.py`, `agent.py`, `vision_parser.py`, `analysis.py` → OK.
+- Rotte registrate dall'app: `/api/analysis`, `/api/catalog`, `/api/catalog/car/{car_id}`,
+  `/api/catalog/track/{track_id}`, `/api/session`, `/api/setup-params`, `/api/setup/from-image`
+  — **`/api/csv/parse` sparita**, le altre 7 intatte.
+- `test_observability` **24/24** · `test_budget` **31/31** · `npx tsc --noEmit` **0 errori**.
+- Nessuna chiamata LLM reale: spesa invariata ($0,3292 su $1).
+
+**File protetti:** ☑ sbloccato con «ok procedi» → `csv_parser.py` (cancellato), `agent.py` (rimozione
+Streamlit + costante morta), `vision_parser.py` (solo commenti).
+**Rimasto fuori apposta:** ⚠️`prompts/chat_system_prompt.txt` riga 12 cita ancora il pulsante v1
+«ANALIZZA SESSIONE» — è **contenuto** che cambia il comportamento di Gigi, non codice morto: serve un
+«ok procedi» a sé e verrà riscritto con L4. Idem i commenti di `demo_data.py` che citano il CSV come
+fonte delle pressioni a freddo: file protetto sui numeri, si riscrive quando la demo diventerà un bundle.
+
+**Decisione:** ☑ Mantenuto — in attesa di «ok push».
+
 ---
 
 <!-- TEMPLATE — copia e incolla per ogni nuova entry

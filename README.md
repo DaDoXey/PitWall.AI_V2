@@ -8,7 +8,7 @@ bridge the gap between complex data and track performance for sim-racers. Develo
 Digital Innovation Specialist course.
 
 > **v2** of the PitWall.AI web app: a migration from Streamlit to **Next.js + FastAPI**. It reuses
-> the v1 domain logic (LLM client, CSV parser, ACC ranges, vision) behind a clean API, with a rich
+> the v1 domain logic (LLM client, ACC ranges, vision) behind a clean API, with a rich
 > React UI.
 
 ## Current status
@@ -33,9 +33,9 @@ backend/       FastAPI
     logging_config.py  # rotating log with a request id (backend/logs/)
     budget.py    # LLM spending cap, per category and per month
     api/         # endpoints (listed below)
-    core/        # domain logic: agent, csv_parser, setup_params, vision_parser, demo, prompts,
+    core/        # domain logic: agent, setup_params, vision_parser, demo, prompts,
                  # data/ (ACC catalogue and track guides)
-    tests/       # test_parser (baseline 12/12), test_observability, test_budget
+    tests/       # test_observability (24/24), test_budget (31/31)
   scripts/       # image pipeline (photos, crops, maps) and track guide validator
 frontend/      Next.js 15.5 (App Router) + TypeScript + Tailwind + Recharts + Framer Motion
   src/
@@ -45,6 +45,8 @@ frontend/      Next.js 15.5 (App Router) + TypeScript + Tailwind + Recharts + Fr
 docs/          # historical planning (00-02) and as-built V2 architecture (03)
 ```
 Details in [`docs/03-v2-architecture.md`](docs/03-v2-architecture.md).
+The ongoing data-logic rework (native ACC sources, canonical session bundle, analysis engine) is
+specified in [`docs/04-rework-dati.md`](docs/04-rework-dati.md).
 
 ### Pages
 | Route | Page |
@@ -63,7 +65,6 @@ Details in [`docs/03-v2-architecture.md`](docs/03-v2-architecture.md).
 | GET | `/api/session` | Current session |
 | POST | `/api/analysis` | Race engineer analysis |
 | GET | `/api/setup-params` | Setup parameters and their ranges |
-| POST | `/api/csv/parse` | Telemetry CSV import |
 | POST | `/api/setup/from-image` | Reads a setup from a screenshot |
 | GET | `/api/catalog` | Car and track catalogue |
 | GET | `/api/catalog/car/{car_id}` | Single car sheet |
@@ -100,7 +101,6 @@ Open <http://localhost:3000>. Without a Google Client ID, sign in with **«Entra
 ### Tests
 ```bash
 cd backend
-./.venv/Scripts/python app/tests/test_parser.py          # baseline 12/12
 ./.venv/Scripts/python app/tests/test_observability.py   # logs and request id, offline
 ./.venv/Scripts/python app/tests/test_budget.py          # spending cap, offline (fake client)
 ```

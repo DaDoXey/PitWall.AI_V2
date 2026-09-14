@@ -34,7 +34,7 @@ HAZARD-V2-B) + `cd frontend && npm run dev` (:3000). Health `GET :8000/` →
 | `/` | `(app)/page.tsx` | **Dashboard**: card KPI con drag&drop, ordine e taglie in `localStorage` · `GET /api/session` |
 | `/telemetry` | `(app)/telemetry/page.tsx` | **Telemetria**: grafici, heatmap, gauge, tabelle giro · `GET /api/session` |
 | `/console` | `(app)/console/page.tsx` | **Console** di Gigi: domanda → analisi a 4 sezioni, con il profilo pilota del wizard · `POST /api/analysis` |
-| `/setup` | `(app)/setup/page.tsx` | **Setup**: 5 tab / 49 slider ACC, selettori vettura/circuito, upload CSV e screenshot · `GET /api/catalog`, `/api/setup-params`, `/api/session`; `POST /api/csv/parse`, `/api/setup/from-image` |
+| `/setup` | `(app)/setup/page.tsx` | **Setup**: 5 tab / 49 slider ACC, selettori vettura/circuito, upload screenshot setup · `GET /api/catalog`, `/api/setup-params`, `/api/session`; `POST /api/setup/from-image` |
 | `/lezioni` · `/lezioni/[slug]` | `(app)/lezioni/…` | **A Lezione con Gigi**: indice e dettaglio, contenuti read-only da `lib/lessons.ts` |
 | `/crediti` | `(app)/crediti/page.tsx` | Crediti delle immagini Wikimedia Commons: legge `public/assets/ATTRIBUTIONS.md` a build-time |
 | `/login` | `(auth)/login/page.tsx` | Google Sign-In (popup) oppure modalità demo; profilo solo in `sessionStorage`, nessuna sessione server |
@@ -58,13 +58,13 @@ Le schede vettura/circuito (`SessionBriefing`) leggono `GET /api/catalog/car/{id
   presidio chiave (flag demo/live), cartella dei log. **`logging_config.py`** — log rotante con request-id (Entry #026).
   **`budget.py`** — tetto di spesa del ramo LLM: prenotazione al costo massimo e saldo al reale, per categoria
   (analisi/screenshot/chat) e per mese (Entry #028).
-- **`api/`**: `session.py`, `analysis.py`, `setup.py`, `csv.py`, `vision.py`, `catalog.py`.
+- **`api/`**: `session.py`, `analysis.py`, `setup.py`, `vision.py`, `catalog.py`.
 - **`core/`** (⚠️ = protetto): ⚠️`agent.py` (client LLM: analisi con cascata + `chat_with_gigi`, non collegata),
-  ⚠️`csv_parser.py`, ⚠️`setup_params.py` (+ ⚠️`data/car_setup_ranges.json`), ⚠️`vision_parser.py`,
+  ⚠️`setup_params.py` (+ ⚠️`data/car_setup_ranges.json`), ⚠️`vision_parser.py`,
   ⚠️`prompts/` (`system_prompt_v4.txt`, `chat_system_prompt.txt`), `demo_data.py` e `demo_responses.py` (⚠️ i numeri),
   `catalog.py` + `data/cars.json` (31 GT3) e `data/tracks.json` (25 circuiti), `data/tracks_knowledge/` (guide dei
   tracciati: 4 su 25).
-- **`tests/`**: `test_parser.py`, `test_observability.py`, `test_budget.py`.
+- **`tests/`**: `test_observability.py`, `test_budget.py`.
 - **`backend/scripts/`** (fuori da `app/`): pipeline delle immagini (foto, ritagli, mappe, crediti) e validatore delle guide.
 - **`backend/logs/`** (gitignorata): `pitwall.log`, `llm_spesa.json`, e i registri `llm_token_log.md` / `llm_incidents.md`
   scritti da `agent.py`.
@@ -76,7 +76,6 @@ Le schede vettura/circuito (`SessionBriefing`) leggono `GET /api/catalog/car/{id
   In demo-mode: sempre cache, routing per keyword, domande fuori perimetro → risposta di reindirizzo. In live:
   `fallback` anche senza chiave, a tetto di spesa raggiunto o con testo oltre 4000/1000 caratteri (prompt/profilo).
 - `GET /api/setup-params?car&track` (entrambi opzionali) → 5 sezioni / 49 `Param{label,min,max,step,unit,default,tip}`.
-- `POST /api/csv/parse` (multipart) → `CsvResult` (400 se CSV invalido).
 - `POST /api/setup/from-image` (multipart) → `{params,summary,…}` (503 in demo-mode, 503 se manca la key server,
   429 a tetto di spesa raggiunto, 500 se la lettura fallisce).
 - `GET /api/catalog` → indice di vetture e circuiti · `GET /api/catalog/car/{car_id}` e `/api/catalog/track/{track_id}`
@@ -106,8 +105,8 @@ Sorgente unica dei numeri per la coerenza cross-schermata:
 
 ## 7 · Verifica
 - Frontend: `npx tsc --noEmit` **0 err** + rotte `/ /console /telemetry /setup /lezioni /crediti /login` **200**.
-- Backend: `./.venv/Scripts/python app/tests/test_parser.py` → **12/12** · `test_observability.py` → **24/24** ·
-  `test_budget.py` → **30/30** (tutti offline).
+- Backend: `./.venv/Scripts/python app/tests/test_observability.py` → **24/24** ·
+  `test_budget.py` → **31/31** (tutti offline).
 - **Mai** `npm run build` con `npm run dev` attivo (corrompe `.next`, HAZARD-V2-A).
 
 ## 8 · Deploy (da decidere)
