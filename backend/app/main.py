@@ -16,7 +16,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from app import config
-from app.api import analysis, catalog, csv, session, setup, vision
+from app.api import analysis, catalog, session, setup, vision
 from app.logging_config import request_id, setup_logging
 
 setup_logging()
@@ -32,7 +32,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-for _router in (session.router, analysis.router, setup.router, csv.router, vision.router, catalog.router):
+for _router in (session.router, analysis.router, setup.router, vision.router, catalog.router):
     app.include_router(_router, prefix="/api")
 
 # Un request-id arrivato dal client si riusa solo se e' innocuo: finisce dentro ogni

@@ -108,7 +108,7 @@ export async function postAnalysis(prompt: string, profile?: string) {
   return res.json() as Promise<{ question: string; text: string; source: string }>;
 }
 
-// Errore con lo status HTTP, così la UI può distinguere 400 (CSV non valido)
+// Errore con lo status HTTP, così la UI può distinguere 400 (file non valido)
 // da 503 (screenshot senza chiave server) e mostrare il messaggio giusto.
 export class ApiError extends Error {
   constructor(public status: number, message: string) {
@@ -131,19 +131,6 @@ async function postFile(path: string, file: File) {
     throw new ApiError(res.status, detail);
   }
   return res.json();
-}
-
-export type CsvResult = {
-  laps_count: number;
-  fuel_cons_avg: number;
-  has_pressure_data: boolean;
-  has_temp_data: boolean;
-  warnings: string[];
-  validation_errors: string[];
-};
-
-export function postCsvParse(file: File) {
-  return postFile("/api/csv/parse", file) as Promise<CsvResult>;
 }
 
 export type VisionResult = { params: Record<string, number>; summary: string };

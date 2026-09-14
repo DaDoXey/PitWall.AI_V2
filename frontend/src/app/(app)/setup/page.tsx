@@ -10,9 +10,7 @@ import {
   getCatalog,
   getSession,
   getSetupParams,
-  postCsvParse,
   postSetupFromImage,
-  type CsvResult,
 } from "@/lib/api";
 import {
   CAR_LIST_FALLBACK,
@@ -256,7 +254,7 @@ export default function SetupPage() {
       {/* Toggle input sessione */}
       <div className="mb-4 flex w-fit items-center gap-2.5 text-sm text-subtle">
         <Toggle checked={showInputs} onChange={setShowInputs} label="Mostra input sessione" />
-        <span>Input sessione (selettori auto/pista · upload CSV/screenshot)</span>
+        <span>Input sessione (selettori auto/pista · screenshot setup)</span>
       </div>
 
       {showInputs && (
@@ -426,50 +424,9 @@ function SessionInputs({
         <MiniSlider label="Temp. Pista" value={tempTrack} min={0} max={60} unit="°C" onChange={onTempTrack} />
       </div>
 
-      <div className="mt-4 grid grid-cols-1 gap-4 border-t border-line pt-4 md:grid-cols-2">
-        <CsvUpload />
+      <div className="mt-4 border-t border-line pt-4">
         <ScreenshotUpload onApplyVision={onApplyVision} />
       </div>
-    </div>
-  );
-}
-
-function CsvUpload() {
-  const [result, setResult] = useState<CsvResult | null>(null);
-  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
-
-  async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setMsg(null);
-    setResult(null);
-    try {
-      const r = await postCsvParse(file);
-      setResult(r);
-      setMsg({ ok: true, text: `CSV letto: ${r.laps_count} giri · consumo medio ${r.fuel_cons_avg.toFixed(2)} L/giro` });
-    } catch (err) {
-      const text = err instanceof ApiError ? err.message : "Impossibile leggere il CSV.";
-      setMsg({ ok: false, text });
-    }
-  }
-
-  return (
-    <div>
-      <div className="mb-1.5 font-mono text-[0.6rem] uppercase tracking-widest text-muted">
-        Carica CSV sessione
-      </div>
-      <input
-        type="file"
-        accept=".csv"
-        onChange={onFile}
-        className="block w-full text-xs text-subtle file:mr-3 file:cursor-pointer file:rounded-md file:border file:border-line-strong file:bg-raised file:px-3 file:py-1.5 file:text-xs file:text-white hover:file:border-accent"
-      />
-      {msg && (
-        <p className={`mt-2 text-xs ${msg.ok ? "text-ok" : "text-warn"}`}>{msg.text}</p>
-      )}
-      {result && result.warnings.length > 0 && (
-        <p className="mt-1 text-[0.7rem] text-muted">{result.warnings.length} avvisi di range nei dati.</p>
-      )}
     </div>
   );
 }
