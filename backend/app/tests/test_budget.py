@@ -328,7 +328,7 @@ try:
 
     azzera()
     RISPOSTE.extend([("incompleta", 2000, 2500), ("incompleta", 2000, 2500), (SEZIONI_OK, 2100, 900)])
-    testo = agent.get_ai_response(user_input="sottosterzo", api_key="chiave-finta", show_warning=False)
+    testo = agent.get_ai_response(user_input="sottosterzo", api_key="chiave-finta")
     atteso = (2 * budget.costo_reale("claude-haiku-4-5", _usage(2000, 2500))
               + budget.costo_reale("claude-sonnet-4-6", _usage(2100, 900)))
     test("B21 cascata haiku x2 -> sonnet: tre chiamate, spesa = somma dei tre costi reali",
@@ -340,7 +340,7 @@ try:
                                                     for c in CLIENT[-3:]), str(CLIENT[-3:]))
 
     azzera(analisi=0)
-    testo = agent.get_ai_response(user_input="sottosterzo", api_key="chiave-finta", show_warning=False)
+    testo = agent.get_ai_response(user_input="sottosterzo", api_key="chiave-finta")
     test("B22 cascata a tetto esaurito: nessuna chiamata, agent risponde 'non disponibile'",
          not CREATE and "temporaneamente non disponibile" in testo, f"{len(CREATE)} chiamate")
 

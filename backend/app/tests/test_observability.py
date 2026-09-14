@@ -162,7 +162,7 @@ try:
 
     config.ANTHROPIC_API_KEY = "chiave-finta-mai-usata"
     # Fino all'Entry #027 questo caso mandava 33.000 caratteri e registrava l'eccezione
-    # vera dell'`import streamlit`. Dall'Entry #028 un testo cosi' lungo si ferma prima.
+    # vera del ramo LLM. Dall'Entry #028 un testo cosi' lungo si ferma prima.
     chiamate_agent = []
     agent.get_ai_response = lambda **kw: chiamate_agent.append(1) or SEZIONI_OK
     r, body, rid, righe = analisi(MARCATORE + " " + "a" * 33_000)

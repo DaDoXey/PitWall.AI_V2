@@ -5,7 +5,7 @@
 // Reduced-motion: il layout avvolge l'app in <MotionConfig reducedMotion="user">
 // (framer riduce da solo i transform/layout); per i casi non-transform (CountUp,
 // pulse) si usa useReducedMotion() nel componente, che degrada a stato finale.
-import type { Transition, Variants } from "framer-motion";
+import type { Variants } from "framer-motion";
 
 // Curva e durate condivise. EASE ~ easeOutExpo: entra deciso, si posa morbido.
 export const EASE = [0.22, 1, 0.36, 1] as const;
@@ -22,12 +22,6 @@ export const staggerContainer: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
 };
-
-// Preset per whileHover delle card: lift sobrio + transizione morbida.
-export const cardHover = { y: -4, transition: { duration: DUR.fast, ease: EASE } };
-
-// Transizione base riutilizzabile (per animate()/whileHover puntuali).
-export const baseTransition: Transition = { duration: DUR.base, ease: EASE };
 
 // Comodità: un solo import per il reduced-motion nei componenti.
 export { useReducedMotion } from "framer-motion";

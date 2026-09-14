@@ -31,12 +31,6 @@ export const STROKE = {
   needle: 2, // lancetta / linea-dato attiva / marker
 } as const;
 
-// ── Glow / ombre: SPENTI di default sugli elementi dato ──
-// Regola: nessun drop-shadow/glow di default. Il glow discreto è riservato al
-// SOLO stato di allarme attivo (opzionale), mai come abbellimento permanente.
-export const NO_GLOW = "none";
-export const alarmGlow = `drop-shadow(0 0 2px ${COLORS.accent})`;
-
-// ── Tipografia numerica: JetBrains Mono (classe Tailwind `font-mono`), nessun effetto testo ──
-// Promemoria d'uso, non un valore: i numeri-strumento restano mono e piatti.
-export const MONO_CLASS = "font-mono";
+// ── Regole estetiche (guardrail, non valori) ──
+// Nessun glow/drop-shadow sugli elementi dato. I numeri-strumento restano
+// mono (`font-mono`) e piatti, senza effetti sul testo.

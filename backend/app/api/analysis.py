@@ -62,7 +62,7 @@ _REQUIRED = ["## Diagnosi", "## Causa Meccanica", "## Correzione Setup", "## Not
 # Lunghezze massime del ramo reale (Entry #028). Il profilo del wizard e' una riga da
 # ~300 caratteri; una domanda del pilota sta ben sotto i 4000. Oltre, niente chiamata:
 # riduce il caso peggiore del costo, e tiene l'input lontano dalla soglia degli 8000
-# token stimati di agent.py, oltre la quale parte l'`import streamlit`.
+# token stimati di agent.py, oltre la quale il contesto viene solo annotato nel log.
 MAX_CARATTERI_PROMPT = 4000
 MAX_CARATTERI_PROFILO = 1000
 

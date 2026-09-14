@@ -78,7 +78,7 @@ def image_to_base64(image_path: str) -> tuple[str, str]:
 
 
 def parse_setup_from_image(
-    image_source,  # path str oppure bytes (da Streamlit file_uploader)
+    image_source,  # path str oppure bytes (dall'upload della rotta /api/setup/from-image)
     api_key: str,
     media_type: str | None = None,  # MIME dell'upload; usato solo se image_source è bytes
 ) -> dict:
@@ -89,7 +89,7 @@ def parse_setup_from_image(
     Parametri:
         image_source : path al file locale O bytes da st.file_uploader
         api_key      : Anthropic API key
-        media_type   : MIME dell'immagine (es. UploadedFile.type di Streamlit);
+        media_type   : MIME dell'immagine (es. UploadFile.content_type di FastAPI);
                        usato solo con bytes, altrimenti default "image/png"
 
     Restituisce:
@@ -102,7 +102,7 @@ def parse_setup_from_image(
     """
     client = anthropic.Anthropic(api_key=api_key)
 
-    # Gestione input: bytes da Streamlit o path su disco
+    # Gestione input: bytes dalla rotta o path su disco
     if isinstance(image_source, (bytes, bytearray)):
         image_data = base64.standard_b64encode(image_source).decode("utf-8")
         media_type = media_type or "image/png"  # MIME dell'upload se fornito, altrimenti default

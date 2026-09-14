@@ -1,9 +1,10 @@
 """
 agent.py — PitWall.AI v2
 Client LLM con system prompt v4.
-Compatibile con il contesto esteso (setup completo + CSV + feedback).
+Compatibile con il contesto esteso (setup completo + dati sessione + feedback).
 """
 
+import logging
 import os
 from datetime import datetime, timezone
 from pathlib import Path
@@ -13,17 +14,18 @@ import anthropic
 # Tetto di spesa (MUST #2, Entry #028): ogni chiamata prenota il costo massimo prima e salda il reale dopo.
 from app import budget
 
+log = logging.getLogger("pitwall.agent")
+
 
 # ─────────────────────────────────────────────
 # COSTANTI
 # ─────────────────────────────────────────────
 PROMPT_PATH = Path(__file__).parent / "prompts" / "system_prompt_v4.txt"
 REQUIRED_SECTIONS = ["## Diagnosi", "## Causa Meccanica", "## Correzione Setup", "## Note Aggiuntive"]
-MAX_RETRIES = 1
 
 
 def get_env_var(name: str, default: str = "") -> str:
-    """Recupera una variabile da st.secrets (Streamlit Cloud) o os.getenv (locale)."""
+    """Recupera una variabile d'ambiente (os.getenv) con valore di default."""
     return os.getenv(name, default)
 
 
@@ -136,22 +138,17 @@ def get_ai_response(
     api_key: str,
     auto: str = "",
     tracciato: str = "",
-    show_warning: bool = True,
 ) -> str:
     """
     Ottieni risposta da Claude con retry logic e fallback su altri modelli Anthropic.
     """
     anthropic_key = api_key
 
-    # Controllo dimensione contesto
+    # Contesto sovradimensionato: si annota e si prosegue (il tetto di spesa e' il vero freno).
     context_ok, estimated_tokens = check_context_size(user_input)
-    if not context_ok and show_warning:
-        import streamlit as st
-        st.warning(
-            f"⚠️ Contesto molto grande (~{estimated_tokens} token stimati). "
-            "La risposta potrebbe essere più lenta o incompleta. "
-            "Prova a ridurre la lunghezza del feedback o del CSV."
-        )
+    if not context_ok:
+        log.warning("contesto oltre il massimo: ~%d token stimati (max %d)",
+                    estimated_tokens, MAX_INPUT_TOKENS)
 
     errors = []
 
@@ -224,12 +221,12 @@ def load_chat_system_prompt() -> str:
 def chat_with_gigi(messages: list, api_key: str, context: str = "", model_name: str | None = None):
     """
     Generatore: invia la cronologia chat a Claude in streaming e fa yield dei
-    chunk di testo (per st.write_stream). NESSUNA validazione a 4 sezioni.
+    chunk di testo. NESSUNA validazione a 4 sezioni.
 
     Args:
         messages: lista [{"role": "user"|"assistant", "content": str}, ...].
         api_key:  ANTHROPIC_API_KEY.
-        context:  blocco contesto opzionale (ultima analisi, setup, CSV).
+        context:  blocco contesto opzionale (ultima analisi, setup, dati sessione).
         model_name: override modello; default CLAUDE_MODEL.
     """
     model = model_name or CLAUDE_MODEL
