@@ -1,6 +1,6 @@
 # PitWall.AI v2 — REWORK DATI: specifica viva
 
-> **Aperto:** 14/09/2026 · **Stato:** L0 e **L1 completi e pushati** (`c1a488b`). Prossimo: L2.
+> **Aperto:** 14/09/2026 · **Stato:** L0, L1 e **L2 (prima versione) fatti**. Prossimo: L3.
 > Questo file è la **fonte di verità** del rework della logica dati: formato, strati, lotti e stato.
 > Va aggiornato a ogni avanzamento, prima del commit del lotto. Cronologia → `PROMPT_LOG.md`;
 > architettura in vigore → `03-v2-architecture.md`; malfunzionamenti → `INCIDENTS.md`.
@@ -97,7 +97,7 @@ invece che da mantenere a mano.
 |---|---|---|
 | **L0** | Pulizia totale (CSV, residui Streamlit, codice morto) + questa specifica | **fatto — 14/09** (`167b9a2` `22cb500` `952fa05`) |
 | **L1** | Adattatori Results JSON + Setup JSON → session bundle | **fatto — 14/09** (`f93ea57` `94ef0d6` `7894fc2` `c1a488b`) |
-| **L2** | Motore di analisi v1: giri, carburante, costanza, gomme | **prossimo** |
+| **L2** | Motore di analisi v1: ritmo, settori, costanza, degrado, carburante | **fatto — 14/09**, 57/57 |
 | **L3** | Registratore shared memory → canali → analisi per curva | da fare |
 | **L4** | Gigi e schermate sul bundle; demo come bundle | da fare |
 | **L5** | Import MoTeC (opzionale) | da fare |
@@ -218,12 +218,47 @@ Rotte: `POST /api/sessions/import/setup` · `POST /api/sessions/import/results` 
 risultati reali a 16 vetture → **409 con l'elenco**, poi import della vettura 3 → 22 giri, miglior
 giro 101409 ms, 3 assunzioni dichiarate; elenco e rilettura corretti.
 
+## 8b · Il motore di analisi (L2, prima versione)
+
+`app/analisi/motore.py` — `analizza(bundle) -> ReportAnalisi`. Statistica elementare su dati veri,
+**nessun LLM**: è la fonte delle cifre che Gigi citerà, e per questo dev'essere ripetibile a mano.
+
+**Cosa calcola, con i soli risultati di ACC:**
+- **Ritmo**: miglior giro, **giro teorico** (somma dei settori migliori), quanto hai *lasciato sul
+  tavolo*, media, mediana, media dei 3 migliori.
+- **Settori**: migliore, media, dispersione, **perdita media per giro** e perdita sul giro migliore.
+- **Costanza**: deviazione, coefficiente di variazione, scarto dal migliore al peggiore, quanti giri
+  entro mezzo secondo, e un giudizio che non è una carezza.
+- **Degrado**: regressione lineare sui giri di ritmo (ms/giro + R², perdita su 10 giri).
+- **Carburante**: consumo medio quando il residuo cala davvero; altrimenti dichiara perché no.
+- **Verdetto**: le perdite **ordinate per gravità**, ognuna con la **prova** (i numeri) e l'**azione**.
+
+**Due scelte che tengono onesti i numeri:**
+1. **Giri di ritmo.** Un giro oltre il **+10% sul migliore** non è ritmo (out lap, rientro ai box,
+   bandiera, fuoripista): resta nei conteggi ma non entra in medie, settori, costanza e degrado, e il
+   report dice **quanti** ne ha esclusi. Il riferimento è il giro migliore e non la mediana, perché su
+   una sessione corta la mediana è già inquinata proprio dagli out lap che si vogliono togliere.
+2. **Soglie minime.** Sotto 3 giri niente costanza, sotto 5 niente degrado, con meno di 2 giri niente
+   settori: invece di un numero fragile si dice quanti giri servono. E se il giro teorico risultasse
+   più lento del miglior giro reale, non viene mostrato: vorrebbe dire settori non confrontabili.
+
+`dati_mancanti` raccoglie le assunzioni dell'import **e** ciò che i risultati non contengono (gomme,
+pressioni, freni, traiettorie): un silenzio non deve mai passare per «va tutto bene».
+
+**Rotta:** `GET /api/sessions/{id}/analisi` — deterministica, zero rete, zero spesa.
+
+**Prova sul backend vivo** (sessione reale di 23 giri): 20 giri di ritmo, 3 esclusi; miglior giro
+100.230, costanza 804 ms → «ballerina», solo il 10% dei giri entro mezzo secondo; settore 3 a 6,7
+decimi di media dal proprio migliore; ritmo in miglioramento (−98 ms/giro, R² 0,49) e quindi
+**nessuna** voce di degrado nel verdetto.
+
 ## 9 · Baseline di verifica
 
 Con `test_parser` eliminato insieme al CSV, la verifica minima di ogni entry diventa:
 `python app/tests/test_observability.py` **24/24** · `python app/tests/test_budget.py` **31/31** ·
 `npx tsc --noEmit` **0 errori** · da L1: `app/tests/test_bundle.py` **37/37** e
-`app/tests/test_adattatori.py` **81/81** · `app/tests/test_sessions.py` **44/44**.
+`app/tests/test_adattatori.py` **81/81** · `app/tests/test_sessions.py` **50/50** ·
+`app/tests/test_analisi.py` **57/57**.
 
 ## 10 · Posizionamento (ricerca concorrenti, 14/09/2026)
 

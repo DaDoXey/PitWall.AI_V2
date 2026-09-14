@@ -1592,6 +1592,55 @@ demo-mode perché non usano né chiave né rete, e in locale il live è spento.
 **File protetti:** ☑ nessuno toccato (`setup_params.py` solo letto per allineare le chiavi).
 **Decisione:** ☑ Mantenuto — committato e pushato il 14/09 su «ok push» (`952fa05..c1a488b`).
 
+
+## Entry #033 — L2 del REWORK DATI: il motore di analisi (prima versione)
+
+| Campo | Valore |
+|---|---|
+| Data | 14/09/2026 |
+| Agente dev | Claude Code (claude-opus-5) |
+| Area | NEW `app/analisi/` (`__init__.py`, `motore.py`) · NEW `tests/test_analisi.py` · MOD `api/sessions.py` (rotta analisi) · MOD `tests/test_sessions.py` · MOD `README.md` `README.it.md` `docs/04-rework-dati.md` |
+| Commit | (in questa iterazione, pushati su indicazione di Edoardo) |
+| Contesto | Dopo L1 (#032, pushato `005c4f1`). Edoardo: «procedi che per oggi sarà l'ultima fase, appena hai finito pusha che poi staccherò». |
+
+**Catalogo messaggi:** «procedi con la prossima fase» · «ok push» · «procedi che per oggi sarà
+l'ultima fase, appena hai finito pusha che poi staccherò».
+
+**Modifica:** `analisi/motore.py` con `analizza(bundle) -> ReportAnalisi`, deterministico e senza
+LLM. Calcola **ritmo** (miglior giro, giro teorico dalla somma dei settori migliori, lasciato sul
+tavolo, media/mediana/media dei 3 migliori), **settori** (migliore, media, dispersione, perdita media
+per giro e sul giro migliore), **costanza** (deviazione, coefficiente di variazione, scarto massimo,
+giri entro mezzo secondo, giudizio), **degrado** (regressione lineare: ms/giro, R², perdita su 10
+giri), **carburante** (solo se il residuo cala davvero) e il **verdetto** ordinato per gravità, con
+prova numerica e azione per ogni voce (decisione 3 del 14/09: spietato, ma con la correzione
+attaccata). `dati_mancanti` raccoglie le assunzioni dell'import e ciò che i risultati non contengono.
+
+**Due scelte di metodo che tengono onesti i numeri:**
+1. **Giri di ritmo.** Un giro oltre il **+10% sul miglior giro** non entra in medie, settori,
+   costanza e degrado: è un out lap, un rientro, una bandiera. Resta contato, e il report dichiara
+   quanti ne ha esclusi. Prima avevo usato la **mediana** come riferimento: su una sessione corta la
+   mediana è già inquinata dagli out lap che si vogliono togliere, e infatti sulla fixture da 4 giri
+   dava una deviazione di 67 secondi. Corretto sul miglior giro.
+2. **Soglie minime dichiarate:** sotto 3 giri niente costanza, sotto 5 niente degrado, sotto 2 niente
+   settori. E un giro teorico più lento del miglior giro reale non viene mostrato: vorrebbe dire
+   settori non confrontabili.
+
+**Rotta nuova:** `GET /api/sessions/{id}/analisi` (deterministica, nessuna rete, nessuna spesa).
+
+**Verifica:**
+- `test_analisi` **57/57**, con i conti fatti a mano nei commenti del test (giro teorico, medie,
+  deviazioni, pendenza del degrado esatta a 200 ms/giro con R² 1).
+- `test_sessions` **50/50** (+6 sulla rotta di analisi) · `test_bundle` 37/37 ·
+  `test_adattatori` 81/81 · `test_observability` 24/24 · `test_budget` 31/31.
+- **Backend vivo, sessione reale da 23 giri:** 20 giri di ritmo, 3 esclusi; miglior giro 100.230;
+  costanza 804 ms → «ballerina», solo il 10% dei giri entro mezzo secondo; settore 3 a 6,7 decimi di
+  media dal proprio migliore; ritmo in **miglioramento** (−98 ms/giro, R² 0,49) → nessuna voce di
+  degrado nel verdetto, come dev'essere.
+- Nessuna chiamata LLM: spesa invariata ($0,3292 su $1).
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — pushato il 14/09 su indicazione di Edoardo.
+
 ---
 
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
