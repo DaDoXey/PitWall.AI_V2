@@ -1600,7 +1600,7 @@ demo-mode perché non usano né chiave né rete, e in locale il live è spento.
 | Data | 14/09/2026 |
 | Agente dev | Claude Code (claude-opus-5) |
 | Area | NEW `app/analisi/` (`__init__.py`, `motore.py`) · NEW `tests/test_analisi.py` · MOD `api/sessions.py` (rotta analisi) · MOD `tests/test_sessions.py` · MOD `README.md` `README.it.md` `docs/04-rework-dati.md` |
-| Commit | (in questa iterazione, pushati su indicazione di Edoardo) |
+| Commit | `f9262a2` (motore + rotta + test) · `ec91fc7` (docs + questo log) |
 | Contesto | Dopo L1 (#032, pushato `005c4f1`). Edoardo: «procedi che per oggi sarà l'ultima fase, appena hai finito pusha che poi staccherò». |
 
 **Catalogo messaggi:** «procedi con la prossima fase» · «ok push» · «procedi che per oggi sarà
