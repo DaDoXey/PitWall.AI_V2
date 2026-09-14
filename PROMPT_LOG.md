@@ -1526,6 +1526,72 @@ fonte delle pressioni a freddo: file protetto sui numeri, si riscrive quando la 
 
 **Decisione:** ☑ Mantenuto — in attesa di «ok push».
 
+
+## Entry #032 — L1 del REWORK DATI: dal file di ACC al «session bundle»
+
+| Campo | Valore |
+|---|---|
+| Data | 14/09/2026 |
+| Agente dev | Claude Code (claude-opus-5) |
+| Area | NEW `app/bundle/` (`schema.py`, `store.py`, `adapters/lettura.py`, `acc_setup.py`, `acc_results.py`) · NEW `api/sessions.py` · NEW `tests/test_bundle.py`, `test_adattatori.py`, `test_sessions.py`, `tests/fixtures/` · MOD `main.py` `.gitignore` `backend/.env.example` `README.md` `README.it.md` `docs/04-rework-dati.md` |
+| Commit | (da fare, in attesa di «ok push») |
+| Contesto | Dopo L0 (#031, pushato). Edoardo: «procedi con f3», «procedi con la prossima fase» — metodo a fasi. |
+
+**Catalogo messaggi:** «ok push e poi procedi, andiamo per fasi ricordatelo» · «assetto corsa
+competizione non è installato sul pc purtroppo ti toccherà cercare online. ora procedi con il
+prossimo punto» · «procedi con f3» · «procedi con la prossima fase».
+
+**Vincolo emerso:** **ACC non è installato** su questo PC (c'è AC1; la cartella Documenti è un
+residuo del 2021 con la sola `Config`). Su indicazione di Edoardo le strutture sono state ricavate da
+**file reali pubblici**; le fixture nel repo hanno quella struttura con valori nostri.
+
+**F1 — formato canonico** (`bundle/schema.py`, `test_bundle.py` **37/37**): `SessionBundle` =
+`meta` + `giri[]` + `setup` + `eventi[]` + `canali` + `assunzioni[]`, con `schema_version` e rifiuto
+delle versioni non leggibili. La decisione 7 è un vincolo di tipo: un `ValoreSetup` con un numero in
+unità reali ma senza `verificato=True` **non è costruibile**, così nessuno può mostrare psi inventati.
+
+**F2 — adattatore Setup** (`adapters/acc_setup.py`, +39 test): legge tutti e **49** i parametri con le
+chiavi già usate da `setup_params.py`. Click restano click; **il camber esce in gradi e verificato**
+perché è ACC a scriverlo come float; il `toe` no (`toeOutLinear` non è in gradi). Il JSON originale
+resta in `Setup.raw`. **Tre assunzioni dichiarate** in `Setup.assunzioni` (ordine di `rideHeight`,
+uso di `bumpStopRateUp`, caster da `casterLF`). Provato su **30 setup reali di 30 vetture** (GT3,
+GT4, GT2, Challenge): 30/30 letti, 49 parametri ciascuno, slug sempre uguale al catalogo.
+
+**F3 — adattatore Results** (`adapters/acc_results.py`, +42 test): legge **entrambi** gli schemi
+(file del gioco: `sessionDef`/`lapTime`/`fuel`/tipo numerico; file del server: `trackName`/`laptime`/
+`isValidForBest`). Con più vetture nel file **non sceglie**: `elenca_partecipanti()` e richiesta
+esplicita di `car_id`/`player_id`. Provato su **9 file di risultati reali**; l'unico rifiutato è
+quello senza giri. Un file reale ha fatto emergere `sessionType: "Q2"` (sessioni numerate dai server),
+ora gestito.
+
+**F4 — archivio e rotte** (`bundle/store.py`, `api/sessions.py`, `test_sessions.py` **44/44**):
+un file JSON per sessione in `backend/sessions/` (gitignorata), id leggibile validato da regex **e**
+dal controllo del percorso risolto (traversal), scrittura atomica. Rotte `POST
+/api/sessions/import/setup`, `POST /api/sessions/import/results`, `GET /api/sessions`,
+`GET /api/sessions/{id}`, `DELETE /api/sessions/{id}`. **Interruttore `PITWALL_ALLOW_IMPORT`**
+(default acceso, da spegnere sul deploy vetrina): queste rotte non passano dal presidio della
+demo-mode perché non usano né chiave né rete, e in locale il live è spento.
+
+**Due correzioni a quanto avevo affermato prima, fatte sui dati veri:**
+1. **Niente BOM.** I setup sono UTF-8 *senza* BOM e i risultati **UTF-16 LE senza BOM**: il
+   riconoscimento della codifica guarda i byte nulli (`adapters/lettura.py`), non un marcatore che non
+   c'è. Era il dettaglio che avrebbe fatto fallire l'import al primo file vero.
+2. **Il carburante per giro non è gratis.** Nel file del gioco esaminato `fuel` è **costante su tutti
+   i giri** di ogni vettura: sembra il carburante di partenza, non il residuo. Il consumo si calcola
+   solo se il valore cala davvero, altrimenti il bundle lo **dichiara non calcolabile**. Il consumo
+   affidabile arriverà da L3. Da riverificare su un file di sessione in singolo.
+
+**Verifica:**
+- `test_bundle` **37/37** · `test_adattatori` **81/81** · `test_sessions` **44/44** ·
+  `test_observability` **24/24** · `test_budget` **31/31** (tutti offline).
+- **Backend vivo, file veri:** setup importato (49 parametri, 4 in gradi, 2 assunzioni); risultati a
+  16 vetture → **409 con l'elenco dei partecipanti**; con `car_id=3` → 22 giri, miglior giro
+  101409 ms, 3 assunzioni; `GET /api/sessions` elenca entrambe; `/api/csv/parse` resta 404.
+- Nessuna chiamata LLM: spesa invariata ($0,3292 su $1).
+
+**File protetti:** ☑ nessuno toccato (`setup_params.py` solo letto per allineare le chiavi).
+**Decisione:** ☑ Mantenuto — in attesa di «ok push».
+
 ---
 
 <!-- TEMPLATE — copia e incolla per ogni nuova entry

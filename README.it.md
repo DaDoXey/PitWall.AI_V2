@@ -35,7 +35,8 @@ backend/       FastAPI
     api/         # endpoint (elenco sotto)
     core/        # logica di dominio: agent, setup_params, vision_parser, demo, prompts,
                  # data/ (catalogo ACC e guide dei tracciati)
-    tests/       # test_observability (24/24), test_budget (31/31)
+    tests/       # test_bundle (37), test_adattatori (81), test_sessions (44),
+                 # test_observability (24), test_budget (31)
   scripts/       # pipeline delle immagini (foto, ritagli, mappe) e validatore delle guide
 frontend/      Next.js 15.5 (App Router) + TypeScript + Tailwind + Recharts + Framer Motion
   src/
@@ -69,6 +70,11 @@ specificato in [`docs/04-rework-dati.md`](docs/04-rework-dati.md).
 | GET | `/api/catalog` | Catalogo vetture e circuiti |
 | GET | `/api/catalog/car/{car_id}` | Scheda di una vettura |
 | GET | `/api/catalog/track/{track_id}` | Scheda di un circuito |
+| POST | `/api/sessions/import/setup` | Importa un setup salvato in ACC |
+| POST | `/api/sessions/import/results` | Importa un file di risultati di ACC (409 se il file ha più vetture) |
+| GET | `/api/sessions` | Elenco delle sessioni importate |
+| GET | `/api/sessions/{id}` | Una sessione (session bundle) |
+| DELETE | `/api/sessions/{id}` | Rimuove una sessione |
 
 ## Avvio in locale
 
