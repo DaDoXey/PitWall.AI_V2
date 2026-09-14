@@ -1534,7 +1534,7 @@ fonte delle pressioni a freddo: file protetto sui numeri, si riscrive quando la 
 | Data | 14/09/2026 |
 | Agente dev | Claude Code (claude-opus-5) |
 | Area | NEW `app/bundle/` (`schema.py`, `store.py`, `adapters/lettura.py`, `acc_setup.py`, `acc_results.py`) · NEW `api/sessions.py` · NEW `tests/test_bundle.py`, `test_adattatori.py`, `test_sessions.py`, `tests/fixtures/` · MOD `main.py` `.gitignore` `backend/.env.example` `README.md` `README.it.md` `docs/04-rework-dati.md` |
-| Commit | (da fare, in attesa di «ok push») |
+| Commit | `f93ea57` (F1 formato) · `94ef0d6` (F2–F3 adattatori) · `7894fc2` (F4 archivio e rotte) · `c1a488b` (docs + questo log) |
 | Contesto | Dopo L0 (#031, pushato). Edoardo: «procedi con f3», «procedi con la prossima fase» — metodo a fasi. |
 
 **Catalogo messaggi:** «ok push e poi procedi, andiamo per fasi ricordatelo» · «assetto corsa
@@ -1590,7 +1590,7 @@ demo-mode perché non usano né chiave né rete, e in locale il live è spento.
 - Nessuna chiamata LLM: spesa invariata ($0,3292 su $1).
 
 **File protetti:** ☑ nessuno toccato (`setup_params.py` solo letto per allineare le chiavi).
-**Decisione:** ☑ Mantenuto — in attesa di «ok push».
+**Decisione:** ☑ Mantenuto — committato e pushato il 14/09 su «ok push» (`952fa05..c1a488b`).
 
 ---
 

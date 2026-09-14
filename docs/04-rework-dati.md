@@ -1,6 +1,6 @@
 # PitWall.AI v2 — REWORK DATI: specifica viva
 
-> **Aperto:** 14/09/2026 · **Stato:** L0 fatto e pushato · **L1 completo** (Fasi 1–4), da committare.
+> **Aperto:** 14/09/2026 · **Stato:** L0 e **L1 completi e pushati** (`c1a488b`). Prossimo: L2.
 > Questo file è la **fonte di verità** del rework della logica dati: formato, strati, lotti e stato.
 > Va aggiornato a ogni avanzamento, prima del commit del lotto. Cronologia → `PROMPT_LOG.md`;
 > architettura in vigore → `03-v2-architecture.md`; malfunzionamenti → `INCIDENTS.md`.
@@ -96,8 +96,8 @@ invece che da mantenere a mano.
 | Lotto | Contenuto | Stato |
 |---|---|---|
 | **L0** | Pulizia totale (CSV, residui Streamlit, codice morto) + questa specifica | **fatto — 14/09** (`167b9a2` `22cb500` `952fa05`) |
-| **L1** | Adattatori Results JSON + Setup JSON → session bundle | **fatto — 14/09** (F1–F4), da committare |
-| **L2** | Motore di analisi v1: giri, carburante, costanza, gomme | da fare |
+| **L1** | Adattatori Results JSON + Setup JSON → session bundle | **fatto — 14/09** (`f93ea57` `94ef0d6` `7894fc2` `c1a488b`) |
+| **L2** | Motore di analisi v1: giri, carburante, costanza, gomme | **prossimo** |
 | **L3** | Registratore shared memory → canali → analisi per curva | da fare |
 | **L4** | Gigi e schermate sul bundle; demo come bundle | da fare |
 | **L5** | Import MoTeC (opzionale) | da fare |
