@@ -5,6 +5,7 @@ Rotte:
 - `POST /api/sessions/import/results` — un file di risultati diventa una sessione
 - `GET  /api/sessions`                — elenco, dalla più recente
 - `GET  /api/sessions/{id}`           — il bundle intero
+- `GET  /api/sessions/{id}/analisi`   — il report del motore di analisi (L2)
 - `DELETE /api/sessions/{id}`         — rimuove una sessione
 
 **Presidio.** Queste rotte scrivono su disco e non toccano né la chiave né la rete,
@@ -25,6 +26,7 @@ import os
 
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 
+from app.analisi import analizza
 from app.bundle import store
 from app.bundle.adapters import (
     ResultsAccError,
@@ -154,6 +156,21 @@ async def leggi_sessione(id_sessione: str):
         raise HTTPException(status_code=404, detail="Sessione non trovata")
     except store.ArchivioError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get("/sessions/{id_sessione}/analisi")
+async def analisi_sessione(id_sessione: str):
+    """Il report deterministico della sessione: nessuna rete, nessun modello, zero spesa."""
+    try:
+        bundle = store.leggi(id_sessione)
+    except store.SessioneNonTrovata:
+        raise HTTPException(status_code=404, detail="Sessione non trovata")
+    except store.ArchivioError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    report = analizza(bundle)
+    log.info("analisi di %s: %d giri, %d voci nel verdetto",
+             id_sessione, report.giri_totali, len(report.verdetto))
+    return report
 
 
 @router.delete("/sessions/{id_sessione}")

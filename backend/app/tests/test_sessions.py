@@ -209,6 +209,28 @@ test("S38 cancellarla due volte dà 404",
      client.delete(f"/api/sessions/{primo}").status_code == 404)
 
 # ---------------------------------------------------------------------------
+# 3b. Analisi della sessione (L2)
+# ---------------------------------------------------------------------------
+resp = carica("acc_results_gioco_prove.json", "/api/sessions/import/results", track="monza")
+id_analisi = resp.json()["id"]
+
+resp = client.get(f"/api/sessions/{id_analisi}/analisi")
+test("S33b GET /api/sessions/{id}/analisi risponde 200", resp.status_code == 200,
+     resp.text[:200])
+rep = resp.json() if resp.status_code == 200 else {}
+test("S33c il report porta il miglior giro della sessione",
+     rep.get("ritmo", {}).get("miglior_giro_ms") == 103134,
+     str(rep.get("ritmo")))
+test("S33d e il verdetto con le sue voci", isinstance(rep.get("verdetto"), list))
+test("S33e e dichiara i dati che non ha", len(rep.get("dati_mancanti", [])) >= 2,
+     str(rep.get("dati_mancanti"))[:150])
+
+test("S33f l'analisi di una sessione inesistente dà 404",
+     client.get("/api/sessions/20260101-000000-inesistente-dddd/analisi").status_code == 404)
+test("S33g e quella di un id storto dà 400",
+     client.get("/api/sessions/storto/analisi").status_code == 400)
+
+# ---------------------------------------------------------------------------
 # 4. Interruttore dell'import (per il deploy vetrina)
 # ---------------------------------------------------------------------------
 os.environ["PITWALL_ALLOW_IMPORT"] = "0"
