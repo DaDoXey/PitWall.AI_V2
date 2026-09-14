@@ -8,6 +8,9 @@ venv/
 .env.*
 !.env.example
 
+# Sessioni importate dal pilota (bundle L1): dati suoi, restano sul suo disco.
+backend/sessions/
+
 # ── Node / Next (frontend) ──
 node_modules/
 .next/
