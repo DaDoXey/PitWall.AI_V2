@@ -1,6 +1,7 @@
 # PitWall.AI v2 — REWORK DATI: specifica viva
 
-> **Aperto:** 14/09/2026 · **Stato:** L0, L1 e **L2 (prima versione) fatti**. Prossimo: L3.
+> **Aperto:** 14/09/2026 · **Stato:** L0, L1, L2 fatti; **L3 in corso** (fasi 1 e 2 fatte il
+> 15/09: struttura, lettore, dizionario dei canali, registratore). Prossimo: L3 fase 3.
 > Questo file è la **fonte di verità** del rework della logica dati: formato, strati, lotti e stato.
 > Va aggiornato a ogni avanzamento, prima del commit del lotto. Cronologia → `PROMPT_LOG.md`;
 > architettura in vigore → `03-v2-architecture.md`; malfunzionamenti → `INCIDENTS.md`.
@@ -98,7 +99,7 @@ invece che da mantenere a mano.
 | **L0** | Pulizia totale (CSV, residui Streamlit, codice morto) + questa specifica | **fatto — 14/09** (`167b9a2` `22cb500` `952fa05`) |
 | **L1** | Adattatori Results JSON + Setup JSON → session bundle | **fatto — 14/09** (`f93ea57` `94ef0d6` `7894fc2` `c1a488b`) |
 | **L2** | Motore di analisi v1: ritmo, settori, costanza, degrado, carburante | **fatto — 14/09**, 57/57 |
-| **L3** | Registratore shared memory → canali → analisi per curva | da fare |
+| **L3** | Registratore shared memory → canali → analisi per curva | **in corso** — F1 lettore, F2 registratore, F3 analisi per curva (15/09); resta F4 |
 | **L4** | Gigi e schermate sul bundle; demo come bundle | da fare |
 | **L5** | Import MoTeC (opzionale) | da fare |
 
@@ -128,7 +129,7 @@ ne esisteranno.
   (`idealLineGrip`, `wetLevel`, …).
 - **File del server dedicato:** chiavi `sessionType` ("R"), **`trackName`**, `serverName`,
   `sessionResult`, `laps` con `laptime` e `isValidForBest` — ma **senza carburante**.
-- Entrambi sono codificati in **UTF-16 little-endian e SENZA BOM** (il file comincia con `{ `):
+- Entrambi sono codificati in **UTF-16 little-endian e SENZA BOM** (il file comincia con `{` seguito da un byte nullo):
   letti come UTF-8 danno spazzatura, e **non ci si può basare sul BOM per accorgersene** — il
   riconoscimento va fatto guardando i byte nulli.
 
@@ -270,3 +271,117 @@ TrackPro ($20/mese, l'unico in tempo reale: voce + haptics) · Trophi.ai ($15/me
 Due letture: **tutti** leggono la shared memory → la strada scelta è lo standard del settore; e **tutti**
 hanno uno strato AI sottile e incoraggiante. Nessuno vende un ingegnere di pista spietato che parla del
 **tuo** setup con numeri deterministici, in italiano. È il posizionamento di Gigi.
+
+## 8 · L3 — il registratore della shared memory (15/09/2026)
+
+**Decisioni di Edoardo del 15/09, chiuse:** ACC sta sulla sua **PS5** e non sarà mai su questo PC →
+il registratore non è verificabile contro ACC in locale, mai (non «finché non lo installa»).
+**Assetto Corsa 1 resta solo banco di prova della tubatura** — stessi file mappati, stessi primi
+campi — e **mai** fonte di dati per l'analisi: PitWall è ACC-only, tarare soglie su un'altra fisica
+falserebbe tutto. Canali **cappati a 100 Hz**, struttura fissata alla **1.8.12**, archivio con
+**tetto configurabile**, analisi per curva dentro L3 su canali sintetici.
+
+### La fonte
+Documento ufficiale **«ACC Shared Memory Documentation v1.8.12»** (Kunos Simulazioni), incrociato
+con un'implementazione di riferimento mantenuta. Da lì escono tre cose, tutte estratte da script
+riproducibili (`backend/scripts/estrai_appendici_acc.py`, `estrai_campi_acc.py`):
+
+1. **le tre pagine** campo per campo → `app/telemetria/strutture.py` (800 · 1588 · 820 byte: i conti
+   tornano esatti sommando i campi, e i test li ricontano);
+2. **la descrizione ufficiale di ogni campo** → `app/core/data/acc_campi_shared_memory.json`
+   (216 campi su 217 hanno la descrizione di Kunos; l'unico senza è `deprecated_2`, che il documento
+   lascia in bianco);
+3. **le tabelle per vettura** (appendici 2-7) → `app/core/data/acc_riferimenti_vetture.json`:
+   43 vetture con Kunos ID, **carModelId numerico**, offset del brake bias, coefficienti della
+   pressione freni, angolo di sterzo massimo, giri massimi.
+
+Il `carModelId` è il pezzo che mancava a **L1**: i risultati scritti dai *server* identificano la
+vettura con un numero, e finora si sapeva solo dire «vettura 30».
+
+### Due fatti verificati che hanno cambiato il progetto
+- **La dimensione di una mappa non si può misurare.** Windows arrotonda ogni sezione alla pagina da
+  4 KB: mappare gli 800 byte di ACC su una sezione da 712 (AC1) riesce, e la coda legge zeri senza un
+  errore. Tutte e tre le pagine stanno sotto i 4 KB → nessun controllo sulla dimensione può
+  accorgersi del gioco sbagliato. L'unica difesa è l'**identità dichiarata nella pagina statica**
+  (`smVersion`, `acVersion`, `carModel`), che il lettore legge all'aggancio e riporta.
+- **Si apre, non si crea.** `mmap` di Python, su Windows, *crea* la mappa se non esiste: agganciarsi
+  così a un gioco spento dà una pagina di zeri che sembra telemetria buona. Si chiama direttamente
+  `OpenFileMappingW`, che esiste solo per aprire.
+
+### Che cosa si registra
+**Tutti** i parametri che ACC riempie davvero: **211 colonne** (136 dalla pagina fisica, 75 dalla
+grafica), ognuna con nome canonico, unità (con la provenienza: documento / uso comune / non
+dichiarata) e descrizione ufficiale — è il **dizionario dei canali**, scritto accanto ai dati di ogni
+sessione. Restano fuori, con la ragione scritta nel dizionario: i campi che il documento marca «non
+usati da ACC» (sono zeri), le stringhe (i tempi esistono già in millisecondi) e le due tabelle delle
+**altre** vetture in pista (`carCoordinates`, `carID`: 240 colonne che non parlano del pilota).
+
+### Come finisce su disco
+```
+<PITWALL_SESSIONS_DIR>/telemetria/<id>/
+    sessione.json     metadati, assunzioni, elenco ordinato delle colonne
+    dizionario.json   i 211 canali con unità e descrizione, e le avvertenze
+    canali.npz        due matrici compresse: float32 e int32
+```
+**Due matrici, non una:** i tempi in millisecondi passati per un float32 comincerebbero ad
+arrotondare sopra i 16,7 milioni, e un tempo sul giro arrotondato è un dato falso. Si scrive **a
+blocchi ogni minuto**: se il gioco si pianta si perde un minuto, non la sessione, e i blocchi rimasti
+si consolidano dopo. Il **tetto** (`PITWALL_TELEMETRIA_MAX_SESSIONI`, default 40) libera solo i
+canali grezzi delle più vecchie e lascia metadati e dizionario, marcati `canali_rimossi`: niente
+sparisce di nascosto. ⚠️ **L'archivio va tenuto fuori da OneDrive** (`PITWALL_SESSIONS_DIR`): a
+100 Hz sono ~290 MB/ora grezzi, che una cartella sincronizzata manderebbe in rete.
+
+### Ciclo di vita
+Thread dentro il backend (nessun eseguibile da distribuire, nessuna firma da comprare), avviato con
+l'app e fermato con lei; si aggancia da solo quando il gioco compare, registra **solo in stato LIVE**
+(non replay, non pausa), deduplica sui `packetId` e chiude la sessione dopo 20 s fuori pista.
+Interruttore **`PITWALL_ALLOW_RECORDER`** (default acceso, da spegnere sul deploy vetrina).
+Rotte: `GET /api/telemetria/stato`, `POST .../avvia`, `POST .../ferma`, `GET .../sessioni`,
+`GET .../sessioni/{id}`, `GET .../sessioni/{id}/canali`, `DELETE .../sessioni/{id}`.
+
+### L'analisi per curva (F3)
+`app/analisi/curve.py`, deterministica e senza LLM, in quattro passaggi:
+1. **i giri si ritagliano dalla posizione** (`normalizedCarPosition` che riparte da 0); conta solo
+   chi ha la spazzata completa, e i giri passati dai box restano fuori;
+2. **i canali si reindicizzano sulla distanza** su una griglia fissa (2000 punti ≈ 2,5 m su un
+   tracciato da 5 km): confrontare due giri nel tempo non ha senso, sulla stessa posizione sì;
+3. **le curve si ricavano dal profilo di velocità mediano** fra i giri buoni (decisione 4: nessun
+   dato a mano per 25 circuiti). Ogni curva è il tratto fra il massimo di velocità che la precede e
+   quello che la segue → **i tratti si toccano e coprono tutto il giro**, quindi nessun decimo può
+   sparire fra due curve (c'è un test che somma i tratti e ritrova il tempo sul giro);
+4. **la perdita si misura per tratto**, contro il miglior tempo del pilota su quel tratto.
+Per ogni curva e giro: punto di frenata, velocità minima e dove cade, riapertura del gas, trail
+braking, coasting, tempo e decimi persi. Il verdetto esce ordinato per gravità, ogni voce con il
+numero che la prova e l'azione da fare.
+
+**Aggiunta ai canali:** `pitwall.tempo_ms`, l'unico canale che non viene da ACC. La shared memory
+non porta un orologio della registrazione (`iCurrentTime` azzera a ogni giro, `Clock` è l'ora del
+mondo di gioco): senza, nessun conto sul tempo è possibile. È dichiarato nel dizionario come nostro.
+
+**La lunghezza del tracciato non esiste in ACC** (`trackSplineLength` è fra i campi non riempiti):
+viene stimata integrando la velocità sul giro migliore — sul banco di prova dà 2999,5 m su 3000
+veri. Serve solo a esprimere le posizioni in metri; nessun conto dipende dalla sua esattezza.
+
+**Come si prova senza ACC:** un tracciato finto (`app/tests/pista_finta.py`) con curve in posizioni
+note. Su tre giri identici il verdetto è **vuoto** (nessun falso allarme); mettendo un errore solo
+nella curva 2 (v-min 105 invece di 120 km/h, frenata 40 m prima) il giro perde 700 ms e l'analisi
+ne attribuisce **698,5 a quella curva**, riconoscendo i punti di frenata a 1380 m e 1340 m — cioè
+esattamente i valori impostati.
+
+### Stato delle fasi di L3
+- **F1 struttura + lettore** — fatta (`test_telemetria` 97/97)
+- **F2 dizionario + registratore + archivio + rotte** — fatta (`test_registratore` 69/69)
+- **F3 distanza, curve, analisi per curva, rotta `/curve`** — fatta (`test_curve` 62/62)
+- **F4 il tutto dentro il bundle e nel motore di analisi** — da fare
+
+### Identificativi delle vetture: allineati (15/09)
+Quattro vetture del catalogo avevano un `acc_car_id` che **non** è l'identificativo Kunos (ACC scrive
+il nome della cartella, non quello del modello): `bentley_continental_gt3_2015` → `..._2016`,
+`lexus_rcf_gt3` → `lexus_rc_f_gt3`, `nissan_gt_r_gt3_2015` → `..._2017`,
+`reiter_engineering_r_ex_gt3` → `lamborghini_gallardo_rex`. Con quegli slug il setup importato da ACC
+per quelle quattro non si agganciava al catalogo. Corretti in `cars.json` (l'`id` interno di PitWall
+non è cambiato: foto, ritagli e range di setup restano dove sono).
+Aggiunta la **lista ufficiale completa** (`acc_lista_vetture_handbook.json`, 54 vetture dall'ACC
+Server Admin Handbook v1.10.2): copre anche le GT3 del 2023-24 e la classe GT2, e ora **31 vetture
+su 31** del catalogo hanno il loro `carModelId`. L'adattatore dei risultati traduce il numero in
+vettura; se un numero non è in lista, lo dichiara invece di indovinare.

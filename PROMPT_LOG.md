@@ -1641,6 +1641,126 @@ attaccata). `dati_mancanti` raccoglie le assunzioni dell'import e ciò che i ris
 **File protetti:** ☑ nessuno toccato.
 **Decisione:** ☑ Mantenuto — pushato il 14/09 su indicazione di Edoardo.
 
+## Entry #034 — L3 del REWORK DATI, fasi 1-2: la shared memory di ACC, letta e registrata
+
+| Campo | Valore |
+|---|---|
+| Data | 15/09/2026 |
+| Agente dev | Claude Code (claude-opus-5) |
+| Area | NEW `app/telemetria/` (`strutture.py`, `lettore.py`, `dizionario.py`, `registratore.py`) · NEW `app/api/telemetria.py` · NEW `app/core/riferimenti_acc.py` · NEW `data/acc_riferimenti_vetture.json`, `data/acc_campi_shared_memory.json` · NEW `scripts/estrai_appendici_acc.py`, `scripts/estrai_campi_acc.py` · NEW test `test_telemetria` `test_riferimenti` `test_registratore` + `tests/banco_finto.py` · MOD `app/main.py` `README.md` `README.it.md` `docs/04-rework-dati.md` |
+| Commit | non ancora committato |
+| Contesto | L3 del rework dati (dopo #033). Sei domande di scope chiuse prima di scrivere codice. |
+
+**Catalogo messaggi:** «leggi la memoria e riprendiamo il lavoro dell'ultima volta» · risposte alle
+6 domande di scope (ACC su PS5, AC1 come banco, tutti i parametri, formato e ciclo di vita delegati
+a me, analisi per curva dentro L3) · «estraile e ricordati di concentrarti su ACC e non AC1. poi
+procedi con il resto».
+
+**Decisioni chiuse in apertura:** ACC sta sulla **PS5** di Edoardo e non sarà mai su questo PC → il
+registratore non è verificabile contro ACC, mai. **AC1 solo come banco di prova della tubatura**,
+mai come fonte di dati: PitWall è ACC-only e tarare soglie su un'altra fisica falserebbe tutto.
+100 Hz, struttura fissata alla 1.8.12, tetto d'archivio configurabile.
+
+**Modifica:**
+- **F1** — `strutture.py`: le tre pagine campo per campo dal documento ufficiale Kunos v1.8.12
+  (85+87+45 campi; 800 · 1588 · 820 byte). `lettore.py`: aggancio con `OpenFileMappingW`,
+  deduplica sui `packetId`, stato del gioco, identità dichiarata dalla pagina statica.
+- **Appendici** — due script riproducibili estraggono dal PDF le tabelle per vettura (43 vetture:
+  Kunos ID, **carModelId numerico**, offset del bias, coefficienti dei freni, angolo di sterzo, giri
+  massimi) e la descrizione ufficiale di **216 campi su 217**. Nuovo modulo `riferimenti_acc.py`.
+- **F2** — `dizionario.py`: **211 canali** con nome canonico, unità (con provenienza) e descrizione
+  ufficiale. `registratore.py`: thread nel backend, registra solo in stato LIVE, scrive a blocchi
+  ogni minuto, consolida in `canali.npz` (due matrici: float32 e int32), tetto configurabile che
+  libera i canali grezzi ma **lascia la sessione dichiarata**. Rotte `/api/telemetria/*`.
+
+**Tre correzioni fatte sui fatti, non sulle intenzioni:**
+1. **Due offset sbagliati miei** (`brakeTemp`, `clutch`): avevo trascritto la fine del campo invece
+   dell'inizio. Il test li ricalcola dal documento e li ha bocciati. Un offset sbagliato non dà
+   errore: dà numeri plausibili e falsi.
+2. **La difesa sulla dimensione della mappa non funziona.** Windows arrotonda ogni sezione alla
+   pagina da 4 KB: mappare 800 byte su una sezione da 712 riesce e la coda legge zeri. Tolta,
+   sostituita con l'identità dichiarata nella pagina statica. I test inchiodano il fatto.
+3. **Il tetto dell'archivio ordinava per nome**, che ha la risoluzione del secondo: due sessioni
+   nello stesso secondo potevano far cancellare i canali di quella sbagliata. Ora ordina per data di
+   scrittura.
+
+**Trovato per strada (da decidere):** quattro vetture del catalogo hanno un `acc_car_id` che **non**
+è il Kunos ID ufficiale (`bentley_continental_gt3_2015` → `bentley_continental_gt3_2016`,
+`lexus_rcf_gt3` → `lexus_rc_f_gt3`, `nissan_gt_r_gt3_2015` → `nissan_gt_r_gt3_2017`,
+`reiter_engineering_r_ex_gt3` → `lamborghini_gallardo_rex`). Con quegli slug, il setup importato da
+ACC per quelle quattro non si aggancia al catalogo. `cars.json` **non è stato toccato**: serve la
+decisione di Edoardo.
+
+**Verifica:**
+- `test_telemetria` **97/97** · `test_riferimenti` **56/56** · `test_registratore` **66/66** ·
+  test già esistenti invariati: bundle 37/37, adattatori 81/81, analisi 57/57, sessions 50/50,
+  observability 24/24, budget 31/31. **Totale 499**, tutti offline.
+- Backend vivo: `/` espone `recorder_allowed`, `/api/telemetria/stato` risponde (211 colonne,
+  non agganciato perché ACC non c'è), elenco vuoto, id malformato → 400.
+- Nessuna chiamata LLM: spesa invariata ($0,3292 su $1).
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☐ Mantenuto ☐ Modificato ulteriormente ☐ Rollback — in attesa di «ok push».
+
+## Entry #035 — Vetture allineate agli identificativi ufficiali, archivio fuori da OneDrive, e L3 fase 3 (analisi per curva)
+
+| Campo | Valore |
+|---|---|
+| Data | 15/09/2026 |
+| Agente dev | Claude Code (claude-opus-5) |
+| Area | MOD `data/cars.json` (4 slug) · MOD `bundle/adapters/acc_results.py` · NEW `data/acc_lista_vetture_handbook.json` + `scripts/estrai_lista_vetture_handbook.py` · MOD `core/riferimenti_acc.py` · NEW `analisi/curve.py` · NEW `tests/pista_finta.py`, `tests/test_curve.py` · MOD `telemetria/dizionario.py`, `telemetria/registratore.py`, `api/telemetria.py` · MOD `.env` `.env.example` `README*.md` `docs/04` |
+| Commit | non ancora committato |
+| Contesto | Seguito di #034, stessa sessione: le tre cose lasciate in sospeso + F3 di L3. |
+
+**Catalogo messaggi:** «1 riallinea le vetture sbagliate e fixa il problema in modo da avere tutti i
+modelli precisi… 2 l'archivio io volevo che fosse nel desktop sennò spostalo dove ti fa comodo basta
+che te mi ricordi dove l'hai spostato. 3 benissimo così, ricordati che ogni cosa deve essere
+allineata precisamente sotto ogni aspetto. miriamo alla perfezione assoluta. vai col prossimo passo».
+
+**1 · Vetture allineate.** Corretti i quattro `acc_car_id` che non erano gli identificativi Kunos
+(`bentley_continental_gt3_2015`→`..._2016`, `lexus_rcf_gt3`→`lexus_rc_f_gt3`,
+`nissan_gt_r_gt3_2015`→`..._2017`, `reiter_engineering_r_ex_gt3`→`lamborghini_gallardo_rex`);
+l'`id` interno di PitWall non è stato toccato, quindi foto, ritagli e range di setup restano agganciati.
+Le stranezze sono confermate da **tre fonti**: appendice 2 del documento shared memory, ACC Server
+Admin Handbook v1.10.2, e l'implementazione di Race Element (che le commenta come «kunos feature»).
+Aggiunta la **lista ufficiale completa** delle 54 vetture (handbook), che copre anche le GT3 2023-24 e
+la classe GT2: ora **31 su 31** vetture del catalogo hanno il loro `carModelId`, e l'adattatore dei
+risultati traduce il numero in vettura (prima restava un numero).
+
+**2 · Archivio spostato.** Da `backend/sessions/` (dentro OneDrive) a
+`%LOCALAPPDATA%\PitWall\sessions`, via `PITWALL_SESSIONS_DIR` nel `.env`. Sul Desktop c'è il
+collegamento **«PitWall - dati sessioni»**: il Desktop *è* OneDrive, e a 100 Hz la telemetria fa
+~290 MB/ora. I tre bundle del 14/09 sono stati spostati e si rivedono tutti.
+
+**3 · L3 fase 3 — analisi per curva** (`analisi/curve.py`): giri ritagliati dalla posizione, canali
+reindicizzati sulla distanza (griglia da 2000 punti), curve ricavate dal profilo di velocità mediano,
+perdita misurata per tratto contro il miglior tempo del pilota su quel tratto. Per curva e per giro:
+punto di frenata, v-min e dove cade, riapertura del gas, trail braking, coasting, decimi persi.
+Verdetto ordinato per gravità, ogni voce con prova numerica e azione. Rotta
+`GET /api/telemetria/sessioni/{id}/curve`. Aggiunto il canale **`pitwall.tempo_ms`** (l'unico non di
+ACC: la shared memory non porta un orologio della registrazione).
+
+**Due difetti trovati dai test, corretti:**
+1. **Le curve lunghe a velocità costante sparivano.** Misuravo la profondità del minimo in una
+   finestra fissa: dentro un curvone il profilo è piatto, quindi profondità zero e nessuna curva.
+   Ora la profondità si misura *camminando* ai due lati finché il profilo non risale (prominenza).
+2. **Le rotte nei README erano finite due volte**, per una doppia sostituzione mia su CRLF e LF.
+
+**Verifica:**
+- `test_curve` **62/62** (banco: tracciato finto a 3 curve). Su tre giri identici il verdetto è
+  **vuoto**; con un errore piazzato solo nella curva 2 il giro perde 700 ms e l'analisi ne attribuisce
+  **698,5 a quella curva**, con punti di frenata a 1380 m e 1340 m — i valori impostati.
+  La lunghezza del tracciato stimata dalla velocità: **2999,5 m su 3000**.
+- `test_adattatori` **86/86** (+5) · `test_riferimenti` **73/73** (+17) ·
+  `test_registratore` **69/69** (+3) · `test_telemetria` 97/97 · gli altri invariati.
+  **Totale 583**, tutti offline.
+- Backend vivo: rotte 200, `/curve` su una registrazione da un giro solo risponde **422 spiegando
+  perché**, non 500.
+- Nessuna chiamata LLM: spesa invariata ($0,3292 su $1).
+
+**File protetti:** ☑ nessuno toccato (`cars.json` non è nell'elenco dei protetti; `car_setup_ranges.json` non toccato).
+**Decisione:** ☐ Mantenuto ☐ Modificato ulteriormente ☐ Rollback — in attesa di «ok push».
+
 ---
 
 <!-- TEMPLATE — copia e incolla per ogni nuova entry

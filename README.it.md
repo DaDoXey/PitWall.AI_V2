@@ -35,8 +35,12 @@ backend/       FastAPI
     api/         # endpoint (elenco sotto)
     core/        # logica di dominio: agent, setup_params, vision_parser, demo, prompts,
                  # data/ (catalogo ACC e guide dei tracciati)
+    telemetria/  # shared memory di ACC: strutture, lettore, dizionario, registratore
+    analisi/     # motore deterministico: ritmo e costanza (L2), curve (L3)
     tests/       # test_bundle (37), test_adattatori (81), test_analisi (57),
-                 # test_sessions (50), test_observability (24), test_budget (31)
+                 # test_sessions (50), test_observability (24), test_budget (31),
+                 # test_telemetria (97), test_riferimenti (73), test_registratore (69),
+                 # test_curve (62)
   scripts/       # pipeline delle immagini (foto, ritagli, mappe) e validatore delle guide
 frontend/      Next.js 15.5 (App Router) + TypeScript + Tailwind + Recharts + Framer Motion
   src/
@@ -76,6 +80,13 @@ specificato in [`docs/04-rework-dati.md`](docs/04-rework-dati.md).
 | GET | `/api/sessions/{id}` | Una sessione (session bundle) |
 | GET | `/api/sessions/{id}/analisi` | Report di analisi della sessione (deterministico, senza LLM) |
 | DELETE | `/api/sessions/{id}` | Rimuove una sessione |
+| GET | `/api/telemetria/stato` | Stato del registratore della telemetria (aggancio, sessione in corso) |
+| POST | `/api/telemetria/avvia` · `/ferma` | Accende e spegne il registratore |
+| GET | `/api/telemetria/sessioni` | Registrazioni di telemetria sul disco |
+| GET | `/api/telemetria/sessioni/{id}` | Metadati di una registrazione |
+| GET | `/api/telemetria/sessioni/{id}/canali` | Serie dei canali richiesti, con decimazione |
+| GET | `/api/telemetria/sessioni/{id}/curve` | Analisi per curva: dove si perde, quanto, cosa fare (deterministica) |
+| DELETE | `/api/telemetria/sessioni/{id}` | Cancella una registrazione |
 
 ## Avvio in locale
 

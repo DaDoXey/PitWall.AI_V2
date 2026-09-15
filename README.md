@@ -35,8 +35,12 @@ backend/       FastAPI
     api/         # endpoints (listed below)
     core/        # domain logic: agent, setup_params, vision_parser, demo, prompts,
                  # data/ (ACC catalogue and track guides)
+    telemetria/  # shared memory di ACC: strutture, lettore, dizionario, registratore
+    analisi/     # motore deterministico: ritmo e costanza (L2), curve (L3)
     tests/       # test_bundle (37), test_adattatori (81), test_analisi (57),
-                 # test_sessions (50), test_observability (24), test_budget (31)
+                 # test_sessions (50), test_observability (24), test_budget (31),
+                 # test_telemetria (97), test_riferimenti (73), test_registratore (69),
+                 # test_curve (62)
   scripts/       # image pipeline (photos, crops, maps) and track guide validator
 frontend/      Next.js 15.5 (App Router) + TypeScript + Tailwind + Recharts + Framer Motion
   src/
@@ -76,6 +80,13 @@ specified in [`docs/04-rework-dati.md`](docs/04-rework-dati.md).
 | GET | `/api/sessions/{id}` | One session (session bundle) |
 | GET | `/api/sessions/{id}/analisi` | Deterministic analysis report (no LLM) |
 | DELETE | `/api/sessions/{id}` | Removes a session |
+| GET | `/api/telemetria/stato` | Telemetry recorder status (attachment, current session) |
+| POST | `/api/telemetria/avvia` · `/ferma` | Starts and stops the recorder |
+| GET | `/api/telemetria/sessioni` | Telemetry recordings on disk |
+| GET | `/api/telemetria/sessioni/{id}` | Metadata of one recording |
+| GET | `/api/telemetria/sessioni/{id}/canali` | Requested channel series, with decimation |
+| GET | `/api/telemetria/sessioni/{id}/curve` | Per-corner analysis: where time is lost, how much, what to do (deterministic) |
+| DELETE | `/api/telemetria/sessioni/{id}` | Deletes a recording |
 
 ## Running locally
 
