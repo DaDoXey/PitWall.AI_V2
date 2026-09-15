@@ -1,0 +1,1545 @@
+{
+  "fonte": "ACC Shared Memory Documentation v1.8.12 — Kunos Simulazioni",
+  "estratto_il": "2026-09-15",
+  "estratto_da": "backend/scripts/estrai_campi_acc.py",
+  "nota": "Descrizioni dei campi copiate dal documento ufficiale e incrociate con app/telemetria/strutture.py. `usato_da_acc` viene dalla lista CAMPI_NON_USATI, che a sua volta traduce le marcature «Not used / Not shown in ACC» del documento.",
+  "pagine": {
+    "physics": {
+      "mappa": "Local\\acpmf_physics",
+      "byte": 800,
+      "campi": {
+        "packetId": {
+          "offset": 0,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Current step index",
+          "usato_da_acc": true
+        },
+        "gas": {
+          "offset": 4,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Gas pedal input value (from -0 to 1.0)",
+          "usato_da_acc": true
+        },
+        "brake": {
+          "offset": 8,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Brake pedal input value (from -0 to 1.0)",
+          "usato_da_acc": true
+        },
+        "fuel": {
+          "offset": 12,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Amount of fuel remaining in kg",
+          "usato_da_acc": true
+        },
+        "gear": {
+          "offset": 16,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Current gear",
+          "usato_da_acc": true
+        },
+        "rpm": {
+          "offset": 20,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Engine revolutions per minute",
+          "usato_da_acc": true
+        },
+        "steerAngle": {
+          "offset": 24,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Steering input value (from -1.0 to 1.0)",
+          "usato_da_acc": true
+        },
+        "speedKmh": {
+          "offset": 28,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Car speed in km/h",
+          "usato_da_acc": true
+        },
+        "velocity": {
+          "offset": 32,
+          "byte": 12,
+          "tipo_documento": "float[3]",
+          "descrizione": "Car velocity vector in global coordinates",
+          "usato_da_acc": true
+        },
+        "accG": {
+          "offset": 44,
+          "byte": 12,
+          "tipo_documento": "float[3]",
+          "descrizione": "Car acceleration vector in global coordinates",
+          "usato_da_acc": true
+        },
+        "wheelSlip": {
+          "offset": 56,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Tyre slip for each tyre [FL, FR, RL, RR]",
+          "usato_da_acc": true
+        },
+        "wheelLoad": {
+          "offset": 72,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Wheel load for each tyre [FL, FR, RL, RR]",
+          "usato_da_acc": false
+        },
+        "wheelPressure": {
+          "offset": 88,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Tyre pressure [FL, FR, RL, RR]",
+          "usato_da_acc": true
+        },
+        "wheelAngularSpeed": {
+          "offset": 104,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Wheel angular speed in rad/s [FL, FR, RL, RR]",
+          "usato_da_acc": true
+        },
+        "tyreWear": {
+          "offset": 120,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Tyre wear [FL, FR, RL, RR]",
+          "usato_da_acc": false
+        },
+        "tyreDirtyLevel": {
+          "offset": 136,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Dirt accumulated on tyre surface [FL, FR, RL, RR]",
+          "usato_da_acc": false
+        },
+        "tyreCoreTemp": {
+          "offset": 152,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "* Tyre rubber core temperature [FL, FR, RL, RR]",
+          "usato_da_acc": true
+        },
+        "camberRAD": {
+          "offset": 168,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Wheels camber in radians [FL, FR, RL, RR]",
+          "usato_da_acc": false
+        },
+        "suspensionTravel": {
+          "offset": 184,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Suspension travel [FL, FR, RL, RR]",
+          "usato_da_acc": true
+        },
+        "drs": {
+          "offset": 200,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "DRS on",
+          "usato_da_acc": false
+        },
+        "tc": {
+          "offset": 204,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "** TC in action",
+          "usato_da_acc": true
+        },
+        "heading": {
+          "offset": 208,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Car yaw orientation",
+          "usato_da_acc": true
+        },
+        "pitch": {
+          "offset": 212,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Car pitch orientation",
+          "usato_da_acc": true
+        },
+        "roll": {
+          "offset": 216,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Car roll orientation",
+          "usato_da_acc": true
+        },
+        "cgHeight": {
+          "offset": 220,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Centre of gravity height",
+          "usato_da_acc": false
+        },
+        "carDamage": {
+          "offset": 224,
+          "byte": 20,
+          "tipo_documento": "float[5]",
+          "descrizione": "Car damage: front 0, rear 1, left 2, right 3, centre 4",
+          "usato_da_acc": true
+        },
+        "numberOfTyresOut": {
+          "offset": 244,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Number of tyres out of track",
+          "usato_da_acc": false
+        },
+        "pitLimiterOn": {
+          "offset": 248,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Pit limiter is on",
+          "usato_da_acc": true
+        },
+        "abs": {
+          "offset": 252,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "*** ABS in action",
+          "usato_da_acc": true
+        },
+        "kersCharge": {
+          "offset": 256,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "kersInput": {
+          "offset": 260,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "autoshifterOn": {
+          "offset": 264,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Automatic transmission on",
+          "usato_da_acc": true
+        },
+        "rideHeight": {
+          "offset": 268,
+          "byte": 8,
+          "tipo_documento": "float[2]",
+          "descrizione": "Ride height: 0 front, 1 rear",
+          "usato_da_acc": false
+        },
+        "turboBoost": {
+          "offset": 276,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Car turbo level",
+          "usato_da_acc": true
+        },
+        "ballast": {
+          "offset": 280,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Car ballast in kg / Not implemented",
+          "usato_da_acc": false
+        },
+        "airDensity": {
+          "offset": 284,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Air density",
+          "usato_da_acc": false
+        },
+        "airTemp": {
+          "offset": 288,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Air temperature",
+          "usato_da_acc": true
+        },
+        "roadTemp": {
+          "offset": 292,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Road temperature",
+          "usato_da_acc": true
+        },
+        "localAngularVel": {
+          "offset": 296,
+          "byte": 12,
+          "tipo_documento": "float[3]",
+          "descrizione": "Car angular velocity vector in local coordinates",
+          "usato_da_acc": true
+        },
+        "finalFF": {
+          "offset": 308,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Force feedback signal",
+          "usato_da_acc": true
+        },
+        "performanceMeter": {
+          "offset": 312,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "engineBrake": {
+          "offset": 316,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "ersRecoveryLevel": {
+          "offset": 320,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "ersPowerLevel": {
+          "offset": 324,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "ersHeatCharging": {
+          "offset": 328,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "ersIsCharging": {
+          "offset": 332,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "kersCurrentKJ": {
+          "offset": 336,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "drsAvailable": {
+          "offset": 340,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "drsEnabled": {
+          "offset": 344,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "brakeTemp": {
+          "offset": 348,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Brake discs temperatures",
+          "usato_da_acc": true
+        },
+        "clutch": {
+          "offset": 364,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Clutch pedal input value (from -0 to 1.0)",
+          "usato_da_acc": true
+        },
+        "tyreTempI": {
+          "offset": 368,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Not shown in ACC",
+          "usato_da_acc": false
+        },
+        "tyreTempM": {
+          "offset": 384,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Not shown in ACC",
+          "usato_da_acc": false
+        },
+        "tyreTempO": {
+          "offset": 400,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Not shown in ACC",
+          "usato_da_acc": false
+        },
+        "isAIControlled": {
+          "offset": 416,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Car is controlled by the AI",
+          "usato_da_acc": true
+        },
+        "tyreContactPoint": {
+          "offset": 420,
+          "byte": 48,
+          "tipo_documento": "float[4][3]",
+          "descrizione": "Tyre contact point global coordinates [FL, FR, RL, RR] [x,y,z]",
+          "usato_da_acc": true
+        },
+        "tyreContactNormal": {
+          "offset": 468,
+          "byte": 48,
+          "tipo_documento": "float[4][3]",
+          "descrizione": "Tyre contact normal [FL, FR, RL, RR] [x,y,z]",
+          "usato_da_acc": true
+        },
+        "tyreContactHeading": {
+          "offset": 516,
+          "byte": 48,
+          "tipo_documento": "float[4][3]",
+          "descrizione": "Tyre contact heading [FL, FR, RL, RR] [x,y,z]",
+          "usato_da_acc": true
+        },
+        "brakeBias": {
+          "offset": 564,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Front brake bias, see Appendix 4",
+          "usato_da_acc": true
+        },
+        "localVelocity": {
+          "offset": 568,
+          "byte": 12,
+          "tipo_documento": "float[3]",
+          "descrizione": "Car velocity vector in local coordinates",
+          "usato_da_acc": true
+        },
+        "P2PActivation": {
+          "offset": 580,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "P2PStatus": {
+          "offset": 584,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "currentMaxRpm": {
+          "offset": 588,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Maximum engine rpm",
+          "usato_da_acc": true
+        },
+        "mz": {
+          "offset": 592,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Not shown in ACC",
+          "usato_da_acc": false
+        },
+        "fx": {
+          "offset": 608,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Not shown in ACC",
+          "usato_da_acc": false
+        },
+        "fy": {
+          "offset": 624,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Not shown in ACC",
+          "usato_da_acc": false
+        },
+        "slipRatio": {
+          "offset": 640,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Tyre slip ratio [FL, FR, RL, RR] in radians",
+          "usato_da_acc": true
+        },
+        "slipAngle": {
+          "offset": 656,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Tyre slip angle [FL, FR, RL, RR]",
+          "usato_da_acc": true
+        },
+        "tcinAction": {
+          "offset": 672,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "** TC in action",
+          "usato_da_acc": true
+        },
+        "absInAction": {
+          "offset": 676,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "*** ABS in action",
+          "usato_da_acc": true
+        },
+        "suspensionDamage": {
+          "offset": 680,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Suspensions damage levels [FL, FR, RL, RR]",
+          "usato_da_acc": false
+        },
+        "tyreTemp": {
+          "offset": 696,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "* Tyres core temperatures [FL, FR, RL, RR]",
+          "usato_da_acc": true
+        },
+        "waterTemp": {
+          "offset": 712,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Water Temperature",
+          "usato_da_acc": true
+        },
+        "brakePressure": {
+          "offset": 716,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Brake pressure [FL, FR, RL, RR] see Appendix 2",
+          "usato_da_acc": true
+        },
+        "frontBrakeCompound": {
+          "offset": 732,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Brake pad compund front",
+          "usato_da_acc": true
+        },
+        "rearBrakeCompound": {
+          "offset": 736,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Brake pad compund rear",
+          "usato_da_acc": true
+        },
+        "padLife": {
+          "offset": 740,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Brake pad wear [FL, FR, RL, RR]",
+          "usato_da_acc": true
+        },
+        "discLife": {
+          "offset": 756,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Brake disk wear [FL, FR, RL, RR]",
+          "usato_da_acc": true
+        },
+        "ignitionOn": {
+          "offset": 772,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Ignition switch set to on?",
+          "usato_da_acc": true
+        },
+        "starterEngineOn": {
+          "offset": 776,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Starter Switch set to on?",
+          "usato_da_acc": true
+        },
+        "isEngineRunning": {
+          "offset": 780,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Engine running?",
+          "usato_da_acc": true
+        },
+        "kerbVibration": {
+          "offset": 784,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "vibrations sent to the FFB, could be used for motion rigs",
+          "usato_da_acc": true
+        },
+        "slipVibrations": {
+          "offset": 788,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "vibrations sent to the FFB, could be used for motion rigs",
+          "usato_da_acc": true
+        },
+        "gVibrations": {
+          "offset": 792,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "vibrations sent to the FFB, could be used for motion rigs",
+          "usato_da_acc": true
+        },
+        "absVibrations": {
+          "offset": 796,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "vibrations sent to the FFB, could be used for motion rigs",
+          "usato_da_acc": true
+        }
+      }
+    },
+    "graphics": {
+      "mappa": "Local\\acpmf_graphics",
+      "byte": 1588,
+      "campi": {
+        "packetId": {
+          "offset": 0,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Current step index",
+          "usato_da_acc": true
+        },
+        "status": {
+          "offset": 4,
+          "byte": 4,
+          "tipo_documento": "acc_status",
+          "descrizione": "See enums",
+          "usato_da_acc": true
+        },
+        "session": {
+          "offset": 8,
+          "byte": 4,
+          "tipo_documento": "",
+          "descrizione": "See enums ACC_SESSION_TYPE",
+          "usato_da_acc": true
+        },
+        "currentTime": {
+          "offset": 12,
+          "byte": 30,
+          "tipo_documento": "",
+          "descrizione": "[15] Current lap time in wide character",
+          "usato_da_acc": true
+        },
+        "lastTime": {
+          "offset": 42,
+          "byte": 30,
+          "tipo_documento": "wchar_t[15]",
+          "descrizione": "Last lap time in wide character",
+          "usato_da_acc": true
+        },
+        "bestTime": {
+          "offset": 72,
+          "byte": 30,
+          "tipo_documento": "wchar_t[15]",
+          "descrizione": "Best lap time in wide character",
+          "usato_da_acc": true
+        },
+        "split": {
+          "offset": 102,
+          "byte": 30,
+          "tipo_documento": "wchar_t[15]",
+          "descrizione": "Last split time in wide character",
+          "usato_da_acc": true
+        },
+        "completedLaps": {
+          "offset": 132,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "* No of completed laps",
+          "usato_da_acc": true
+        },
+        "position": {
+          "offset": 136,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Current player position",
+          "usato_da_acc": true
+        },
+        "iCurrentTime": {
+          "offset": 140,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Current lap time in milliseconds",
+          "usato_da_acc": true
+        },
+        "iLastTime": {
+          "offset": 144,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Last lap time in milliseconds",
+          "usato_da_acc": true
+        },
+        "iBestTime": {
+          "offset": 148,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Best lap time in milliseconds",
+          "usato_da_acc": true
+        },
+        "sessionTimeLeft": {
+          "offset": 152,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Session time left",
+          "usato_da_acc": true
+        },
+        "distanceTraveled": {
+          "offset": 156,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Distance travelled in the current stint",
+          "usato_da_acc": true
+        },
+        "isInPit": {
+          "offset": 160,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Car is pitting",
+          "usato_da_acc": true
+        },
+        "currentSectorIndex": {
+          "offset": 164,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Current track sector",
+          "usato_da_acc": true
+        },
+        "lastSectorTime": {
+          "offset": 168,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Last sector time in milliseconds",
+          "usato_da_acc": true
+        },
+        "numberOfLaps": {
+          "offset": 172,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "* Number of completed laps",
+          "usato_da_acc": true
+        },
+        "tyreCompound": {
+          "offset": 176,
+          "byte": 66,
+          "tipo_documento": "wchar_t[33]",
+          "descrizione": "Tyre compound used",
+          "usato_da_acc": true
+        },
+        "replayTimeMultiplier": {
+          "offset": 244,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "normalizedCarPosition": {
+          "offset": 248,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Car position on track spline (0.0 start to 1.0 finish)",
+          "usato_da_acc": true
+        },
+        "activeCars": {
+          "offset": 252,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Number of cars on track",
+          "usato_da_acc": true
+        },
+        "carCoordinates": {
+          "offset": 256,
+          "byte": 720,
+          "tipo_documento": "float[60][3]",
+          "descrizione": "Coordinates of cars on track",
+          "usato_da_acc": true
+        },
+        "carID": {
+          "offset": 976,
+          "byte": 240,
+          "tipo_documento": "int[60]",
+          "descrizione": "Car IDs of cars on track",
+          "usato_da_acc": true
+        },
+        "playerCarID": {
+          "offset": 1216,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Player Car ID",
+          "usato_da_acc": true
+        },
+        "penaltyTime": {
+          "offset": 1220,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Penalty time to wait",
+          "usato_da_acc": true
+        },
+        "flag": {
+          "offset": 1224,
+          "byte": 4,
+          "tipo_documento": "acc_flag_type",
+          "descrizione": "See enums",
+          "usato_da_acc": true
+        },
+        "penalty": {
+          "offset": 1228,
+          "byte": 4,
+          "tipo_documento": "",
+          "descrizione": "time to wait",
+          "usato_da_acc": true
+        },
+        "idealLineOn": {
+          "offset": 1232,
+          "byte": 4,
+          "tipo_documento": "",
+          "descrizione": "Ideal line on",
+          "usato_da_acc": true
+        },
+        "isInPitLane": {
+          "offset": 1236,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Car is in pit lane",
+          "usato_da_acc": true
+        },
+        "surfaceGrip": {
+          "offset": 1240,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Ideal line friction coefficient",
+          "usato_da_acc": false
+        },
+        "mandatoryPitDone": {
+          "offset": 1244,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Mandatory pit is completed",
+          "usato_da_acc": true
+        },
+        "windSpeed": {
+          "offset": 1248,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Wind speed in m/s",
+          "usato_da_acc": true
+        },
+        "windDirection": {
+          "offset": 1252,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "wind direction in radians",
+          "usato_da_acc": true
+        },
+        "isSetupMenuVisible": {
+          "offset": 1256,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Car is working on setup",
+          "usato_da_acc": true
+        },
+        "mainDisplayIndex": {
+          "offset": 1260,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "current car main display index, see Appendix 1",
+          "usato_da_acc": true
+        },
+        "secondaryDisplayIndex": {
+          "offset": 1264,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "current car secondary display index",
+          "usato_da_acc": true
+        },
+        "TC": {
+          "offset": 1268,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Traction control level",
+          "usato_da_acc": true
+        },
+        "TCCut": {
+          "offset": 1272,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Traction control cut level",
+          "usato_da_acc": true
+        },
+        "engineMap": {
+          "offset": 1276,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Current engine map",
+          "usato_da_acc": true
+        },
+        "ABS": {
+          "offset": 1280,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "ABS level",
+          "usato_da_acc": true
+        },
+        "fuelXLap": {
+          "offset": 1284,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Average fuel consumed per lap in liters",
+          "usato_da_acc": true
+        },
+        "rainLights": {
+          "offset": 1288,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Rain lights on",
+          "usato_da_acc": true
+        },
+        "flashingLights": {
+          "offset": 1292,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Flashing lights on",
+          "usato_da_acc": true
+        },
+        "lightsStage": {
+          "offset": 1296,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Current lights stage",
+          "usato_da_acc": true
+        },
+        "exhaustTemperature": {
+          "offset": 1300,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Exhaust temperature",
+          "usato_da_acc": true
+        },
+        "wiperLV": {
+          "offset": 1304,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Current wiper stage",
+          "usato_da_acc": true
+        },
+        "driverStintTotalTimeLeft": {
+          "offset": 1308,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Time the driver is allowed to drive/race (ms)",
+          "usato_da_acc": true
+        },
+        "driverStintTimeLeft": {
+          "offset": 1312,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Time the driver is allowed to drive/stint (ms)",
+          "usato_da_acc": true
+        },
+        "rainTyres": {
+          "offset": 1316,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Are rain tyres equipped",
+          "usato_da_acc": true
+        },
+        "sessionIndex": {
+          "offset": 1320,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "float usedFuel Used fuel since last time refueling",
+          "usato_da_acc": true
+        },
+        "usedFuel": {
+          "offset": 1324,
+          "byte": 4,
+          "tipo_documento": "",
+          "descrizione": "Used fuel since last time refueling",
+          "usato_da_acc": true
+        },
+        "deltaLapTime": {
+          "offset": 1328,
+          "byte": 30,
+          "tipo_documento": "wchar_t[15]",
+          "descrizione": "Delta time in wide character",
+          "usato_da_acc": true
+        },
+        "iDeltaLapTime": {
+          "offset": 1360,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Delta time time in milliseconds",
+          "usato_da_acc": true
+        },
+        "estimatedLapTime": {
+          "offset": 1364,
+          "byte": 30,
+          "tipo_documento": "wchar_t[15]",
+          "descrizione": "Estimated lap time in milliseconds",
+          "usato_da_acc": true
+        },
+        "iEstimatedLapTime": {
+          "offset": 1396,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Estimated lap time in wide character",
+          "usato_da_acc": true
+        },
+        "isDeltaPositive": {
+          "offset": 1400,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Delta positive (1) or negative (0)",
+          "usato_da_acc": true
+        },
+        "iSplit": {
+          "offset": 1404,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Last split time in milliseconds",
+          "usato_da_acc": true
+        },
+        "isValidLap": {
+          "offset": 1408,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Check if Lap is valid for timing",
+          "usato_da_acc": true
+        },
+        "fuelEstimatedLaps": {
+          "offset": 1412,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Laps possible with current fuel level",
+          "usato_da_acc": true
+        },
+        "trackStatus": {
+          "offset": 1416,
+          "byte": 66,
+          "tipo_documento": "wchar_t[33]",
+          "descrizione": "Status of track",
+          "usato_da_acc": true
+        },
+        "missingMandatoryPits": {
+          "offset": 1484,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Mandatory pitstops the player still has to do",
+          "usato_da_acc": true
+        },
+        "Clock": {
+          "offset": 1488,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Time of day in seconds",
+          "usato_da_acc": true
+        },
+        "directionLightsLeft": {
+          "offset": 1492,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Is Blinker left on",
+          "usato_da_acc": true
+        },
+        "directionLightsRight": {
+          "offset": 1496,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Is Blinker right on",
+          "usato_da_acc": true
+        },
+        "GlobalYellow": {
+          "offset": 1500,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Yellow Flag is out?",
+          "usato_da_acc": true
+        },
+        "GlobalYellow1": {
+          "offset": 1504,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Yellow Flag in Sector 1 is out?",
+          "usato_da_acc": true
+        },
+        "GlobalYellow2": {
+          "offset": 1508,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Yellow Flag in Sector 2 is out?",
+          "usato_da_acc": true
+        },
+        "GlobalYellow3": {
+          "offset": 1512,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Yellow Flag in Sector 3 is out?",
+          "usato_da_acc": true
+        },
+        "GlobalWhite": {
+          "offset": 1516,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "White Flag is out?",
+          "usato_da_acc": true
+        },
+        "GlobalGreen": {
+          "offset": 1520,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Green Flag is out?",
+          "usato_da_acc": true
+        },
+        "GlobalChequered": {
+          "offset": 1524,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Checkered Flag is out?",
+          "usato_da_acc": true
+        },
+        "GlobalRed": {
+          "offset": 1528,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Red Flag is out?",
+          "usato_da_acc": true
+        },
+        "mfdTyreSet": {
+          "offset": 1532,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "# of tyre set on the MFD",
+          "usato_da_acc": true
+        },
+        "mfdFuelToAdd": {
+          "offset": 1536,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "How much fuel to add on the MFD",
+          "usato_da_acc": true
+        },
+        "mfdTyrePressureLF": {
+          "offset": 1540,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Tyre pressure left front on the MFD",
+          "usato_da_acc": true
+        },
+        "mfdTyrePressureRF": {
+          "offset": 1544,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Tyre pressure right front on the MFD",
+          "usato_da_acc": true
+        },
+        "mfdTyrePressureLR": {
+          "offset": 1548,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Tyre pressure left rear on the MFD",
+          "usato_da_acc": true
+        },
+        "mfdTyrePressureRR": {
+          "offset": 1552,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Tyre pressure right rear on the MFD",
+          "usato_da_acc": true
+        },
+        "trackGripStatus": {
+          "offset": 1556,
+          "byte": 4,
+          "tipo_documento": "acc_track_grip_status",
+          "descrizione": "See enums",
+          "usato_da_acc": true
+        },
+        "rainIntensity": {
+          "offset": 1560,
+          "byte": 4,
+          "tipo_documento": "",
+          "descrizione": "See enums ACC_RAIN_INTENSITY",
+          "usato_da_acc": true
+        },
+        "rainIntensityIn10min": {
+          "offset": 1564,
+          "byte": 4,
+          "tipo_documento": "",
+          "descrizione": "See enums ACC_RAIN_INTENSITY",
+          "usato_da_acc": true
+        },
+        "rainIntensityIn30min": {
+          "offset": 1568,
+          "byte": 4,
+          "tipo_documento": "",
+          "descrizione": "See enums ACC_RAIN_INTENSITY",
+          "usato_da_acc": true
+        },
+        "currentTyreSet": {
+          "offset": 1572,
+          "byte": 4,
+          "tipo_documento": "",
+          "descrizione": "Tyre Set currently in use",
+          "usato_da_acc": true
+        },
+        "strategyTyreSet": {
+          "offset": 1576,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Next Tyre set per strategy",
+          "usato_da_acc": true
+        },
+        "gapAhead": {
+          "offset": 1580,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Distance in ms to car in front",
+          "usato_da_acc": true
+        },
+        "gapBehind": {
+          "offset": 1584,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Distance in ms to car behind",
+          "usato_da_acc": true
+        }
+      }
+    },
+    "static": {
+      "mappa": "Local\\acpmf_static",
+      "byte": 820,
+      "campi": {
+        "smVersion": {
+          "offset": 0,
+          "byte": 30,
+          "tipo_documento": "wchar_t[15]",
+          "descrizione": "Shared memory version",
+          "usato_da_acc": true
+        },
+        "acVersion": {
+          "offset": 30,
+          "byte": 30,
+          "tipo_documento": "wchar_t[15]",
+          "descrizione": "Assetto Corsa version",
+          "usato_da_acc": true
+        },
+        "numberOfSessions": {
+          "offset": 60,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Number of sessions",
+          "usato_da_acc": true
+        },
+        "numCars": {
+          "offset": 64,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Number of cars",
+          "usato_da_acc": true
+        },
+        "carModel": {
+          "offset": 68,
+          "byte": 66,
+          "tipo_documento": "wchar_t[33]",
+          "descrizione": "Player car model see Appendix 2",
+          "usato_da_acc": true
+        },
+        "track": {
+          "offset": 134,
+          "byte": 66,
+          "tipo_documento": "wchar_t[33]",
+          "descrizione": "Track name",
+          "usato_da_acc": true
+        },
+        "playerName": {
+          "offset": 200,
+          "byte": 66,
+          "tipo_documento": "wchar_t[33]",
+          "descrizione": "Player name",
+          "usato_da_acc": true
+        },
+        "playerSurname": {
+          "offset": 266,
+          "byte": 66,
+          "tipo_documento": "wchar_t[33]",
+          "descrizione": "Player surname",
+          "usato_da_acc": true
+        },
+        "playerNick": {
+          "offset": 332,
+          "byte": 66,
+          "tipo_documento": "wchar_t[33]",
+          "descrizione": "Player nickname",
+          "usato_da_acc": true
+        },
+        "sectorCount": {
+          "offset": 400,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Number of sectors",
+          "usato_da_acc": true
+        },
+        "maxTorque": {
+          "offset": 404,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Not shown in ACC",
+          "usato_da_acc": false
+        },
+        "maxPower": {
+          "offset": 408,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Not shown in ACC",
+          "usato_da_acc": false
+        },
+        "maxRpm": {
+          "offset": 412,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Maximum rpm",
+          "usato_da_acc": true
+        },
+        "maxFuel": {
+          "offset": 416,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Maximum fuel tank capacity",
+          "usato_da_acc": true
+        },
+        "suspensionMaxTravel": {
+          "offset": 420,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Not shown in ACC",
+          "usato_da_acc": false
+        },
+        "tyreRadius": {
+          "offset": 436,
+          "byte": 16,
+          "tipo_documento": "float[4]",
+          "descrizione": "Not shown in ACC",
+          "usato_da_acc": false
+        },
+        "maxTurboBoost": {
+          "offset": 452,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Maximum turbo boost",
+          "usato_da_acc": false
+        },
+        "deprecated_1": {
+          "offset": 456,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "float deprecated_2",
+          "usato_da_acc": false
+        },
+        "deprecated_2": {
+          "offset": 460,
+          "byte": 4,
+          "tipo_documento": "",
+          "descrizione": "",
+          "usato_da_acc": false
+        },
+        "penaltiesEnabled": {
+          "offset": 464,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Penalties enabled",
+          "usato_da_acc": true
+        },
+        "aidFuelRate": {
+          "offset": 468,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Fuel consumption rate",
+          "usato_da_acc": true
+        },
+        "aidTireRate": {
+          "offset": 472,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Tyre wear rate",
+          "usato_da_acc": true
+        },
+        "aidMechanicalDamage": {
+          "offset": 476,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Mechanical damage rate",
+          "usato_da_acc": true
+        },
+        "allowTyreBlankets": {
+          "offset": 480,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Not allowed in Blancpain endurance series",
+          "usato_da_acc": true
+        },
+        "aidStability": {
+          "offset": 484,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Stability control used",
+          "usato_da_acc": true
+        },
+        "aidAutoClutch": {
+          "offset": 488,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Auto clutch used",
+          "usato_da_acc": true
+        },
+        "aidAutoBlip": {
+          "offset": 492,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Always true in ACC",
+          "usato_da_acc": true
+        },
+        "hasDRS": {
+          "offset": 496,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "hasERS": {
+          "offset": 500,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "hasKERS": {
+          "offset": 504,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "kersMaxJ": {
+          "offset": 508,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "engineBrakeSettingsCount": {
+          "offset": 512,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "ersPowerControllerCount": {
+          "offset": 516,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "trackSplineLength": {
+          "offset": 520,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "trackConfiguration": {
+          "offset": 524,
+          "byte": 66,
+          "tipo_documento": "wchar_t",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "ersMaxJ": {
+          "offset": 592,
+          "byte": 4,
+          "tipo_documento": "float",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "isTimedRace": {
+          "offset": 596,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "hasExtraLap": {
+          "offset": 600,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "carSkin": {
+          "offset": 604,
+          "byte": 66,
+          "tipo_documento": "wchar_t[33]",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "reversedGridPositions": {
+          "offset": 672,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Not used in ACC",
+          "usato_da_acc": false
+        },
+        "pitWindowStart": {
+          "offset": 676,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Pit window opening time",
+          "usato_da_acc": true
+        },
+        "pitWindowEnd": {
+          "offset": 680,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "Pit windows closing time",
+          "usato_da_acc": true
+        },
+        "isOnline": {
+          "offset": 684,
+          "byte": 4,
+          "tipo_documento": "int",
+          "descrizione": "If is a multiplayer session",
+          "usato_da_acc": true
+        },
+        "dryTyresName": {
+          "offset": 688,
+          "byte": 66,
+          "tipo_documento": "wchar_t[33]",
+          "descrizione": "Name of the dry tyres",
+          "usato_da_acc": true
+        },
+        "wetTyresName": {
+          "offset": 754,
+          "byte": 66,
+          "tipo_documento": "wchar_t[33]",
+          "descrizione": "Name of the wet tyres",
+          "usato_da_acc": true
+        }
+      }
+    }
+  }
+}
