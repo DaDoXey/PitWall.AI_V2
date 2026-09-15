@@ -201,7 +201,7 @@
   },
   {
     "id": "bentley_continental_gt3_2015",
-    "acc_car_id": "bentley_continental_gt3_2015",
+    "acc_car_id": "bentley_continental_gt3_2016",
     "brand": "Bentley",
     "model": "Continental GT3",
     "year": 2015,
@@ -763,7 +763,7 @@
   },
   {
     "id": "lexus_rc_f_gt3",
-    "acc_car_id": "lexus_rcf_gt3",
+    "acc_car_id": "lexus_rc_f_gt3",
     "brand": "Lexus",
     "model": "RC F GT3",
     "year": 2016,
@@ -1004,7 +1004,7 @@
   },
   {
     "id": "nissan_gtr_nismo_gt3_2015",
-    "acc_car_id": "nissan_gt_r_gt3_2015",
+    "acc_car_id": "nissan_gt_r_gt3_2017",
     "brand": "Nissan",
     "model": "GT-R Nismo GT3",
     "year": 2015,
@@ -1204,7 +1204,7 @@
   },
   {
     "id": "reiter_engineering_r_ex_gt3",
-    "acc_car_id": "reiter_engineering_r_ex_gt3",
+    "acc_car_id": "lamborghini_gallardo_rex",
     "brand": "Reiter Engineering",
     "model": "R-EX GT3",
     "year": 2017,

@@ -38,6 +38,7 @@ from pathlib import Path
 from typing import Any
 
 from app.bundle.adapters.lettura import FileAccIllegibile, carica_json
+from app.core import riferimenti_acc
 from app.bundle.schema import (
     Condizioni,
     Fonte,
@@ -81,9 +82,9 @@ NOTA_VALIDITA = (
     "di bit non documentato) → tutti i giri risultano validi finché non si legge "
     "quel campo con certezza"
 )
-NOTA_VETTURA = (
-    "vettura: il file la indica con un id numerico (`carModel`) → lo slug del "
-    "catalogo arriverà con la tabella di corrispondenza"
+NOTA_VETTURA_IGNOTA = (
+    "vettura: il file la indica con un id numerico (`carModel`) che non compare "
+    "nella lista ufficiale di ACC → resta il numero, senza nome"
 )
 
 
@@ -332,8 +333,15 @@ def leggi_results_acc(
         assunzioni.append(NOTA_CARBURANTE)
     if del_gioco:
         assunzioni.append(NOTA_VALIDITA)
-    if mia.car_model is not None:
-        assunzioni.append(NOTA_VETTURA)
+    # Il numero diventa una vettura: `carModel` e' l'identificativo ufficiale di ACC
+    # (appendice 6 del documento shared memory + handbook del server dedicato).
+    vettura = None
+    if isinstance(mia.car_model, int):
+        riferimento = riferimenti_acc.vettura_da_car_model_id(mia.car_model)
+        if riferimento:
+            vettura = riferimento.get("acc_car_id")
+        if vettura is None:
+            assunzioni.append(NOTA_VETTURA_IGNOTA)
 
     pista = track or dati.get("trackName")
     if isinstance(pista, str):
@@ -351,6 +359,7 @@ def leggi_results_acc(
     meta = Meta(
         fonte=Fonte.ACC_RESULTS,
         file_origine=nome_file,
+        car=vettura,
         car_model_id=mia.car_model if isinstance(mia.car_model, int) else None,
         track=pista,
         pilota=mia.pilota,

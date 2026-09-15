@@ -250,8 +250,36 @@ test("A66 il tipo gara (10) viene riconosciuto", g.meta.tipo_sessione is TipoSes
 test("A67 senza circuito indicato lo dichiara mancante invece di inventarlo",
      g.meta.track is None and any("circuito" in a for a in g.assunzioni))
 
+# Il numero della vettura diventa una vettura (tabelle ufficiali di ACC, L3)
+test("A67b il `carModel` numerico diventa lo slug della vettura",
+     b.meta.car == "lamborghini_gallardo_rex" and b.meta.car_model_id == 13,
+     f"{b.meta.car} / {b.meta.car_model_id}")
+test("A67c …e sparisce l'assunzione «vettura sconosciuta»",
+     not any("vettura" in a for a in b.assunzioni), f"{b.assunzioni}")
+
+import json as _json  # noqa: E402
+import tempfile as _tempfile  # noqa: E402
+
+from app.bundle.adapters.lettura import carica_json  # noqa: E402
+
+_grezzo, _ = carica_json(FIX / "acc_results_gioco_prove.json")
+for _riga in _grezzo["snapShot"]["leaderBoardLines"]:
+    _riga["car"]["carModel"] = 999            # un numero che ACC non usa
+_finto = pathlib.Path(_tempfile.mkdtemp()) / "risultati_vettura_ignota.json"
+_finto.write_bytes(_json.dumps(_grezzo).encode("utf-16-le"))   # come li scrive ACC
+_ignota = leggi_results_acc(_finto, track="monza")
+test("A67d un carModel fuori lista non diventa una vettura a caso",
+     _ignota.meta.car is None and _ignota.meta.car_model_id == 999,
+     f"{_ignota.meta.car}")
+test("A67e …e viene dichiarato nelle assunzioni",
+     any("non compare nella lista ufficiale" in a for a in _ignota.assunzioni),
+     f"{_ignota.assunzioni}")
+
 # File del server dedicato: schema diverso, stesso bundle
 srv = leggi_results_acc(FIX / "acc_results_server.json")
+test("A67f anche dal server il numero diventa vettura",
+     srv.meta.car == "mercedes_amg_gt3" and srv.meta.car_model_id == 1,
+     f"{srv.meta.car} / {srv.meta.car_model_id}")
 test("A68 legge anche il formato del server dedicato", len(srv.giri) == 2)
 test("A69 dal server il circuito c'è davvero", srv.meta.track == "brands_hatch")
 test("A70 il tipo sessione testuale ('R') diventa gara",
