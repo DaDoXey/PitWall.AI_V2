@@ -16,8 +16,9 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from app import config
-from app.api import analysis, catalog, session, sessions, setup, vision
+from app.api import analysis, catalog, session, sessions, setup, telemetria, vision
 from app.logging_config import request_id, setup_logging
+from app.telemetria import registratore as telemetria_reg
 
 setup_logging()
 log = logging.getLogger("pitwall.http")
@@ -33,7 +34,7 @@ app.add_middleware(
 )
 
 for _router in (session.router, sessions.router, analysis.router, setup.router,
-                vision.router, catalog.router):
+                vision.router, catalog.router, telemetria.router):
     app.include_router(_router, prefix="/api")
 
 # Un request-id arrivato dal client si riusa solo se e' innocuo: finisce dentro ogni
@@ -63,6 +64,25 @@ async def request_context(request: Request, call_next):
         request_id.reset(token)
 
 
+@app.on_event("startup")
+def avvia_registratore():
+    """Il registratore della telemetria parte col backend (decisione 5 del 15/09).
+
+    Attrito zero: il pilota accende il gioco e basta. Il thread, finche' ACC non
+    c'e', ritenta ogni due secondi e non fa nient'altro. Sul deploy vetrina
+    `PITWALL_ALLOW_RECORDER=0` lo tiene spento.
+    """
+    if telemetria_reg.abilitato():
+        telemetria.registratore().avvia()
+
+
+@app.on_event("shutdown")
+def ferma_registratore():
+    """Spegnendo il backend si chiude la sessione aperta, invece di perderla."""
+    if telemetria_reg.abilitato():
+        telemetria.registratore().ferma()
+
+
 @app.get("/")
 def health():
     return {
@@ -71,4 +91,5 @@ def health():
         "version": "0.1.0",
         "demo_mode": config.demo_mode(),
         "live_allowed": config.allow_live(),
+        "recorder_allowed": telemetria_reg.abilitato(),
     }
