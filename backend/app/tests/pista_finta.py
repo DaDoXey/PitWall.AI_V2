@@ -62,8 +62,23 @@ class PistaFinta:
         return v
 
 
-def genera(pista: PistaFinta, giri: list[GiroFinto]) -> dict[str, np.ndarray]:
-    """Genera i canali di una sessione, nello stesso formato che scrive il registratore."""
+def genera(
+    pista: PistaFinta,
+    giri: list[GiroFinto],
+    completo: bool = False,
+    carburante_iniziale_l: float = 60.0,
+    consumo_per_giro_l: float = 2.5,
+    squilibrio_pressione_psi: float = 0.0,
+    crescita_pressione_psi_giro: float = 0.0,
+) -> dict[str, np.ndarray]:
+    """Genera i canali di una sessione, nello stesso formato che scrive il registratore.
+
+    Con `completo=True` aggiunge i canali che servono al bundle e all'analisi di
+    gomme e freni: carburante che cala, pressioni e temperature per ruota, freni,
+    tempo ufficiale del giro precedente, settori, condizioni. Anche questi
+    volutamente prevedibili: il consumo è esattamente `consumo_per_giro_l`, e lo
+    squilibrio fra i lati è esattamente quello che si chiede.
+    """
     dt = 1.0 / pista.frequenza_hz
     posizione: list[float] = []
     velocita: list[float] = []
@@ -99,7 +114,7 @@ def genera(pista: PistaFinta, giri: list[GiroFinto]) -> dict[str, np.ndarray]:
             s += v / 3.6 * dt
             t += dt
 
-    return {
+    canali = {
         "graphics.normalizedCarPosition": np.asarray(posizione, dtype=np.float32),
         "physics.speedKmh": np.asarray(velocita, dtype=np.float32),
         "physics.brake": np.asarray(freno, dtype=np.float32),
@@ -111,6 +126,68 @@ def genera(pista: PistaFinta, giri: list[GiroFinto]) -> dict[str, np.ndarray]:
         "graphics.isInPitLane": np.asarray(box, dtype=np.int32),
         "graphics.completedLaps": np.asarray(completati, dtype=np.int32),
     }
+    if not completo:
+        return canali
+
+    # ── i canali che servono al bundle e all'analisi di gomme e freni ──
+    numero_giro = np.asarray(completati, dtype=np.int32)
+    quota = np.asarray(posizione, dtype=np.float64)          # 0-1 dentro il giro
+    percorso = numero_giro + quota                            # giri percorsi, con la frazione
+
+    canali["physics.fuel"] = np.asarray(
+        carburante_iniziale_l - percorso * consumo_per_giro_l, dtype=np.float32)
+    canali["physics.airTemp"] = np.full(len(posizione), 24.0, dtype=np.float32)
+    canali["physics.roadTemp"] = np.full(len(posizione), 31.0, dtype=np.float32)
+
+    # pressioni: base uguale per tutti, più lo squilibrio chiesto sul lato sinistro
+    # e la crescita per giro. Ogni ruota resta riconoscibile dal suo scostamento.
+    base = 27.4
+    # Gli scostamenti sono UGUALI fra sinistra e destra e diversi fra i due assi:
+    # cosi' `squilibrio_pressione_psi` e' esattamente lo squilibrio sinistra-destra
+    # che il test misurera', senza contributi nascosti del banco.
+    scostamenti = {"FL": 0.10, "FR": 0.10, "RL": -0.05, "RR": -0.05}
+    for ruota, scostamento in scostamenti.items():
+        lato_sinistro = ruota in ("FL", "RL")
+        valori = (base + scostamento
+                  + (squilibrio_pressione_psi if lato_sinistro else 0.0)
+                  + percorso * crescita_pressione_psi_giro)
+        canali[f"physics.wheelPressure.{ruota}"] = np.asarray(valori, dtype=np.float32)
+        canali[f"physics.tyreCoreTemp.{ruota}"] = np.full(
+            len(posizione), 82.0 + scostamento * 10, dtype=np.float32)
+        canali[f"physics.brakeTemp.{ruota}"] = np.asarray(
+            [380.0 if ruota.startswith("F") else 330.0] * len(posizione), dtype=np.float32)
+        canali[f"physics.padLife.{ruota}"] = np.asarray(
+            29.0 - percorso * 0.05, dtype=np.float32)
+        canali[f"physics.discLife.{ruota}"] = np.asarray(
+            32.0 - percorso * 0.02, dtype=np.float32)
+
+    # tempo ufficiale del giro precedente, come lo espone ACC: cambia al traguardo
+    dt = 1.0 / pista.frequenza_hz
+    campioni_per_giro = [int(np.sum(numero_giro == n)) for n in range(len(giri))]
+    ultimo = np.zeros(len(posizione), dtype=np.int32)
+    inizio = 0
+    for indice, quanti in enumerate(campioni_per_giro):
+        if indice > 0:
+            ultimo[inizio:inizio + quanti] = int(round(campioni_per_giro[indice - 1] * dt * 1000))
+        inizio += quanti
+    canali["graphics.iLastTime"] = ultimo
+
+    # settori: tre parti uguali del giro, con lo split del settore appena chiuso
+    settore = np.minimum((quota * 3).astype(np.int32), 2)
+    canali["graphics.currentSectorIndex"] = settore.astype(np.int32)
+    tempo = np.asarray(tempo_ms, dtype=np.int64)
+    split = np.zeros(len(posizione), dtype=np.int32)
+    for indice in range(1, len(posizione)):
+        if settore[indice] != settore[indice - 1]:
+            inizio_giro = int(np.flatnonzero(numero_giro == numero_giro[indice])[0])
+            split[indice:] = int(tempo[indice] - tempo[inizio_giro])
+    canali["graphics.iSplit"] = split
+
+    canali["graphics.currentTyreSet"] = np.ones(len(posizione), dtype=np.int32)
+    canali["graphics.rainIntensity"] = np.zeros(len(posizione), dtype=np.int32)
+    canali["graphics.trackGripStatus"] = np.full(len(posizione), 2, dtype=np.int32)
+    canali["graphics.GlobalYellow"] = np.zeros(len(posizione), dtype=np.int32)
+    return canali
 
 
 def pista_tre_curve() -> PistaFinta:

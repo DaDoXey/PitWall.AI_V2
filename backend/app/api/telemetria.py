@@ -8,6 +8,7 @@ Rotte:
 - `GET  /api/telemetria/sessioni/{id}`      — i metadati di una registrazione
 - `GET  /api/telemetria/sessioni/{id}/canali` — le serie, per nome, con decimazione
 - `GET  /api/telemetria/sessioni/{id}/curve`  — l'analisi per curva (L3 · Fase 3)
+- `POST /api/telemetria/sessioni/{id}/importa` — la registrazione diventa un session bundle
 - `DELETE /api/telemetria/sessioni/{id}`    — cancella una registrazione
 
 **Presidio.** Come per l'import di L1, queste rotte non toccano né la chiave né la
@@ -31,6 +32,11 @@ import numpy as np
 from fastapi import APIRouter, HTTPException, Query
 
 from app.analisi.curve import CurveNonCalcolabili, analizza_curve
+from app.bundle import store
+from app.bundle.adapters.acc_telemetria import (
+    TelemetriaNonConvertibile,
+    bundle_da_registrazione,
+)
 from app.telemetria import registratore as reg
 
 router = APIRouter()
@@ -204,6 +210,31 @@ def curve(
     if not dettaglio:
         fuori.pop("dettaglio")
     return fuori
+
+
+@router.post("/telemetria/sessioni/{id_sessione}/importa")
+def importa(id_sessione: str):
+    """Trasforma una registrazione in un session bundle e la mette nell'archivio.
+
+    Da qui in poi la sessione registrata vive dove vivono le altre: stesso elenco,
+    stesso formato, stessa analisi. È il punto in cui L1 e L3 smettono di essere due
+    mondi (L3 · Fase 4).
+    """
+    _presidio()
+    cartella = _cartella(id_sessione)
+    try:
+        bundle, _canali = bundle_da_registrazione(cartella)
+    except TelemetriaNonConvertibile as errore:
+        raise HTTPException(status_code=422, detail=str(errore)) from errore
+    id_bundle = store.salva(bundle)
+    log.info("registrazione %s importata come bundle %s", id_sessione, id_bundle)
+    return {
+        "id_registrazione": id_sessione,
+        "id_sessione": id_bundle,
+        "giri": len(bundle.giri),
+        "giri_con_tempo": len([g for g in bundle.giri if g.tempo_ms]),
+        "assunzioni": bundle.assunzioni,
+    }
 
 
 @router.delete("/telemetria/sessioni/{id_sessione}")

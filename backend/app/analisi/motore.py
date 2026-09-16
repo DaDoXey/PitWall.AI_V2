@@ -117,6 +117,12 @@ class ReportAnalisi(_Base):
     carburante: Carburante
     verdetto: list[Perdita] = Field(default_factory=list)
     dati_mancanti: list[str] = Field(default_factory=list)
+    # Ciò che si può dire solo con i canali della shared memory (L3 · Fase 4).
+    # Restano dizionari e non modelli: le loro forme vivono in `analisi/curve.py` e
+    # `analisi/gomme.py`, e ricopiarle qui vorrebbe dire tenerle allineate a mano.
+    curve: dict | None = None
+    gomme_e_freni: dict | None = None
+    ha_canali: bool = False
 
 
 def _decimi(ms: float) -> float:
@@ -328,8 +334,66 @@ def _sec(ms: int | None) -> str:
     return "—" if ms is None else f"{ms / 1000:.3f}"
 
 
-def analizza(bundle: SessionBundle) -> ReportAnalisi:
-    """Il report deterministico di una sessione. Nessuna rete, nessun modello."""
+def _dai_canali(canali: dict) -> tuple[dict | None, dict | None, list[Perdita], list[str]]:
+    """Ciò che solo la telemetria può dire: curve, gomme, freni.
+
+    Import tardivi e di proposito: chi analizza un file di risultati non deve
+    caricare numpy per niente, e il motore di L2 resta utilizzabile anche senza
+    canali — che è esattamente la situazione di chi importa un file dal gioco.
+    """
+    from app.analisi.curve import CurveNonCalcolabili, analizza_curve
+    from app.analisi.gomme import analizza_gomme_e_freni, indice_giri
+    from app.analisi.curve import dividi_in_giri
+
+    note: list[str] = []
+    voci: list[Perdita] = []
+
+    curve = None
+    try:
+        report_curve = analizza_curve(canali)
+    except CurveNonCalcolabili as errore:
+        note.append(f"analisi per curva non possibile: {errore}")
+    except (KeyError, ValueError) as errore:      # canali storti: si dice, non si crolla
+        note.append(f"analisi per curva fallita: {errore}")
+    else:
+        curve = report_curve.come_json()
+        note.extend(report_curve.dati_mancanti)
+        for voce in report_curve.verdetto:
+            # La gravità di una curva è il tempo che costa: stessa scala delle altre
+            # voci del verdetto, così l'ordinamento confronta cose confrontabili.
+            perdita = next((r.perdita_media_ms for r in report_curve.riepilogo
+                            if f"curva {r.curva}" in voce.titolo), 0.0)
+            voci.append(Perdita(
+                titolo=voce.titolo,
+                decimi=_decimi(perdita) if perdita else None,
+                prova=voce.prova,
+                azione=voce.azione,
+                gravita=float(perdita) if perdita else 80.0,
+            ))
+
+    gomme = None
+    try:
+        report_gomme = analizza_gomme_e_freni(
+            canali, indice_giri(canali, dividi_in_giri(canali))
+        )
+    except (KeyError, ValueError) as errore:
+        note.append(f"analisi di gomme e freni fallita: {errore}")
+    else:
+        gomme = report_gomme.come_json()
+        note.extend(report_gomme.dati_mancanti)
+        voci.extend(Perdita(titolo=v.titolo, prova=v.prova, azione=v.azione,
+                            gravita=v.gravita) for v in report_gomme.voci)
+    return curve, gomme, voci, note
+
+
+def analizza(bundle: SessionBundle, canali: dict | None = None) -> ReportAnalisi:
+    """Il report deterministico di una sessione. Nessuna rete, nessun modello.
+
+    Con i `canali` di una registrazione (L3) il report cresce invece di cambiare: si
+    aggiungono l'analisi per curva, gomme e freni, e le loro voci entrano **nello
+    stesso verdetto**, ordinate per gravità insieme alle altre. Un solo elenco di
+    priorità: è la differenza fra un cruscotto e un ingegnere.
+    """
     tutti = [g for g in bundle.giri if g.tempo_ms]
     validi = _validi(bundle)
     ritmici = _da_ritmo(validi)
@@ -355,13 +419,33 @@ def analizza(bundle: SessionBundle) -> ReportAnalisi:
             f"nei giri totali")
     if not carburante.calcolabile and carburante.motivo:
         mancanti.append(f"carburante: {carburante.motivo}")
-    mancanti.append("gomme, pressioni, freni e traiettorie: non sono nei risultati di "
-                    "ACC → arrivano con il registratore della shared memory")
+    if not canali:
+        mancanti.append("gomme, pressioni, freni e traiettorie: non sono nei risultati "
+                        "di ACC → arrivano con il registratore della shared memory")
     if bundle.setup is None:
         mancanti.append("setup: nessun setup collegato a questa sessione → le correzioni "
                         "restano generiche")
 
+    curve = gomme_e_freni = None
+    voci_canali: list[Perdita] = []
+    if canali:
+        curve, gomme_e_freni, voci_canali, note = _dai_canali(canali)
+        mancanti.extend(note)
+    else:
+        mancanti.append(
+            "canali della shared memory non collegati a questa sessione → niente "
+            "analisi per curva, gomme, freni"
+        )
+
+    verdetto = _verdetto(ritmo, settori, costanza, degrado,
+                         len(tutti) or len(bundle.giri), buttati)
+    verdetto.extend(voci_canali)
+    verdetto.sort(key=lambda v: v.gravita, reverse=True)
+
     return ReportAnalisi(
+        curve=curve,
+        gomme_e_freni=gomme_e_freni,
+        ha_canali=bool(canali),
         giri_di_ritmo=len(ritmici),
         giri_esclusi_dal_ritmo=len(validi) - len(ritmici),
         car=bundle.meta.car,
@@ -375,7 +459,6 @@ def analizza(bundle: SessionBundle) -> ReportAnalisi:
         costanza=costanza,
         degrado=degrado,
         carburante=carburante,
-        verdetto=_verdetto(ritmo, settori, costanza, degrado, len(tutti) or len(bundle.giri),
-                           buttati),
+        verdetto=verdetto,
         dati_mancanti=mancanti,
     )

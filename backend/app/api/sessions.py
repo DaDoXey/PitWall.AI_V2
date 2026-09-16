@@ -5,7 +5,7 @@ Rotte:
 - `POST /api/sessions/import/results` — un file di risultati diventa una sessione
 - `GET  /api/sessions`                — elenco, dalla più recente
 - `GET  /api/sessions/{id}`           — il bundle intero
-- `GET  /api/sessions/{id}/analisi`   — il report del motore di analisi (L2)
+- `GET  /api/sessions/{id}/analisi`   — il report del motore (L2, + curve e gomme se ci sono i canali)
 - `DELETE /api/sessions/{id}`         — rimuove una sessione
 
 **Presidio.** Queste rotte scrivono su disco e non toccano né la chiave né la rete,
@@ -30,6 +30,7 @@ from app.analisi import analizza
 from app.bundle import store
 from app.bundle.adapters import (
     ResultsAccError,
+    canali_del_bundle,
     SetupAccError,
     elenca_partecipanti,
     leggi_results_acc,
@@ -167,9 +168,13 @@ async def analisi_sessione(id_sessione: str):
         raise HTTPException(status_code=404, detail="Sessione non trovata")
     except store.ArchivioError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    report = analizza(bundle)
-    log.info("analisi di %s: %d giri, %d voci nel verdetto",
-             id_sessione, report.giri_totali, len(report.verdetto))
+    # Se la sessione viene da una registrazione, i suoi canali sono ancora sul disco:
+    # il report cresce (curve, gomme, freni) invece di restare quello dei soli tempi.
+    canali = canali_del_bundle(bundle)
+    report = analizza(bundle, canali)
+    log.info("analisi di %s: %d giri, %d voci nel verdetto%s",
+             id_sessione, report.giri_totali, len(report.verdetto),
+             " (con canali)" if canali else "")
     return report
 
 
