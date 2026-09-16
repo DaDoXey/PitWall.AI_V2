@@ -99,7 +99,7 @@ invece che da mantenere a mano.
 | **L0** | Pulizia totale (CSV, residui Streamlit, codice morto) + questa specifica | **fatto — 14/09** (`167b9a2` `22cb500` `952fa05`) |
 | **L1** | Adattatori Results JSON + Setup JSON → session bundle | **fatto — 14/09** (`f93ea57` `94ef0d6` `7894fc2` `c1a488b`) |
 | **L2** | Motore di analisi v1: ritmo, settori, costanza, degrado, carburante | **fatto — 14/09**, 57/57 |
-| **L3** | Registratore shared memory → canali → analisi per curva | **in corso** — F1 lettore, F2 registratore, F3 analisi per curva (15/09); resta F4 |
+| **L3** | Registratore shared memory → canali → analisi per curva | **fatto — 15/09** (F1 lettore · F2 registratore · F3 curve · F4 bundle e report unico) |
 | **L4** | Gigi e schermate sul bundle; demo come bundle | da fare |
 | **L5** | Import MoTeC (opzionale) | da fare |
 
@@ -372,7 +372,32 @@ esattamente i valori impostati.
 - **F1 struttura + lettore** — fatta (`test_telemetria` 97/97)
 - **F2 dizionario + registratore + archivio + rotte** — fatta (`test_registratore` 69/69)
 - **F3 distanza, curve, analisi per curva, rotta `/curve`** — fatta (`test_curve` 62/62)
-- **F4 il tutto dentro il bundle e nel motore di analisi** — da fare
+- **F4 bundle e report unico** — fatta (`test_telemetria_bundle` 50/50)
+
+### F4 — una registrazione diventa una sessione come le altre
+`bundle/adapters/acc_telemetria.py` trasforma i canali in un **session bundle**: stessi giri, stesso
+formato, stesso archivio di un file importato da ACC. Da qui in poi non esistono più «le sessioni
+importate» e «le registrazioni»: esistono le sessioni.
+- il **tempo sul giro lo dice ACC** (`iLastTime`, lo stesso dei risultati), non il nostro cronometro;
+  `pitwall.tempo_ms` fa da controprova e uno scarto oltre mezzo secondo viene **dichiarato**;
+- il **consumo vero per giro** finalmente c'è: dai risultati di ACC non si poteva ricavare (il campo
+  `fuel` è costante per giro), qui è la differenza del serbatoio fra inizio e fine giro;
+- i canali **non entrano** nel bundle: entra il loro indirizzo (decine di MB restano dove sono);
+- i giri incompleti (registrazione avviata a metà pista) restano contati ma senza tempo.
+
+`analisi/gomme.py` aggiunge gomme e freni, con un limite scelto apposta: **la finestra di pressione
+«ottimale» di una GT3 non è pubblicata da ACC**, quindi non si giudica contro una costante non
+verificata. Si misurano e si giudicano solo gli **squilibri** (ant/post, sx/dx) e le **tendenze**
+(pressione che sale sullo stint): una differenza e una pendenza si dimostrano da sole. I valori
+assoluti si riportano sempre. Quando la tabella delle finestre sarà verificata in gioco
+(decisione 7), i giudizi assoluti si aggiungono lì, marcati come verificati.
+
+`analisi/motore.py` accetta ora i canali: **il report cresce invece di cambiare**. Curve, gomme e
+freni entrano nello **stesso verdetto**, ordinato per gravità insieme alle voci di ritmo e costanza —
+un solo elenco di priorità, che è la differenza fra un cruscotto e un ingegnere. Senza canali il
+motore si comporta esattamente come prima e dichiara che non erano collegati.
+Rotte: `POST /api/telemetria/sessioni/{id}/importa` e `GET /api/sessions/{id}/analisi`, che include
+curve e gomme quando i canali esistono ancora sul disco.
 
 ### Identificativi delle vetture: allineati (15/09)
 Quattro vetture del catalogo avevano un `acc_car_id` che **non** è l'identificativo Kunos (ACC scrive

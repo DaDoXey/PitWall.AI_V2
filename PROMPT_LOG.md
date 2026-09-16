@@ -1648,7 +1648,7 @@ attaccata). `dati_mancanti` raccoglie le assunzioni dell'import e ciò che i ris
 | Data | 15/09/2026 |
 | Agente dev | Claude Code (claude-opus-5) |
 | Area | NEW `app/telemetria/` (`strutture.py`, `lettore.py`, `dizionario.py`, `registratore.py`) · NEW `app/api/telemetria.py` · NEW `app/core/riferimenti_acc.py` · NEW `data/acc_riferimenti_vetture.json`, `data/acc_campi_shared_memory.json` · NEW `scripts/estrai_appendici_acc.py`, `scripts/estrai_campi_acc.py` · NEW test `test_telemetria` `test_riferimenti` `test_registratore` + `tests/banco_finto.py` · MOD `app/main.py` `README.md` `README.it.md` `docs/04-rework-dati.md` |
-| Commit | non ancora committato |
+| Commit | `e965dda` (F1 lettore) · `9bf6742` (riferimenti ufficiali) · `bd62a04` (F2 registratore e rotte) · `cb4ab5c` (docs) — pushati il 15/09 |
 | Contesto | L3 del rework dati (dopo #033). Sei domande di scope chiuse prima di scrivere codice. |
 
 **Catalogo messaggi:** «leggi la memoria e riprendiamo il lavoro dell'ultima volta» · risposte alle
@@ -1700,7 +1700,7 @@ decisione di Edoardo.
 - Nessuna chiamata LLM: spesa invariata ($0,3292 su $1).
 
 **File protetti:** ☑ nessuno toccato.
-**Decisione:** ☐ Mantenuto ☐ Modificato ulteriormente ☐ Rollback — in attesa di «ok push».
+**Decisione:** ☑ Mantenuto — pushato il 15/09 («ok push e procedi con la F4»).
 
 ## Entry #035 — Vetture allineate agli identificativi ufficiali, archivio fuori da OneDrive, e L3 fase 3 (analisi per curva)
 
@@ -1709,7 +1709,7 @@ decisione di Edoardo.
 | Data | 15/09/2026 |
 | Agente dev | Claude Code (claude-opus-5) |
 | Area | MOD `data/cars.json` (4 slug) · MOD `bundle/adapters/acc_results.py` · NEW `data/acc_lista_vetture_handbook.json` + `scripts/estrai_lista_vetture_handbook.py` · MOD `core/riferimenti_acc.py` · NEW `analisi/curve.py` · NEW `tests/pista_finta.py`, `tests/test_curve.py` · MOD `telemetria/dizionario.py`, `telemetria/registratore.py`, `api/telemetria.py` · MOD `.env` `.env.example` `README*.md` `docs/04` |
-| Commit | non ancora committato |
+| Commit | `bc5625a` (vetture allineate) · `be90962` (F3 analisi per curva) · `cb4ab5c` (docs) — pushati il 15/09 |
 | Contesto | Seguito di #034, stessa sessione: le tre cose lasciate in sospeso + F3 di L3. |
 
 **Catalogo messaggi:** «1 riallinea le vetture sbagliate e fixa il problema in modo da avere tutti i
@@ -1759,7 +1759,54 @@ ACC: la shared memory non porta un orologio della registrazione).
 - Nessuna chiamata LLM: spesa invariata ($0,3292 su $1).
 
 **File protetti:** ☑ nessuno toccato (`cars.json` non è nell'elenco dei protetti; `car_setup_ranges.json` non toccato).
-**Decisione:** ☐ Mantenuto ☐ Modificato ulteriormente ☐ Rollback — in attesa di «ok push».
+**Decisione:** ☑ Mantenuto — pushato il 15/09 («ok push e procedi con la F4»).
+
+## Entry #036 — L3 fase 4: la registrazione diventa una sessione, e il verdetto torna uno solo
+
+| Campo | Valore |
+|---|---|
+| Data | 15/09/2026 |
+| Agente dev | Claude Code (claude-opus-5) |
+| Area | NEW `bundle/adapters/acc_telemetria.py` · NEW `analisi/gomme.py` · MOD `analisi/motore.py` · MOD `api/telemetria.py` `api/sessions.py` `bundle/adapters/__init__.py` · NEW `tests/test_telemetria_bundle.py` · MOD `tests/pista_finta.py` · MOD `README*.md` `docs/04` |
+| Commit | `5169c07` (codice) + commit docs successivo — pushati il 16/09 |
+| Contesto | Chiude L3. Seguito di #034 e #035 (pushati come `cb4ab5c`). |
+
+**Catalogo messaggi:** «ok push e procedi con la F4».
+
+**Modifica:** una registrazione della shared memory diventa un **session bundle**, cioè
+esattamente ciò che l'app già consuma. Da qui in poi non esistono più «le sessioni importate» e
+«le registrazioni»: esistono le sessioni, in un archivio solo, con un'analisi sola.
+- **Il tempo sul giro lo dice ACC** (`iLastTime`), non il nostro cronometro; `pitwall.tempo_ms` fa
+  da controprova e uno scarto oltre mezzo secondo viene dichiarato invece di essere risolto di nascosto.
+- **Il consumo vero per giro** c'è finalmente: dai risultati del gioco non si poteva ricavare (`fuel`
+  costante per giro, cfr. #032), qui è la differenza del serbatoio fra inizio e fine giro.
+- I canali non entrano nel bundle: entra il loro indirizzo.
+- `analisi/gomme.py`: pressioni, temperature, freni, consumo pastiglie. **Limite scelto apposta:** la
+  finestra di pressione «ottimale» di una GT3 non è pubblicata da ACC, quindi non si giudica contro
+  una costante non verificata. Si giudicano solo squilibri e tendenze, che si dimostrano da sé; i
+  valori assoluti si riportano sempre.
+- `analisi/motore.py` accetta i canali: il report **cresce invece di cambiare**, e curve, gomme e
+  freni entrano nello **stesso verdetto** ordinato per gravità. Un solo elenco di priorità.
+- Rotte: `POST /api/telemetria/sessioni/{id}/importa`; `GET /api/sessions/{id}/analisi` ora include
+  curve e gomme quando i canali esistono ancora.
+
+**Un test che avevo scritto debole, rifatto:** B23 sulla crescita delle pressioni passava comunque
+(`... or True`). Ora verifica la pendenza vera (0,12 psi/giro imposti, 0,12 misurati) e ho aggiunto
+il caso opposto: con pressioni stabili e bilanciate il verdetto dev'essere **vuoto**.
+
+**Una correzione al banco di prova:** lo squilibrio fra i lati chiesto al generatore non era quello
+misurato (0,4 contro 0,5), perché il banco aveva scostamenti per ruota che si sommavano. Ora gli
+scostamenti sono uguali fra sinistra e destra: ciò che si chiede è ciò che si misura.
+
+**Verifica:**
+- `test_telemetria_bundle` **50/50** · gli altri dieci invariati. **Totale 636**, tutti offline.
+- Backend vivo: importazione di una registrazione, `/api/sessions` la elenca con fonte `acc_shm`,
+  `/analisi` risponde con curve e gomme; tolti i canali dal disco, la stessa rotta torna al report di
+  L2 **dichiarando** che i canali non sono collegati, invece di crollare.
+- Nessuna chiamata LLM: spesa invariata ($0,3292 su $1).
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» del 16/09 («ok push e prepara le domande di L4»).
 
 ---
 
