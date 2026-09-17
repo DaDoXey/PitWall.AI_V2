@@ -101,7 +101,7 @@ invece che da mantenere a mano.
 | **L2** | Motore di analisi v1: ritmo, settori, costanza, degrado, carburante | **fatto — 14/09**, 57/57 |
 | **L3** | Registratore shared memory → canali → analisi per curva | **fatto — 15/09** (F1 lettore · F2 registratore · F3 curve · F4 bundle e report unico) |
 | **L4** | Gigi e schermate sul bundle; demo come bundle | **fatto — 16/09** (motore rivisto, soglie Kunos, demo generata, 5 schermate + Sessioni, Gigi a 5 sezioni) — vedi §11 |
-| **L5** | Import MoTeC (opzionale) | da fare |
+| **L5** | Import MoTeC: riferimenti e validazione del motore su canali veri di ACC | **fatto — 17/09** (F1 lettore · F2 bundle · F3 validazione · F4 confronto · F5 export `.ld`) — vedi §12 |
 
 ## 7 · Fatti verificati sui file reali (14/09/2026)
 
@@ -496,3 +496,142 @@ storia di Monza su qualunque sessione.
 751 test offline, `tsc` 0 errori, backend e frontend vivi: tutte le pagine 200; controllate nel
 browser Dashboard, Telemetria (3 tab), Console (5 sezioni, fonti demo e motore), Sessioni, Setup
 (variazione applicata 24.2 → 24.8 psi), cambio di sessione e persistenza alla ricarica.
+
+## 12 · L5 — MoTeC: il motore su dati veri (17/09/2026)
+
+Aperto con quattro giri di domande. **Premessa accettata:** l'export MoTeC esiste solo su ACC per PC
+ed Edoardo gioca su PS5, quindi questi file **non sono mai suoi**. Servono a due cose (decisione 1c):
+**validare il motore su canali veri di ACC** — finora provato su dati sintetici e su Assetto Corsa 1 —
+e fare da **giri di riferimento** (utili ai futuri utenti PC). Fasi: F1 lettore · F2 bundle · F3
+validazione · F4 confronto nell'interfaccia · F5 export delle registrazioni PitWall in `.ld`.
+
+### I file veri (fuori dal repo)
+In `%LOCALAPPDATA%\PitWall\motec\riferimenti\`, con provenienza e licenza scritte:
+- `kyxap_acc-all-in-one/` — github.com/kyxap/acc-all-in-one, **CC BY-NC-SA 4.0**, nov-dic 2023
+  (fisica 1.9.x): 16 export nativi (+ un `.ldx` orfano), McLaren 720S GT3 Evo su 13 piste, BMW M4
+  GT3 a Zolder, Porsche 991 GT3 R a Misano. **Un giro lanciato per file.**
+- `fri3_drive/` — cartelle Google Drive pubbliche di un canale YouTube (setup «FRI3»), **nessuna
+  licenza scritta**: 6 giri BMW M4 GT3 (Monza, Imola, Spa ×2, Paul Ricard, Misano; ACC 1.9.4-1.10.2)
+  **salvati da MoTeC i2** + 18 setup JSON (Q, Q2, RS).
+- Ricerca fatta da Claude Code e da Claude Desktop (report del 17/09): **nessuno stint ACC gratuito
+  di più giri** trovato fra GitHub, forum, dataset e Drive pubblici. Restano da guardare a mano
+  Discord e Reddit. Esclusi con motivo: assettoCorsaGym (è AC1), Popometer (a pagamento), Hojaji et
+  al. 2024 (ACC 1.9 ma aggregati CSV per giro: utile più avanti per il motore a livello di giro).
+
+### F1 · Il formato, verificato byte per byte (`backend/app/motec/`)
+Struttura letta in `gotzl/ldparser` e `afonso360/motec-i2` (solo documentazione, codice nostro), poi
+verificata sui file: intestazione 1762 byte → evento → pista → vettura; metadati dei canali da 124
+byte in lista collegata; dati in coda, e **l'ultimo byte dell'ultimo canale coincide con la fine del
+file** in 22 file su 22.
+- **55 canali, tutti float32 a scala 1**, a 20/50/60/100/200 Hz: velocità, pedali, sterzo (gradi),
+  marcia, giri motore, G, TC/ABS attivi, sospensioni, bumpstop, velocità ruote, temperature freni,
+  pressioni gomme (psi, unità dichiarata «..»), `TYRE_TAIR`, 9 canali `EN_*` di significato ignoto.
+- **Mancano:** posizione o coordinate, carburante, settori, usura pastiglie, validità del giro, box.
+- **Da non usare:** `LAP_BEACON` (sempre
+  0), `CLUTCH` (sempre 0), `TIME` (si azzera a metà giro in alcuni file, a Misano arriva a 477 s).
+- **I giri stanno nel `.ldx`:** beacon in **microsecondi**; la distanza fra due beacon coincide al
+  millesimo con il «Fastest Time» dichiarato, in 16 export su 16.
+- **I file salvati da MoTeC i2** hanno il `.ldx` riscritto senza beacon, vettura vuota
+  nell'intestazione, 45 canali tagliati sul giro e 10 (`EN_*`, `TIME`) lunghi quanto la sessione.
+- `test_motec.py` 42/42 su file sintetici con la stessa impaginazione.
+
+### F2 · Da MoTeC a sessione (`bundle/adapters/motec.py`, schema 1.2)
+- Griglia a 100 Hz come il registratore; **nomi canonici solo dove il significato coincide** (velocità
+  km/h, pedali 0-1, giri motore, pressioni, freni, sospensioni in m); il resto resta `motec.*`.
+- **Posizione ricavata** integrando la velocità, **azzerata a ogni traguardo** (decisione 1); tratti
+  senza traguardo di chiusura mai «completi». Validità del giro, box e settori dichiarati assenti.
+- **File ritagliati in i2** (decisione 2): un giro se la distanza sta entro il 3% della lunghezza del
+  catalogo; i canali più lunghi del ritaglio esclusi e dichiarati.
+- **Consumo sempre con la fonte** (decisione 3, schema 1.2 `carburante_fonte`): misurato (shared
+  memory) › manuale (litri a inizio e fine, ripartiti sulla distanza) › setup (`fuelPerLap` salvato da
+  ACC). Il report porta `carburante.fonte`.
+- **`TYRE_TAIR` a parte**, mai contro la finestra Kunos (riferita al core).
+- `meta.riferimento`: la sessione è di un altro pilota, non conta nel tetto dell'archivio.
+- `POST /api/sessions/import/motec` (ld, ldx, setup, litri, mescola, riferimento; 200 MB); cancellare
+  la sessione cancella anche i canali convertiti. `test_motec_bundle.py` 40/40.
+
+### F3 · Validazione (`backend/scripts/valida_motec.py`)
+Lo script legge i file veri e scrive `validazione_motec.md` accanto a loro. Esito del 17/09, 22 file:
+
+**Lettore — tutto torna.** 22/22 letti fino all'ultimo byte; 16/16 export con il giro uguale al
+«Fastest Time»; 22/22 convertiti e analizzati senza errori; 18/18 setup JSON letti (4 parametri su 49
+in unità reali, come previsto finché INC-V2-003 è aperto).
+
+**Distanza integrata — sistematicamente corta, e coerente.** Scarto mediano **−0,9%** dalla
+lunghezza ufficiale (da −2,5% a 0,0%), mai positivo: la lunghezza ufficiale si misura sulla mezzeria,
+la traiettoria taglia le curve. File diversi sulla stessa pista danno la stessa distanza entro
+**±0,05–0,3%** (Misano ±0,8%, fra BMW e Porsche). **Paul Ricard −2,5%** su tre file, il valore più lontano:
+il catalogo dà il layout con la chicane del Mistral (5842 m), senza chicane sono 5770 m. Il profilo di
+velocità non lo decide (il rallentamento a ~3800 m può essere la chicane o Signes): **da verificare in
+gioco**. La tolleranza del 3% sul ritaglio i2 lì è al limite.
+
+**Curve — trovate circa metà di quelle ufficiali, com'era previsto.** Mettendo in fila giri di file
+diversi della stessa pista: Monza 6/11, Misano 6/16, Paul Ricard 7/15, Spa 8/19, Suzuka 9/18,
+Zandvoort 9/14. Il motore riconosce le **frenate** (minimi di velocità di almeno 15 km/h): curve in
+pieno ed esse fatte con una frenata sola non sono «curve» per lui. Il minimo della stessa curva si
+sposta fra i giri di 14–62 m in mediana, fino a 111 m (Spa, dove si mescolano due vetture, due versioni
+e due ritagli i2): è la somma di **traiettorie e piloti diversi** e dell'**inizio incerto dei ritagli
+i2**, non separabile con questi file. Conseguenza: **i confronti curva per curva hanno senso fra giri
+con i beacon**; un ritaglio i2 come riferimento va dichiarato meno preciso.
+
+**Gomme e freni — il motore giudica, e i numeri sono plausibili.** Pressioni medie 25,7–27,2 psi sui
+giri veloci; molte ruote dentro la finestra Kunos per tutto il giro, alcune fuori (Imola posteriori sopra
+per metà del giro, Mount Panorama lato sinistro sotto). Picchi dei freni anteriori **540–805 °C**, sopra i 700 °C
+di picco del riferimento community in 7 file su 22 su **giri da qualifica**: conferma che quella
+soglia (2022, senza fonte Kunos) va presa con le molle — è già fuori dal verdetto.
+
+**Non verificabile con questi file:** degrado e costanza (un giro per file), consumo misurato (MoTeC
+non esporta il carburante), settori, temperatura al core, validità del giro.
+
+### Difetti trovati — proposti e applicati con l'ok di Edoardo (17/09)
+1. **I giri incompleti contano come «buttati».** Il motore conta come buttato ogni giro con
+   `valido=False`, e gli adattatori (MoTeC **e shared memory**) marcano non validi anche l'uscita e il
+   rientro, che non hanno tempo. Risultato: «1 giri su 1 buttati» su 14 file veri su 22, con il
+   consiglio di mollare il giro invalidato. Colpisce ogni sessione vera che inizia o finisce a metà
+   pista; la demo no (nessun giro incompleto).
+2. **«1 giri»:** la voce non accorda il singolare.
+3. **Tolleranza del ritaglio i2:** Paul Ricard sta a −2,4% con un limite del 3%, per un effetto
+   (traiettoria più corta della mezzeria) che è sistematico.
+
+**Correzioni:** (1) il motore conta come buttati solo i giri **finiti** e invalidati (`tempo_ms`
+presente); la tabella dei giri mostra «incompleto» invece di «invalido» per uscita e rientro;
+(2) «1 giro su N buttato»; (3) tolleranza del ritaglio i2 al **4%**. Test: `test_analisi` N35b-c,
+`test_motec_bundle` F14b e F21b.
+
+### F4 · Il confronto nell'interfaccia
+- **Tab Curve**: il confronto sulla distanza c'è anche **senza analisi per curva** (basta un giro con i
+  canali) e il **giro B può venire da un'altra sessione con la stessa vettura e la stessa pista**;
+  con un giro solo, B parte dal primo riferimento. Nuova traccia **delta B − A** in secondi allo stesso
+  punto di pista, con il valore al traguardo (Zandvoort, McLaren contro McLaren: +0,290 s contro
+  1:38.334 − 1:38.042). `pitwall.tempo_ms` entra fra i canali di `/tracce`.
+- **Ritagli i2** marcati nel bundle (`meta.ritaglio_i2`) e nel riassunto: il confronto mostra
+  l'avviso «leggi per tendenze, non al metro».
+- **Sessioni → Importa un export MoTeC**: .ld, .ldx, setup, litri a inizio e fine, gomme, «è un giro
+  mio». Nell'archivio le etichette «riferimento» e «ritaglio i2»; nel selettore «rif.».
+- I riferimenti **non sono mai la sessione di default**; le conversioni MoTeC **non compaiono** fra le
+  registrazioni da importare e non si reimportano (409).
+- Consumo con la fonte accanto sulla Dashboard; `TYRE_TAIR` in un riquadro a parte («non giudicate»);
+  «incompleto» invece di «invalido» per uscita e rientro; «1 giro» al singolare nell'interfaccia.
+- Verifica: 840 test, `tsc` 0, 6 file veri importati dalla rotta e controllati nel browser (Zandvoort
+  nativo con due riferimenti, Spa BMW con due ritagli i2, Sessioni).
+
+### F5 · Le sessioni di PitWall in MoTeC i2 (`app/motec/scrittura.py`, `esporta.py`)
+- **Scrittore con l'impaginazione di ACC**: intestazione 1762 byte, evento 1762, pista 4918, vettura
+  8020, canali da 13384, costanti copiate dai file veri. **Prova di compatibilità** (MoTeC i2 non è
+  installato qui): i 16 export nativi, riletti e riscritti, sono **identici byte per byte**, `.ld` e
+  `.ldx` (validazione, sezione H).
+- **Due letture di F1 corrette** mentre si scriveva: a 86-93 non c'è un u32 «3 604 535» ma quattro
+  u16 — **numero di canali (due volte), frequenza massima e minima** (55, 55, 200, 20); e **l'unità sta
+  nel campo da 8 byte** che i parser chiamano «nome breve» (quello da 12 è vuoto). Gli ultimi 40 byte di
+  ogni canale portano massimo e minimo arrotondati, due limiti di scala (ROTY ±100, GEAR 6/0, STEERANGLE
+  180 o 200 secondo la vettura) e i decimali di visualizzazione. Nel `.ldx` i beacon sono microsecondi
+  **interi** e numerati con il contatore dei giri della sessione.
+- **Export** (`GET /api/sessions/{id}/export/motec`, zip): i canali che ACC esporta tornano con nome e
+  unità di ACC (SPEED m/s, THROTTLE/BRAKE %, SUS_TRAVEL mm, TYRE_PRESS, BRAKE_TEMP, RPMS); in più quello
+  che l'export di ACC non ha, con nomi che non fingono equivalenze: `FUEL`, `TYRE_CORE_TEMP_*`,
+  `LAP_POSITION`, `STEER_INPUT` (-1..1), `GEAR_SM` (marcia come la scrive la shared memory). Tutto a
+  100 Hz; beacon dai giri del motore, bordi compresi se la registrazione parte o finisce sul traguardo.
+  Nome del file nel formato di ACC. L'import accetta un beacon a 0 s.
+- **Andata e ritorno sulla demo**: esportata e reimportata, 8 giri con i tempi entro un campione
+  (10 ms) e le stesse 7 curve. Bottone «MoTeC ↓» nell'Archivio per ogni sessione con i canali.
+- `test_motec_export.py` 17/17; `test_motec.py` 43/43.

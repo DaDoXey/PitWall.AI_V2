@@ -1848,6 +1848,49 @@ scostamenti sono uguali fra sinistra e destra: ciò che si chiede è ciò che si
 
 ---
 
+## Entry #038 — L5: MoTeC, il motore su dati veri di ACC (lettore, import, validazione, confronto, export)
+
+| Campo | Valore |
+|---|---|
+| Data | 17/09/2026 |
+| Agente dev | Claude Code (claude-opus-5) |
+| Area | Backend: NEW `app/motec/` (`ld.py` lettore, `ldx.py` giri e nome file, `scrittura.py` scrittore con l'impaginazione di ACC, `esporta.py`) · NEW `bundle/adapters/motec.py` · `bundle/schema.py` 1.2 (`FonteCarburante`, `meta.riferimento`, `meta.ritaglio_i2`) · `bundle/store.py` · `bundle/adapters/acc_telemetria.py` · `analisi/motore.py` (fonte del consumo, giri buttati) · `analisi/gomme.py` (TYRE_TAIR a parte) · `telemetria/registratore.py` (riferimenti fuori dal tetto) · `api/sessions.py` (import e export MoTeC, tempo nelle tracce, cancellazione dei canali convertiti) · `api/telemetria.py` · NEW `scripts/valida_motec.py` · test NEW motec, motec_bundle, motec_export (+ `motec_finto.py`), `test_analisi`. Frontend: `AnalisiCurve` (confronto con altre sessioni, delta), Sessioni (import MoTeC, etichette, «MoTeC ↓»), Dashboard (fonte del consumo), `GommeFreni`, `GiriSessione`, Sidebar, `lib/sessione`, `lib/api`, `lib/formato`. Docs: `docs/04` §12, README. |
+| Commit | `2b38080` lettore, scrittore ed export · `c695336` import e motore · `0d5d730` API · `9ac2e0e` frontend + commit docs successivo — committati il 17/09, push in attesa |
+| Contesto | Lotto L5 del rework dati (dopo #037), primo filone dell'ordine deciso il 17/09: L5 → guide dei tracciati → range di setup + INC-V2-003 → chat di Gigi → Lotto 2; deploy per ultimo. |
+
+**Catalogo messaggi:**
+1. «ok push per tutti i commit… poi svolgiamo nell'ordine seguente: L5 MoTeC, le guide dei tracciati, inc-v2-003, chat di gigi ed il lotto 2. il deploy lo svolgeremo appena sarà possibile mettere tutto quanto a runnare online… prima di svolgere inc-v2-003 controlleremo tutti i range di setup da verificare» → push di L4, primo giro di domande su L5.
+2. «1 c, 2 claude desktop, 3-4-5 vanno bene» → scopo: validazione del motore + giri di riferimento; lettore nostro; bundle `motec` «riferimento»; canali sul dizionario.
+3. «1 va bene poi in caso ricontrolla se manca qualcosa… sennò falla te direttamente la ricerca… 2 va bene. 3 va bene la proposta. 4 perfetto così» → ricerca fatta dal terminale; 17 coppie `.ld`/`.ldx` scaricate (fuori dal repo).
+4. «falle direttamente te le ricerche… ok per il download… le piste su console sono identiche» → prompt per Claude Desktop sul Desktop (`PROMPT_L5_stint_MoTeC_ACC.txt`).
+5. «ok parti da F1 e mettimi il prompt in un file txt sul desktop» → F1.
+6. «ho finito il report di ricerca… 1 va bene anche se troppo approssimativo… 2 va bene. 3 no dobbiamo fare in modo che risulti anche quello… hai tutte le autorizzazioni» → analisi del report, 6 giri BMW + 18 setup scaricati da Drive, precisazioni su posizione e carburante.
+7. «1 ok… 3 ok chiarissimo… 1 va bene. 2 se si possono gestire allora certo. 3 aggiungilo. ora procedi con la F2» → consumo con fonte, ritagli i2, export come F5.
+8. «ok procedi con la F3» · «ok su tutti e tre, poi procedi con la F4» · «procedi con F5 poi appena finito committiamo ogni cosa».
+
+**Ricerca e file veri** (tutti fuori dal repo, in `%LOCALAPPDATA%\PitWall\motec\riferimenti`): `kyxap/acc-all-in-one` (CC BY-NC-SA 4.0, 16 export nativi ACC 1.9.x, un giro ciascuno) e 6 cartelle Drive di un canale YouTube (BMW M4 GT3, file salvati da MoTeC i2 + setup, nessuna licenza scritta). Nessuno stint ACC gratuito di più giri trovato, né da Claude Code né dal report di Claude Desktop (che conteneva un errore: «hotlap da 150-300 KB», i veri pesano 2-6 MB).
+
+**Modifica:** dettaglio in `docs/04-rework-dati.md` §12. In sintesi:
+- **F1 lettore**: formato verificato byte per byte su 22 file; giri dai beacon del `.ldx` (microsecondi, uguali al «Fastest Time» al millesimo); `LAP_BEACON`, `CLUTCH`, `TIME` inutilizzabili; nessun canale di posizione né di carburante.
+- **F2 import**: griglia a 100 Hz, nomi canonici solo dove il significato coincide; posizione ricavata dalla velocità e azzerata a ogni traguardo; ritagli di MoTeC i2 validi come un giro se la distanza torna col catalogo (4%); consumo sempre con la fonte (misurato › manuale › setup); `TYRE_TAIR` mai contro la finestra Kunos; rotta `POST /api/sessions/import/motec`.
+- **F3 validazione** (`scripts/valida_motec.py`): distanza integrata −0,9% in mediana (sempre corta: traiettoria vs mezzeria), curve ≈ metà del catalogo (il motore vede le frenate), minimi spostati 14-62 m fra file diversi. Tre difetti proposti e applicati su ok: giri incompleti contati «buttati» (14 file su 22, anche le registrazioni della shared memory), «1 giri», tolleranza del ritaglio al 3%.
+- **F4 confronto**: tab Curve con giro B da un'altra sessione (stessa vettura e pista), traccia delta B − A, avviso sui ritagli i2; import MoTeC nella pagina Sessioni; riferimenti mai di default; conversioni MoTeC escluse dalle registrazioni da importare.
+- **F5 export**: scrittore con l'impaginazione di ACC — **i 16 export nativi riletti e riscritti sono identici byte per byte**, `.ld` e `.ldx`; `GET /api/sessions/{id}/export/motec` (zip) con i canali di ACC nelle loro unità più FUEL, TYRE_CORE_TEMP, LAP_POSITION, STEER_INPUT, GEAR_SM; beacon sui tempi ufficiali dei giri.
+
+**Correzioni a letture mie di F1** (trovate scrivendo F5, corrette): a 86-93 dell'intestazione non c'è un u32 «3 604 535» ma quattro u16 (canali ×2, frequenza massima e minima); l'unità dei canali sta nel campo da 8 byte, non in quello da 12.
+
+**Verifica:**
+- Backend **858/858** in 17 file, tutti offline (nuovi: motec 43, motec_bundle 45, motec_export 17; analisi 59). `tsc --noEmit` 0 errori.
+- File veri: 22/22 letti, convertiti e analizzati; 16/16 riscritti identici; validazione senza più «buttati».
+- Backend e frontend vivi: tutte le pagine 200; 6 file veri importati dalla rotta; nel browser il confronto di Zandvoort (McLaren contro riferimento, delta al traguardo +0,290 s = 1:38.334 − 1:38.042), l'avviso dei ritagli i2 a Spa, il modulo di import; 3 export scaricati dalla rotta e riletti senza avvertenze.
+- Nessuna chiamata LLM: spesa invariata. Nessun file protetto toccato.
+- **Da sapere:** nell'archivio vero restano le 6 sessioni MoTeC di prova (Zandvoort ×3, Monza BMW, Spa BMW ×2), cancellabili dall'Archivio.
+
+**File protetti:** non toccati.
+**Decisione:** ☑ Mantenuto — «procedi con F5 poi appena finito committiamo ogni cosa». Push in attesa di «ok push».
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]

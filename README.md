@@ -37,11 +37,13 @@ backend/       FastAPI
                  # data/ (ACC catalogue, track guides, Kunos and community references)
     bundle/      # session bundle, adapters, archive, the generated DEMO session
     telemetria/  # ACC shared memory: structures, reader, dictionary, recorder, synthetic bench
+    motec/       # MoTeC files: .ld/.ldx reader, writer with ACC's exact layout, session export
     analisi/     # deterministic engine: pace, consistency, corners, tyres and brakes; Gigi's context
-    tests/       # 751 offline tests: observability 24, budget 31, bundle 37, adattatori 86,
-                 # analisi 57, analisi_l4 45, demo 38, gigi 32, sessions 50, telemetria 97,
-                 # riferimenti 73, registratore 69, curve 62, telemetria_bundle 50
-  scripts/       # image pipeline (photos, crops, maps) and track guide validator
+    tests/       # 858 offline tests: observability 24, budget 31, bundle 37, adattatori 86,
+                 # analisi 59, analisi_l4 45, demo 38, gigi 32, sessions 50, telemetria 97,
+                 # riferimenti 73, registratore 69, curve 62, telemetria_bundle 50,
+                 # motec 43, motec_bundle 45, motec_export 17
+  scripts/       # image pipeline, track guide validator, MoTeC validation on real ACC files
 frontend/      Next.js 15.5 (App Router) + TypeScript + Tailwind + Recharts + Framer Motion
   src/
     app/         # layout + pages (listed below)
@@ -77,6 +79,8 @@ specified in [`docs/04-rework-dati.md`](docs/04-rework-dati.md).
 | POST | `/api/sessions/import/setup` | Imports a setup saved in ACC |
 | POST | `/api/sessions/import/results` | Imports an ACC results file (409 when it holds several cars) |
 | POST | `/api/sessions/manuale` | Manual session (console players): lap times, setup, the driver's account |
+| POST | `/api/sessions/import/motec` | Imports an ACC MoTeC export (.ld + .ldx, optional setup and fuel litres) as a session with channels |
+| GET | `/api/sessions/{id}/export/motec` | The session as .ld + .ldx (zip) to open in MoTeC i2 |
 | GET | `/api/sessions` | Stored sessions, DEMO included |
 | GET | `/api/sessions/{id}` | One session (session bundle) |
 | GET | `/api/sessions/{id}/analisi` | Deterministic analysis report (no LLM; adds corners, tyres and brakes when channels exist) |

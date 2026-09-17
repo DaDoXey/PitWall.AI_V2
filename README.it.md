@@ -37,11 +37,13 @@ backend/       FastAPI
                  # data/ (catalogo ACC, guide dei tracciati, riferimenti Kunos e community)
     bundle/      # session bundle, adattatori, archivio, la sessione DEMO generata
     telemetria/  # shared memory di ACC: strutture, lettore, dizionario, registratore, banco sintetico
+    motec/       # file MoTeC: lettore .ld/.ldx, scrittore con l'impaginazione esatta di ACC, export
     analisi/     # motore deterministico: ritmo, costanza, curve, gomme e freni; contesto di Gigi
-    tests/       # 751 test offline: observability 24, budget 31, bundle 37, adattatori 86,
-                 # analisi 57, analisi_l4 45, demo 38, gigi 32, sessions 50, telemetria 97,
-                 # riferimenti 73, registratore 69, curve 62, telemetria_bundle 50
-  scripts/       # pipeline delle immagini (foto, ritagli, mappe) e validatore delle guide
+    tests/       # 858 test offline: observability 24, budget 31, bundle 37, adattatori 86,
+                 # analisi 59, analisi_l4 45, demo 38, gigi 32, sessions 50, telemetria 97,
+                 # riferimenti 73, registratore 69, curve 62, telemetria_bundle 50,
+                 # motec 43, motec_bundle 45, motec_export 17
+  scripts/       # pipeline delle immagini, validatore delle guide, validazione MoTeC sui file veri
 frontend/      Next.js 15.5 (App Router) + TypeScript + Tailwind + Recharts + Framer Motion
   src/
     app/         # layout + pagine (elenco sotto)
@@ -77,6 +79,8 @@ specificato in [`docs/04-rework-dati.md`](docs/04-rework-dati.md).
 | POST | `/api/sessions/import/setup` | Importa un setup salvato in ACC |
 | POST | `/api/sessions/import/results` | Importa un file di risultati di ACC (409 se il file ha più vetture) |
 | POST | `/api/sessions/manuale` | Sessione manuale (chi gioca su console): tempi, setup, racconto del pilota |
+| POST | `/api/sessions/import/motec` | Importa un export MoTeC di ACC (.ld + .ldx, setup e litri facoltativi) come sessione con i canali |
+| GET | `/api/sessions/{id}/export/motec` | La sessione come .ld + .ldx (zip) da aprire in MoTeC i2 |
 | GET | `/api/sessions` | Elenco delle sessioni, DEMO compresa |
 | GET | `/api/sessions/{id}` | Una sessione (session bundle) |
 | GET | `/api/sessions/{id}/analisi` | Report di analisi della sessione (deterministico, senza LLM; con curve, gomme e freni se ci sono i canali) |
