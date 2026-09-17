@@ -43,6 +43,7 @@ from app.bundle.schema import (
     Condizioni,
     Evento,
     Fonte,
+    FonteCarburante,
     Giro,
     Mescola,
     Meta,
@@ -349,6 +350,8 @@ def bundle_da_canali(
     return SessionBundle(
         meta=meta,
         giri=giri,
+        carburante_fonte=(FonteCarburante.MISURATO
+                          if any(g.carburante_usato_l is not None for g in giri) else None),
         eventi=eventi,
         canali=Canali(
             frequenza_hz=frequenza,
@@ -370,7 +373,8 @@ def canali_del_bundle(bundle: SessionBundle) -> dict[str, np.ndarray] | None:
     """
     from app.telemetria.registratore import cartella_telemetria, leggi_canali
 
-    if bundle.canali is None or bundle.meta.fonte not in (Fonte.ACC_SHARED_MEMORY, Fonte.DEMO):
+    if bundle.canali is None or bundle.meta.fonte not in (Fonte.ACC_SHARED_MEMORY, Fonte.DEMO,
+                                                          Fonte.MOTEC):
         return None
     cartella = (cartella_telemetria() / bundle.canali.file).parent
     if not (cartella / "canali.npz").exists() or not (cartella / "sessione.json").exists():

@@ -105,6 +105,8 @@ class Carburante(_Base):
     consumo_medio_l_giro: float | None = None
     giri_misurati: int = 0
     motivo: str | None = None
+    # «misurato» | «manuale» | «setup»: il numero non si mostra mai senza la sua fonte.
+    fonte: str | None = None
 
 
 class Perdita(_Base):
@@ -385,7 +387,8 @@ def _verdetto(ritmo: Ritmo, settori: list[Settore], costanza: Costanza,
     if buttati:
         quota = 100 * buttati / giri_totali if giri_totali else 0
         voci.append(Perdita(
-            titolo=f"{buttati} giri su {giri_totali} buttati",
+            titolo=(f"1 giro su {giri_totali} buttato" if buttati == 1
+                    else f"{buttati} giri su {giri_totali} buttati"),
             decimi=None,
             prova=f"{quota:.0f}% dei giri non validi: tempo in pista speso per niente",
             azione="In qualifica un giro invalidato vale zero: molla il giro appena "
@@ -591,8 +594,17 @@ def analizza(bundle: SessionBundle, canali: dict | None = None) -> ReportAnalisi
     carburante = _carburante(bundle.giri)
     if not carburante.calcolabile:
         carburante.motivo = _carburante_motivo(bundle)
+    elif bundle.carburante_fonte is not None:
+        carburante.fonte = bundle.carburante_fonte.value
+    elif bundle.meta.fonte.value in ("acc_shm", "demo"):
+        # bundle scritti prima dello schema 1.2: dalla shared memory il consumo è misurato
+        carburante.fonte = "misurato"
 
-    buttati = len([g for g in bundle.giri if not g.valido])
+    # Buttato = un giro FINITO e invalidato. L'uscita dai box e il rientro (senza tempo,
+    # perché cominciano o finiscono a metà pista) sono giri contati, non errori del pilota:
+    # prima finivano qui e il verdetto diceva «1 giri su 1 buttati» su un hotlap pulito
+    # (14 file MoTeC veri su 22, validazione L5 del 17/09).
+    buttati = len([g for g in bundle.giri if not g.valido and g.tempo_ms])
     mescola = bundle.meta.mescola.value if bundle.meta.mescola else None
 
     mancanti = list(bundle.assunzioni)

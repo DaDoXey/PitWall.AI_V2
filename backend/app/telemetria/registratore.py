@@ -414,12 +414,14 @@ class Registratore:
 
 
 def _e_demo(cartella: Path) -> bool:
-    """La sessione DEMO non conta nel tetto: si rigenera da sola, e non è del pilota."""
+    """Fuori dal tetto: la DEMO (si rigenera da sola) e i riferimenti importati da MoTeC
+    (L5: non sono del pilota, e il tetto non deve buttare le sue registrazioni per loro,
+    né le loro per le sue)."""
     try:
-        return bool(json.loads((cartella / "sessione.json").read_text(encoding="utf-8"))
-                    .get("demo"))
+        dati = json.loads((cartella / "sessione.json").read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return False
+    return bool(dati.get("demo") or dati.get("riferimento"))
 
 
 def tetto_sessioni() -> int:

@@ -42,6 +42,10 @@ NOMI_RUOTE = {"FL": "Ant.SX", "FR": "Ant.DX", "RL": "Post.SX", "RR": "Post.DX"}
 PARAMETRO_PRESSIONE = {r: f"tire_press_{r.lower()}" for r in RUOTE}
 
 PRESSIONE = "physics.wheelPressure"
+# `TYRE_TAIR` dei file MoTeC di ACC (L5): temperatura della gomma NON dichiarata come
+# temperatura al core. Si riporta a parte e non si giudica mai contro la finestra Kunos.
+TEMP_GOMMA_MOTEC = {"FL": "motec.TYRE_TAIR_LF", "FR": "motec.TYRE_TAIR_RF",
+                    "RL": "motec.TYRE_TAIR_LR", "RR": "motec.TYRE_TAIR_RR"}
 TEMP_GOMMA = "physics.tyreCoreTemp"
 TEMP_FRENO = "physics.brakeTemp"
 PASTIGLIE = "physics.padLife"
@@ -119,6 +123,10 @@ class Gomme:
         "Kunos (più rotazione dal posteriore): si riportano, non si giudicano."
     )
     nota_finestra: str = ""
+    # Solo per i file MoTeC: `TYRE_TAIR`, fuori da ogni giudizio (decisione del 17/09).
+    temperatura_motec_media: PerRuota | None = None
+    temperatura_motec_massima: PerRuota | None = None
+    nota_temperatura_motec: str | None = None
 
 
 @dataclass
@@ -379,6 +387,16 @@ def analizza_gomme_e_freni(
                 (temp_medie[0] + temp_medie[2]) / 2 - (temp_medie[1] + temp_medie[3]) / 2, 2)
         else:
             mancanti.append("temperature del core gomma non registrate")
+            serie_motec = [canali.get(TEMP_GOMMA_MOTEC[r]) for r in RUOTE]
+            if all(s is not None and s.size for s in serie_motec):
+                tm = utili([np.asarray(s, dtype=np.float64) for s in serie_motec])
+                gomme.temperatura_motec_media = PerRuota.da_valori(
+                    [float(np.mean(t)) for t in tm], 1)
+                gomme.temperatura_motec_massima = PerRuota.da_valori(
+                    [float(np.max(t)) for t in tm], 1)
+                gomme.nota_temperatura_motec = (
+                    "TYRE_TAIR dall'export MoTeC di ACC: non è dichiarata come temperatura "
+                    "al core, quindi si mostra e non si giudica contro la finestra Kunos")
 
         # ── finestre ufficiali: solo gomme da asciutto ──
         if mescola == ASCIUTTO:

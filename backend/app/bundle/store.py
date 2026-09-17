@@ -64,6 +64,8 @@ class Riassunto(BaseModel):
     ha_canali: bool = False
     ha_racconto: bool = False
     demo: bool = False
+    riferimento: bool = False
+    ritaglio_i2: bool = False
 
 
 def cartella() -> Path:
@@ -148,6 +150,8 @@ def _riassumi(id_sessione: str, bundle: SessionBundle) -> Riassunto:
         ha_canali=bundle.canali is not None,
         ha_racconto=bool(bundle.racconto and not bundle.racconto.vuoto()),
         demo=bundle.meta.fonte.value == "demo",
+        riferimento=bundle.meta.riferimento,
+        ritaglio_i2=bundle.meta.ritaglio_i2,
     )
 
 

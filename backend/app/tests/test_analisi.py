@@ -174,6 +174,19 @@ test("N34 e non entrano nel miglior giro (99000 era invalido)",
 test("N35 il verdetto rinfaccia i giri buttati",
      any("buttati" in v.titolo for v in t.verdetto), str([v.titolo for v in t.verdetto]))
 
+# Validazione L5 (17/09): uscita e rientro senza tempo non sono giri buttati.
+con_uscita = bundle([
+    Giro(numero=1, tempo_ms=None, valido=False),
+    Giro(numero=2, tempo_ms=100000, splits_ms=[30000, 35000, 35000]),
+    Giro(numero=3, tempo_ms=99500, splits_ms=[29800, 34900, 34800], valido=False),
+    Giro(numero=4, tempo_ms=None, valido=False),
+])
+u = analizza(con_uscita)
+test("N35b uscita e rientro senza tempo non sono «buttati»", u.giri_buttati == 1, str(u.giri_buttati))
+test("N35c un giro buttato al singolare",
+     any(v.titolo.startswith("1 giro su") and v.titolo.endswith("buttato") for v in u.verdetto),
+     str([v.titolo for v in u.verdetto]))
+
 # ---------------------------------------------------------------------------
 # 5. Quando un dato non c'è, si dice
 # ---------------------------------------------------------------------------

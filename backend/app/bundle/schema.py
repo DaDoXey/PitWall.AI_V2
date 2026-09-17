@@ -28,7 +28,8 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 # smette di essere leggibile così com'è; il secondo quando si aggiungono campi
 # opzionali (un bundle 1.0 si legge ancora). I bundle salvati portano la versione con
 # cui sono nati. 1.1 (16/09/2026): mescola, piattaforma, racconto del pilota.
-SCHEMA_VERSION = "1.1"
+# 1.2 (17/09/2026, L5): sessione di riferimento (non del pilota) e fonte del consumo.
+SCHEMA_VERSION = "1.2"
 
 
 class BundleVersionError(ValueError):
@@ -44,6 +45,15 @@ class Fonte(str, Enum):
     MOTEC = "motec"                    # export .ld/.ldx (L5)
     DEMO = "demo"                      # sessione dimostrativa di PitWall
     MANUALE = "manuale"                # inserito a mano dal pilota
+
+
+class FonteCarburante(str, Enum):
+    """Da dove viene il consumo di una sessione. Si mostra sempre accanto al numero:
+    un consumo misurato e uno dichiarato non valgono uguale (decisione del 17/09)."""
+
+    MISURATO = "misurato"      # serbatoio letto campione per campione (shared memory)
+    MANUALE = "manuale"        # litri a inizio e fine, scritti dal pilota
+    SETUP = "setup"            # `fuelPerLap` salvato da ACC nella strategia del setup
 
 
 class Piattaforma(str, Enum):
@@ -106,6 +116,13 @@ class Meta(_Base):
     # Kunos vale solo sull'asciutto). None = non nota, e allora non si giudica.
     mescola: Mescola | None = None
     piattaforma: Piattaforma | None = None
+    # Sessione di un altro pilota (es. un giro MoTeC scaricato): serve da confronto,
+    # non entra nello storico di chi usa l'app.
+    riferimento: bool = False
+    # Giro ritagliato a mano in MoTeC i2 (niente passaggi sul traguardo): l'inizio del
+    # giro è dove l'ha tagliato qualcuno, quindi il confronto curva per curva è meno
+    # preciso (validazione L5: fino a decine di metri di scarto).
+    ritaglio_i2: bool = False
 
     @field_validator("car", "track")
     @classmethod
@@ -244,6 +261,7 @@ class SessionBundle(_Base):
     eventi: list[Evento] = Field(default_factory=list)
     canali: Canali | None = None
     racconto: Racconto | None = None
+    carburante_fonte: FonteCarburante | None = None
     # Ciò che l'import ha dovuto interpretare, o che il file non permette di sapere.
     # Va mostrato al pilota: un dato mancante dichiarato vale più di uno inventato.
     assunzioni: list[str] = Field(default_factory=list)
