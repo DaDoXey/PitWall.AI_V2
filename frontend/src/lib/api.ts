@@ -95,10 +95,19 @@ export type Riassunto = {
   ha_canali: boolean;
   ha_racconto: boolean;
   demo: boolean;
+  // L5: sessione di un altro pilota (es. un giro MoTeC scaricato), e giro ritagliato a mano
+  // in MoTeC i2 (inizio incerto: confronto curva per curva meno preciso).
+  riferimento: boolean;
+  ritaglio_i2: boolean;
 };
 
 export function getSessioni() {
   return getJSON<{ sessioni: Riassunto[]; demo_id: string }>("/api/sessions?limite=200");
+}
+
+/** Lo zip .ld + .ldx della sessione, per MoTeC i2 (L5): un link da scaricare, non un fetch. */
+export function urlEsportaMotec(id: string) {
+  return `${API_BASE}/api/sessions/${encodeURIComponent(id)}/export/motec`;
 }
 
 export function cancellaSessione(id: string) {
@@ -183,6 +192,8 @@ export type Carburante = {
   consumo_medio_l_giro: number | null;
   giri_misurati: number;
   motivo: string | null;
+  // Da dove viene il consumo (L5): il numero non si mostra mai senza.
+  fonte: "misurato" | "manuale" | "setup" | null;
 };
 
 export type Curva = {
@@ -236,6 +247,10 @@ export type Gomme = {
   pressione_massima: PerRuota;
   temperatura_media: PerRuota;
   temperatura_massima: PerRuota;
+  // Solo file MoTeC: TYRE_TAIR, non dichiarata come temperatura al core → mai giudicata.
+  temperatura_motec_media?: PerRuota | null;
+  temperatura_motec_massima?: PerRuota | null;
+  nota_temperatura_motec?: string | null;
   mescola: Mescola | null;
   squilibrio_ant_post_psi: number | null;
   squilibrio_sx_dx_psi: number | null;
@@ -335,6 +350,8 @@ export type Bundle = {
     durata_s: number | null;
     mescola: Mescola | null;
     piattaforma: Piattaforma | null;
+    riferimento?: boolean;
+    ritaglio_i2?: boolean;
     condizioni: {
       temp_aria_c: number | null;
       temp_pista_c: number | null;
@@ -345,6 +362,7 @@ export type Bundle = {
   };
   setup: { nome: string | null; valori: Record<string, ValoreSetup>; assunzioni: string[] } | null;
   racconto: Racconto | null;
+  giri: { numero: number; tempo_ms: number | null; valido: boolean; in_pit: boolean }[];
   assunzioni: string[];
 };
 
@@ -415,6 +433,34 @@ export function importaRisultati(file: File, carId?: number) {
   form.append("file", file);
   if (carId !== undefined) form.append("car_id", String(carId));
   return postForm<{ id: string; assunzioni: string[] }>("/api/sessions/import/results", form);
+}
+
+// Export MoTeC di ACC (L5): .ld obbligatorio, .ldx per i giri, setup e litri facoltativi.
+export type ImportMotec = {
+  ld: File;
+  ldx?: File | null;
+  setup?: File | null;
+  carburanteInizioL?: number | null;
+  carburanteFineL?: number | null;
+  mescola?: Mescola | null;
+  riferimento: boolean;
+};
+
+export function importaMotec(dati: ImportMotec) {
+  const form = new FormData();
+  form.append("ld", dati.ld);
+  if (dati.ldx) form.append("ldx", dati.ldx);
+  if (dati.setup) form.append("setup", dati.setup);
+  if (dati.carburanteInizioL != null && dati.carburanteFineL != null) {
+    form.append("carburante_inizio_l", String(dati.carburanteInizioL));
+    form.append("carburante_fine_l", String(dati.carburanteFineL));
+  }
+  if (dati.mescola) form.append("mescola", dati.mescola);
+  form.append("riferimento", dati.riferimento ? "true" : "false");
+  return postForm<{ id: string; giri: number; giri_con_tempo: number; assunzioni: string[] }>(
+    "/api/sessions/import/motec",
+    form,
+  );
 }
 
 export type SessioneManuale = {

@@ -80,6 +80,20 @@ export function etichettaFonte(fonte: Fonte, piattaforma?: Piattaforma | null): 
   }
 }
 
+/** «1 giro», «3 giri»: con i riferimenti MoTeC a giro singolo «1 giri» si vedeva ovunque. */
+export function giri(n: number | null | undefined, aggettivo = ""): string {
+  const quanti = n ?? 0;
+  const parola = quanti === 1 ? "giro" : "giri";
+  return `${quanti} ${parola}${aggettivo ? ` ${quanti === 1 ? aggettivo.replace(/i$/, "e") : aggettivo}` : ""}`;
+}
+
+/** Da dove viene il consumo: accanto al numero, sempre (L5). */
+export const ETICHETTA_FONTE_CARBURANTE: Record<"misurato" | "manuale" | "setup", string> = {
+  misurato: "misurato",
+  manuale: "inserito da te",
+  setup: "dal setup",
+};
+
 /** Nome leggibile di uno slug quando il catalogo non lo conosce: «bmw_m4_gt3» → «bmw m4 gt3». */
 export function slugLeggibile(slug: string | null | undefined): string {
   return slug ? slug.replace(/_/g, " ") : "—";

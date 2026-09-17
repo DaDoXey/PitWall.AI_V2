@@ -20,6 +20,7 @@ import {
   creaSessioneManuale,
   getRegistrazioni,
   getStatoRegistratore,
+  importaMotec,
   importaRegistrazione,
   importaRisultati,
   importaSetup,
@@ -29,10 +30,11 @@ import {
   type Racconto,
   type Registrazione,
   type StatoRegistratore,
+  urlEsportaMotec,
 } from "@/lib/api";
 import { useProfile } from "@/lib/profile";
 import { useSessione } from "@/lib/sessione";
-import { data, ETICHETTA_PIATTAFORMA, ETICHETTA_TIPO, etichettaFonte, tempoGiro } from "@/lib/formato";
+import { data, ETICHETTA_PIATTAFORMA, ETICHETTA_TIPO, etichettaFonte, giri, tempoGiro } from "@/lib/formato";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { CHIAVE_BOZZA_SETUP } from "@/lib/setup";
 
@@ -134,7 +136,124 @@ function PercorsoPC() {
     <div className="grid gap-4 lg:grid-cols-2">
       <ImportaFile />
       <Registratore />
+      <div className="lg:col-span-2">
+        <ImportaMotec />
+      </div>
     </div>
+  );
+}
+
+// Export MoTeC di ACC (L5). ACC li scrive solo su PC, in Documenti\Assetto Corsa
+// Competizione\MoTeC, se nell'elettronica del setup «giri di telemetria» è sopra zero.
+// Di solito sono giri di altri piloti: per questo di default sono «riferimento».
+function ImportaMotec() {
+  const { ricarica } = useSessione();
+  const router = useRouter();
+  const [ld, setLd] = useState<File | null>(null);
+  const [ldx, setLdx] = useState<File | null>(null);
+  const [setup, setSetup] = useState<File | null>(null);
+  const [inizio, setInizio] = useState("");
+  const [fine, setFine] = useState("");
+  const [mescola, setMescola] = useState<Mescola | "">("");
+  const [mio, setMio] = useState(false);
+  const [lavoro, setLavoro] = useState(false);
+  const [esito, setEsito] = useState<Esito>(null);
+
+  const litri = (t: string) => {
+    const n = Number(t.trim().replace(",", "."));
+    return t.trim() && Number.isFinite(n) && n >= 0 ? n : null;
+  };
+  const lInizio = litri(inizio);
+  const lFine = litri(fine);
+  const soloUno = (lInizio === null) !== (lFine === null);
+  const alRovescio = lInizio !== null && lFine !== null && lFine >= lInizio;
+
+  async function importa() {
+    if (!ld) return;
+    setLavoro(true);
+    setEsito(null);
+    try {
+      const r = await importaMotec({
+        ld,
+        ldx,
+        setup,
+        carburanteInizioL: lInizio,
+        carburanteFineL: lFine,
+        mescola: mescola || null,
+        riferimento: !mio,
+      });
+      await ricarica(r.id);
+      setEsito({ ok: true, testo: `Importato: ${giri(r.giri_con_tempo)} con tempo, ${r.assunzioni.length} note sui dati.` });
+      router.push("/telemetry");
+    } catch (e) {
+      setEsito({ ok: false, testo: messaggio(e, "Import MoTeC non riuscito.") });
+    } finally {
+      setLavoro(false);
+    }
+  }
+
+  const campo = "rounded-md border border-line bg-inset px-2 py-1.5 text-sm text-white placeholder:text-muted focus:border-accent focus:outline-none";
+  const etichetta = "font-mono text-[0.6rem] uppercase tracking-widest text-muted";
+  const inputFile =
+    "block w-full text-xs text-subtle file:mr-3 file:cursor-pointer file:rounded-md file:border file:border-line-strong file:bg-raised file:px-3 file:py-1.5 file:text-xs file:text-white hover:file:border-accent";
+
+  return (
+    <Blocco
+      titolo="Importa un export MoTeC"
+      sottotitolo="Documenti\Assetto Corsa Competizione\MoTeC: il .ld porta i canali, il .ldx i passaggi sul traguardo. MoTeC non esporta posizione in pista né carburante: la posizione si ricava dalla velocità, il consumo lo dai tu o il setup."
+    >
+      <div className="grid gap-3 md:grid-cols-3">
+        <label className="flex flex-col gap-1">
+          <span className={etichetta}>File .ld · obbligatorio</span>
+          <input type="file" accept=".ld" onChange={(e) => setLd(e.target.files?.[0] ?? null)} className={inputFile} />
+        </label>
+        <label className="flex flex-col gap-1">
+          <span className={etichetta}>File .ldx · i giri</span>
+          <input type="file" accept=".ldx" onChange={(e) => setLdx(e.target.files?.[0] ?? null)} className={inputFile} />
+        </label>
+        <label className="flex flex-col gap-1">
+          <span className={etichetta}>Setup .json · facoltativo</span>
+          <input type="file" accept=".json,application/json" onChange={(e) => setSetup(e.target.files?.[0] ?? null)} className={inputFile} />
+        </label>
+      </div>
+      <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <label className="flex flex-col gap-1">
+          <span className={etichetta}>Litri a inizio sessione</span>
+          <input value={inizio} onChange={(e) => setInizio(e.target.value)} inputMode="decimal" placeholder="es. 60" className={campo} />
+        </label>
+        <label className="flex flex-col gap-1">
+          <span className={etichetta}>Litri a fine sessione</span>
+          <input value={fine} onChange={(e) => setFine(e.target.value)} inputMode="decimal" placeholder="es. 24.5" className={campo} />
+        </label>
+        <label className="flex flex-col gap-1">
+          <span className={etichetta}>Gomme</span>
+          <select value={mescola} onChange={(e) => setMescola(e.target.value as Mescola | "")} className={campo}>
+            <option value="">Dal setup, o non indicate</option>
+            <option value="asciutto">Da asciutto</option>
+            <option value="bagnato">Da bagnato</option>
+          </select>
+        </label>
+        <label className="flex items-end gap-2 pb-1.5 text-[0.8rem] text-subtle">
+          <input type="checkbox" checked={mio} onChange={(e) => setMio(e.target.checked)} />
+          È un giro mio (non un riferimento)
+        </label>
+      </div>
+      <p className="mt-2 text-[0.7rem] text-muted">
+        Consumo: i litri che scrivi valgono più del setup, e il report dice sempre da dove viene il numero. Senza .ldx i giri
+        non si conoscono, salvo un giro ritagliato in MoTeC i2 lungo quanto la pista.
+      </p>
+      {soloUno && <p className="mt-1 text-[0.72rem] text-warn">Per il consumo servono i litri a inizio e a fine.</p>}
+      {alRovescio && <p className="mt-1 text-[0.72rem] text-warn">A fine sessione ci sono più litri che all&apos;inizio.</p>}
+      <button
+        type="button"
+        disabled={!ld || lavoro || soloUno || alRovescio}
+        onClick={importa}
+        className="mt-3 rounded-md bg-accent px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {lavoro ? "Import…" : "Importa"}
+      </button>
+      <Esito esito={esito} />
+    </Blocco>
   );
 }
 
@@ -239,7 +358,7 @@ function ImportaFile() {
                 {p.numero !== null ? `#${p.numero} · ` : ""}
                 {p.pilota ?? "Pilota sconosciuto"}
               </span>
-              <span className="font-mono text-[0.62rem] text-muted">{p.giri} giri</span>
+              <span className="font-mono text-[0.62rem] text-muted">{giri(p.giri)}</span>
             </button>
           ))}
         </div>
@@ -582,12 +701,14 @@ function Archivio() {
                     {nomi.pista(s.track)} · {nomi.vettura(s.car)}
                   </span>
                   <Etichetta testo={etichettaFonte(s.fonte, s.piattaforma)} accesa={s.demo} />
+                  {s.riferimento && <Etichetta testo="riferimento" />}
+                  {s.ritaglio_i2 && <Etichetta testo="ritaglio i2" />}
                   {s.ha_canali && <Etichetta testo="telemetria" />}
                   {s.ha_setup && <Etichetta testo="setup" />}
                   {s.ha_racconto && <Etichetta testo="racconto" />}
                 </div>
                 <div className="mt-0.5 font-mono text-[0.62rem] text-muted">
-                  {ETICHETTA_TIPO[s.tipo_sessione] ?? "Sessione"} · {s.giri} giri · best {tempoGiro(s.miglior_giro_ms)}
+                  {ETICHETTA_TIPO[s.tipo_sessione] ?? "Sessione"} · {giri(s.giri)} · best {tempoGiro(s.miglior_giro_ms)}
                   {!s.demo ? ` · ${data(s.iniziata_il ?? s.importato_il)}` : ""}
                 </div>
               </div>
@@ -601,6 +722,16 @@ function Archivio() {
               >
                 {aperta ? "Aperta" : "Apri"}
               </button>
+              {s.ha_canali && (
+                <a
+                  href={urlEsportaMotec(s.id)}
+                  download
+                  className="rounded-md px-2 py-1 font-mono text-[0.6rem] uppercase tracking-widest text-subtle transition hover:text-white"
+                  title="Scarica .ld + .ldx da aprire in MoTeC i2 (con carburante, temperature al core e posizione, se registrati)"
+                >
+                  MoTeC ↓
+                </a>
+              )}
               {!s.demo && (
                 <button
                   type="button"

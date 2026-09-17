@@ -13,7 +13,7 @@ import AnalisiCurve from "@/components/charts/AnalisiCurve";
 import GommeFreni from "@/components/charts/GommeFreni";
 import { fadeInUp } from "@/lib/motion";
 import { useSessione } from "@/lib/sessione";
-import { ETICHETTA_TIPO } from "@/lib/formato";
+import { ETICHETTA_TIPO, giri } from "@/lib/formato";
 
 export default function TelemetryPage() {
   const { report, idSessione, caricamento, errore, nomi } = useSessione();
@@ -30,7 +30,7 @@ export default function TelemetryPage() {
     <div>
       <PageHeader
         title="Telemetria"
-        subtitle={`${nomi.pista(report.track)} · ${nomi.vettura(report.car)} · ${ETICHETTA_TIPO[report.tipo_sessione] ?? "sessione"} · ${report.giri_totali} giri`}
+        subtitle={`${nomi.pista(report.track)} · ${nomi.vettura(report.car)} · ${ETICHETTA_TIPO[report.tipo_sessione] ?? "sessione"} · ${giri(report.giri_totali)}`}
       />
       {!report.ha_canali && (
         <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="mb-4 rounded-xl border border-line bg-surface p-3 text-[0.8rem] text-subtle">

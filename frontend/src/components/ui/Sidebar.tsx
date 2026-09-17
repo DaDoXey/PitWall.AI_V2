@@ -17,7 +17,7 @@ import SidebarSection from "@/components/ui/SidebarSection";
 import QuickNotes from "@/components/ui/QuickNotes";
 import { useProfile } from "@/lib/profile";
 import { useSessione } from "@/lib/sessione";
-import { data, ETICHETTA_TIPO, etichettaFonte, tempoGiro } from "@/lib/formato";
+import { data, ETICHETTA_TIPO, etichettaFonte, giri, tempoGiro } from "@/lib/formato";
 import { COLORS } from "@/lib/theme";
 
 // Icone: set line-style coerente (NavIcons, FASE 4 #7) al posto delle emoji miste.
@@ -216,7 +216,7 @@ function SelettoreSessione() {
         <div className="truncate font-mono text-[0.62rem] text-muted">{nomi.vettura(sessione.car)}</div>
         <div className="mt-1 flex items-center justify-between font-mono text-[0.58rem] text-subtle">
           <span>
-            {ETICHETTA_TIPO[sessione.tipo_sessione] ?? "Sessione"} · {sessione.giri} giri
+            {ETICHETTA_TIPO[sessione.tipo_sessione] ?? "Sessione"} · {giri(sessione.giri)}
           </span>
           <span className="text-muted">{aperto ? "▴" : "cambia ▾"}</span>
         </div>
@@ -256,7 +256,7 @@ function SelettoreSessione() {
                   </div>
                   <div className="truncate font-mono text-[0.58rem] text-muted">{nomi.vettura(s.car)}</div>
                   <div className="font-mono text-[0.56rem] text-subtle">
-                    {s.giri} giri · best {tempoGiro(s.miglior_giro_ms)}
+                    {giri(s.giri)} · best {tempoGiro(s.miglior_giro_ms)}
                     {!s.demo && (s.iniziata_il || s.importato_il) ? ` · ${data(s.iniziata_il ?? s.importato_il)}` : ""}
                   </div>
                 </button>
@@ -276,7 +276,11 @@ function SelettoreSessione() {
   );
 }
 
-function BadgeFonte({ s }: { s: { fonte: Parameters<typeof etichettaFonte>[0]; piattaforma: Parameters<typeof etichettaFonte>[1]; demo: boolean } }) {
+function BadgeFonte({
+  s,
+}: {
+  s: { fonte: Parameters<typeof etichettaFonte>[0]; piattaforma: Parameters<typeof etichettaFonte>[1]; demo: boolean; riferimento?: boolean };
+}) {
   return (
     <span
       className={`shrink-0 rounded border px-1 font-mono text-[0.48rem] uppercase tracking-widest ${
@@ -284,6 +288,7 @@ function BadgeFonte({ s }: { s: { fonte: Parameters<typeof etichettaFonte>[0]; p
       }`}
     >
       {etichettaFonte(s.fonte, s.piattaforma)}
+      {s.riferimento ? " · rif." : ""}
     </span>
   );
 }

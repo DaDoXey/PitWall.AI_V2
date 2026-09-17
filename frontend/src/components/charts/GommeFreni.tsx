@@ -11,7 +11,7 @@ import { CartesianGrid, Line, LineChart, ReferenceArea, ReferenceLine, Responsiv
 import PressureGauge from "@/components/charts/PressureGauge";
 import { Riquadro } from "@/components/charts/GiriSessione";
 import type { Finestra, GiroGomme, PerRuota, Report } from "@/lib/api";
-import { numero, RUOTE } from "@/lib/formato";
+import { giri, numero, RUOTE } from "@/lib/formato";
 import { INSTRUMENT, STATE } from "@/lib/instrument";
 import { COLORS } from "@/lib/theme";
 
@@ -36,7 +36,7 @@ export default function GommeFreni({ report }: { report: Report }) {
   return (
     <div className="flex flex-col gap-4">
       {g && (
-        <Riquadro titolo={`Pressioni in pista · media su ${g.misurato_su_giri} giri utili`}>
+        <Riquadro titolo={`Pressioni in pista · media su ${giri(g.misurato_su_giri, "utili")}`}>
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
             {RUOTE.map((r) => {
               const valore = g.pressione_media[r.key];
@@ -60,6 +60,23 @@ export default function GommeFreni({ report }: { report: Report }) {
           </div>
           <NotaFinestra testo={g.nota_finestra} />
           <p className="mt-1 text-[0.7rem] text-muted">{g.nota_assi}</p>
+        </Riquadro>
+      )}
+
+      {g?.temperatura_motec_media && (
+        <Riquadro titolo="Temperature gomme dal file MoTeC · non giudicate">
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+            {RUOTE.map((r) => (
+              <div key={r.key} className="rounded-xl border border-line bg-inset p-3">
+                <div className="font-mono text-[0.6rem] uppercase tracking-widest text-muted">{r.label}</div>
+                <div className="mt-1 font-mono text-lg text-white">{numero(g.temperatura_motec_media?.[r.key] ?? null, 1)} °C</div>
+                <div className="font-mono text-[0.6rem] text-muted">
+                  media · massima {numero(g.temperatura_motec_massima?.[r.key] ?? null, 1)} °C
+                </div>
+              </div>
+            ))}
+          </div>
+          {g.nota_temperatura_motec && <p className="mt-2 text-[0.7rem] text-muted">{g.nota_temperatura_motec}</p>}
         </Riquadro>
       )}
 

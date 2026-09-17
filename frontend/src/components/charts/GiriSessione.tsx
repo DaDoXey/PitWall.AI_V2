@@ -60,7 +60,9 @@ export default function GiriSessione({ report }: { report: Report }) {
                   <td className="py-1.5">
                     <span className="flex flex-wrap gap-1">
                       {g.migliore && <Stato testo="migliore" colore={STATE.best} />}
-                      {!g.valido && <Stato testo="invalido" colore={STATE.alarm} />}
+                      {/* senza tempo = uscita o rientro a metà pista: non è un errore del pilota */}
+                      {!g.valido && g.tempo_ms !== null && <Stato testo="invalido" colore={STATE.alarm} />}
+                      {g.tempo_ms === null && <Stato testo="incompleto" colore={COLORS.muted} />}
                       {g.in_pit && <Stato testo="box" colore={COLORS.subtle} />}
                       {g.valido && g.tempo_ms !== null && !g.di_ritmo && <Stato testo="fuori ritmo" colore={COLORS.muted} />}
                     </span>

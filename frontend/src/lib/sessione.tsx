@@ -86,7 +86,8 @@ export function SessioneProvider({ children }: { children: React.ReactNode }) {
         const scelta = apriId ?? leggiScelta(demo);
         // In modalità demo si parte dalla DEMO: la postazione è condivisa e l'archivio
         // del PC non è la demo di nessuno.
-        const predefinita = demo ? r.demo_id : (r.sessioni[0]?.id ?? r.demo_id);
+        // I riferimenti (giri MoTeC di altri piloti, L5) non sono mai la sessione di default.
+        const predefinita = demo ? r.demo_id : (r.sessioni.find((s) => !s.riferimento)?.id ?? r.demo_id);
         const id = esiste(scelta) ? (scelta as string) : predefinita;
         setIdSessione(id);
         if (id) salvaScelta(id, demo);

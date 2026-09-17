@@ -13,7 +13,7 @@ import Sparkline from "@/components/charts/Sparkline";
 import { fadeInUp, staggerContainer, useReducedMotion } from "@/lib/motion";
 import type { Finestra, Report, Riassunto } from "@/lib/api";
 import { useSessione } from "@/lib/sessione";
-import { data, ETICHETTA_TIPO, etichettaFonte, numero, RUOTE, tempoGiro } from "@/lib/formato";
+import { data, ETICHETTA_FONTE_CARBURANTE, ETICHETTA_TIPO, etichettaFonte, giri, numero, RUOTE, tempoGiro } from "@/lib/formato";
 import { COLORS } from "@/lib/theme";
 import { INSTRUMENT, STATE } from "@/lib/instrument";
 
@@ -274,7 +274,11 @@ function SchedaSessione({ report, sessione, pista, vettura }: { report: Report; 
         <Stat label="Giro teorico" value={tempoGiro(r.giro_teorico_ms)} />
         <Stat
           label="Consumo"
-          value={report.carburante.calcolabile ? `${numero(report.carburante.consumo_medio_l_giro, 2)} l/giro` : "—"}
+          value={
+            report.carburante.calcolabile
+              ? `${numero(report.carburante.consumo_medio_l_giro, 2)} l/giro${report.carburante.fonte ? ` · ${ETICHETTA_FONTE_CARBURANTE[report.carburante.fonte]}` : ""}`
+              : "—"
+          }
         />
         <Stat label="Telemetria" value={report.ha_canali ? "sì" : "no"} />
       </div>
@@ -423,7 +427,13 @@ function buildKpis(report: Report): Kpi[] {
       valueNum: report.carburante.calcolabile ? report.carburante.consumo_medio_l_giro : null,
       suffix: " l/giro",
       decimals: 2,
-      note: report.carburante.calcolabile ? `Misurato su ${report.carburante.giri_misurati} giri` : report.carburante.motivo ?? "Non calcolabile",
+      note: report.carburante.calcolabile
+        ? report.carburante.fonte === "manuale"
+          ? `Inserito da te: media ripartita su ${giri(report.carburante.giri_misurati)}`
+          : report.carburante.fonte === "setup"
+            ? "Dal setup: stima salvata da ACC, non misurata"
+            : `Misurato su ${giri(report.carburante.giri_misurati)}`
+        : report.carburante.motivo ?? "Non calcolabile",
       detail: "Carburante usato giro per giro, misurato dal serbatoio registrato (non stimato).",
       color: report.carburante.calcolabile ? STATE.ok : COLORS.muted,
       series: conConsumo.map((g) => g.carburante_usato_l as number),
