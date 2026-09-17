@@ -78,7 +78,8 @@ ORIGINALI = {"Anthropic": anthropic.Anthropic, "log_incident": agent.log_inciden
              "log_token_usage": agent.log_token_usage}
 
 SEZIONI_OK = "\n".join(["## Diagnosi x", "## Causa Meccanica Probabile x",
-                        "## Correzione Setup Consigliata x", "## Note Aggiuntive x"])
+                        "## Correzione Setup Consigliata x", "## Correzione di Guida x",
+                        "## Note Aggiuntive x"])
 CREATE = []                                    # ogni chiamata "al modello" finisce qui
 RISPOSTE = []                                  # (testo, token_in, token_out) in coda; vuota = default
 

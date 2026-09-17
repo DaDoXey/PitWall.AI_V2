@@ -413,6 +413,15 @@ class Registratore:
         temporaneo.replace(percorso)
 
 
+def _e_demo(cartella: Path) -> bool:
+    """La sessione DEMO non conta nel tetto: si rigenera da sola, e non è del pilota."""
+    try:
+        return bool(json.loads((cartella / "sessione.json").read_text(encoding="utf-8"))
+                    .get("demo"))
+    except (OSError, ValueError):
+        return False
+
+
 def tetto_sessioni() -> int:
     """Quante sessioni conservano i canali grezzi. 0 = nessun tetto."""
     try:
@@ -437,7 +446,8 @@ def applica_tetto(radice: Path | None = None) -> list[str]:
     # risoluzione del secondo, e due sessioni nello stesso secondo verrebbero
     # ordinate dai quattro esadecimali casuali — cioe' a caso.
     con_canali = sorted(
-        (c for c in radice.iterdir() if c.is_dir() and (c / "canali.npz").exists()),
+        (c for c in radice.iterdir()
+         if c.is_dir() and (c / "canali.npz").exists() and not _e_demo(c)),
         key=lambda c: (c / "canali.npz").stat().st_mtime,
     )
     alleggerite = []

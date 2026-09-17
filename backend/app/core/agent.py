@@ -1,7 +1,8 @@
 """
 agent.py — PitWall.AI v2
-Client LLM con system prompt v4.
-Compatibile con il contesto esteso (setup completo + dati sessione + feedback).
+Client LLM con system prompt v5 (L4 del rework dati, 16/09/2026): Gigi riceve il report
+del motore di analisi, il setup e il racconto del pilota, e risponde in 5 sezioni —
+la quinta, «Correzione di Guida», esiste perché il motore ora misura la guida.
 """
 
 import logging
@@ -20,8 +21,9 @@ log = logging.getLogger("pitwall.agent")
 # ─────────────────────────────────────────────
 # COSTANTI
 # ─────────────────────────────────────────────
-PROMPT_PATH = Path(__file__).parent / "prompts" / "system_prompt_v4.txt"
-REQUIRED_SECTIONS = ["## Diagnosi", "## Causa Meccanica", "## Correzione Setup", "## Note Aggiuntive"]
+PROMPT_PATH = Path(__file__).parent / "prompts" / "system_prompt_v5.txt"
+REQUIRED_SECTIONS = ["## Diagnosi", "## Causa Meccanica", "## Correzione Setup",
+                     "## Correzione di Guida", "## Note Aggiuntive"]
 
 
 def get_env_var(name: str, default: str = "") -> str:
@@ -29,7 +31,7 @@ def get_env_var(name: str, default: str = "") -> str:
     return os.getenv(name, default)
 
 
-# INC-001: 2500 è il minimo sicuro per l'output completo a 4 sezioni.
+# INC-001: 2500 è il minimo sicuro per l'output completo a 5 sezioni.
 MAX_OUTPUT_TOKENS = int(get_env_var("PITWALL_MAX_OUTPUT_TOKENS", "2500"))
 MAX_INPUT_TOKENS  = int(get_env_var("PITWALL_MAX_INPUT_TOKENS", "8000"))
 
@@ -102,15 +104,16 @@ def load_system_prompt() -> str:
         return PROMPT_PATH.read_text(encoding="utf-8")
     except FileNotFoundError:
         return (
-            "Sei PitWall.AI, un Race Engineer virtuale per ACC. "
-            "Rispondi con 4 sezioni: ## Diagnosi, ## Causa Meccanica Probabile, "
-            "## Correzione Setup Consigliata, ## Note Aggiuntive."
+            "Sei Gigi, ingegnere di pista virtuale per ACC. "
+            "Rispondi con 5 sezioni: ## Diagnosi, ## Causa Meccanica Probabile, "
+            "## Correzione Setup Consigliata, ## Correzione di Guida, ## Note Aggiuntive. "
+            "Cita solo i numeri del report che ricevi."
         )
 
 
 def validate_output(response: str) -> bool:
     """
-    Verifica che l'output LLM contenga le 4 sezioni obbligatorie.
+    Verifica che l'output LLM contenga le 5 sezioni obbligatorie.
     """
     return all(section in response for section in REQUIRED_SECTIONS)
 
@@ -201,7 +204,7 @@ def get_ai_response(
 
 
 # ─────────────────────────────────────────────
-# CHAT GIGI (aggiunta — canale conversazionale, separato dall'analisi a 4 sezioni)
+# CHAT GIGI (aggiunta — canale conversazionale, separato dall'analisi a 5 sezioni)
 # ─────────────────────────────────────────────
 CHAT_PROMPT_PATH = Path(__file__).parent / "prompts" / "chat_system_prompt.txt"
 CHAT_MAX_OUTPUT_TOKENS = int(get_env_var("PITWALL_CHAT_MAX_TOKENS", "800"))
@@ -221,7 +224,7 @@ def load_chat_system_prompt() -> str:
 def chat_with_gigi(messages: list, api_key: str, context: str = "", model_name: str | None = None):
     """
     Generatore: invia la cronologia chat a Claude in streaming e fa yield dei
-    chunk di testo. NESSUNA validazione a 4 sezioni.
+    chunk di testo. NESSUNA validazione a 5 sezioni.
 
     Args:
         messages: lista [{"role": "user"|"assistant", "content": str}, ...].

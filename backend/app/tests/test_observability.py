@@ -89,7 +89,8 @@ ORIGINALI = {
 
 MARCATORE = "MARCATORE-PRIVATO-7Q"
 SEZIONI_OK = "\n".join(["## Diagnosi x", "## Causa Meccanica Probabile x",
-                        "## Correzione Setup Consigliata x", "## Note Aggiuntive x"])
+                        "## Correzione Setup Consigliata x", "## Correzione di Guida x",
+                        "## Note Aggiuntive x"])
 
 client = TestClient(fastapi_app, raise_server_exceptions=False)
 _letto = 0
@@ -182,9 +183,9 @@ try:
 
     agent.get_ai_response = lambda **kw: "risposta senza le sezioni"
     r, body, rid, righe = analisi("sottosterzo in uscita")
-    test("T11 risposta senza le 4 sezioni: fallback + WARNING col motivo",
+    test("T11 risposta senza le 5 sezioni: fallback + WARNING col motivo",
          body.get("source") == "fallback" and "WARNING" in righe
-         and "senza le 4 sezioni" in righe, righe.strip())
+         and "senza le sezioni obbligatorie" in righe, righe.strip())
 
     agent.get_ai_response = lambda **kw: "⚠️ Servizio temporaneamente non disponibile. Riprova tra poco."
     r, body, rid, righe = analisi("sottosterzo in uscita")

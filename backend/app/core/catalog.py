@@ -1,15 +1,15 @@
 """core/catalog.py — catalogo vetture e circuiti ACC (Lotto 1).
 
 Sorgente di verità del CATALOGO: `data/cars.json` (31 GT3) e `data/tracks.json`
-(25 circuiti). NON è un file protetto: i numeri della demo restano in
-`demo_data.py`, qui vive solo l'anagrafica (identità, specifiche, didascalie,
-riferimenti asset).
+(25 circuiti). NON è un file protetto: i numeri delle sessioni stanno nell'archivio
+(session bundle, demo compresa), qui vive solo l'anagrafica (identità, specifiche,
+didascalie, riferimenti asset).
 
 **Identità = slug.** L'app storicamente identifica auto e piste con il nome di
 display ("BMW M4 GT3", "Monza"); il catalogo usa slug stabili (`bmw_m4_gt3`).
 `resolve_car()` / `resolve_track()` fanno da ponte: normalizzano il testo e,
 per i casi che la normalizzazione non copre, consultano ALIAS_* — così le
-liste storiche di `catalog.ts` e `demo_data.SESSION` continuano a funzionare
+liste storiche di `catalog.ts` e i nomi della pagina Setup continuano a funzionare
 senza che nessuno debba riscrivere le stringhe.
 
 Nessun dato viene inventato: i campi incerti restano marcati nel JSON
@@ -54,7 +54,7 @@ ALIAS_CARS: dict[str, str] = {
 }
 
 ALIAS_TRACKS: dict[str, str] = {
-    # Nomi brevi usati da catalog.ts / demo_data rispetto ai nomi ufficiali.
+    # Nomi brevi usati da catalog.ts e dalla UI rispetto ai nomi ufficiali.
     "spafrancorchamps": "spa_francorchamps",
     "nurburgringgp": "nurburgring_gp",
     "nurburgring": "nurburgring_gp",

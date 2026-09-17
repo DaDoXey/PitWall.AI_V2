@@ -45,7 +45,8 @@ LOG = BACKEND / "logs" / "pitwall.log"
 SPESA = BACKEND / "logs" / "llm_spesa.json"
 USCITA = BACKEND / "logs" / "stress"
 BASE = "http://127.0.0.1:8000"
-SEZIONI = ["## Diagnosi", "## Causa Meccanica", "## Correzione Setup", "## Note Aggiuntive"]
+SEZIONI = ["## Diagnosi", "## Causa Meccanica", "## Correzione Setup", "## Correzione di Guida",
+           "## Note Aggiuntive"]
 
 FASE_A = [
     "In ingresso alla Parabolica l'auto va larga e non chiude la traiettoria, cosa cambio?",
