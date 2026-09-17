@@ -114,6 +114,10 @@ def elenca(limite: int = Query(default=50, ge=1, le=500)):
         if not cartella.is_dir() or not (cartella / "sessione.json").exists():
             continue
         dati = _metadati(cartella)
+        # Le conversioni di un file MoTeC (L5) vivono qui per il formato dei canali, ma non
+        # sono registrazioni da importare: sono già sessioni dell'archivio.
+        if dati.get("fonte") == "motec":
+            continue
         fuori.append({
             "id": dati.get("id", cartella.name),
             "inizio": dati.get("inizio"),
@@ -225,6 +229,9 @@ def importa(id_sessione: str):
         raise HTTPException(status_code=409,
                             detail="La demo è già nell'archivio delle sessioni")
     cartella = _cartella(id_sessione)
+    if _metadati(cartella).get("fonte") == "motec":
+        raise HTTPException(status_code=409,
+                            detail="Conversione di un file MoTeC: è già una sessione dell'archivio")
     try:
         bundle, _canali = bundle_da_registrazione(cartella)
     except TelemetriaNonConvertibile as errore:

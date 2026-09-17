@@ -5,6 +5,9 @@ Rotte:
 - `POST /api/sessions/import/results` — un file di risultati diventa una sessione
 - `POST /api/sessions/manuale`        — una sessione scritta dal pilota (console: setup,
                                         tempi se li ha, racconto della guida)
+- `POST /api/sessions/import/motec`   — un export MoTeC di ACC (.ld + .ldx) diventa una
+                                        sessione con i canali (L5)
+- `GET  /api/sessions/{id}/export/motec` — la sessione come .ld + .ldx (zip) per MoTeC i2 (L5)
 - `GET  /api/sessions`                — elenco, dalla più recente (la DEMO in fondo)
 - `GET  /api/sessions/{id}`           — il bundle intero
 - `GET  /api/sessions/{id}/analisi`   — il report del motore (L2, + curve e gomme se ci sono i canali)
@@ -64,6 +67,8 @@ log = logging.getLogger("pitwall.sessions")
 
 # Un file di ACC sta in pochi KB: il tetto serve solo a non farsi riempire il disco.
 MAX_BYTE = 20 * 1024 * 1024
+# Un .ld di ACC pesa 2-6 MB a giro (verificato il 17/09): 200 MB sono uno stint lungo.
+MAX_BYTE_MOTEC = 200 * 1024 * 1024
 
 
 def _import_consentito() -> bool:
@@ -77,13 +82,13 @@ def _presidio() -> None:
                             detail="Import delle sessioni disattivato su questa installazione")
 
 
-async def _leggi_upload(file: UploadFile) -> bytes:
-    raw = await file.read()
+async def _leggi_upload(file: UploadFile, massimo: int = MAX_BYTE) -> bytes:
+    raw = await file.read(massimo + 1)
     if not raw:
         raise HTTPException(status_code=400, detail="File vuoto")
-    if len(raw) > MAX_BYTE:
+    if len(raw) > massimo:
         raise HTTPException(status_code=413,
-                            detail=f"File troppo grande (massimo {MAX_BYTE // (1024 * 1024)} MB)")
+                            detail=f"File troppo grande (massimo {massimo // (1024 * 1024)} MB)")
     return raw
 
 
@@ -236,6 +241,124 @@ async def crea_sessione_manuale(corpo: SessioneManuale):
     return {"id": id_sessione, "riassunto": store.riassunto(id_sessione)}
 
 
+@router.post("/sessions/import/motec")
+async def importa_motec(
+    ld: UploadFile = File(...),
+    ldx: UploadFile | None = File(default=None),
+    setup: UploadFile | None = File(default=None),
+    carburante_inizio_l: float | None = Form(default=None, ge=0, le=150),
+    carburante_fine_l: float | None = Form(default=None, ge=0, le=150),
+    mescola: Mescola | None = Form(default=None),
+    riferimento: bool = Form(default=True),
+):
+    """Un export MoTeC di ACC diventa una sessione con i canali (L5 · Fase 2).
+
+    Il `.ldx` porta i passaggi sul traguardo: senza, i giri non si conoscono (salvo i
+    file ritagliati in MoTeC i2, che valgono un giro se la distanza è quella della
+    pista). Il setup, se c'è, porta mescola e consumo dichiarato; i litri a inizio e
+    fine, se ci sono, valgono più del setup.
+    """
+    import shutil
+
+    from app.bundle.adapters.motec import (
+        CarburanteManuale,
+        MotecNonConvertibile,
+        bundle_da_motec,
+        salva_registrazione,
+    )
+    from app.motec import FileMotecNonValido, LdxNonValido, registrazione_da_byte
+    from app.telemetria import registratore
+
+    _presidio()
+    nome_ld = ld.filename or "sessione.ld"
+    if not nome_ld.lower().endswith(".ld"):
+        raise HTTPException(status_code=400, detail="Il primo file deve essere un .ld di MoTeC")
+    if ldx is not None and not (ldx.filename or "").lower().endswith(".ldx"):
+        raise HTTPException(status_code=400, detail="Il file dei giri deve essere un .ldx")
+    if (carburante_inizio_l is None) != (carburante_fine_l is None):
+        raise HTTPException(status_code=400,
+                            detail="Per il consumo servono i litri a inizio E a fine sessione")
+
+    raw_ld = await _leggi_upload(ld, MAX_BYTE_MOTEC)
+    raw_ldx = await _leggi_upload(ldx) if ldx is not None else None
+    try:
+        registrazione = registrazione_da_byte(raw_ld, raw_ldx, nome_ld)
+    except (FileMotecNonValido, LdxNonValido) as e:
+        log.warning("400: MoTeC non leggibile (%s, %d byte): %s", nome_ld, len(raw_ld), e)
+        raise HTTPException(status_code=400, detail=str(e))
+
+    setup_letto = None
+    if setup is not None:
+        raw_setup = await _leggi_upload(setup)
+        try:
+            setup_letto = leggi_setup_acc(
+                raw_setup, nome=(setup.filename or "").removesuffix(".json") or None)
+        except SetupAccError as e:
+            raise HTTPException(status_code=400, detail=f"setup: {e}")
+
+    carburante = (CarburanteManuale(carburante_inizio_l, carburante_fine_l)
+                  if carburante_inizio_l is not None else None)
+    try:
+        bundle, canali, metadati = bundle_da_motec(
+            registrazione, setup=setup_letto, carburante=carburante, mescola=mescola,
+            riferimento=riferimento, nome_file=nome_ld)
+    except MotecNonConvertibile as e:
+        log.warning("422: MoTeC non convertibile (%s): %s", nome_ld, e)
+        raise HTTPException(status_code=422, detail=str(e))
+
+    id_registrazione = registratore.nuovo_id(bundle.meta.car, bundle.meta.track)
+    cartella = registratore.cartella_telemetria() / id_registrazione
+    bundle.canali.file = f"{id_registrazione}/canali.npz"
+    metadati["id"] = id_registrazione
+    metadati["file_origine"] = nome_ld
+    try:
+        salva_registrazione(cartella, canali, metadati)
+        id_sessione = store.salva(bundle)
+    except Exception:
+        shutil.rmtree(cartella, ignore_errors=True)   # niente canali orfani su disco
+        raise
+    log.info("MoTeC importato: %s (%s, %s, %d giri, riferimento=%s, carburante=%s)",
+             id_sessione, bundle.meta.car, bundle.meta.track, len(bundle.giri),
+             riferimento, bundle.carburante_fonte.value if bundle.carburante_fonte else "—")
+    return {
+        "id": id_sessione,
+        "id_registrazione": id_registrazione,
+        "riassunto": store.riassunto(id_sessione),
+        "giri": len(bundle.giri),
+        "giri_con_tempo": len([g for g in bundle.giri if g.tempo_ms]),
+        "assunzioni": bundle.assunzioni,
+    }
+
+
+@router.get("/sessions/{id_sessione}/export/motec")
+async def esporta_motec(id_sessione: str):
+    """La sessione come coppia `.ld` + `.ldx`, in uno zip, da aprire in MoTeC i2 (L5 · F5).
+
+    Solo lettura: non scrive niente sul disco del server. Funziona per ogni sessione con i
+    canali (registrazioni, demo, import MoTeC); senza canali risponde 409.
+    """
+    from fastapi.responses import Response
+
+    from app.motec.esporta import EsportazioneImpossibile, esporta
+
+    bundle = _leggi_o_errore(id_sessione)
+    canali = canali_del_bundle(bundle)
+    if not canali:
+        raise HTTPException(status_code=409,
+                            detail="Questa sessione non ha canali: niente da esportare per MoTeC")
+    try:
+        esportazione = esporta(bundle, canali)
+    except EsportazioneImpossibile as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    log.info("export MoTeC: %s → %s (%d canali, %d byte)", id_sessione,
+             esportazione.nome_base, len(esportazione.canali), len(esportazione.ld))
+    return Response(
+        content=esportazione.zip(),
+        media_type="application/zip",
+        headers={"Content-Disposition": f'attachment; filename="{esportazione.nome_base}.zip"'},
+    )
+
+
 @router.get("/sessions")
 async def elenco_sessioni(limite: int = 50):
     limite = max(1, min(limite, 200))
@@ -273,6 +396,8 @@ async def analisi_sessione(id_sessione: str):
 # 200 colonne per sbaglio.
 CANALI_TRACCE = (
     "physics.speedKmh", "physics.brake", "physics.gas", "physics.steerAngle", "physics.gear",
+    # il tempo sulla distanza: serve al delta fra due giri, anche di sessioni diverse (L5)
+    "pitwall.tempo_ms",
 )
 
 
@@ -348,10 +473,28 @@ async def cancella_sessione(id_sessione: str):
     if demo.e_demo(id_sessione):
         raise HTTPException(status_code=403, detail="La sessione demo non si cancella")
     try:
+        bundle = store.leggi(id_sessione)
+    except store.SessioneNonTrovata:
+        raise HTTPException(status_code=404, detail="Sessione non trovata")
+    except store.ArchivioError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    try:
         store.cancella(id_sessione)
     except store.SessioneNonTrovata:
         raise HTTPException(status_code=404, detail="Sessione non trovata")
     except store.ArchivioError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    # I canali di un import MoTeC sono una conversione del file del pilota, non una
+    # registrazione originale: se ne vanno con la sessione. (Le registrazioni della
+    # shared memory hanno la loro rotta di cancellazione e restano.)
+    if bundle.meta.fonte == Fonte.MOTEC and bundle.canali is not None:
+        import shutil
+
+        from app.telemetria.registratore import cartella_telemetria
+
+        radice = cartella_telemetria().resolve()
+        cartella_canali = (radice / bundle.canali.file).parent.resolve()
+        if cartella_canali.parent == radice and cartella_canali.is_dir():
+            shutil.rmtree(cartella_canali, ignore_errors=True)
     log.info("sessione cancellata: %s", id_sessione)
     return {"cancellata": id_sessione}
