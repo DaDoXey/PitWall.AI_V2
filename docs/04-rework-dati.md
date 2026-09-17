@@ -100,7 +100,7 @@ invece che da mantenere a mano.
 | **L1** | Adattatori Results JSON + Setup JSON → session bundle | **fatto — 14/09** (`f93ea57` `94ef0d6` `7894fc2` `c1a488b`) |
 | **L2** | Motore di analisi v1: ritmo, settori, costanza, degrado, carburante | **fatto — 14/09**, 57/57 |
 | **L3** | Registratore shared memory → canali → analisi per curva | **fatto — 15/09** (F1 lettore · F2 registratore · F3 curve · F4 bundle e report unico) |
-| **L4** | Gigi e schermate sul bundle; demo come bundle | da fare |
+| **L4** | Gigi e schermate sul bundle; demo come bundle | **fatto — 16/09** (motore rivisto, soglie Kunos, demo generata, 5 schermate + Sessioni, Gigi a 5 sezioni) — vedi §11 |
 | **L5** | Import MoTeC (opzionale) | da fare |
 
 ## 7 · Fatti verificati sui file reali (14/09/2026)
@@ -261,6 +261,11 @@ Con `test_parser` eliminato insieme al CSV, la verifica minima di ogni entry div
 `app/tests/test_adattatori.py` **81/81** · `app/tests/test_sessions.py` **50/50** ·
 `app/tests/test_analisi.py` **57/57**.
 
+**Dal 16/09 (L4):** 14 file di test, **751** in tutto, tutti offline — observability 24 · budget 31 ·
+bundle 37 · adattatori 86 · analisi 57 · analisi_l4 45 · demo 38 · gigi 32 · sessions 50 ·
+telemetria 97 · riferimenti 73 · registratore 69 · curve 62 · telemetria_bundle 50 — più
+`npx tsc --noEmit` 0 errori.
+
 ## 10 · Posizionamento (ricerca concorrenti, 14/09/2026)
 
 Track Titan (265k utenti, Porsche Ventures, $8–20/mese, post-sessione, consigli AI descritti come
@@ -387,7 +392,7 @@ importate» e «le registrazioni»: esistono le sessioni.
 
 `analisi/gomme.py` aggiunge gomme e freni, con un limite scelto apposta: **la finestra di pressione
 «ottimale» di una GT3 non è pubblicata da ACC**, quindi non si giudica contro una costante non
-verificata. Si misurano e si giudicano solo gli **squilibri** (ant/post, sx/dx) e le **tendenze**
+verificata. *(Superato il 16/09: la fonte Kunos esiste ed è stata trovata — vedi §11.)* Si misurano e si giudicano solo gli **squilibri** (ant/post, sx/dx) e le **tendenze**
 (pressione che sale sullo stint): una differenza e una pendenza si dimostrano da sole. I valori
 assoluti si riportano sempre. Quando la tabella delle finestre sarà verificata in gioco
 (decisione 7), i giudizi assoluti si aggiungono lì, marcati come verificati.
@@ -410,3 +415,84 @@ Aggiunta la **lista ufficiale completa** (`acc_lista_vetture_handbook.json`, 54 
 Server Admin Handbook v1.10.2): copre anche le GT3 del 2023-24 e la classe GT2, e ora **31 vetture
 su 31** del catalogo hanno il loro `carModelId`. L'adattatore dei risultati traduce il numero in
 vettura; se un numero non è in lista, lo dichiara invece di indovinare.
+
+## 11 · L4 — Gigi e le schermate sul bundle (16/09/2026)
+
+Aperto con due giri di domande, tutte le proposte approvate e «ok procedi su tutto» (anche sui file
+protetti: numeri demo, prompt, agente). Priorità dichiarata da Edoardo: **ristrutturare tutto e
+verificare che funzioni senza difetti o sbavature nelle analisi**, come base per completare la build.
+
+### Le soglie: una fonte primaria, e una community separata
+La finestra delle gomme **è pubblicata da Kunos**: «Version 1.9 - Physics notes», PDF di Aristotelis
+(staff Kunos) nel thread ufficiale del forum assettocorsa.net, 19/04/2023. Da lì, con la frase esatta
+e la pagina, in `core/data/acc_riferimenti_fisica_v19.json`: **26–27 psi** in pista (dichiarata
+*indicativa*), **70–100 °C al core** (tipica 80–90), superficie fra 50 e 120+ °C normale, **massimo
+15 °C fra esterno e interno** (non esposto dalla shared memory: non misurabile), **pressioni diverse
+fra gli assi = strumento di setup**, bumpstop 20–30 mm. Il PDF non è nel repo, solo i valori.
+I valori che circolano fra piloti (freni ant. ≤650 °C e post. ≤450 °C, bagnato 29,5–31 psi, pastiglie
+1–4) stanno in `acc_riferimenti_community.json` con `stato: "da_confermare"`, le fonti e i loro
+limiti: si mostrano con l'etichetta «community», **mai nel verdetto**. Diventano verificati solo con
+due fonti indipendenti più una conferma primaria (Kunos o lettura in gioco).
+
+### Il motore, rivisto
+- **Verdetto solo di perdite**; ciò che funziona va in `cosa_regge` con la sua prova. Un «Costanza
+  solida» in cima a un elenco di problemi non ci finisce più.
+- **Gomme contro la finestra Kunos** per *quota di tempo fuori* (>20% → voce), solo con mescola da
+  asciutto, solo nei giri completi fuori dai box. Le voci portano `parametri` (es.
+  `tire_press_rl: +0.6`) che la pagina Setup usa senza interpretare testo.
+- **Squilibrio fra gli assi fuori dal verdetto** (Kunos: è uno strumento); fra i lati resta.
+- **Pressioni che salgono**: voce solo se la salita porta fuori finestra (prima il verdetto poteva dire
+  insieme «alza la pressione» e «parti più basso»).
+- **Degrado dal giro migliore in poi**: i giri a gomme fredde facevano una «U» che nascondeva il calo
+  (demo: R² 0,02 → 0,98). Gravità = perdita media a giro, stessa scala delle altre voci. Il campo
+  `significativo` lo decide il motore. Un ritmo che **migliora** è un punto fermo con il suo nome, e
+  la voce sulla costanza dice che parte della dispersione viene da lì.
+- **Giro teorico** con `motivo_teorico` quando non si calcola; sotto i 100 ms dal reale non è una perdita.
+- **Settori delle registrazioni** letti da `lastSectorTime` (durata ufficiale del settore): prima si
+  usava `iSplit`, ambiguo, e il terzo settore andava perso → nessun giro teorico per le sessioni
+  registrate. Il terzo, se manca il traguardo successivo, è ricavato per differenza e dichiarato.
+- **Consumo** da `usedFuel` (litri, documentato) invece di `fuel` (kg per il documento).
+- **Bug curva 1 / curva 12**: la gravità di una voce per curva si cercava nel titolo («curva 1» sta
+  dentro «curva 12»). Ora la voce porta `curva` e `perdita_ms`.
+- Il report porta `giri` (stato di ogni giro deciso dal motore): le schermate non ricalcolano niente.
+
+### La demo è una sessione
+`bundle/demo.py` genera una sessione DEMO nello stesso archivio (id fisso, data 2000 → in fondo
+all'elenco): Monza con 7 curve nelle posizioni reali, velocità massima e perdite **calibrate** sui
+tempi della storia (1:47.82 al giro 4, calo fino a 1:49.16), pressioni posteriori basse, Post.DX oltre
+i 100 °C, consumo 3,2 l/giro, freni con picchi realistici. Il setup è un **file vero di ACC**. Nel repo
+c'è il generatore, non i canali: si crea all'avvio, si ricrea se manca o se cambia versione, non si
+cancella, non conta nel tetto dell'archivio. `core/demo_data.py` e `GET /api/session` sono spariti.
+
+### Console e PC: due percorsi, un motore
+Decisione di Edoardo: si chiede **dove gioca** (primo passo del wizard, o nella pagina Sessioni). Su
+PC: import dei file e registratore. Su console: sessione manuale con tempi (facoltativi), setup
+preparato nella pagina Setup e **racconto** per fasi (andamento, frenata, ingresso, centro, uscita,
+gomme, curve critiche). Stesso bundle (`meta.piattaforma`, `racconto`), stesso motore, stesse schermate;
+il report dichiara ciò che manca. `POST /api/sessions/manuale`.
+
+### Gigi
+Prompt **v5** (il v4 è cancellato): riceve report compresso, setup, racconto, profilo e domanda; cita
+solo numeri presenti; riferimenti Kunos nel prompt; **5 sezioni**, nuova «Correzione di Guida». Con il
+live spento: sulla DEMO la cache (riscritta sui numeri veri del report demo, 5 sezioni), sulle altre
+sessioni la **risposta dal motore** (`analisi/gigi.py`, fonte `motore`) — prima avrebbe raccontato la
+storia di Monza su qualunque sessione.
+
+### Schermate
+- **Selettore di sessione** nella Sidebar; `lib/sessione.tsx` condivide sessione e report fra tutte le
+  pagine. Ultima sessione di default; in demo si parte dalla DEMO e la scelta vale per la visita.
+- **Dashboard**: scheda sessione, verdetto (prime 5, espandibile), cosa regge, note sui dati, 7 KPI dal
+  report (best, teorico, costanza, degrado, consumo, pressioni e temperature in finestra).
+- **Telemetria**: tab Giri (tabella, delta, settori), Curve (riepilogo + due giri sovrapposti sulla
+  distanza da `GET /api/sessions/{id}/tracce`), Gomme e freni (gauge con finestra Kunos neutra, serie
+  per giro, freni con riferimento community tratteggiato).
+- **Sessioni** (nuova): percorso PC, percorso console, archivio.
+- **Setup**: parametri da toccare secondo il verdetto (click = applica la variazione), setup grezzo
+  della sessione in lettura, «crea una sessione con questo setup».
+- **Via** (conti nel browser o numeri scritti a mano): corsie, scatter, radar, channel report, heatmap,
+  confronto metà stint, salute sessione, avvisi, consigli, finestra pressioni «a freddo», target fissi.
+
+### Verifica
+751 test offline, `tsc` 0 errori, backend e frontend vivi: tutte le pagine 200; controllate nel
+browser Dashboard, Telemetria (3 tab), Console (5 sezioni, fonti demo e motore), Sessioni, Setup
+(variazione applicata 24.2 → 24.8 psi), cambio di sessione e persistenza alla ricarica.

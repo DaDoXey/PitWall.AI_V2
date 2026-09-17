@@ -1810,6 +1810,44 @@ scostamenti sono uguali fra sinistra e destra: ciò che si chiede è ciò che si
 
 ---
 
+## Entry #037 — L4: Gigi e le schermate sul bundle, soglie Kunos, demo generata, percorso console
+
+| Campo | Valore |
+|---|---|
+| Data | 16/09/2026 |
+| Agente dev | Claude Code (claude-opus-5) |
+| Area | Backend: `analisi/` (motore, gomme, curve, NEW gigi) · `bundle/` (schema 1.1, store, adattatore telemetria, NEW demo) · NEW `core/riferimenti_fisica.py` + 2 JSON di riferimenti · `api/` (sessions, telemetria, analysis; via session.py) · 🔓 `core/agent.py`, `prompts/` (NEW v5, via v4, chat), `demo_responses.py`, via `demo_data.py` · `telemetria/banco.py` (ex tests/pista_finta) · test NEW analisi_l4, demo, gigi. Frontend: NEW `lib/sessione.tsx`, `lib/formato.ts`, pagina `/sessioni`, `Verdetto`, `GiriSessione`, `AnalisiCurve`, `GommeFreni`; riscritti Dashboard, Telemetria, Setup, Sidebar, Console, api, setup, console, profile, onboarding, tour; cancellati 19 componenti/lib della v1. Docs: `docs/04` §11, `docs/03`, README. |
+| Commit | `c93e347` motore e riferimenti · `1ef647a` demo e Gigi · `d953f4f` API · `4953b6f` frontend + commit docs successivo — pushati il 17/09 |
+| Contesto | Lotto L4 del rework dati (dopo #036). |
+
+**Catalogo messaggi:**
+1. «ok push e prepara le domande di L4» → push di F4 (`5169c07` `7031086`), primo giro di 8 domande.
+2. «vanno bene tutte le tue proposte, fai il secondo giro… la ricerca per la fonte kunos… puoi farla direttamente te… verificare fonti alternative come la community… delle chicche però da confermare» → ricerca fatta dal terminale, secondo giro di 8 domande.
+3. «1-6 vanno bene… 7 ti propongo di chiedere all'utente da che piattaforma gioca… per console fare qualcosa di più ridotto ma che alla fine funzioni esattamente come quello per pc… 8 proviamo… la cosa importante ora è ristrutturare tutto quanto e verificare che funzioni senza problemi, difetti o sbavature durante le analisi… ok procedi su tutto».
+4. (17/09) «ho visto la demo… è un gigantesco passo avanti… riprendiamo» → «ok push per tutti i commit… poi L5 MoTeC, le guide dei tracciati, inc-v2-003, chat di gigi ed il lotto 2».
+
+**Ricerca (fonte primaria trovata):** «Version 1.9 - Physics notes», PDF di Aristotelis (staff Kunos) sul forum ufficiale, 19/04/2023, letto per intero: 26–27 psi indicativi, 70–100 °C al core, assi con pressioni diverse = strumento di setup, 15 °C esterno/interno, bumpstop 20–30 mm. Community (da confermare, fonti e limiti scritti): freni ≤650/450 °C (fonte del 2022, pre-1.9), bagnato 29,5–31 psi, pastiglie 1–4 (fonti in disaccordo su 3 e 4).
+
+**Modifica:** dettaglio completo in `docs/04-rework-dati.md` §11. In sintesi:
+- **Motore**: verdetto solo di perdite + `cosa_regge`; gomme giudicate contro la finestra Kunos per quota di tempo fuori (solo asciutto, solo giri utili) con `parametri` per il Setup; assi fuori dal verdetto; degrado dal giro migliore; teorico con motivo; `giri` e `significativo`/`ruote_fuori` decisi nel backend.
+- **Difetti trovati e chiusi** (da test, dalla demo e dai dati veri del 14/09): terzo settore perso nelle registrazioni (`iSplit` → `lastSectorTime`); voce di curva 1 con i numeri della curva 12; degrado nascosto dalla «U» dei giri freddi (R² 0,02 → 0,98 sulla demo); «alza la pressione» insieme a «parti più basso»; «Il giro non l'hai messo insieme» per 10 ms; «Costanza solida» rivendicata mentre il ritmo cala; «il ritmo tiene» su uno stint che migliora di 98 ms a giro; azione a 0.8 psi su due ruote con scarti 0.6 e 0.8; consumo da `fuel` in kg; freni della demo a 893 °C.
+- **Demo come sessione** generata e calibrata (Monza, 7 curve, 1:47.82 al giro 4), setup vero di ACC; via `demo_data.py` e `/api/session`.
+- **Piattaforma**: primo passo del wizard; percorso console con sessione manuale e racconto per fasi, stesso motore.
+- **Gigi**: prompt v5 a 5 sezioni (nuova «Correzione di Guida»), contesto = report compresso; risposta dal motore quando il live è spento su sessioni non demo; cache demo riscritta sui numeri del report.
+- **Schermate**: selettore di sessione, Dashboard sul verdetto, Telemetria a 3 tab, pagina Sessioni, Setup guidato dal verdetto; nessun conto nel browser.
+
+**Verifica:**
+- Backend **751/751** in 14 file, tutti offline (nuovi: analisi_l4 45, demo 38, gigi 32). `tsc --noEmit` 0 errori.
+- Backend e frontend vivi: tutte le rotte 200. Nel browser: Dashboard, Telemetria (Giri, Curve con due giri sovrapposti, Gomme e freni), Console (5 sezioni; fonte demo e fonte motore su una sessione vera), Sessioni (percorso console, archivio), Setup (variazione del verdetto applicata 24.2 → 24.8 psi), cambio sessione e persistenza alla ricarica. Nessun errore in console.
+- Sbavature viste a schermo e corrette: card KPI senza grafico centrate in verticale, settori oltre il minuto, etichette C1… tagliate, testi del motore in minuscolo, sessione persa alla ricarica in demo.
+- Nessuna chiamata LLM: spesa invariata.
+- Incidente mio, chiuso: un log del frontend finito sul Desktop (OneDrive) per un percorso relativo sbagliato, cancellato subito; un file `curve.py` vuoto creato alla radice da un comando fallito, cancellato.
+
+**File protetti:** 🔓 sbloccati con «ok procedi su tutto» → `agent.py`, `prompts/*`, `demo_responses.py`, `demo_data.py` (cancellato). Non toccati: `setup_params.py`, `car_setup_ranges.json`, `vision_parser.py`.
+**Decisione:** ☑ Mantenuto — verifica a schermo della demo il 17/09 («un gigantesco passo avanti… sta venendo come mi immaginavo») e «ok push per tutti i commit… nell'ordine che mi hai proposto». Prima dei commit rilanciati 751/751 e `tsc` 0. Non verificati a schermo da Edoardo: wizard completo, sessione vera col login Google, pagina Sessioni nel dettaglio.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]

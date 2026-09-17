@@ -31,26 +31,26 @@ HAZARD-V2-B) + `cd frontend && npm run dev` (:3000). Health `GET :8000/` →
 **Pagine:**
 | Rotta | File | Cosa fa · API |
 |---|---|---|
-| `/` | `(app)/page.tsx` | **Dashboard**: card KPI con drag&drop, ordine e taglie in `localStorage` · `GET /api/session` |
-| `/telemetry` | `(app)/telemetry/page.tsx` | **Telemetria**: grafici, heatmap, gauge, tabelle giro · `GET /api/session` |
-| `/console` | `(app)/console/page.tsx` | **Console** di Gigi: domanda → analisi a 4 sezioni, con il profilo pilota del wizard · `POST /api/analysis` |
-| `/setup` | `(app)/setup/page.tsx` | **Setup**: 5 tab / 49 slider ACC, selettori vettura/circuito, upload screenshot setup · `GET /api/catalog`, `/api/setup-params`, `/api/session`; `POST /api/setup/from-image` |
+| `/` | `(app)/page.tsx` | **Dashboard** (L4): scheda sessione, verdetto, cosa regge, note sui dati, 7 KPI con drag&drop · report da `lib/sessione.tsx` (`GET /api/sessions/{id}/analisi`) |
+| `/telemetry` | `(app)/telemetry/page.tsx` | **Telemetria** (L4): tab Giri, Curve, Gomme e freni · report + `GET /api/sessions/{id}/tracce` |
+| `/console` | `(app)/console/page.tsx` | **Console** di Gigi sulla sessione aperta: analisi a 5 sezioni, con il profilo pilota · `POST /api/analysis` |
+| `/setup` | `(app)/setup/page.tsx` | **Setup**: 5 tab / 49 slider ACC, parametri indicati dal verdetto, setup grezzo della sessione, upload screenshot · `GET /api/catalog`, `/api/setup-params`, `/api/sessions/{id}`; `POST /api/setup/from-image` |
+| `/sessioni` | `(app)/sessioni/page.tsx` | **Sessioni** (L4): percorso PC (import file, registratore), percorso console (sessione manuale con racconto), archivio |
 | `/lezioni` · `/lezioni/[slug]` | `(app)/lezioni/…` | **A Lezione con Gigi**: indice e dettaglio, contenuti read-only da `lib/lessons.ts` |
 | `/crediti` | `(app)/crediti/page.tsx` | Crediti delle immagini Wikimedia Commons: legge `public/assets/ATTRIBUTIONS.md` a build-time |
 | `/login` | `(auth)/login/page.tsx` | Google Sign-In (popup) oppure modalità demo; profilo solo in `sessionStorage`, nessuna sessione server |
 
 Le schede vettura/circuito (`SessionBriefing`) leggono `GET /api/catalog/car/{id}` e `/api/catalog/track/{id}`.
 
-- **`components/ui/`**: `AlertsFeed`, `AuthGate`, `CountUp`, `GigiAdvice`, `GigiAvatar`, `GigiTour`, `HealthStatus`,
-  `MotionProvider`, `NavIcons`, `OnboardingFlow`, `PageHeader`, `Providers`, `QuickNotes`, `SessionBriefing`,
-  `SessionHealth`, `Sidebar`, `SidebarSection`, `Tabs`, `UserChip`.
-- **`components/charts/`**: `ChannelReport`, `LapChannelBars`, `LapDeltaChart`, `LapTable`, `LapTimesTable`,
-  `PressureGauge`, `ScatterPlot`, `SetupRadar`, `Sparkline`, `StintCompare`, `TelemetryLanes`, `TyreHeatmap`,
-  `TyreSnapshotGrid`.
-- **`lib/`**: `api.ts` (fetch client + `ApiError`), `auth.tsx`, `profile.tsx`, `theme.ts`, **`instrument.ts`** (token
-  "analogici": STATE ok/warn/alarm/cold, INSTRUMENT grid/track/tick/ink, STROKE hairline/tick/needle), **`motion.ts`**
-  (`fadeInUp`/`stagger`/`cardHover`, `EASE`, `DUR`), `advice.ts`, `catalog.ts` (liste di fallback se il backend non
-  risponde), `console.ts`, `crosscheck.ts`, `health.ts`, `lessons.ts`, `setup.ts`, `telemetry.ts`.
+- **`components/ui/`**: `AuthGate`, `CountUp`, `GigiAvatar`, `GigiTour`, `MotionProvider`, `NavIcons`,
+  `OnboardingFlow` (5 passi, il primo è la piattaforma), `PageHeader`, `Providers`, `QuickNotes`, `SessionBriefing`,
+  `Sidebar` (selettore di sessione + verdetto in una riga), `SidebarSection`, `Tabs`, `UserChip`, `Verdetto`.
+- **`components/charts/`**: `AnalisiCurve`, `GiriSessione`, `GommeFreni`, `PressureGauge`, `Sparkline`.
+- **`lib/`**: `api.ts` (fetch client tipizzato sul report + `ApiError`), **`sessione.tsx`** (sessione aperta e report
+  condivisi da tutte le pagine), **`formato.ts`** (solo formattazione: nessun conto), `auth.tsx`, `profile.tsx`,
+  `theme.ts`, **`instrument.ts`** (token "analogici"), **`motion.ts`**, `catalog.ts` (liste di fallback),
+  `console.ts`, `lessons.ts`, `setup.ts`.
+- **Regola L4**: i conti li fa il motore di analisi nel backend; il frontend mostra.
 - Asset visivi in `public/assets/` (**gitignorata**, ~33 MB): si rigenerano con gli script di `backend/scripts/`.
 
 ## 3 · Backend (`backend/app/`)
@@ -58,23 +58,28 @@ Le schede vettura/circuito (`SessionBriefing`) leggono `GET /api/catalog/car/{id
   presidio chiave (flag demo/live), cartella dei log. **`logging_config.py`** — log rotante con request-id (Entry #026).
   **`budget.py`** — tetto di spesa del ramo LLM: prenotazione al costo massimo e saldo al reale, per categoria
   (analisi/screenshot/chat) e per mese (Entry #028).
-- **`api/`**: `session.py`, `analysis.py`, `setup.py`, `vision.py`, `catalog.py`.
-- **`core/`** (⚠️ = protetto): ⚠️`agent.py` (client LLM: analisi con cascata + `chat_with_gigi`, non collegata),
-  ⚠️`setup_params.py` (+ ⚠️`data/car_setup_ranges.json`), ⚠️`vision_parser.py`,
-  ⚠️`prompts/` (`system_prompt_v4.txt`, `chat_system_prompt.txt`), `demo_data.py` e `demo_responses.py` (⚠️ i numeri),
-  `catalog.py` + `data/cars.json` (31 GT3) e `data/tracks.json` (25 circuiti), `data/tracks_knowledge/` (guide dei
-  tracciati: 4 su 25).
-- **`tests/`**: `test_observability.py`, `test_budget.py`.
+- **`api/`**: `sessions.py` (archivio, import, sessione manuale, analisi, tracce, riferimenti), `telemetria.py`,
+  `analysis.py`, `setup.py`, `vision.py`, `catalog.py`.
+- **`bundle/`**: `schema.py` (session bundle 1.1), `store.py`, `adapters/` (setup, risultati, telemetria),
+  `demo.py` (sessione DEMO generata). **`telemetria/`**: shared memory di ACC, registratore, `banco.py` sintetico.
+  **`analisi/`**: `motore.py`, `curve.py`, `gomme.py`, `gigi.py`. Dettaglio in `docs/04-rework-dati.md`.
+- **`core/`** (⚠️ = protetto): ⚠️`agent.py` (client LLM: analisi a 5 sezioni con cascata + `chat_with_gigi`, non
+  collegata), ⚠️`setup_params.py` (+ ⚠️`data/car_setup_ranges.json`), ⚠️`vision_parser.py`,
+  ⚠️`prompts/` (`system_prompt_v5.txt`, `chat_system_prompt.txt`), ⚠️`demo_responses.py`, `riferimenti_fisica.py`
+  (+ `data/acc_riferimenti_fisica_v19.json` Kunos e `acc_riferimenti_community.json`), `riferimenti_acc.py`,
+  `catalog.py` + `data/cars.json` (31 GT3) e `data/tracks.json` (25 circuiti), `data/tracks_knowledge/` (guide: 4 su 25).
+- **`tests/`**: 14 file, 751 test offline (elenco nei README).
 - **`backend/scripts/`** (fuori da `app/`): pipeline delle immagini (foto, ritagli, mappe, crediti) e validatore delle guide.
 - **`backend/logs/`** (gitignorata): `pitwall.log`, `llm_spesa.json`, e i registri `llm_token_log.md` / `llm_incidents.md`
   scritti da `agent.py`.
 
 ## 4 · Contratto API
 - `GET /` → health `{status, service, version, demo_mode, live_allowed}`.
-- `GET /api/session` → `{ session, tyre_labels, temp{series,max,limit,scale}, pressure{hot,hot_window,hot_series,cold,cold_window,cold_amber_margin,avg_hot}, fuel_per_lap, lap_times, laps, suggested_params }`.
-- `POST /api/analysis` body `{prompt, profile?}` → `{question, text (4 sezioni md), source: demo|cache|api|fallback}`.
-  In demo-mode: sempre cache, routing per keyword, domande fuori perimetro → risposta di reindirizzo. In live:
-  `fallback` anche senza chiave, a tetto di spesa raggiunto o con testo oltre 4000/1000 caratteri (prompt/profilo).
+- Sessioni, analisi, tracce, telemetria e riferimenti: tabella nei README, formato in `docs/04-rework-dati.md`.
+- `POST /api/analysis` body `{prompt, profile?, session_id?}` → `{question, text (5 sezioni md), source:
+  demo|cache|motore|api|fallback}`. Live spento: sulla DEMO la cache per keyword (fuori perimetro → reindirizzo), sulle
+  altre sessioni la risposta composta dal motore (`motore`). Live: `fallback` senza chiave, a tetto di spesa o con
+  testo oltre 4000/1000 caratteri — cache sulla DEMO, motore sulle altre.
 - `GET /api/setup-params?car&track` (entrambi opzionali) → 5 sezioni / 49 `Param{label,min,max,step,unit,default,tip}`.
 - `POST /api/setup/from-image` (multipart) → `{params,summary,…}` (503 in demo-mode, 503 se manca la key server,
   429 a tetto di spesa raggiunto, 500 se la lettura fallisce).
@@ -90,23 +95,17 @@ stesso presidio vale per la lettura screenshot (Entry #027).
 Acceso il live, ogni chiamata passa da `budget.prenota()` / `budget.salda()` (agganci in `agent.py` e
 `vision_parser.py`): tetti `PITWALL_BUDGET_{ANALISI,SCREENSHOT,CHAT}_GIORNO` + `PITWALL_BUDGET_MESE`.
 
-## 6 · Invarianti dati demo (`core/demo_data.py`) — da preservare
-Sorgente unica dei numeri per la coerenza cross-schermata:
-- Sessione: Monza · BMW M4 GT3 (modello 2021) · 8 giri · best **1:47.812** (= minimo di `LAP_TIMES`, controllato
-  all'import) · ~3.2 L/giro (25.6 L totali). Caso didattico: **retrotreno scarico** (Post.DX a 105°C).
-- **Temp max = ultimo valore della serie** (88/90/95/105°C; limite 95°C; scala heatmap 80–105).
-- **Pressioni a caldo = ultimo giro di `HOT_PRESS_SERIES` = gauge** (controllato all'import): 26.5/26.7/25.7/25.5 psi,
-  media 26.1; finestra a caldo **26.0–27.0**.
-- **Pressioni a freddo**: 25.0/25.2/24.2/24.0 psi; finestra a freddo **24.5–25.5** (margine ambra 0.6). I posteriori
-  stanno sotto finestra: è la causa della storia demo.
-- **Freddo e caldo mai mescolati**; delta freddo→caldo **+1.5 psi** uniforme. Stessi valori in
-  `prompts/system_prompt_v4.txt` e `prompts/chat_system_prompt.txt` (vedi `SPEC_ERRATA.md` ERR-02).
-- Parametri suggeriti da Gigi (evidenziati negli slider): `tire_press_rl`, `tire_press_rr`, `preload`.
+## 6 · La sessione DEMO (`bundle/demo.py`, dal 16/09/2026)
+`core/demo_data.py` non esiste più: la demo è una sessione generata e analizzata dallo stesso motore delle altre.
+- Monza · BMW M4 GT3 · 8 giri di prove su asciutto · best **1:47.820** al giro 4 · 3.2 l/giro (25.6 l).
+- Storia: posteriori sotto la finestra Kunos (media 25.4 / 25.2 psi), Post.DX oltre i 100 °C al core per il 38% del
+  tempo (105 °C a fine stint), calo di 352 ms a giro dal giro 4.
+- I numeri della cache di Gigi (`demo_responses.py`) sono quelli del report della demo: lo verifica `test_gigi.py`.
+- Si alza `VERSIONE_GENERATORE` quando cambia il generatore: all'avvio la demo si rigenera.
 
 ## 7 · Verifica
-- Frontend: `npx tsc --noEmit` **0 err** + rotte `/ /console /telemetry /setup /lezioni /crediti /login` **200**.
-- Backend: `./.venv/Scripts/python app/tests/test_observability.py` → **24/24** ·
-  `test_budget.py` → **31/31** (tutti offline).
+- Frontend: `npx tsc --noEmit` **0 err** + rotte `/ /console /telemetry /setup /sessioni /lezioni /crediti /login` **200**.
+- Backend: 14 file di test in `app/tests/`, **751** test, tutti offline.
 - **Mai** `npm run build` con `npm run dev` attivo (corrompe `.next`, HAZARD-V2-A).
 
 ## 8 · Deploy (da decidere)

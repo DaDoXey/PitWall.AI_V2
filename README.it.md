@@ -15,7 +15,7 @@ corso AI & Digital Innovation Specialist.
 **Esame del 15/07/2026 superato**, con la demo in demo-mode. Ora è in corso la **build vera e
 propria**: portare PitWall dalla demo al prodotto, con l'LLM reale sotto.
 
-Il client LLM è già implementato: un'analisi a 4 sezioni validate, con retry e cascata di modelli,
+Il client LLM è già implementato: un'analisi a 5 sezioni validate, con retry e cascata di modelli,
 che si accende con `PITWALL_ALLOW_LIVE=1` + `PITWALL_DEMO_MODE=0` + la chiave. Il client contiene
 anche una chat di Gigi in streaming, non ancora collegata a nessuna rotta. Ogni chiamata al modello
 passa da un **tetto di spesa** giornaliero e mensile. **L'LLM reale resta spento di default** finché
@@ -33,14 +33,14 @@ backend/       FastAPI
     logging_config.py  # log rotante con request-id (backend/logs/)
     budget.py    # tetto di spesa del ramo LLM, per categoria e per mese
     api/         # endpoint (elenco sotto)
-    core/        # logica di dominio: agent, setup_params, vision_parser, demo, prompts,
-                 # data/ (catalogo ACC e guide dei tracciati)
-    telemetria/  # shared memory di ACC: strutture, lettore, dizionario, registratore
-    analisi/     # motore deterministico: ritmo e costanza (L2), curve, gomme e freni (L3)
-    tests/       # test_bundle (37), test_adattatori (86), test_analisi (57),
-                 # test_sessions (50), test_observability (24), test_budget (31),
-                 # test_telemetria (97), test_riferimenti (73), test_registratore (69),
-                 # test_curve (62), test_telemetria_bundle (50)
+    core/        # logica di dominio: agent, setup_params, vision_parser, risposte demo, prompts,
+                 # data/ (catalogo ACC, guide dei tracciati, riferimenti Kunos e community)
+    bundle/      # session bundle, adattatori, archivio, la sessione DEMO generata
+    telemetria/  # shared memory di ACC: strutture, lettore, dizionario, registratore, banco sintetico
+    analisi/     # motore deterministico: ritmo, costanza, curve, gomme e freni; contesto di Gigi
+    tests/       # 751 test offline: observability 24, budget 31, bundle 37, adattatori 86,
+                 # analisi 57, analisi_l4 45, demo 38, gigi 32, sessions 50, telemetria 97,
+                 # riferimenti 73, registratore 69, curve 62, telemetria_bundle 50
   scripts/       # pipeline delle immagini (foto, ritagli, mappe) e validatore delle guide
 frontend/      Next.js 15.5 (App Router) + TypeScript + Tailwind + Recharts + Framer Motion
   src/
@@ -56,10 +56,11 @@ specificato in [`docs/04-rework-dati.md`](docs/04-rework-dati.md).
 ### Pagine
 | Rotta | Pagina |
 |---|---|
-| `/` | Dashboard |
-| `/telemetry` | Telemetria |
-| `/console` | Console (analisi del race engineer) |
-| `/setup` | Setup |
+| `/` | Dashboard: il verdetto della sessione aperta |
+| `/telemetry` | Telemetria: giri, curve, gomme e freni |
+| `/console` | Console (analisi del race engineer sulla sessione aperta) |
+| `/setup` | Setup (parametri indicati dal verdetto) |
+| `/sessioni` | Sessioni: import (PC), sessione manuale (console), archivio |
 | `/lezioni` · `/lezioni/[slug]` | A Lezione con Gigi |
 | `/crediti` | Crediti delle immagini (Wikimedia Commons) |
 | `/login` | Accesso (Google oppure modalità demo) |
@@ -67,8 +68,7 @@ specificato in [`docs/04-rework-dati.md`](docs/04-rework-dati.md).
 ### API
 | Metodo | Rotta | Cosa fa |
 |---|---|---|
-| GET | `/api/session` | Sessione corrente |
-| POST | `/api/analysis` | Analisi del race engineer |
+| POST | `/api/analysis` | Analisi del race engineer su una sessione (5 sezioni; `session_id`, di default la DEMO) |
 | GET | `/api/setup-params` | Parametri di setup e relativi range |
 | POST | `/api/setup/from-image` | Lettura del setup da uno screenshot |
 | GET | `/api/catalog` | Catalogo vetture e circuiti |
@@ -76,10 +76,13 @@ specificato in [`docs/04-rework-dati.md`](docs/04-rework-dati.md).
 | GET | `/api/catalog/track/{track_id}` | Scheda di un circuito |
 | POST | `/api/sessions/import/setup` | Importa un setup salvato in ACC |
 | POST | `/api/sessions/import/results` | Importa un file di risultati di ACC (409 se il file ha più vetture) |
-| GET | `/api/sessions` | Elenco delle sessioni importate |
+| POST | `/api/sessions/manuale` | Sessione manuale (chi gioca su console): tempi, setup, racconto del pilota |
+| GET | `/api/sessions` | Elenco delle sessioni, DEMO compresa |
 | GET | `/api/sessions/{id}` | Una sessione (session bundle) |
 | GET | `/api/sessions/{id}/analisi` | Report di analisi della sessione (deterministico, senza LLM; con curve, gomme e freni se ci sono i canali) |
-| DELETE | `/api/sessions/{id}` | Rimuove una sessione |
+| GET | `/api/sessions/{id}/tracce` | Canali di al massimo 4 giri sulla stessa griglia di distanza |
+| GET | `/api/riferimenti/fisica` | Soglie di gomme e freni: Kunos (primaria) e community (da confermare) |
+| DELETE | `/api/sessions/{id}` | Rimuove una sessione (non la DEMO) |
 | GET | `/api/telemetria/stato` | Stato del registratore della telemetria (aggancio, sessione in corso) |
 | POST | `/api/telemetria/avvia` · `/ferma` | Accende e spegne il registratore |
 | GET | `/api/telemetria/sessioni` | Registrazioni di telemetria sul disco |
@@ -99,7 +102,7 @@ pip install -r requirements.txt
 cp .env.example .env        # opzionale: senza chiave gira in demo-mode
 python -m uvicorn app.main:app
 ```
-Health check: <http://localhost:8000/> · API demo: <http://localhost:8000/api/session>
+Health check: <http://localhost:8000/> · sessioni (DEMO compresa): <http://localhost:8000/api/sessions>
 
 > **Niente `--reload`:** su Windows continua a servire il codice vecchio dopo una modifica al
 > backend (HAZARD-V2-B in `INCIDENTS.md`). Dopo aver toccato il backend, fermalo e rilancialo.
