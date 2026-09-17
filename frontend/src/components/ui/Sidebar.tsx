@@ -1,23 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import UserChip from "@/components/ui/UserChip";
-import { IconConsole, IconDashboard, IconLessons, IconSetup, IconTelemetry } from "@/components/ui/NavIcons";
-import HealthStatus from "@/components/ui/HealthStatus";
-import GigiAdvice from "@/components/ui/GigiAdvice";
+import {
+  IconConsole,
+  IconDashboard,
+  IconLessons,
+  IconSessions,
+  IconSetup,
+  IconTelemetry,
+} from "@/components/ui/NavIcons";
 import SidebarSection from "@/components/ui/SidebarSection";
 import QuickNotes from "@/components/ui/QuickNotes";
-import StintCompareModal from "@/components/charts/StintCompare";
-import { getSession } from "@/lib/api";
 import { useProfile } from "@/lib/profile";
-import { DEFAULT_CONDITIONS } from "@/lib/catalog";
-import { buildHealth, HEALTH_COLOR, HEALTH_LABEL } from "@/lib/health";
-import { buildAlerts } from "@/lib/crosscheck";
-import type { SessionData } from "@/lib/telemetry";
+import { useSessione } from "@/lib/sessione";
+import { data, ETICHETTA_TIPO, etichettaFonte, tempoGiro } from "@/lib/formato";
+import { COLORS } from "@/lib/theme";
 
 // Icone: set line-style coerente (NavIcons, FASE 4 #7) al posto delle emoji miste.
 const NAV = [
@@ -25,41 +26,25 @@ const NAV = [
   { href: "/console", label: "Engineer Console", icon: IconConsole },
   { href: "/telemetry", label: "Telemetria", icon: IconTelemetry },
   { href: "/setup", label: "Setup", icon: IconSetup },
+  { href: "/sessioni", label: "Sessioni", icon: IconSessions },
   { href: "/lezioni", label: "Lezioni", icon: IconLessons },
 ];
 
 export default function Sidebar() {
   const path = usePathname();
-  const [session, setSession] = useState<SessionData | null>(null);
   // Pannello footer aperto (note rapide). null = chiuso.
   const [footerPanel, setFooterPanel] = useState<"notes" | null>(null);
-  // Modal confronto metà stint (FASE 8 #7): il bottone ⇄ è un launcher, non un toggle.
-  const [compareOpen, setCompareOpen] = useState(false);
-  // Portale del modal su document.body (INC-V2-006): l'aside è sticky e uno sticky
-  // crea SEMPRE uno stacking context → uno z-50 interno perde contro le card
-  // `relative` della Dashboard, che nel DOM vengono dopo. `mounted` evita di
-  // toccare `document` durante l'SSR.
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
   // Replay onboarding (megaprompt #9, FASE 1): rilancia wizard → tour per la demo.
   const { startOnboarding } = useProfile();
+  const { report } = useSessione();
 
-  useEffect(() => {
-    getSession()
-      .then(setSession)
-      .catch(() => setSession(null)); // sidebar resta usabile anche senza backend
-  }, []);
-
-  const s = session?.session;
-  // Stato aggregato + avvisi per i badge delle sezioni (visibili anche da compresse).
-  const health = session ? buildHealth(session) : null;
-  const alertCount = session ? buildAlerts(session).length : 0;
+  const primo = report?.verdetto[0] ?? null;
 
   return (
     <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col border-r border-line bg-surface">
       {/* Header fisso in alto (megaprompt #7, FASE 2): brand + chip utente + NAV.
-          I 4 tasti di navigazione stanno QUI, fuori dalla zona scrollabile: restano
-          visibili sempre, ovunque sia lo scroll del corpo sidebar. */}
+          La navigazione sta QUI, fuori dalla zona scrollabile: resta visibile
+          sempre, ovunque sia lo scroll del corpo sidebar. */}
       <div className="border-b border-line p-4">
         <div className="font-display text-lg font-bold tracking-wide">
           PITWALL<span className="text-accent">.AI</span>
@@ -70,9 +55,6 @@ export default function Sidebar() {
         <div className="mt-3">
           <UserChip />
         </div>
-        {/* Stato attivo (FASE 4 #7): barra accent a sinistra + icona accent
-            (hover: accent-hover), stesso pattern del filetto sinistro usato da
-            Sessione corrente / Gigi consiglia — via la pillola piena. */}
         <nav className="mt-3 flex flex-col gap-1">
           {NAV.map((n) => {
             // Match anche le sotto-rotte (es. /lezioni/[slug]); "/" resta esatto.
@@ -105,103 +87,56 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      {/* Area centrale scrollabile (solo moduli, la nav è nell'header fisso).
-          Assorbe l'eccesso di altezza come coda in fondo invece di lasciare un
-          vuoto a metà colonna; a finestra bassa scrolla, header e footer restano
-          sempre raggiungibili. */}
+      {/* Area centrale scrollabile: la sessione aperta e cosa dice il motore. */}
       <div className="pw-scroll flex flex-1 flex-col gap-4 overflow-y-auto p-4">
+        <SelettoreSessione />
 
-      {/* Sessione corrente + stato sessione più visibile (badge demo) */}
-      {s && (
-        <div className="rounded-lg border border-l-2 border-line border-l-accent bg-inset p-3">
-          <div className="mb-1 flex items-center justify-between">
-            <span className="font-mono text-[0.55rem] uppercase tracking-widest text-accent">Sessione corrente</span>
-            <span className="inline-flex items-center gap-1 font-mono text-[0.5rem] uppercase tracking-widest text-ok">
-              <span className="h-1 w-1 rounded-full bg-ok" />
-              demo
-            </span>
-          </div>
-          <div className="text-sm text-white">{s.track}</div>
-          <div className="font-mono text-[0.62rem] text-muted">
-            {s.car} · stint {s.stint.toLowerCase()}
-          </div>
-          <div className="font-mono text-[0.62rem] text-muted">{DEFAULT_CONDITIONS}</div>
-        </div>
-      )}
-
-      {/* Salute sessione + Avvisi FUSI (megaprompt #6, FASE 2): un solo modulo a due
-          stati (semaforo sempre, lista avvisi su richiesta). Il badge resta visibile
-          anche a sezione compressa: stato aggregato + conteggio avvisi se > 0. */}
-      {session && health && (
-        <SidebarSection
-          id="health"
-          title="Salute sessione"
-          badge={
-            <span
-              className="inline-flex items-center gap-1 font-mono text-[0.5rem] uppercase tracking-widest"
-              style={{ color: HEALTH_COLOR[health.overall] }}
-            >
-              <span className="h-1 w-1 rounded-full" style={{ background: HEALTH_COLOR[health.overall] }} />
-              {HEALTH_LABEL[health.overall]}
-              {alertCount > 0 && <span style={{ color: HEALTH_COLOR.warn }}>· {alertCount}</span>}
-            </span>
-          }
-        >
-          <HealthStatus data={session} />
-        </SidebarSection>
-      )}
-
-      {/* Gigi consiglia (megaprompt #7, FASE 3): 1 sola voce (prossima azione) +
-          link "vedi tutti" → Console. Il badge "online" migra qui dal widget
-          footer rimosso: una sola rappresentazione di Gigi nella sidebar. */}
-      {session && (
-        <SidebarSection
-          id="gigi"
-          title="Gigi consiglia"
-          badge={
-            <span className="inline-flex items-center gap-1 font-mono text-[0.5rem] uppercase tracking-widest text-ok">
-              <span className="h-1 w-1 rounded-full bg-ok" />
-              online
-            </span>
-          }
-        >
-          <GigiAdvice data={session} />
-        </SidebarSection>
-      )}
-
-      {/* Storico sessioni: riga coming-soon. La card "Sessioni recenti" è stata
-          rimossa (megaprompt #7, FASE 3): mostrava la stessa identica sessione
-          della card "Sessione corrente" qui sopra. */}
-      <button
-        type="button"
-        disabled
-        aria-disabled="true"
-        title="Lo storico completo delle sessioni arriverà prossimamente"
-        className="flex w-full cursor-not-allowed items-center justify-between rounded-md border border-dashed border-line px-2 py-1.5 text-left"
-      >
-        <span className="font-mono text-[0.58rem] text-subtle">Storico sessioni</span>
-        <span className="font-mono text-[0.5rem] uppercase tracking-widest text-muted">prossimamente</span>
-      </button>
+        {/* Il verdetto in una riga: il problema numero uno della sessione aperta. */}
+        {report && (
+          <SidebarSection
+            id="verdetto"
+            title="Verdetto"
+            badge={
+              <span
+                className="inline-flex items-center gap-1 font-mono text-[0.5rem] uppercase tracking-widest"
+                style={{ color: report.verdetto.length ? COLORS.warn : COLORS.ok }}
+              >
+                <span
+                  className="h-1 w-1 rounded-full"
+                  style={{ background: report.verdetto.length ? COLORS.warn : COLORS.ok }}
+                />
+                {report.verdetto.length ? `${report.verdetto.length} voci` : "pulito"}
+              </span>
+            }
+          >
+            {primo ? (
+              <div className="rounded-lg border border-line bg-inset p-2.5">
+                <div className="font-mono text-[0.5rem] uppercase tracking-widest text-muted">Priorità 1</div>
+                <div className="mt-0.5 text-[0.78rem] leading-snug text-white">{primo.titolo}</div>
+                <div className="mt-1.5 text-[0.7rem] leading-snug text-subtle">{primo.azione}</div>
+                <Link
+                  href="/"
+                  className="mt-2 inline-block font-mono text-[0.55rem] uppercase tracking-widest text-accent transition hover:underline"
+                >
+                  Tutto il verdetto →
+                </Link>
+              </div>
+            ) : (
+              <p className="text-[0.72rem] text-subtle">
+                {report.giri_totali
+                  ? "Nessuna perdita dimostrabile con i dati di questa sessione."
+                  : "Nessun giro misurato: il verdetto parte dai tempi."}
+              </p>
+            )}
+          </SidebarSection>
+        )}
       </div>
 
-      {/* Footer ancorato in fondo (niente più mt-auto → niente vuoto a metà colonna) */}
+      {/* Footer ancorato in fondo */}
       <div className="flex flex-col gap-2 border-t border-line p-4">
-        {/* Pannello footer attivo: note rapide (FASE 6 #5). Il confronto è un
-            modal (FASE 8 #7): QuickCompare e la sua "precedente" statica finta
-            sono stati sostituiti dal confronto metà stint su dati reali. */}
         {footerPanel === "notes" && <QuickNotes />}
 
-        {/* Azioni rapide: sostituiscono i due shortcut-icona (FASE 6) */}
         <div className="grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            onClick={() => setCompareOpen(true)}
-            aria-haspopup="dialog"
-            title="Confronta prima e seconda metà dello stint"
-            className="flex h-8 items-center justify-center gap-1 rounded-md border border-line font-mono text-[0.58rem] text-subtle transition hover:border-accent hover:text-white"
-          >
-            ⇄ Confronto
-          </button>
           <button
             type="button"
             onClick={() => setFooterPanel((p) => (p === "notes" ? null : "notes"))}
@@ -213,23 +148,20 @@ export default function Sidebar() {
           >
             ✎ Note
           </button>
+          {/* Replay onboarding (megaprompt #9): rilancia wizard "Conosci il pilota" → tour. */}
+          <button
+            type="button"
+            onClick={startOnboarding}
+            aria-haspopup="dialog"
+            title="Rifai il wizard Conosci il pilota e il tour delle schermate"
+            className="flex h-8 items-center justify-center gap-1 rounded-md border border-line font-mono text-[0.58rem] text-subtle transition hover:border-accent hover:text-white"
+          >
+            ↻ Tutorial
+          </button>
         </div>
 
-        {/* Replay onboarding (megaprompt #9): rilancia wizard "Conosci il pilota"
-            → tour. Serve per la demo d'esame; il profilo salvato resta finché
-            il wizard non viene ricompletato. */}
-        <button
-          type="button"
-          onClick={startOnboarding}
-          aria-haspopup="dialog"
-          title="Rifai il wizard Conosci il pilota e il tour delle schermate"
-          className="flex h-8 items-center justify-center gap-1 rounded-md border border-line font-mono text-[0.58rem] text-subtle transition hover:border-accent hover:text-white"
-        >
-          ↻ Rivedi tutorial
-        </button>
-
         <div className="font-mono text-[0.6rem] text-muted">
-          v1.0.0 · post-esame
+          v1.1.0 · rework dati
           <span className="block">© 2026 Edoardo Ferlito · MIT</span>
           {/* Attribuzione asset: le licenze CC BY/BY-SA la vogliono
               raggiungibile dall'utente, non solo nel repo. */}
@@ -238,17 +170,120 @@ export default function Sidebar() {
           </Link>
         </div>
       </div>
-
-      {/* Modal confronto metà stint (overlay full-screen, raggiungibile da ogni pagina).
-          Renderizzato in portale su body: fuori dallo stacking context dell'aside
-          sticky, così z-50 vale davvero a livello viewport (INC-V2-006). */}
-      {mounted &&
-        createPortal(
-          <AnimatePresence>
-            {compareOpen && session && <StintCompareModal data={session} onClose={() => setCompareOpen(false)} />}
-          </AnimatePresence>,
-          document.body
-        )}
     </aside>
+  );
+}
+
+// ─────────────────────────────────────────────
+// Selettore della sessione aperta
+// ─────────────────────────────────────────────
+function SelettoreSessione() {
+  const { elenco, sessione, apri, nomi, errore } = useSessione();
+  const [aperto, setAperto] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!aperto) return;
+    const fuori = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setAperto(false);
+    };
+    const esc = (e: KeyboardEvent) => e.key === "Escape" && setAperto(false);
+    document.addEventListener("mousedown", fuori);
+    document.addEventListener("keydown", esc);
+    return () => {
+      document.removeEventListener("mousedown", fuori);
+      document.removeEventListener("keydown", esc);
+    };
+  }, [aperto]);
+
+  if (errore && !elenco) return <p className="text-[0.72rem] text-warn">{errore}</p>;
+  if (!sessione) return <p className="font-mono text-[0.6rem] text-muted">Caricamento sessioni…</p>;
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setAperto((a) => !a)}
+        aria-expanded={aperto}
+        aria-haspopup="listbox"
+        className="w-full rounded-lg border border-l-2 border-line border-l-accent bg-inset p-3 text-left transition hover:border-line-strong"
+      >
+        <div className="mb-1 flex items-center justify-between">
+          <span className="font-mono text-[0.55rem] uppercase tracking-widest text-accent">Sessione aperta</span>
+          <BadgeFonte s={sessione} />
+        </div>
+        <div className="text-sm text-white">{nomi.pista(sessione.track)}</div>
+        <div className="truncate font-mono text-[0.62rem] text-muted">{nomi.vettura(sessione.car)}</div>
+        <div className="mt-1 flex items-center justify-between font-mono text-[0.58rem] text-subtle">
+          <span>
+            {ETICHETTA_TIPO[sessione.tipo_sessione] ?? "Sessione"} · {sessione.giri} giri
+          </span>
+          <span className="text-muted">{aperto ? "▴" : "cambia ▾"}</span>
+        </div>
+      </button>
+
+      <AnimatePresence>
+        {aperto && elenco && (
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.12 }}
+            role="listbox"
+            className="pw-scroll absolute left-0 right-0 z-30 mt-1 max-h-80 overflow-y-auto rounded-lg border border-line bg-raised p-1 shadow-xl"
+          >
+            {elenco.map((s) => {
+              const scelta = s.id === sessione.id;
+              return (
+                <button
+                  key={s.id}
+                  type="button"
+                  role="option"
+                  aria-selected={scelta}
+                  onClick={() => {
+                    apri(s.id);
+                    setAperto(false);
+                  }}
+                  className={`block w-full rounded-md px-2.5 py-2 text-left transition ${
+                    scelta ? "bg-accent/15" : "hover:bg-surface"
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className={`truncate text-[0.78rem] ${scelta ? "text-accent" : "text-white"}`}>
+                      {nomi.pista(s.track)}
+                    </span>
+                    <BadgeFonte s={s} />
+                  </div>
+                  <div className="truncate font-mono text-[0.58rem] text-muted">{nomi.vettura(s.car)}</div>
+                  <div className="font-mono text-[0.56rem] text-subtle">
+                    {s.giri} giri · best {tempoGiro(s.miglior_giro_ms)}
+                    {!s.demo && (s.iniziata_il || s.importato_il) ? ` · ${data(s.iniziata_il ?? s.importato_il)}` : ""}
+                  </div>
+                </button>
+              );
+            })}
+            <Link
+              href="/sessioni"
+              onClick={() => setAperto(false)}
+              className="mt-1 block rounded-md border-t border-line px-2.5 py-2 font-mono text-[0.58rem] uppercase tracking-widest text-subtle transition hover:text-white"
+            >
+              + Importa o crea una sessione
+            </Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function BadgeFonte({ s }: { s: { fonte: Parameters<typeof etichettaFonte>[0]; piattaforma: Parameters<typeof etichettaFonte>[1]; demo: boolean } }) {
+  return (
+    <span
+      className={`shrink-0 rounded border px-1 font-mono text-[0.48rem] uppercase tracking-widest ${
+        s.demo ? "border-ok/50 text-ok" : "border-line-strong text-subtle"
+      }`}
+    >
+      {etichettaFonte(s.fonte, s.piattaforma)}
+    </span>
   );
 }

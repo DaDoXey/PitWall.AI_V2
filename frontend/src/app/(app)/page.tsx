@@ -8,40 +8,32 @@ import PageHeader from "@/components/ui/PageHeader";
 import { IconConsole, IconSetup, IconTelemetry } from "@/components/ui/NavIcons";
 import CountUp from "@/components/ui/CountUp";
 import { CarCard, TrackCard } from "@/components/ui/SessionBriefing";
+import { CosaRegge, ElencoVerdetto, NoteDati, StatoSessione } from "@/components/ui/Verdetto";
 import Sparkline from "@/components/charts/Sparkline";
 import { fadeInUp, staggerContainer, useReducedMotion } from "@/lib/motion";
-import { getSession } from "@/lib/api";
-import { TYRE_SERIES, type Corner, type SessionData } from "@/lib/telemetry";
+import type { Finestra, Report, Riassunto } from "@/lib/api";
+import { useSessione } from "@/lib/sessione";
+import { data, ETICHETTA_TIPO, etichettaFonte, numero, RUOTE, tempoGiro } from "@/lib/formato";
 import { COLORS } from "@/lib/theme";
-import { INSTRUMENT } from "@/lib/instrument";
-
-// Orizzonte (giri) per la proiezione consumo — assunzione dichiarata, non un dato ACC.
-const PROJECTION_LAPS = 5;
+import { INSTRUMENT, STATE } from "@/lib/instrument";
 
 // Ordine di default delle card KPI. Il drag&drop lo riordina; ordine e taglie
 // (normale/estesa) sono persistiti in localStorage (sopravvivono al refresh).
-const KPI_ORDER = ["temp", "press", "fuel", "trend", "spread", "outwin", "proj"] as const;
-const STORE_KEY = "pw_dashboard_kpi_v1";
+// v2 (L4): KPI nuovi, letti dal report del motore — l'ordine della v1 non vale più.
+const KPI_ORDER = ["best", "teorico", "costanza", "degrado", "consumo", "pressione", "temperatura"] as const;
+const STORE_KEY = "pw_dashboard_kpi_v2";
 
 export default function Dashboard() {
-  const [data, setData] = useState<SessionData | null>(null);
-  const [err, setErr] = useState<string | null>(null);
+  const { report, sessione, caricamento, errore, nomi } = useSessione();
   const [order, setOrder] = useState<string[]>([...KPI_ORDER]);
   const [sizes, setSizes] = useState<Set<string>>(new Set()); // KPI "estese" (col-span-2)
   const [selected, setSelected] = useState<string | null>(null); // KPI aperto nel modal
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [overIndex, setOverIndex] = useState<number | null>(null);
   // Lato del bersaglio puntato dal cursore (fix INC-V2-005): il drop inserisce
-  // PRIMA o DOPO la card sorvolata, non "al suo indice" (che con le card estese
-  // e il reflow del grid produceva posizioni inattese e asimmetriche).
+  // PRIMA o DOPO la card sorvolata, non "al suo indice".
   const [overSide, setOverSide] = useState<"before" | "after" | null>(null);
   const dragFrom = useRef<number | null>(null);
-
-  useEffect(() => {
-    getSession()
-      .then(setData)
-      .catch(() => setErr("Backend non raggiungibile — avvia FastAPI su :8000 (vedi README)."));
-  }, []);
 
   // Ripristina ordine/taglie da localStorage (persistenza oltre la sessione).
   useEffect(() => {
@@ -60,23 +52,15 @@ export default function Dashboard() {
     }
   }, []);
 
-  if (err)
+  if (!report || !sessione)
     return (
       <div>
-        <PageHeader title="Dashboard" subtitle="Riepilogo ultima sessione" />
-        <p className="text-sm text-warn">{err}</p>
-      </div>
-    );
-  if (!data)
-    return (
-      <div>
-        <PageHeader title="Dashboard" subtitle="Riepilogo ultima sessione" />
-        <p className="text-sm text-subtle">Caricamento…</p>
+        <PageHeader title="Dashboard" subtitle="Il verdetto della sessione" />
+        <StatoSessione errore={errore} caricamento={caricamento || !report} />
       </div>
     );
 
-  const s = data.session;
-  const kpis = buildKpis(data);
+  const kpis = buildKpis(report);
   const byId = Object.fromEntries(kpis.map((k) => [k.id, k]));
   const ordered = order.map((id) => byId[id]).filter(Boolean) as Kpi[];
   const openKpi = selected ? byId[selected] : null;
@@ -90,8 +74,7 @@ export default function Dashboard() {
   }
 
   // Riordino (persistito): `insert` è la posizione di INSERZIONE nell'array
-  // com'era prima della rimozione (bersaglio + eventuale +1 se lato "after");
-  // la rimozione della card trascinata fa scalare gli indici successivi.
+  // com'era prima della rimozione (bersaglio + eventuale +1 se lato "after").
   function reorder(insert: number) {
     const from = dragFrom.current;
     dragFrom.current = null;
@@ -108,7 +91,6 @@ export default function Dashboard() {
     persist(next, sizes);
   }
 
-  // Taglia card: normale ↔ estesa (col-span-2), persistita.
   function toggleSize(id: string) {
     const next = new Set(sizes);
     if (next.has(id)) next.delete(id);
@@ -119,42 +101,30 @@ export default function Dashboard() {
 
   return (
     <div>
-      <PageHeader title="Dashboard" subtitle="Riepilogo ultima sessione" />
+      <PageHeader title="Dashboard" subtitle="Il verdetto della sessione" />
 
-      {/* Card sessione */}
-      <motion.div
-        variants={fadeInUp}
-        initial="hidden"
-        animate="visible"
-        className="mb-4 rounded-xl border border-l-4 border-line border-l-accent bg-surface p-5"
-      >
-        <div className="font-mono text-[0.6rem] uppercase tracking-widest text-accent">Ultima sessione</div>
-        <div className="mt-1 font-display text-2xl font-bold">{s.track}</div>
-        <div className="text-sm text-subtle">
-          {s.car} · {s.car_year} · stint {s.stint.toLowerCase()}
-        </div>
-        <div className="mt-4 flex flex-wrap gap-8 border-t border-line pt-3 text-sm">
-          <Stat label="Giri" value={`${s.laps} · best ${s.best_lap}`} />
-          <Stat label="Consumo" value={`${s.fuel_avg_per_lap} L/giro · ${s.fuel_total} L`} />
-        </div>
-      </motion.div>
+      <SchedaSessione report={report} sessione={sessione} pista={nomi.pista(report.track)} vettura={nomi.vettura(report.car)} />
 
-      {/* Schede di contesto dal catalogo ACC: chi è questa pista e questa
-          vettura. I nomi della sessione sono risolti dal backend (slug o
-          display), quindi si passano così come arrivano da /api/session. */}
-      <motion.div
-        variants={staggerContainer}
-        initial="hidden"
-        animate="visible"
-        className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-2"
-      >
-        <TrackCard track={s.track} />
-        <CarCard car={s.car} />
-      </motion.div>
+      {/* Il verdetto viene prima dei numeri: è la ragione per cui si apre la pagina. */}
+      <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <section className="lg:col-span-2">
+          <Titoletto>Verdetto · ordinato per gravità</Titoletto>
+          <ElencoVerdetto voci={report.verdetto} />
+        </section>
+        <section className="flex flex-col gap-4">
+          {report.cosa_regge.length > 0 && (
+            <div>
+              <Titoletto>Cosa regge</Titoletto>
+              <CosaRegge punti={report.cosa_regge} />
+            </div>
+          )}
+          <NoteDati note={report.dati_mancanti} />
+        </section>
+      </div>
 
       {/* KPI: ingresso a cascata; ogni card apre il dettaglio in-page e si può trascinare */}
       <div className="mb-1 flex items-baseline justify-between">
-        <div className="font-mono text-[0.6rem] uppercase tracking-widest text-muted">Indicatori sessione</div>
+        <Titoletto>Indicatori sessione</Titoletto>
         <div className="font-mono text-[0.56rem] uppercase tracking-widest text-muted">trascina per riordinare · click per dettaglio</div>
       </div>
       <motion.div
@@ -162,11 +132,7 @@ export default function Dashboard() {
         initial="hidden"
         animate="visible"
         className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-        // Fallback per gap e "buchi" del grid (le card estese che vanno a capo
-        // ne lasciano): prima il drop lì era un no-op silenzioso — la card
-        // tornava indietro (INC-V2-005). Ora = inserisci in fondo, con la barra
-        // visibile sull'ultima card prima di rilasciare. Le card gestiscono il
-        // proprio dragover/drop e fanno stopPropagation: qui arrivano solo i vuoti.
+        // Fallback per gap e "buchi" del grid: drop = inserisci in fondo (INC-V2-005).
         onDragOver={(e) => {
           e.preventDefault();
           if (draggingId === null) return;
@@ -212,8 +178,6 @@ export default function Dashboard() {
                 isDragging ? "scale-[0.98] opacity-50" : ""
               }`}
             >
-              {/* Barra di inserzione nel gap (sostituisce il ring: dice DOVE
-                  finirà la card, non solo quale bersaglio stai sorvolando). */}
               {isTarget && (
                 <span
                   aria-hidden="true"
@@ -240,15 +204,18 @@ export default function Dashboard() {
         })}
       </motion.div>
 
-      {/* Prossime azioni: navigazione a pagina (invariata) */}
+      {/* Schede di contesto dal catalogo ACC: chi è questa pista e questa vettura. */}
+      {(report.track || report.car) && (
+        <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
+          {report.track && <TrackCard track={report.track} />}
+          {report.car && <CarCard car={report.car} />}
+        </motion.div>
+      )}
+
+      {/* Prossime azioni */}
       <div className="mt-8">
-        <div className="mb-3 font-mono text-[0.6rem] uppercase tracking-widest text-muted">Prossime azioni</div>
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-          className="grid grid-cols-1 gap-3 sm:grid-cols-3"
-        >
+        <Titoletto>Prossime azioni</Titoletto>
+        <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {ACTIONS.map((a) => (
             <motion.div key={a.href} variants={fadeInUp}>
               <ActionCard {...a} />
@@ -262,172 +229,228 @@ export default function Dashboard() {
   );
 }
 
+function Titoletto({ children }: { children: React.ReactNode }) {
+  return <div className="mb-2 font-mono text-[0.6rem] uppercase tracking-widest text-muted">{children}</div>;
+}
+
 // ─────────────────────────────────────────────
-// KPI: modello dati (tutti derivati da /api/session, nessuna chiamata nuova)
+// Scheda della sessione aperta
+// ─────────────────────────────────────────────
+function SchedaSessione({ report, sessione, pista, vettura }: { report: Report; sessione: Riassunto; pista: string; vettura: string }) {
+  const r = report.ritmo;
+  const quando = sessione.demo ? null : data(sessione.iniziata_il ?? sessione.importato_il);
+  return (
+    <motion.div
+      variants={fadeInUp}
+      initial="hidden"
+      animate="visible"
+      className="mb-6 rounded-xl border border-l-4 border-line border-l-accent bg-surface p-5"
+    >
+      <div className="flex flex-wrap items-center gap-2 font-mono text-[0.6rem] uppercase tracking-widest text-accent">
+        <span>{ETICHETTA_TIPO[report.tipo_sessione] ?? "Sessione"}</span>
+        <span className="text-muted">·</span>
+        <span className={sessione.demo ? "text-ok" : "text-subtle"}>{etichettaFonte(sessione.fonte, sessione.piattaforma)}</span>
+        {report.mescola && (
+          <>
+            <span className="text-muted">·</span>
+            <span className="text-subtle">gomme da {report.mescola}</span>
+          </>
+        )}
+        {quando && (
+          <>
+            <span className="text-muted">·</span>
+            <span className="text-subtle">{quando}</span>
+          </>
+        )}
+      </div>
+      <div className="mt-1 font-display text-2xl font-bold">{pista}</div>
+      <div className="text-sm text-subtle">{vettura}</div>
+      <div className="mt-4 flex flex-wrap gap-x-8 gap-y-3 border-t border-line pt-3 text-sm">
+        <Stat
+          label="Giri"
+          value={`${report.giri_totali}${report.giri_buttati ? ` · ${report.giri_buttati} buttati` : ""}`}
+        />
+        <Stat label="Miglior giro" value={r.miglior_giro_ms ? `${tempoGiro(r.miglior_giro_ms)} · giro ${r.miglior_giro_numero}` : "—"} color={STATE.best} />
+        <Stat label="Giro teorico" value={tempoGiro(r.giro_teorico_ms)} />
+        <Stat
+          label="Consumo"
+          value={report.carburante.calcolabile ? `${numero(report.carburante.consumo_medio_l_giro, 2)} l/giro` : "—"}
+        />
+        <Stat label="Telemetria" value={report.ha_canali ? "sì" : "no"} />
+      </div>
+    </motion.div>
+  );
+}
+
+function Stat({ label, value, color }: { label: string; value: string; color?: string }) {
+  return (
+    <div>
+      <div className="font-mono text-[0.6rem] uppercase tracking-widest text-muted">{label}</div>
+      <div className="mt-0.5 font-mono" style={color ? { color } : undefined}>
+        {value}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────
+// KPI: modello dati. Tutti letti dal report del motore: qui niente medie, niente
+// soglie — solo la scelta di cosa mostrare e in che unità.
 // ─────────────────────────────────────────────
 type Kpi = {
   id: string;
   label: string;
-  valueNum: number;
+  valueNum: number | null; // null = non calcolabile (si mostra `display` o «—»)
+  display?: string; // valore testuale (tempi sul giro) al posto del CountUp
   suffix: string;
   decimals: number;
   note: string;
   detail: string; // "come si calcola" mostrato nel modal
   color: string;
   series?: number[];
-  refLines?: number[]; // linee-soglia nel grafico del modal
-  refs: string[]; // indici/soglie su cui si basa il dato (in chiaro)
+  xs?: number[]; // numeri di giro della serie
+  refLines?: number[];
+  unit?: string; // unità dell'asse del grafico
+  refs: string[];
 };
 
-function buildKpis(d: SessionData): Kpi[] {
-  const corners: Corner[] = ["fl", "fr", "rl", "rr"];
-  const labelOf = (k: Corner) => TYRE_SERIES.find((t) => t.key === k)?.label ?? k;
-  const [lo, hi] = d.pressure.hot_window;
-  const winWidth = hi - lo;
+function finestraKpi(id: string, label: string, f: Finestra | null, report: Report): Kpi {
+  if (!f) {
+    const motivo = !report.ha_canali
+      ? "Serve la telemetria della sessione"
+      : report.mescola !== "asciutto"
+        ? "Finestra Kunos solo per gomme da asciutto"
+        : "Non misurata";
+    return { id, label, valueNum: null, suffix: "", decimals: 0, note: motivo, detail: motivo, color: COLORS.muted, refs: [] };
+  }
+  const fuori = f.ruote_fuori;
+  const nomi = RUOTE.filter((r) => fuori.includes(r.key)).map((r) => r.label);
+  return {
+    id,
+    label,
+    valueNum: RUOTE.length - fuori.length,
+    suffix: "/4",
+    decimals: 0,
+    note: fuori.length === 0 ? `Tutte dentro ${f.min}–${f.max} ${f.unita}` : `Fuori: ${nomi.join(", ")}`,
+    detail: `Ruote rimaste dentro la finestra indicativa Kunos (${f.min}–${f.max} ${f.unita}) nei giri completi fuori dai box. Una ruota conta «fuori» quando ci passa almeno il 20% del tempo.`,
+    color: fuori.length === 0 ? STATE.ok : STATE.warn,
+    refs: [
+      ...RUOTE.map((r) => `${r.label}: dentro ${numero(f.dentro_pct[r.key], 0)}% · sotto ${numero(f.sotto_pct[r.key], 0)}% · sopra ${numero(f.sopra_pct[r.key], 0)}%`),
+      `Fonte: ${f.fonte}`,
+    ],
+  };
+}
 
-  // Gomma più calda + sua serie.
-  const hottest = corners.reduce((a, b) => (d.temp.max[b] > d.temp.max[a] ? b : a));
-  const hotVal = d.temp.max[hottest];
-  const overLimit = hotVal > d.temp.limit;
-  const hotSeries = d.temp.series[hottest];
-  const tempTrend = (hotSeries[hotSeries.length - 1] - hotSeries[0]) / Math.max(1, hotSeries.length - 1);
-
-  // Pressioni: media, fuori-finestra, spread per-giro.
-  const out = corners.filter((k) => d.pressure.hot[k] < lo || d.pressure.hot[k] > hi);
-  const anyLow = corners.some((k) => d.pressure.hot[k] < lo);
-  const pressSeries = d.pressure.hot_series.fl.map(
-    (_, i) => (d.pressure.hot_series.fl[i] + d.pressure.hot_series.fr[i] + d.pressure.hot_series.rl[i] + d.pressure.hot_series.rr[i]) / 4,
-  );
-  const spreadSeries = d.pressure.hot_series.fl.map((_, i) => {
-    const vals = corners.map((k) => d.pressure.hot_series[k][i]);
-    return Math.max(...vals) - Math.min(...vals);
-  });
-  const lastSpread = Math.max(...corners.map((k) => d.pressure.hot[k])) - Math.min(...corners.map((k) => d.pressure.hot[k]));
-  const outPerLap = d.pressure.hot_series.fl.map((_, i) => corners.filter((k) => d.pressure.hot_series[k][i] < lo || d.pressure.hot_series[k][i] > hi).length);
-
-  // Consumo.
-  const spread = Math.max(...d.fuel_per_lap) - Math.min(...d.fuel_per_lap);
-  const stable = spread <= 0.4;
-  const projFuel = d.session.fuel_avg_per_lap * PROJECTION_LAPS;
+function buildKpis(report: Report): Kpi[] {
+  const r = report.ritmo;
+  const conTempo = report.giri.filter((g) => g.tempo_ms !== null);
+  const ritmici = conTempo.filter((g) => g.di_ritmo);
+  const gomme = report.gomme_e_freni?.gomme ?? null;
+  const d = report.degrado;
+  const dalGiro = d.dal_giro ?? 1;
+  const giriDegrado = ritmici.filter((g) => g.numero >= dalGiro);
+  const conConsumo = report.giri.filter((g) => g.carburante_usato_l !== null);
 
   return [
     {
-      id: "temp",
-      label: "Temperatura gomme",
-      valueNum: hotVal,
-      suffix: "°C",
+      id: "best",
+      label: "Miglior giro",
+      valueNum: r.miglior_giro_ms,
+      display: tempoGiro(r.miglior_giro_ms),
+      suffix: "",
       decimals: 0,
-      note: overLimit ? `${labelOf(hottest)} oltre la finestra (${d.temp.limit}°C)` : `${labelOf(hottest)} entro la finestra`,
-      detail: `Massimo di stint sulla gomma più calda (${labelOf(hottest)}), confrontato col limite finestra ${d.temp.limit}°C.`,
-      color: overLimit ? COLORS.accent : COLORS.ok,
-      series: hotSeries,
-      refLines: [d.temp.limit],
-      refs: [`Limite finestra: ${d.temp.limit}°C`, `Gomma più calda: ${labelOf(hottest)}`],
+      note: r.miglior_giro_ms ? `Giro ${r.miglior_giro_numero} · media ${tempoGiro(r.media_ms)}` : "Nessun giro valido",
+      detail: "Il giro valido più veloce della sessione; la media è sui giri di ritmo (entro il +10% dal migliore).",
+      color: STATE.best,
+      series: conTempo.map((g) => (g.tempo_ms as number) / 1000),
+      xs: conTempo.map((g) => g.numero),
+      refLines: r.miglior_giro_ms ? [r.miglior_giro_ms / 1000] : undefined,
+      unit: "s",
+      refs: [`Giri di ritmo: ${report.giri_di_ritmo}`, `Esclusi dal ritmo: ${report.giri_esclusi_dal_ritmo}`],
     },
     {
-      id: "press",
-      label: "Pressione media",
-      valueNum: d.pressure.avg_hot,
-      suffix: " psi",
-      decimals: 1,
-      note: out.length === 0 ? `Tutte in finestra (${lo}–${hi} psi)` : `${out.length} gomm${out.length === 1 ? "a" : "e"} fuori finestra${anyLow ? " · retrotreno basso" : ""}`,
-      detail: `Media delle 4 pressioni a caldo dell'ultimo giro. Finestra ottimale ${lo}–${hi} psi.`,
-      color: out.length === 0 ? COLORS.ok : COLORS.warn,
-      series: pressSeries,
-      refLines: [lo, hi],
-      refs: [`Finestra a caldo: ${lo}–${hi} psi`, `Media ultimo giro: ${d.pressure.avg_hot} psi`],
-    },
-    {
-      id: "fuel",
-      label: "Consumo medio",
-      valueNum: d.session.fuel_avg_per_lap,
-      suffix: " L/giro",
-      decimals: 1,
-      note: stable ? `Stabile (Δ ${spread.toFixed(1)} L) · ${d.session.fuel_total} L totali` : `Variabile (Δ ${spread.toFixed(1)} L) · ${d.session.fuel_total} L totali`,
-      detail: `Consumo medio per giro sullo stint; Δ = escursione tra giro più e meno esoso (${spread.toFixed(1)} L).`,
-      color: stable ? COLORS.ok : COLORS.warn,
-      series: d.fuel_per_lap,
-      refLines: [d.session.fuel_avg_per_lap],
-      refs: [`Media stint: ${d.session.fuel_avg_per_lap} L/giro`, `Δ stint: ${spread.toFixed(1)} L`, `Totale: ${d.session.fuel_total} L`],
-    },
-    {
-      id: "trend",
-      label: "Trend temperatura",
-      valueNum: tempTrend,
-      suffix: "°C/giro",
-      decimals: 1,
-      note: tempTrend > 0 ? `In salita su ${labelOf(hottest)}` : tempTrend < 0 ? `In calo su ${labelOf(hottest)}` : "Stabile",
-      detail: `Pendenza media della temperatura sulla gomma più calda (${labelOf(hottest)}): (ultimo − primo) / giri.`,
-      color: tempTrend > 0 ? COLORS.warn : COLORS.ok,
-      series: hotSeries,
-      refLines: [d.temp.limit],
-      refs: [`Pendenza: ${tempTrend.toFixed(2)} °C/giro`, `Gomma: ${labelOf(hottest)}`, `Limite: ${d.temp.limit}°C`],
-    },
-    {
-      id: "spread",
-      label: "Spread pressioni",
-      valueNum: lastSpread,
-      suffix: " psi",
-      decimals: 1,
-      note: lastSpread > winWidth ? "Sbilanciamento marcato" : "Bilanciamento regolare",
-      detail: `Differenza tra la gomma più gonfia e la più sgonfia (a caldo, ultimo giro). Riferimento: ampiezza finestra ${winWidth.toFixed(1)} psi.`,
-      color: lastSpread > winWidth ? COLORS.warn : COLORS.ok,
-      series: spreadSeries,
-      refLines: [winWidth],
-      refs: [`Ampiezza finestra: ${winWidth.toFixed(1)} psi`, `Spread ultimo giro: ${lastSpread.toFixed(1)} psi`],
-    },
-    {
-      id: "outwin",
-      label: "Gomme fuori finestra",
-      valueNum: out.length,
-      suffix: "/4",
+      id: "teorico",
+      label: "Giro teorico",
+      valueNum: r.giro_teorico_ms,
+      display: tempoGiro(r.giro_teorico_ms),
+      suffix: "",
       decimals: 0,
-      note: out.length === 0 ? "Tutte in finestra" : `${out.map((k) => labelOf(k)).join(", ")}`,
-      detail: `Quante delle 4 gomme sono fuori dalla finestra pressioni a caldo (${lo}–${hi} psi) nell'ultimo giro.`,
-      color: out.length === 0 ? COLORS.ok : COLORS.warn,
-      series: outPerLap,
-      refs: [`Finestra a caldo: ${lo}–${hi} psi`, `Fuori ora: ${out.length ? out.map((k) => labelOf(k)).join(", ") : "nessuna"}`],
+      note:
+        r.lasciato_sul_tavolo_ms !== null
+          ? `${r.lasciato_sul_tavolo_ms} ms lasciati sul tavolo`
+          : r.motivo_teorico ?? "Non calcolabile",
+      detail: "Somma dei tuoi tre settori migliori. La differenza con il miglior giro è il tempo che sai già fare ma non hai messo insieme.",
+      color: r.lasciato_sul_tavolo_ms === null ? COLORS.muted : r.lasciato_sul_tavolo_ms < 100 ? STATE.ok : STATE.warn,
+      refs: [
+        ...report.settori.map((s) => `S${s.numero}: migliore ${(s.migliore_ms / 1000).toFixed(3)} s · perdita media ${s.perdita_media_ms} ms`),
+        ...(r.giri_per_teorico ? [`Costruito su ${r.giri_per_teorico} giri con tutti i settori`] : []),
+      ],
     },
     {
-      id: "proj",
-      label: `Proiezione +${PROJECTION_LAPS} giri`,
-      valueNum: projFuel,
-      suffix: " L",
-      decimals: 1,
-      note: `~${d.session.fuel_avg_per_lap} L/giro a questo ritmo`,
-      detail: `Estrapolazione lineare: consumo medio × ${PROJECTION_LAPS} giri. (Orizzonte ${PROJECTION_LAPS} giri: assunzione di comodo, non un dato ACC.)`,
-      color: COLORS.ok,
-      series: d.fuel_per_lap,
-      refLines: [d.session.fuel_avg_per_lap],
-      refs: [`Consumo medio: ${d.session.fuel_avg_per_lap} L/giro`, `Orizzonte: ${PROJECTION_LAPS} giri`],
+      id: "costanza",
+      label: "Costanza",
+      valueNum: report.costanza.deviazione_ms,
+      suffix: " ms",
+      decimals: 0,
+      note: report.costanza.deviazione_ms !== null
+        ? `${report.costanza.giudizio} · ${numero(report.costanza.percentuale_entro_mezzo_secondo, 0)}% entro 0,5 s`
+        : report.costanza.giudizio ?? "Non calcolabile",
+      detail: "Deviazione standard dei tempi sui giri di ritmo: quanto assomigli a te stesso giro dopo giro.",
+      color: report.costanza.giudizio === "da cronometro" || report.costanza.giudizio === "solida" ? STATE.ok : report.costanza.deviazione_ms === null ? COLORS.muted : STATE.warn,
+      series: ritmici.map((g) => (g.delta_migliore_ms ?? 0) / 1000),
+      xs: ritmici.map((g) => g.numero),
+      refLines: [0],
+      unit: "s dal migliore",
+      refs: [`Scarto massimo: ${report.costanza.scarto_max_ms ?? "—"} ms`, `Giri entro 0,5 s: ${report.costanza.giri_entro_mezzo_secondo}`],
     },
+    {
+      id: "degrado",
+      label: "Degrado",
+      valueNum: d.calcolabile ? d.pendenza_ms_giro : null,
+      suffix: " ms/giro",
+      decimals: 0,
+      note: d.calcolabile ? `Dal giro ${d.dal_giro} · R² ${d.r_quadro}${d.significativo ? " · calo dimostrato" : ""}` : d.motivo ?? "Non calcolabile",
+      detail: "Pendenza dei tempi dal giro migliore in poi (regressione lineare). Un calo conta solo se la retta spiega i dati (R² ≥ 0,3).",
+      color: !d.calcolabile ? COLORS.muted : d.significativo ? STATE.warn : STATE.ok,
+      series: giriDegrado.map((g) => (g.tempo_ms as number) / 1000),
+      xs: giriDegrado.map((g) => g.numero),
+      unit: "s",
+      refs: d.calcolabile ? [`Giri considerati: ${d.giri_considerati}`, `Se continua per 10 giri: ${d.perdita_su_10_giri_ms} ms`] : [],
+    },
+    {
+      id: "consumo",
+      label: "Consumo",
+      valueNum: report.carburante.calcolabile ? report.carburante.consumo_medio_l_giro : null,
+      suffix: " l/giro",
+      decimals: 2,
+      note: report.carburante.calcolabile ? `Misurato su ${report.carburante.giri_misurati} giri` : report.carburante.motivo ?? "Non calcolabile",
+      detail: "Carburante usato giro per giro, misurato dal serbatoio registrato (non stimato).",
+      color: report.carburante.calcolabile ? STATE.ok : COLORS.muted,
+      series: conConsumo.map((g) => g.carburante_usato_l as number),
+      xs: conConsumo.map((g) => g.numero),
+      refLines: report.carburante.consumo_medio_l_giro ? [report.carburante.consumo_medio_l_giro] : undefined,
+      unit: "l",
+      refs: [],
+    },
+    finestraKpi("pressione", "Pressioni in finestra", gomme?.finestra_pressione ?? null, report),
+    finestraKpi("temperatura", "Temperature al core", gomme?.finestra_temperatura ?? null, report),
   ];
 }
 
-// Shortcut di navigazione — stesse icone line-style della Sidebar (NavIcons,
-// emoji sostituite su richiesta: coerenza col resto della nav).
+// Shortcut di navigazione — stesse icone line-style della Sidebar.
 const ACTIONS = [
-  { href: "/console", icon: IconConsole, label: "Engineer Console", hint: "Chiedi a Gigi un'analisi" },
-  { href: "/telemetry", icon: IconTelemetry, label: "Telemetria", hint: "Dati gomme e consumo per-giro" },
-  { href: "/setup", icon: IconSetup, label: "Setup", hint: "Regola i 49 parametri ACC" },
+  { href: "/console", icon: IconConsole, label: "Engineer Console", hint: "Chiedi a Gigi della sessione" },
+  { href: "/telemetry", icon: IconTelemetry, label: "Telemetria", hint: "Giri, curve, gomme e freni" },
+  { href: "/setup", icon: IconSetup, label: "Setup", hint: "I parametri toccati dal verdetto" },
 ];
 
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <div className="font-mono text-[0.6rem] uppercase tracking-widest text-muted">{label}</div>
-      <div className="mt-0.5 font-mono">{value}</div>
-    </div>
-  );
-}
-
-// Pallino di stato: pulse discreto quando lo stato richiede attenzione (accent/warn).
+// Pallino di stato: pulse discreto quando lo stato richiede attenzione.
 function StatusDot({ color, pulse }: { color: string; pulse: boolean }) {
   const reduce = useReducedMotion();
-  if (!pulse || reduce) return <span className="h-1.5 w-1.5 rounded-full" style={{ background: color }} />;
+  if (!pulse || reduce) return <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: color }} />;
   return (
     <motion.span
-      className="h-1.5 w-1.5 rounded-full"
+      className="h-1.5 w-1.5 shrink-0 rounded-full"
       style={{ background: color }}
       animate={{ opacity: [1, 0.35, 1], scale: [1, 1.25, 1] }}
       transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
@@ -435,65 +458,64 @@ function StatusDot({ color, pulse }: { color: string; pulse: boolean }) {
   );
 }
 
-// Card KPI: count-up al mount, apre il dettaglio in-page. In formato normale
-// mostra la sparkline; in formato ESTESO rende lo stesso grafico della modale
-// (assi/griglia/soglie via KpiChart condiviso) — statico, il click apre la modale.
+function ValoreKpi({ kpi, size }: { kpi: Kpi; size: string }) {
+  return (
+    <div className={`block font-mono ${size}`} style={{ color: kpi.valueNum === null ? COLORS.muted : kpi.color }}>
+      {kpi.valueNum === null ? "—" : kpi.display ?? <CountUp value={kpi.valueNum} decimals={kpi.decimals} suffix={kpi.suffix} />}
+    </div>
+  );
+}
+
+// Card KPI: in formato normale mostra la sparkline; in formato ESTESO lo stesso
+// grafico della modale (KpiChart condiviso) — statico, il click apre la modale.
 function KpiCard({ kpi, extended, onOpen }: { kpi: Kpi; extended: boolean; onOpen: () => void }) {
-  const { label, valueNum, suffix, decimals, note, color, series, refLines } = kpi;
+  const { label, note, color, series, refLines } = kpi;
+  const attenzione = color === STATE.warn || color === STATE.alarm;
   return (
     <button
       type="button"
       onClick={onOpen}
-      className="group block w-full cursor-pointer rounded-xl border border-line bg-surface p-4 text-left transition duration-200 hover:-translate-y-1 hover:border-accent/50 hover:shadow-[0_12px_30px_-14px_rgba(232,0,45,0.4)]"
+      className="group flex h-full w-full cursor-pointer flex-col justify-start rounded-xl border border-line bg-surface p-4 text-left transition duration-200 hover:-translate-y-1 hover:border-accent/50 hover:shadow-[0_12px_30px_-14px_rgba(232,0,45,0.4)]"
     >
       <div className="pr-7 font-mono text-[0.6rem] uppercase tracking-widest text-muted">{label}</div>
-      <div className="mt-2 block font-mono text-3xl" style={{ color }}>
-        <CountUp value={valueNum} decimals={decimals} suffix={suffix} />
+      <div className="mt-2">
+        <ValoreKpi kpi={kpi} size="text-3xl" />
       </div>
-      <div className="mt-2 flex items-center gap-1.5 text-xs" style={{ color }}>
-        <StatusDot color={color} pulse={color !== COLORS.ok} />
+      <div className="mt-2 flex items-center gap-1.5 text-xs" style={{ color: kpi.valueNum === null ? COLORS.subtle : color }}>
+        <StatusDot color={kpi.valueNum === null ? COLORS.muted : color} pulse={attenzione} />
         {note}
       </div>
-      {series && series.length >= 2 && (
-        extended ? (
+      {series && series.length >= 2 &&
+        (extended ? (
           <div className="pointer-events-none mt-3 rounded-lg border border-line bg-inset p-2">
-            <KpiChart series={series} color={color} refLines={refLines} unit={suffix.trim()} height={150} showTooltip={false} />
+            <KpiChart series={series} xs={kpi.xs} color={color} refLines={refLines} unit={kpi.unit} height={150} showTooltip={false} />
           </div>
         ) : (
           <div className="mt-3">
             <Sparkline data={series} color={color} />
-            {/* Riferimento di lettura: estremi della serie (scala del mini-trend) */}
             <div className="mt-1 flex justify-between font-mono text-[0.55rem] text-muted">
-              <span>min {fmtNum(Math.min(...series))}</span>
-              <span>max {fmtNum(Math.max(...series))}</span>
+              <span>giro {kpi.xs?.[0]}</span>
+              <span>giro {kpi.xs?.[kpi.xs.length - 1]}</span>
             </div>
           </div>
-        )
-      )}
+        ))}
     </button>
   );
 }
 
-// Formattazione compatta per gli estremi della sparkline: intero o 1 decimale.
-function fmtNum(n: number): string {
-  return Number.isInteger(n) ? String(n) : n.toFixed(1);
-}
-
-// Passo "nice" per l'asse Y (stile MoTeC): arrotonda a 1/2/5×10ⁿ così le
-// etichette sono valori tondi, distinti e leggibili — non più float sovrapposti.
+// Passo "nice" per l'asse Y (stile MoTeC): arrotonda a 1/2/5×10ⁿ.
 function niceStep(range: number): number {
-  const raw = (range > 1e-6 ? range : 1) / 4; // ~4 intervalli
+  const raw = (range > 1e-6 ? range : 1) / 4;
   const mag = Math.pow(10, Math.floor(Math.log10(raw)));
   const norm = raw / mag;
   const step = norm < 1.5 ? 1 : norm < 3 ? 2 : norm < 7 ? 5 : 10;
   return step * mag;
 }
 
-// Grafico dettaglio KPI — COMPONENTE CONDIVISO tra modale e card estesa (così non
-// divergono): assi con scala/unità, griglia hairline, marker su ogni punto,
-// linee-soglia. Statico (stile strumento). `showTooltip` off nella card (preview).
+// Grafico dettaglio KPI — COMPONENTE CONDIVISO tra modale e card estesa.
 function KpiChart({
   series,
+  xs,
   color,
   refLines,
   unit,
@@ -501,30 +523,27 @@ function KpiChart({
   showTooltip = true,
 }: {
   series: number[];
+  xs?: number[];
   color: string;
   refLines?: number[];
   unit?: string;
   height?: number;
   showTooltip?: boolean;
 }) {
-  const rows = series.map((v, i) => ({ i: i + 1, v }));
+  const rows = series.map((v, i) => ({ i: xs?.[i] ?? i + 1, v }));
   const pool = [...series, ...(refLines ?? [])];
   const lo = Math.min(...pool);
   const hi = Math.max(...pool);
   const pad = (hi - lo) * 0.15 || 1;
-  // Dominio + tick su valori tondi: risolve le etichette Y illeggibili/ripetute.
   const step = niceStep(hi - lo);
   const dLo = Math.floor((lo - pad) / step) * step;
   const dHi = Math.ceil((hi + pad) / step) * step;
   const ticks: number[] = [];
   for (let t = dLo, n = 0; t <= dHi + 1e-9 && n < 20; t += step, n++) ticks.push(Number(t.toFixed(6)));
   const decimals = step >= 1 ? 0 : step >= 0.1 ? 1 : 2;
-  const fmtTick = (n: number) => n.toFixed(decimals);
 
   return (
     <div>
-      {/* Unità dell'ordinata: didascalia ORIZZONTALE sopra la scala Y (niente testo
-          ruotato/"storto"). L'ascissa è etichettata "Giro" sotto l'asse. */}
       {unit && <div className="mb-1 pl-1 font-mono text-[0.55rem] uppercase tracking-widest text-muted">{unit}</div>}
       <ResponsiveContainer width="100%" height={height}>
         <LineChart data={rows} margin={{ top: 6, right: 16, bottom: 22, left: 4 }}>
@@ -535,7 +554,7 @@ function KpiChart({
             tick={{ fill: COLORS.muted, fontSize: 10 }}
             label={{ value: "Giro", position: "insideBottom", offset: -10, style: { fill: COLORS.muted, fontSize: 10, textAnchor: "middle" } }}
           />
-          <YAxis domain={[dLo, dHi]} ticks={ticks} tickFormatter={fmtTick} stroke={INSTRUMENT.tick} tick={{ fill: COLORS.muted, fontSize: 10 }} width={44} />
+          <YAxis domain={[dLo, dHi]} ticks={ticks} tickFormatter={(n: number) => n.toFixed(decimals)} stroke={INSTRUMENT.tick} tick={{ fill: COLORS.muted, fontSize: 10 }} width={52} />
           {showTooltip && (
             <Tooltip
               contentStyle={{ background: COLORS.surface, border: `1px solid ${COLORS.line}`, borderRadius: 8, fontSize: 12, boxShadow: "none" }}
@@ -552,8 +571,7 @@ function KpiChart({
   );
 }
 
-// Modal dettaglio KPI (in-page, nessun cambio rotta): valore + grafico leggibile +
-// riferimenti/soglie in chiaro + come si calcola + nota di Gigi.
+// Modal dettaglio KPI (in-page): valore + grafico + riferimenti + come si calcola.
 function KpiModal({ kpi, onClose }: { kpi: Kpi; onClose: () => void }) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -582,17 +600,17 @@ function KpiModal({ kpi, onClose }: { kpi: Kpi; onClose: () => void }) {
             ✕
           </button>
         </div>
-        <div className="mt-2 font-mono text-4xl" style={{ color: kpi.color }}>
-          <CountUp value={kpi.valueNum} decimals={kpi.decimals} suffix={kpi.suffix} />
+        <div className="mt-2">
+          <ValoreKpi kpi={kpi} size="text-4xl" />
         </div>
-        <div className="mt-2 flex items-center gap-1.5 text-sm" style={{ color: kpi.color }}>
-          <StatusDot color={kpi.color} pulse={kpi.color !== COLORS.ok} />
+        <div className="mt-2 flex items-center gap-1.5 text-sm" style={{ color: kpi.valueNum === null ? COLORS.subtle : kpi.color }}>
+          <StatusDot color={kpi.valueNum === null ? COLORS.muted : kpi.color} pulse={kpi.color === STATE.warn} />
           {kpi.note}
         </div>
 
         {kpi.series && kpi.series.length >= 2 && (
           <div className="mt-4 rounded-lg border border-line bg-inset p-3">
-            <KpiChart series={kpi.series} color={kpi.color} refLines={kpi.refLines} unit={kpi.suffix.trim()} />
+            <KpiChart series={kpi.series} xs={kpi.xs} color={kpi.color} refLines={kpi.refLines} unit={kpi.unit} />
           </div>
         )}
 
@@ -602,7 +620,7 @@ function KpiModal({ kpi, onClose }: { kpi: Kpi; onClose: () => void }) {
             <ul className="flex flex-col gap-1">
               {kpi.refs.map((r, idx) => (
                 <li key={idx} className="flex items-center gap-2 font-mono text-[0.72rem] text-subtle">
-                  <span className="h-1 w-1 rounded-full bg-line-strong" />
+                  <span className="h-1 w-1 shrink-0 rounded-full bg-line-strong" />
                   {r}
                 </li>
               ))}
@@ -611,12 +629,6 @@ function KpiModal({ kpi, onClose }: { kpi: Kpi; onClose: () => void }) {
         )}
 
         <p className="mt-4 border-t border-line pt-3 text-[0.8rem] leading-relaxed text-subtle">{kpi.detail}</p>
-
-        {/* Nota di Gigi: /api/session non espone un testo per-KPI → placeholder onesto. */}
-        <div className="mt-3 rounded-lg border border-l-2 border-line border-l-accent bg-inset p-3">
-          <div className="mb-1 font-mono text-[0.55rem] uppercase tracking-widest text-accent">Nota di Gigi</div>
-          <p className="text-[0.78rem] text-muted">Nessuna nota disponibile per questo indicatore.</p>
-        </div>
       </motion.div>
     </motion.div>
   );

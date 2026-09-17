@@ -1,7 +1,7 @@
 "use client";
 
 // Onboarding "Conosci il pilota" (megaprompt #9). FASE 1: host + trigger primo
-// accesso. FASE 2: wizard a 4 step a tap (livello · obiettivo · punti deboli ·
+// accesso. FASE 2: wizard a 5 step a tap (piattaforma, dal 16/09 · livello · obiettivo · punti deboli ·
 // setup) con progress e avanti/indietro; al termine salva il profilo
 // (completedAt = adesso). FASE 3: schermata finale con riepilogo + lezioni
 // consigliate (recommendLessons) + CTA tour/salta. Montato SOLO nel layout
@@ -14,11 +14,19 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   useProfile,
   type DriverProfile,
+  type Platform,
   type WeakArea,
 } from "@/lib/profile";
 import { recommendLessons } from "@/lib/lessons";
 
-// ---- Opzioni dei 4 step (label UI → valore del profilo) ---------------------
+// ---- Opzioni dei 5 step (label UI → valore del profilo) ---------------------
+
+// L4 (16/09/2026): la piattaforma decide da dove arrivano i dati della sessione.
+const PLATFORMS: { value: Platform; label: string; hint: string }[] = [
+  { value: "pc", label: "PC", hint: "PitWall legge i file e la telemetria di ACC" },
+  { value: "playstation", label: "PlayStation", hint: "setup e racconto della sessione, scritti da te" },
+  { value: "xbox", label: "Xbox", hint: "setup e racconto della sessione, scritti da te" },
+];
 
 const LEVELS: { value: DriverProfile["level"]; label: string }[] = [
   { value: "principiante", label: "Principiante" },
@@ -50,6 +58,7 @@ const SETUP_LEVELS: { value: DriverProfile["setupFamiliarity"]; label: string }[
 ];
 
 const STEP_TITLES = [
+  "Dove giochi ad ACC?",
   "Che pilota sei?",
   "Cosa cerchi in pista?",
   "Dove senti di perdere di più?",
@@ -99,6 +108,7 @@ export default function OnboardingFlow() {
     saveProfile,
     resetProfile,
     startTour: startTourCtx,
+    platform: savedPlatform,
   } = useProfile();
 
   // Trigger primo accesso: nessun profilo completato E non già "saltato" → wizard
@@ -112,6 +122,7 @@ export default function OnboardingFlow() {
 
   // Bozza risposte: prefill dal profilo esistente nel replay ("Rivedi tutorial").
   const [step, setStep] = useState(0);
+  const [platform, setPlatformDraft] = useState<Platform | null>(null);
   const [level, setLevel] = useState<DriverProfile["level"] | null>(null);
   const [goal, setGoal] = useState<DriverProfile["goal"] | null>(null);
   const [weakAreas, setWeakAreas] = useState<WeakArea[]>([]);
@@ -122,6 +133,7 @@ export default function OnboardingFlow() {
   useEffect(() => {
     if (!onboardingOpen) return;
     setStep(0);
+    setPlatformDraft(profile?.platform ?? savedPlatform ?? null);
     setLevel(profile?.level ?? null);
     setGoal(profile?.goal ?? null);
     setWeakAreas(profile?.weakAreas ?? []);
@@ -138,21 +150,30 @@ export default function OnboardingFlow() {
   const restartBlank = () => {
     resetProfile();
     setStep(0);
+    setPlatformDraft(null);
     setLevel(null);
     setGoal(null);
     setWeakAreas([]);
     setSetupFam(null);
   };
 
-  // Avanti abilitato: step 1/2/4 vogliono una scelta; i punti deboli possono
-  // restare vuoti (la FASE 3 ha un default di lezioni consigliate).
+  // Avanti abilitato: tutti gli step vogliono una scelta tranne i punti deboli, che
+  // possono restare vuoti (la FASE 3 ha un default di lezioni consigliate).
   const canProceed =
-    step === 0 ? level !== null : step === 1 ? goal !== null : step === 2 ? true : setupFam !== null;
+    step === 0
+      ? platform !== null
+      : step === 1
+        ? level !== null
+        : step === 2
+          ? goal !== null
+          : step === 3
+            ? true
+            : setupFam !== null;
 
   const finish = () => {
-    if (!level || !goal || !setupFam) return; // guardia: non dovrebbe accadere (bottone disabilitato)
-    saveProfile({ level, goal, weakAreas, setupFamiliarity: setupFam });
-    setStep(4); // schermata finale (FASE 3): riepilogo + lezioni consigliate
+    if (!platform || !level || !goal || !setupFam) return; // guardia: bottone disabilitato
+    saveProfile({ platform, level, goal, weakAreas, setupFamiliarity: setupFam });
+    setStep(5); // schermata finale (FASE 3): riepilogo + lezioni consigliate
   };
 
   const startTour = () => {
@@ -161,7 +182,7 @@ export default function OnboardingFlow() {
     startTourCtx();
   };
 
-  const summary = step === 4;
+  const summary = step === 5;
   const recommended = summary ? recommendLessons(weakAreas) : [];
 
   return (
@@ -187,7 +208,7 @@ export default function OnboardingFlow() {
                 Conosci il pilota
               </div>
               <div className="font-mono text-[0.62rem] uppercase tracking-widest text-muted">
-                {summary ? "Il tuo profilo" : `Passo ${step + 1} di 4`}
+                {summary ? "Il tuo profilo" : `Passo ${step + 1} di 5`}
               </div>
             </div>
 
@@ -195,7 +216,7 @@ export default function OnboardingFlow() {
             <div className="mt-2 h-0.5 w-full rounded-full bg-inset">
               <motion.div
                 className="h-full rounded-full bg-accent"
-                animate={{ width: summary ? "100%" : `${((step + 1) / 4) * 100}%` }}
+                animate={{ width: summary ? "100%" : `${((step + 1) / 5) * 100}%` }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
               />
             </div>
@@ -203,26 +224,41 @@ export default function OnboardingFlow() {
             {!summary && (
               <>
                 <h2 className="mt-4 font-display text-lg font-bold">{STEP_TITLES[step]}</h2>
-                {step === 2 && (
+                {step === 0 && (
+                  <p className="mt-1 text-xs text-muted">
+                    Su PC PitWall legge i file e la telemetria del gioco; su console lavori con setup e racconto.
+                    L&apos;analisi funziona in tutti e due i casi.
+                  </p>
+                )}
+                {step === 3 && (
                   <p className="mt-1 text-xs text-muted">
                     Puoi sceglierne più d&apos;una (o nessuna).
                   </p>
                 )}
 
-                <div className={`mt-4 grid gap-2 ${step === 2 ? "grid-cols-2" : "grid-cols-1"}`}>
+                <div className={`mt-4 grid gap-2 ${step === 3 ? "grid-cols-2" : "grid-cols-1"}`}>
                   {step === 0 &&
+                    PLATFORMS.map((o) => (
+                      <Chip
+                        key={o.value}
+                        label={`${o.label} — ${o.hint}`}
+                        selected={platform === o.value}
+                        onClick={() => setPlatformDraft(o.value)}
+                      />
+                    ))}
+                  {step === 1 &&
                     LEVELS.map((o) => (
                       <Chip key={o.value} label={o.label} selected={level === o.value} onClick={() => setLevel(o.value)} />
                     ))}
-                  {step === 1 &&
+                  {step === 2 &&
                     GOALS.map((o) => (
                       <Chip key={o.value} label={o.label} selected={goal === o.value} onClick={() => setGoal(o.value)} />
                     ))}
-                  {step === 2 &&
+                  {step === 3 &&
                     WEAK_AREAS.map((o) => (
                       <Chip key={o.value} label={o.label} selected={weakAreas.includes(o.value)} onClick={() => toggleWeak(o.value)} />
                     ))}
-                  {step === 3 &&
+                  {step === 4 &&
                     SETUP_LEVELS.map((o) => (
                       <Chip key={o.value} label={o.label} selected={setupFam === o.value} onClick={() => setSetupFam(o.value)} />
                     ))}
@@ -261,7 +297,7 @@ export default function OnboardingFlow() {
                     </button>
                   )}
 
-                  {step < 3 ? (
+                  {step < 4 ? (
                     <button
                       type="button"
                       disabled={!canProceed}
@@ -284,13 +320,14 @@ export default function OnboardingFlow() {
               </>
             )}
 
-            {summary && level && goal && setupFam && (
+            {summary && platform && level && goal && setupFam && (
               <>
                 <h2 className="mt-4 font-display text-lg font-bold">Ecco come guidi.</h2>
 
-                {/* Riepilogo: le 4 risposte, idioma etichetta mono + valore */}
+                {/* Riepilogo: le 5 risposte, idioma etichetta mono + valore */}
                 <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 rounded-xl border border-line bg-inset p-4">
                   {[
+                    ["Piattaforma", labelOf(PLATFORMS, platform)],
                     ["Livello", labelOf(LEVELS, level)],
                     ["Obiettivo", labelOf(GOALS, goal)],
                     [

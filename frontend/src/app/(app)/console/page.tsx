@@ -8,9 +8,12 @@ import GigiAvatar from "@/components/ui/GigiAvatar";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { postAnalysis } from "@/lib/api";
 import { profileContextLine, useProfile } from "@/lib/profile";
+import { useSessione } from "@/lib/sessione";
+import { etichettaFonte } from "@/lib/formato";
 import {
   CHIPS,
   DEMO_QUESTION,
+  DOMANDA_SESSIONE,
   parseSections,
   SETUP_SECTION_INDEX,
   SOURCE_LABELS,
@@ -28,32 +31,45 @@ export default function ConsolePage() {
   // Profilo pilota dal wizard (megaprompt #9, FASE 5): allegato a ogni analisi
   // come campo separato — usato dal ramo LLM reale, ignorato dalla demo-cache.
   const { profile, ready: profileReady } = useProfile();
+  // L4: Gigi parla della sessione aperta, non più sempre della demo.
+  const { idSessione, sessione, nomi } = useSessione();
 
-  // Analizza un prompt via backend (demo-cache / LLM gated: la logica sta lì).
-  async function analyze(prompt: string) {
+  // Numero dell'ultima richiesta: una risposta arrivata tardi (sessione cambiata nel
+  // frattempo) non deve sovrascrivere quella della sessione aperta.
+  const ultima = useRef(0);
+
+  // Analizza un prompt via backend (demo-cache / motore / LLM gated: la logica sta lì).
+  // `forza`: il cambio di sessione passa anche se un'analisi è ancora in corso.
+  async function analyze(prompt: string, forza = false) {
     const p = prompt.trim();
-    if (!p || busy.current) return;
+    if (!p || !idSessione || (busy.current && !forza)) return;
+    const numero = ++ultima.current;
     busy.current = true;
     setLoading(true);
     setErr(null);
     try {
-      const res = await postAnalysis(p, profile ? profileContextLine(profile) : undefined);
-      setData(res);
+      const res = await postAnalysis(p, profile ? profileContextLine(profile) : undefined, idSessione);
+      if (numero === ultima.current) setData(res);
     } catch {
-      setErr("Backend non raggiungibile — avvia FastAPI su :8000 (vedi README).");
+      if (numero === ultima.current) setErr("Backend non raggiungibile — avvia FastAPI su :8000 (vedi README).");
     } finally {
-      setLoading(false);
-      busy.current = false;
+      if (numero === ultima.current) {
+        setLoading(false);
+        busy.current = false;
+      }
     }
   }
 
-  // Stato iniziale: console SEMPRE popolata con lo scenario demo (mai vuota).
-  // Aspetta la lettura del profilo da localStorage (F5-fix #9): senza, la
-  // richiesta di mount partiva prima del provider e usciva senza profilo.
+  // Stato iniziale: console SEMPRE popolata (mai vuota). Sulla demo lo scenario
+  // canonico, sulle altre sessioni l'analisi generale. Si rifà a ogni cambio di
+  // sessione. Aspetta la lettura del profilo da localStorage (F5-fix #9).
   useEffect(() => {
-    if (profileReady) analyze(DEMO_QUESTION);
+    if (profileReady && idSessione && sessione) {
+      setData(null);
+      analyze(sessione.demo ? DEMO_QUESTION : DOMANDA_SESSIONE, true);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profileReady]);
+  }, [profileReady, idSessione, sessione?.id]);
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -77,10 +93,12 @@ export default function ConsolePage() {
         className="mb-5 flex items-center gap-3 rounded-xl border border-line border-l-[3px] border-l-accent bg-gradient-to-br from-surface to-raised px-4 py-3"
       >
         <GigiAvatar size={44} />
-        <div className="flex-1">
+        <div className="min-w-0 flex-1">
           <div className="font-display text-sm font-bold tracking-wide">Gigi</div>
-          <div className="mt-0.5 font-mono text-[0.62rem] uppercase tracking-widest text-muted">
-            Race Engineer
+          <div className="mt-0.5 truncate font-mono text-[0.62rem] uppercase tracking-widest text-muted">
+            {sessione
+              ? `Sulla sessione: ${nomi.pista(sessione.track)} · ${nomi.vettura(sessione.car)} · ${etichettaFonte(sessione.fonte, sessione.piattaforma)}`
+              : "Race Engineer"}
           </div>
         </div>
         <div className="flex items-center gap-1.5 font-mono text-[0.6rem] uppercase tracking-widest text-ok">
@@ -142,7 +160,7 @@ export default function ConsolePage() {
         </div>
       )}
 
-      {/* Spinner / 4 card */}
+      {/* Spinner / 5 card */}
       {loading && !data ? (
         <p className="text-sm text-subtle">Gigi sta analizzando…</p>
       ) : (
@@ -165,7 +183,7 @@ export default function ConsolePage() {
 }
 
 // ─────────────────────────────────────────────
-// Card analisi (una delle 4 sezioni)
+// Card analisi (una delle 5 sezioni)
 // ─────────────────────────────────────────────
 function AnalysisCard({
   index,
@@ -207,7 +225,7 @@ function AnalysisCard({
           href="/setup"
           className="mt-3 inline-flex items-center gap-1 font-mono text-[0.62rem] uppercase tracking-widest text-accent transition hover:underline"
         >
-          Vedi i parametri evidenziati in Setup →
+          Vedi i parametri toccati dal verdetto in Setup →
         </Link>
       )}
     </div>

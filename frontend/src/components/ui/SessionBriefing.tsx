@@ -4,7 +4,7 @@
 // didascalie del catalogo ACC (Lotto 1) scritte nella voce di Gigi.
 // Alimentate da /api/catalog/{car,track}/{id}: accettano indifferentemente
 // slug o nome di display, quindi si possono passare direttamente i valori che
-// l'app già usa (demo_data.SESSION.car, selettori del Setup).
+// l'app già usa (slug delle sessioni, nomi dei selettori del Setup).
 //
 // Onestà sui dati: le specifiche del Lotto 1 sono in larga parte ricostruite
 // da conoscenza di dominio, non da fonte primaria (campo `specs.confidence`).

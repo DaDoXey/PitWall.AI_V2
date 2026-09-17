@@ -16,7 +16,13 @@ export type WeakArea =
   | "carburante"
   | "linea";
 
+export type Platform = "pc" | "playstation" | "xbox";
+
 export type DriverProfile = {
+  // Dove gioca (L4, 16/09/2026): decide da dove arrivano i dati. PC = file e telemetria
+  // di ACC; console = setup e racconto del pilota. Opzionale per i profili salvati
+  // prima: la pagina Sessioni la chiede se manca.
+  platform?: Platform;
   level: "principiante" | "intermedio" | "esperto";
   goal: "divertimento" | "tempi" | "competere" | "endurance";
   weakAreas: WeakArea[]; // selezione multipla
@@ -41,6 +47,10 @@ type ProfileCtx = {
   // e da resetProfile ("Riparti da zero").
   dismissOnboarding: () => void;
   saveProfile: (p: Omit<DriverProfile, "completedAt">) => void;
+  // Solo la piattaforma, senza rifare il wizard (pagina Sessioni).
+  setPlatform: (p: Platform) => void;
+  // La piattaforma nota: dal profilo o, se il wizard non è stato fatto, dalla bozza.
+  platform: Platform | null;
   // Azzera profilo salvato + stato in memoria (e tour). Usato dall'ingresso in
   // modalità demo (postazione condivisa: ogni tester riparte da zero) e da
   // "Riparti da zero" nel wizard. Il provider è globale e sopravvive alla
@@ -56,6 +66,16 @@ type ProfileCtx = {
 const Ctx = createContext<ProfileCtx | null>(null);
 const KEY = "pw_driver_profile";
 const SKIP_KEY = "pw_onboarding_skipped";
+const DRAFT_KEY = "pw_driver_platform_draft";
+
+function readStoredDraft(): Partial<DriverProfile> | null {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    return raw ? (JSON.parse(raw) as Partial<DriverProfile>) : null;
+  } catch {
+    return null;
+  }
+}
 
 function readStored(): DriverProfile | null {
   try {
@@ -75,9 +95,12 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const [onboardingOpen, setOnboardingOpen] = useState(false);
   const [onboardingSkipped, setOnboardingSkipped] = useState(false);
   const [tourStep, setTourStep] = useState<number | null>(null);
+  // Piattaforma scelta fuori dal wizard (pagina Sessioni) quando un profilo non c'è.
+  const [draftPlatform, setDraftPlatform] = useState<Platform | null>(null);
 
   useEffect(() => {
     setProfile(readStored());
+    setDraftPlatform(readStoredDraft()?.platform ?? null);
     try {
       setOnboardingSkipped(localStorage.getItem(SKIP_KEY) === "1");
     } catch {
@@ -106,13 +129,29 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const setPlatform = (platform: Platform) => {
+    // Senza un profilo completo si salva una bozza minima: il wizard, se rifatto, la
+    // completerà. `completedAt` resta vuoto, quindi non vale come onboarding fatto.
+    const base = profile ?? readStoredDraft();
+    const next = { ...(base ?? {}), platform } as DriverProfile;
+    if (profile) setProfile(next);
+    try {
+      localStorage.setItem(profile ? KEY : DRAFT_KEY, JSON.stringify(next));
+    } catch {
+      /* no-op */
+    }
+    setDraftPlatform(platform);
+  };
+
   const resetProfile = () => {
     setProfile(null);
     setOnboardingSkipped(false); // "Riparti da zero"/demo: il wizard torna a mostrarsi
     setTourStep(null); // un tour a metà del tester precedente non deve riprendere
+    setDraftPlatform(null);
     try {
       localStorage.removeItem(KEY);
       localStorage.removeItem(SKIP_KEY);
+      localStorage.removeItem(DRAFT_KEY);
     } catch {
       /* no-op */
     }
@@ -129,6 +168,8 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         closeOnboarding: () => setOnboardingOpen(false),
         dismissOnboarding,
         saveProfile,
+        setPlatform,
+        platform: profile?.platform ?? draftPlatform,
         resetProfile,
         tourStep,
         startTour: () => setTourStep(0),
@@ -155,13 +196,20 @@ const GOAL_PHRASE: Record<DriverProfile["goal"], string> = {
   endurance: "endurance e gestione",
 };
 
+const PLATFORM_PHRASE: Record<Platform, string> = {
+  pc: "PC",
+  playstation: "PlayStation",
+  xbox: "Xbox",
+};
+
 export function profileContextLine(p: DriverProfile): string {
   const weak =
     p.weakAreas.length > 0
       ? p.weakAreas.map((w) => w.replace("-", " ")).join(", ").replace(/, ([^,]*)$/, " e $1")
       : "nessuno indicato";
+  const platform = p.platform ? `gioca su ${PLATFORM_PHRASE[p.platform]}, ` : "";
   return (
-    `Profilo pilota: livello ${p.level}, obiettivo ${GOAL_PHRASE[p.goal]}, ` +
+    `Profilo pilota: ${platform}livello ${p.level}, obiettivo ${GOAL_PHRASE[p.goal]}, ` +
     `punti deboli ${weak}, setup: ${p.setupFamiliarity}.`
   );
 }

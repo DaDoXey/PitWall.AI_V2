@@ -1,9 +1,12 @@
 // Logica pura della pagina Setup (Fase 5), portata dalla v1 (ui/setup_view.py):
 // tipi della risposta /api/setup-params, layout dichiarativo dei gruppi per tab,
-// formattazione valore e colore-stato delle pressioni vs finestra a freddo.
-// I range/default/unit arrivano dal backend (modulo dati ACC): qui solo presentazione.
-
-import { COLORS } from "@/lib/theme";
+// formattazione valore. I range/default/unit arrivano dal backend (modulo dati ACC):
+// qui solo presentazione.
+//
+// L4 (16/09/2026): via la finestra delle pressioni «a freddo» (24.5–25.5, non
+// pubblicata da Kunos) e i valori obiettivo fissi dello scenario demo. I parametri da
+// toccare arrivano dal verdetto del motore (`Perdita.parametri`), con la variazione.
+import type { Perdita } from "@/lib/api";
 
 export type Param = {
   label: string;
@@ -17,37 +20,34 @@ export type Param = {
 export type Section = { label: string; params: Record<string, Param> };
 export type SetupParams = Record<string, Section>;
 
-// Finestra pressioni a FREDDO (psi) per la colorazione — speculare a demo_data.py
-// (COLD_PRESS_WINDOW / COLD_PRESS_AMBER_MARGIN). Base version: costante lato client;
-// in futuro cablabile a un endpoint per single-source-of-truth.
-export const COLD_PRESS_WINDOW: [number, number] = [24.5, 25.5];
-export const COLD_PRESS_AMBER_MARGIN = 0.6;
+// Bozza del setup portata dalla pagina Setup alla pagina Sessioni («crea una sessione
+// con questo setup»): vive in sessionStorage, sparisce con la tab.
+export const CHIAVE_BOZZA_SETUP = "pw_setup_bozza";
 
-/** Verde in finestra, ambra entro il margine, rosso oltre. Solo per le pressioni. */
-export function pressureStatusColor(value: number): string {
-  const [lo, hi] = COLD_PRESS_WINDOW;
-  const m = COLD_PRESS_AMBER_MARGIN;
-  if (value >= lo && value <= hi) return COLORS.ok;
-  if (value >= lo - m && value <= hi + m) return COLORS.warn;
-  return COLORS.accent;
-}
-
-export function isPressure(key: string): boolean {
-  return key.startsWith("tire_press_");
-}
-
-// Valori-obiettivo dei parametri suggeriti da Gigi nello scenario demo — le
-// STESSE cifre della "Correzione Setup Consigliata" della Console
-// (demo_responses.py: RL 24.2→25.2 · RR 24.0→25.0 psi a freddo · precarico
-// 60→75 Nm). L'API espone solo le CHIAVI (suggested_params): i target vivono
-// qui lato client, come DEMO_TANK_CAPACITY — un punto solo da cui correggere.
-// Preload 75 è sul passo dello slider (step 10→5 da gate, Entry #018: con
-// step 10 il 75 risultava non impostabile).
-export const GIGI_TARGETS: Record<string, number> = {
-  tire_press_rl: 25.2,
-  tire_press_rr: 25.0,
-  preload: 75,
+/** Un parametro che il verdetto chiede di toccare. */
+export type Suggerimento = {
+  key: string;
+  variazione: number | null; // nell'unità del parametro; null = solo la direzione
+  motivi: string[]; // titoli delle voci del verdetto che lo chiedono
 };
+
+/** I parametri citati dal verdetto, una voce per parametro (lo stesso può tornare in più voci). */
+export function suggerimentiDalVerdetto(verdetto: Perdita[]): Suggerimento[] {
+  const perChiave = new Map<string, Suggerimento>();
+  for (const voce of verdetto) {
+    for (const [key, variazione] of Object.entries(voce.parametri ?? {})) {
+      const esistente = perChiave.get(key);
+      if (esistente) {
+        esistente.motivi.push(voce.titolo);
+        // Il primo numero che arriva è quello della voce più grave: non si sommano.
+        if (esistente.variazione === null) esistente.variazione = variazione;
+      } else {
+        perChiave.set(key, { key, variazione, motivi: [voce.titolo] });
+      }
+    }
+  }
+  return [...perChiave.values()];
+}
 
 /** Formatta il valore: interi senza decimali, altrimenti 1 decimale (step≥0.1) o 2. */
 export function formatValue(p: Param, v: number): string {

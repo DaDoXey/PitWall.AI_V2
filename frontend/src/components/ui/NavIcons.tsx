@@ -46,6 +46,18 @@ export function IconTelemetry({ size = 17 }: IconProps) {
   );
 }
 
+// Sessioni: pila di fogli (l'archivio delle sessioni, L4)
+export function IconSessions({ size = 17 }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" {...base}>
+      <rect x="5" y="7" width="12" height="13" rx="1.5" />
+      <path d="M8 4 H18.5 A1.5 1.5 0 0 1 20 5.5 V16" />
+      <path d="M8 12 H14" />
+      <path d="M8 15.5 H12" />
+    </svg>
+  );
+}
+
 // Lezioni: lampadina (i fondamentali che "accendono" il pilota)
 export function IconLessons({ size = 17 }: IconProps) {
   return (

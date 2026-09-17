@@ -1,13 +1,12 @@
-// Cataloghi UI per i selettori di sessione (Fase 7), portati da v1 (ui/catalog.py).
+// Cataloghi UI per i selettori, portati da v1 (ui/catalog.py).
 // Liste di presentazione: i range setup reali arrivano comunque da
 // /api/setup-params (override per vettura nel DB JSON, fallback ai generici).
 //
-// ⚠️ NON sono più la fonte: dal Lotto 1 il catalogo completo (31 vetture GT3,
+// ⚠️ NON sono la fonte: dal Lotto 1 il catalogo completo (31 vetture GT3,
 // 25 circuiti) arriva da `GET /api/catalog` (backend `core/catalog.py`) via
 // `getCatalog()`. Queste liste restano come **fallback** se il backend non
 // risponde, così i selettori non si svuotano mai. Il backend risolve
-// indifferentemente slug o nomi di display: le stringhe qui sotto restano
-// valide come valore inviato a /api/setup-params.
+// indifferentemente slug o nomi di display.
 
 export const CAR_LIST_FALLBACK = [
   "BMW M4 GT3",
@@ -34,15 +33,7 @@ export const TRACK_LIST_FALLBACK = [
   "Paul Ricard", "Brands Hatch",
 ];
 
-export const CONDITIONS = ["Asciutto", "Umido", "Bagnato"];
-
-// Default demo (coerenti con demo_data.SESSION lato backend).
+// Default dei selettori quando non c'è una sessione da cui leggerli: la vettura e la
+// pista della sessione DEMO.
 export const DEFAULT_CAR = "BMW M4 GT3";
 export const DEFAULT_TRACK = "Monza";
-export const DEFAULT_CONDITIONS = "Asciutto";
-
-// Capacità serbatoio BMW M4 GT3 in ACC (megaprompt #7, FASE 9): costante DEMO
-// lato frontend — /api/session non la espone e demo_data.py (protetto) resta
-// intatto. Usata SOLO per il "residuo stimato" (assunzione dichiarata in UI:
-// serbatoio pieno al via). Un punto solo da cui correggere il valore.
-export const DEMO_TANK_CAPACITY_L = 125;

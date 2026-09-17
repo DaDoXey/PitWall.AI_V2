@@ -2,15 +2,18 @@
 
 // Gauge pressioni a LANCETTA (megaprompt #2, FASE 2): scala semicircolare fissa
 // con tacche, lancetta sottile che punta al valore, colore SOLO sulla lancetta/
-// mozzo/numero (stato), banda finestra neutra. Nessun glow/drop-shadow, nessun
-// riempimento proporzionale animato — resa "strumento analogico" (token instrument.ts).
+// mozzo/numero (stato), banda finestra neutra. Nessun glow/drop-shadow — resa
+// "strumento analogico" (token instrument.ts).
+//
+// L4 (16/09/2026): lo stato NON si calcola più qui. La finestra è quella indicativa
+// di Kunos e il giudizio «fuori» lo dà il motore di analisi (quota di tempo fuori
+// oltre soglia): il gauge riceve `fuori` e un'etichetta, e li mostra.
 import CountUp from "@/components/ui/CountUp";
 import { INSTRUMENT, STATE, STROKE } from "@/lib/instrument";
 
-const MIN = 24.5;
+const MIN = 24.0;
 const MAX = 28.0;
 const TICK_STEP = 0.5;
-const NEAR = 0.5; // banda "al limite" (scelta di presentazione, NON una soglia dati)
 
 function polar(cx: number, cy: number, r: number, deg: number) {
   const rad = (deg * Math.PI) / 180;
@@ -35,17 +38,16 @@ export default function PressureGauge({
   label,
   value,
   window: win,
+  fuori,
+  stato,
 }: {
   label: string;
   value: number;
-  window: [number, number];
+  window: [number, number] | null;
+  fuori: boolean;
+  stato: string;
 }) {
-  const [lo, hi] = win;
-  // Stato a 3 livelli: in finestra / al limite (entro NEAR) / fuori.
-  const dist = value < lo ? lo - value : value > hi ? value - hi : 0;
-  const state = dist === 0 ? "ok" : dist <= NEAR ? "warn" : "alarm";
-  const color = STATE[state];
-  const statusLabel = state === "ok" ? "in finestra" : state === "warn" ? "al limite" : value < lo ? "bassa" : "alta";
+  const color = win === null ? INSTRUMENT.ink : fuori ? STATE.warn : STATE.ok;
 
   const cx = 80;
   const cy = 78;
@@ -59,11 +61,9 @@ export default function PressureGauge({
     <div className="flex flex-col items-center">
       <div className="font-mono text-[0.7rem] uppercase tracking-wider text-subtle">{label}</div>
       <svg viewBox="0 0 160 96" className="w-full max-w-[180px]">
-        {/* Traccia di fondo (hairline) */}
         <path d={arcPath(cx, cy, r, 180, 0)} fill="none" stroke={INSTRUMENT.grid} strokeWidth={2} strokeLinecap="round" />
-        {/* Banda finestra ottimale: zona neutra (nessun colore di stato) */}
-        <path d={arcPath(cx, cy, r, angleFor(lo), angleFor(hi))} fill="none" stroke={INSTRUMENT.track} strokeWidth={4} />
-        {/* Tacche: maggiori sugli interi, minori ogni 0.5 psi */}
+        {/* Finestra indicativa Kunos: zona neutra, nessun colore di stato */}
+        {win && <path d={arcPath(cx, cy, r, angleFor(win[0]), angleFor(win[1]))} fill="none" stroke={INSTRUMENT.track} strokeWidth={4} />}
         {ticks.map((tv) => {
           const a = angleFor(tv);
           const major = Number.isInteger(tv);
@@ -71,7 +71,6 @@ export default function PressureGauge({
           const i = polar(cx, cy, r - (major ? 8 : 5), a);
           return <line key={tv} x1={o.x} y1={o.y} x2={i.x} y2={i.y} stroke={INSTRUMENT.tick} strokeWidth={major ? STROKE.tick : STROKE.hairline} />;
         })}
-        {/* Lancetta + mozzo: unico elemento colorato (stato), nessun glow */}
         <line x1={cx} y1={cy} x2={needle.x} y2={needle.y} stroke={color} strokeWidth={STROKE.needle} strokeLinecap="round" />
         <circle cx={cx} cy={cy} r={3} fill={color} />
       </svg>
@@ -79,8 +78,8 @@ export default function PressureGauge({
         <CountUp value={value} decimals={1} />
         <span className="text-xs text-subtle"> psi</span>
       </div>
-      <div className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color }}>
-        {statusLabel}
+      <div className="text-center font-mono text-[0.58rem] uppercase tracking-wider" style={{ color }}>
+        {stato}
       </div>
     </div>
   );

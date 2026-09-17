@@ -7,33 +7,38 @@
 // La navigazione è centralizzata nell'effect: quando lo step cambia si fa
 // router.push della rotta dello step — "Avanti" incrementa e basta.
 // Lo stato (tourStep) vive in ProfileProvider: sopravvive alla navigazione.
+// L4 (16/09/2026): testi riscritti sulle schermate nuove, più il passo Sessioni.
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import GigiAvatar from "@/components/ui/GigiAvatar";
 import { useProfile } from "@/lib/profile";
 
-// Testi del megaprompt #9, verbatim.
 const TOUR_STEPS = [
   {
     href: "/",
     label: "Dashboard",
-    text: "Qui hai il colpo d'occhio sull'ultima sessione: temperature, pressioni, consumo e gli avvisi che ho trovato. È il punto di partenza.",
+    text: "Qui hai il verdetto della sessione aperta: dove perdi tempo, in ordine di gravità, ognuna con la prova e cosa fare. Accanto, cosa regge davvero.",
+  },
+  {
+    href: "/sessioni",
+    label: "Sessioni",
+    text: "Qui porti dentro le tue sessioni: su PC dai file e dalla telemetria di ACC, su console con il setup e il racconto di come è andata. La sessione aperta la scegli dalla barra a sinistra.",
   },
   {
     href: "/console",
     label: "Engineer Console",
-    text: "Qui mi chiedi un'analisi in parole tue — tipo «l'auto scivola dietro» — e ti rispondo con diagnosi, causa e correzione del setup.",
+    text: "Qui mi chiedi della sessione in parole tue — tipo «l'auto scivola dietro». Ti rispondo con diagnosi, causa, correzione del setup e correzione di guida, citando solo numeri misurati.",
   },
   {
     href: "/telemetry",
     label: "Telemetria",
-    text: "Qui i dati grezzi giro per giro: gomme, pressioni, tempi e correlazioni. Se vuoi capire il perché, guardi qui.",
+    text: "Qui il dettaglio: giri e settori, le curve una per una con due giri sovrapposti, e gomme e freni contro la finestra ufficiale di Kunos.",
   },
   {
     href: "/setup",
     label: "Setup",
-    text: "Qui regoli i parametri dell'auto. Quando ti do una correzione, i parametri toccati te li evidenzio.",
+    text: "Qui regoli i parametri dell'auto. Quelli che il verdetto chiede di toccare te li evidenzio, con la variazione.",
   },
   {
     href: "/lezioni",

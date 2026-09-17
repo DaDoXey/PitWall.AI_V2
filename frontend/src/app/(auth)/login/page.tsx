@@ -34,6 +34,8 @@ export default function LoginPage() {
     resetProfile();
     try {
       for (const k of Object.keys(localStorage)) if (k.startsWith("pw_")) localStorage.removeItem(k);
+      // La sessione aperta nella visita precedente (L4): la demo riparte dalla DEMO.
+      sessionStorage.removeItem("pw_sessione_visita");
     } catch {
       /* no-op: localStorage non disponibile */
     }

@@ -1,15 +1,17 @@
 // Logica pura della Engineer Console (Gigi), portata dalla v1 (ui/console.py):
-// parsing robusto dell'output a 4 sezioni + chip scenari + etichette sorgente.
+// parsing robusto dell'output a 5 sezioni + chip scenari + etichette sorgente.
 // Nessuna dipendenza da React: testabile e riusabile.
 
 export type Section = { title: string; icon: string; body: string };
 
 // (titolo canonico, regex header tollerante, icona). Ordine = ordine card.
 // La 3ª (Correzione Setup) è resa come "SCHEDA SETUP" evidenziata.
+// L4 (16/09/2026): quinta sezione «Correzione di Guida», perché il motore misura la guida.
 const SECTIONS: { title: string; icon: string; pattern: RegExp }[] = [
   { title: "Diagnosi", icon: "🔍", pattern: /##\s*Diagnosi/i },
   { title: "Causa Meccanica Probabile", icon: "⚙", pattern: /##\s*Causa\s+Meccanica/i },
   { title: "Correzione Setup Consigliata", icon: "🔧", pattern: /##\s*Correzione\s+Setup/i },
+  { title: "Correzione di Guida", icon: "🏁", pattern: /##\s*Correzione\s+di\s+Guida/i },
   { title: "Note Aggiuntive", icon: "📋", pattern: /##\s*Note\s+Aggiuntive/i },
 ];
 
@@ -17,12 +19,11 @@ const SECTIONS: { title: string; icon: string; pattern: RegExp }[] = [
 export const SETUP_SECTION_INDEX = 2;
 
 /**
- * Ritorna le 4 sezioni canoniche in ordine. Se una sezione manca, il suo
+ * Ritorna le 5 sezioni canoniche in ordine. Se una sezione manca, il suo
  * `body` è "" → la card degrada con grazia (mai errore), come nella v1.
  */
 export function parseSections(text: string): Section[] {
   const src = text ?? "";
-  // (posizione match, indice sezione) per le sezioni effettivamente presenti.
   const found: { start: number; i: number; headerEnd: number }[] = [];
   SECTIONS.forEach((s, i) => {
     const m = s.pattern.exec(src);
@@ -42,7 +43,7 @@ export function parseSections(text: string): Section[] {
   return SECTIONS.map((s, i) => ({ title: s.title, icon: s.icon, body: bodies[i] ?? "" }));
 }
 
-// Chip scenari rapidi (prompt preset) — come da brief v1.
+// Chip scenari rapidi (prompt preset).
 export const CHIPS = ["Sottosterzo", "Calcola carburante", "Analizza gomme", "Bilanciamento freni"];
 
 // Etichetta leggibile della sorgente restituita dal backend.
@@ -50,8 +51,10 @@ export const SOURCE_LABELS: Record<string, string> = {
   demo: "demo-mode",
   cache: "cache",
   api: "live",
+  motore: "dal motore di analisi · senza modello",
   fallback: "fallback offline",
 };
 
-// Prompt/risposta demo canonici: stato iniziale della console (mai vuota).
+// Prompt di apertura: sulla demo lo scenario canonico, sulle altre sessioni l'analisi generale.
 export const DEMO_QUESTION = "L'auto scivola dietro in accelerazione";
+export const DOMANDA_SESSIONE = "Analizza la sessione";
