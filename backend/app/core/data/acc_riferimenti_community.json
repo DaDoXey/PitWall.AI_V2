@@ -1,0 +1,80 @@
+{
+  "versione_file": "1.0",
+  "compilato_il": "2026-09-16",
+  "regola": "Valori che circolano fra piloti e coach, NON pubblicati da Kunos. Stato «da_confermare»: si mostrano con l'etichetta «community», non entrano mai nel verdetto ne' nella gravita'. Una voce diventa verificata solo con due fonti indipendenti PIU' una conferma primaria (documento Kunos, oppure lettura in gioco).",
+  "voci": {
+    "temperatura_freni_anteriori": {
+      "max_consigliato": 650.0,
+      "picco_max": 700.0,
+      "unita": "°C",
+      "stato": "da_confermare",
+      "canale": "physics.brakeTemp",
+      "fonti": [
+        {
+          "nome": "ThePitCrew — Maximizing Your Brake Performance In ACC",
+          "url": "https://thepitcrew.co.uk/coaching/pit-tips/maximize-your-brakes-acc/",
+          "data": "2022-04-11",
+          "citazione": "650 degrees and under for your front brakes ... no more than 700c on the front"
+        }
+      ],
+      "limiti": "Una sola fonte, del 2022 (prima della fisica 1.9), che non cita Kunos."
+    },
+    "temperatura_freni_posteriori": {
+      "max_consigliato": 450.0,
+      "picco_max": 500.0,
+      "unita": "°C",
+      "stato": "da_confermare",
+      "canale": "physics.brakeTemp",
+      "fonti": [
+        {
+          "nome": "ThePitCrew — Maximizing Your Brake Performance In ACC",
+          "url": "https://thepitcrew.co.uk/coaching/pit-tips/maximize-your-brakes-acc/",
+          "data": "2022-04-11",
+          "citazione": "450 degrees and under for your rear brakes ... no more than 500c on the rear"
+        }
+      ],
+      "limiti": "Una sola fonte, del 2022 (prima della fisica 1.9), che non cita Kunos."
+    },
+    "pressione_gomme_bagnato": {
+      "min": 29.5,
+      "max": 31.0,
+      "ottimo": 30.0,
+      "unita": "psi",
+      "stato": "da_confermare",
+      "canale": "physics.wheelPressure",
+      "fonti": [
+        {
+          "nome": "trophi.ai / Driver61 — Why Tyre Pressures Are Crucial in ACC",
+          "url": "https://www.trophi.ai/post/why-tyre-pressures-are-crucial-in-acc",
+          "data": "2025-10-18",
+          "citazione": "between 29.5 and 31.0 PSI"
+        },
+        {
+          "nome": "Coach Dave Academy — ACC Wet Tyre Pressures, Myth Or Meta?",
+          "url": "https://coachdaveacademy.com/tutorials/acc-wet-tyre-pressures-myth-or-meta/",
+          "data": null,
+          "citazione": "30 psi come pressione convenzionale, misurata nei loro test (non una fonte Kunos)"
+        }
+      ],
+      "limiti": "Nessuna delle due fonti cita Kunos; l'ottimo a 30 psi compare nei riassunti, non verificato su una pagina primaria."
+    },
+    "pastiglie_freno": {
+      "stato": "da_confermare",
+      "descrizioni": {
+        "1": "aggressive, molto sensibili alla temperatura, meno durevoli, prestazione massima: qualifica e gare fino a 90 minuti",
+        "2": "le migliori in generale: stint lunghi fino a 12 ore, buone sul bagnato, finestra di temperatura piu' larga",
+        "3": "fonti in disaccordo: «ottimizzate per il bagnato, legnose» (ThePitCrew) contro «attrito moderato, usura molto bassa, endurance» (altro riassunto)",
+        "4": "fonti in disaccordo: «pastiglie 1 con usura esagerata, solo per prove» (ThePitCrew) contro «sprint da circa un'ora, solo dimostrative» (altro riassunto)"
+      },
+      "fonti": [
+        {
+          "nome": "ThePitCrew — Maximizing Your Brake Performance In ACC",
+          "url": "https://thepitcrew.co.uk/coaching/pit-tips/maximize-your-brakes-acc/",
+          "data": "2022-04-11",
+          "citazione": "Pads 1: more aggressive pads, highest temperature sensitivity and less durability, but highest performance"
+        }
+      ],
+      "limiti": "Le descrizioni vengono attribuite ad Aristotelis, ma il post originale non e' stato trovato; sulle pastiglie 3 e 4 le fonti si contraddicono."
+    }
+  }
+}

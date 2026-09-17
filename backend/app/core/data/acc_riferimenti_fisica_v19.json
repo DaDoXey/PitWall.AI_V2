@@ -1,0 +1,91 @@
+{
+  "versione_file": "1.0",
+  "compilato_il": "2026-09-16",
+  "fonte": {
+    "titolo": "Version 1.9 - Physics notes",
+    "editore": "Kunos Simulazioni",
+    "autore": "Aristotelis (staff Kunos, KS Dev Team)",
+    "pubblicato_il": "2023-04-19",
+    "versione_acc": "1.9.0",
+    "url_thread_ufficiale": "https://assettocorsa.net/forum/index.php?threads/the-acc-v1-9-0-physics-notes-document.72755/",
+    "url_copia_pdf": "https://coachdaveacademy.com/wp-content/uploads/2023/04/ACCv19-physics_notes-3.pdf",
+    "nota": "Il PDF non e' nel repository (materiale Kunos): qui ci sono solo i valori, con la frase da cui vengono. Letto per intero il 16/09/2026."
+  },
+  "voci": {
+    "pressione_gomme_asciutto": {
+      "min": 26.0,
+      "max": 27.0,
+      "unita": "psi",
+      "si_applica_a": "gomme da asciutto (Pirelli DHF), pressione di esercizio a caldo",
+      "indicativa": true,
+      "misurabile_da_telemetria": true,
+      "canale": "physics.wheelPressure",
+      "citazione": "Pressure range: 26psi-27psi. Pressures have a wider operation window. The above range is indicative but doesn't mean you'll find perfect grip at 26.5 like in the previous version.",
+      "pagina": 2,
+      "nota": "Il documento non scrive «a caldo» accanto al range, ma la schermata che lo accompagna legge «Psi hot»: e' la pressione in pista, non quella impostata in garage."
+    },
+    "temperatura_core_gomme": {
+      "min": 70.0,
+      "max": 100.0,
+      "unita": "°C",
+      "si_applica_a": "gomme da asciutto, temperatura del core (non della superficie)",
+      "indicativa": true,
+      "misurabile_da_telemetria": true,
+      "canale": "physics.tyreCoreTemp",
+      "citazione": "Temperature range: 70°C-100°C core",
+      "pagina": 2
+    },
+    "temperatura_core_tipica": {
+      "min": 80.0,
+      "max": 90.0,
+      "unita": "°C",
+      "si_applica_a": "gomme da asciutto, core in condizioni normali di guida",
+      "indicativa": true,
+      "misurabile_da_telemetria": true,
+      "canale": "physics.tyreCoreTemp",
+      "citazione": "While core temperature stays relatively stable at around 80°C to 90°C",
+      "pagina": 2
+    },
+    "temperatura_superficie_normale": {
+      "min": 50.0,
+      "max": 120.0,
+      "unita": "°C",
+      "si_applica_a": "superficie del battistrada: oscillazioni attese, non un difetto",
+      "indicativa": true,
+      "misurabile_da_telemetria": false,
+      "citazione": "the surface flash temperature will vary greatly from down to 50°C at the long straights, and up to 120°C and more while cornering, braking or accelerating. That is normal and expected",
+      "pagina": 2,
+      "nota": "Non si giudica: e' il documento stesso a dire che queste oscillazioni sono normali."
+    },
+    "differenza_esterno_interno_max": {
+      "max": 15.0,
+      "unita": "°C",
+      "si_applica_a": "differenza fra la temperatura Outside e Inside del battistrada (OMI)",
+      "indicativa": true,
+      "misurabile_da_telemetria": false,
+      "citazione": "Avoid having more than 15°C difference between Outside and Inside temperature.",
+      "pagina": 2,
+      "nota": "La shared memory non la espone: i campi tyreTempI/M/O sono marcati «Not shown in ACC». Si legge solo nella schermata del setup, in gioco."
+    },
+    "pressioni_diverse_fra_gli_assi": {
+      "unita": null,
+      "si_applica_a": "differenza di pressione fra asse anteriore e posteriore",
+      "qualitativa": true,
+      "misurabile_da_telemetria": true,
+      "citazione": "You can use different pressures at the front or the rear axle to generate different amounts of flex and stabilise or help the car rotation, depending on the car, track and handling necessities combination.",
+      "pagina": 4,
+      "conseguenza": "Una differenza fra gli assi e' una scelta di setup, non un errore: si riporta, non entra nel verdetto."
+    },
+    "corsa_massima_bumpstop": {
+      "min": 20.0,
+      "max": 30.0,
+      "unita": "mm",
+      "si_applica_a": "compressione massima del bumpstop, oltre la quale la sospensione non comprime piu'",
+      "indicativa": true,
+      "misurabile_da_telemetria": false,
+      "citazione": "Bumpstops travel: 20-30mm max.",
+      "pagina": 5,
+      "nota": "suspensionTravel si registra, ma non si sa dove cominci il bumpstop di quella vettura con quel setup: non si giudica."
+    }
+  }
+}

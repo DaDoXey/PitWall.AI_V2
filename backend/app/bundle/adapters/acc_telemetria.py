@@ -44,17 +44,27 @@ from app.bundle.schema import (
     Evento,
     Fonte,
     Giro,
+    Mescola,
     Meta,
+    Piattaforma,
     SessionBundle,
     TipoSessione,
 )
 
 CARBURANTE = "physics.fuel"
+# Carburante usato dall'ultimo rifornimento: il documento lo dichiara in **litri**,
+# mentre `physics.fuel` è dichiarato in kg (e il gioco mostra litri). Per il consumo
+# si preferisce quello con l'unità scritta nero su bianco.
+CARBURANTE_USATO = "graphics.usedFuel"
 TEMP_ARIA = "physics.airTemp"
 TEMP_PISTA = "physics.roadTemp"
 ULTIMO_TEMPO = "graphics.iLastTime"
-SPLIT = "graphics.iSplit"
+# «Last sector time in milliseconds»: la durata dell'ultimo settore chiuso. Si usa
+# questo e non `iSplit` («Last split time»), che il documento non dice se sia
+# cumulativo o per settore.
+TEMPO_SETTORE = "graphics.lastSectorTime"
 SETTORE = "graphics.currentSectorIndex"
+GOMME_DA_PIOGGIA = "graphics.rainTyres"
 SET_GOMME = "graphics.currentTyreSet"
 PIOGGIA = "graphics.rainIntensity"
 GRIP = "graphics.trackGripStatus"
@@ -76,10 +86,16 @@ _PIOGGIA = {0: 0.0, 1: 0.2, 2: 0.4, 3: 0.6, 4: 0.8, 5: 1.0}
 _GRIP = {0: 0.80, 1: 0.90, 2: 1.00, 3: 0.70, 4: 0.60, 5: 0.45, 6: 0.30}
 
 SCARTO_TEMPI_MS = 500      # oltre questo, i due cronometri non raccontano lo stesso giro
+SCARTO_SETTORI_MS = 100    # tre settori che non sommano al giro non sono quelli del giro
+RITARDO_LETTURA = 2        # campioni dopo il cambio: ACC aggiorna il valore con un tick di ritardo
 
 
 class TelemetriaNonConvertibile(ValueError):
     """La registrazione non contiene abbastanza per farne un bundle."""
+
+
+def _giri(quanti: int) -> str:
+    return "1 giro" if quanti == 1 else f"{quanti} giri"
 
 
 def _media(serie: np.ndarray | None) -> float | None:
@@ -110,6 +126,64 @@ def _tipo_sessione(metadati: dict[str, Any]) -> TipoSessione:
     return _TIPI_TESTO.get(testo, TipoSessione.SCONOSCIUTO)
 
 
+def _mescola(canali: dict[str, np.ndarray], metadati: dict[str, Any]) -> tuple[Mescola | None, str | None]:
+    """La mescola montata. Prima il canale (vale per tutta la sessione), poi il nome
+    letto all'avvio della registrazione. Se cambia a metà, non se ne sceglie una."""
+    serie = canali.get(GOMME_DA_PIOGGIA)
+    if serie is not None and serie.size:
+        valori = np.unique(np.asarray(serie).astype(np.int64))
+        if valori.size > 1:
+            return None, "mescola cambiata durante la registrazione: nessuna finestra applicata"
+        return (Mescola.BAGNATO if int(valori[0]) else Mescola.ASCIUTTO), None
+    nome = (metadati.get("mescola_iniziale") or "").lower()
+    if "wet" in nome:
+        return Mescola.BAGNATO, None
+    if "dry" in nome:
+        return Mescola.ASCIUTTO, None
+    return None, "mescola non registrata: nessuna finestra applicata alle gomme"
+
+
+def _leggi_dopo(serie: np.ndarray | None, indice: int) -> int | None:
+    """Il valore pochi campioni dopo un cambio, se esiste ed è positivo."""
+    if serie is None or indice >= serie.size:
+        return None
+    valore = int(serie[min(indice + RITARDO_LETTURA, serie.size - 1)])
+    return valore if valore > 0 else None
+
+
+def _settori(settore: np.ndarray | None, durate: np.ndarray | None, inizio: int,
+             fine: int, tempo_ms: int | None) -> tuple[list[int], bool]:
+    """(split del giro, terzo ricavato per differenza?).
+
+    S1 e S2 si leggono al passaggio 0→1 e 1→2; S3 al traguardo, cioè nei primi
+    campioni del giro dopo. Se il giro dopo non c'è (fine registrazione), il terzo è
+    il tempo del giro meno i primi due — e lo si dice.
+    """
+    if settore is None or durate is None:
+        return [], False
+    pezzo = settore[inizio:fine]
+    cambi = np.flatnonzero(np.diff(pezzo) != 0) + 1
+    splits: list[int] = []
+    for cambio in cambi[:2]:
+        valore = _leggi_dopo(durate, inizio + int(cambio))
+        if valore is None:
+            return [], False
+        splits.append(valore)
+    if len(splits) < 2:
+        return [], False
+    terzo = _leggi_dopo(durate, fine) if fine < durate.size else None
+    ricavato = False
+    if terzo is None and tempo_ms:
+        terzo = tempo_ms - sum(splits)
+        ricavato = True
+    if terzo is None or terzo <= 0:
+        return [], False
+    splits.append(terzo)
+    if tempo_ms and abs(sum(splits) - tempo_ms) > SCARTO_SETTORI_MS:
+        return [], False
+    return splits, ricavato
+
+
 def bundle_da_canali(
     canali: dict[str, np.ndarray],
     metadati: dict[str, Any],
@@ -127,9 +201,10 @@ def bundle_da_canali(
         raise TelemetriaNonConvertibile("nessun giro nella registrazione")
 
     ultimo_tempo = canali.get(ULTIMO_TEMPO)
-    split = canali.get(SPLIT)
+    durate_settore = canali.get(TEMPO_SETTORE)
     settore = canali.get(SETTORE)
     carburante = canali.get(CARBURANTE)
+    usato_serie = canali.get(CARBURANTE_USATO)
     set_gomme = canali.get(SET_GOMME)
     in_pit = canali.get(IN_PIT)
     valido = canali.get(GIRO_VALIDO)
@@ -138,6 +213,9 @@ def bundle_da_canali(
     eventi: list[Evento] = []
     scarti: list[int] = []
     senza_tempo_ufficiale = 0
+    terzi_ricavati: list[int] = []
+    senza_settori = 0
+    consumo_da_serbatoio = False
 
     for indice, giro in enumerate(giri_canali):
         inizio, fine = giro.inizio, giro.fine
@@ -162,21 +240,31 @@ def bundle_da_canali(
                 senza_tempo_ufficiale += 1
 
         splits: list[int] = []
-        if split is not None and settore is not None:
-            pezzo_settore = settore[inizio:fine]
-            cambi = np.flatnonzero(np.diff(pezzo_settore) != 0) + 1
-            for cambio in cambi[:3]:
-                valore = int(split[inizio + int(cambio) + 1]) if inizio + int(cambio) + 1 < split.size else 0
-                if valore > 0:
-                    splits.append(valore)
+        if giro.completo:
+            splits, ricavato = _settori(settore, durate_settore, inizio, fine, tempo_ms)
+            if ricavato:
+                terzi_ricavati.append(giro.numero)
+            if not splits and tempo_ms:
+                senza_settori += 1
 
         residuo = usato = None
         if carburante is not None and carburante.size > fine - 1:
-            partenza = float(carburante[inizio])
-            arrivo = float(carburante[fine - 1])
-            residuo = round(arrivo, 3)
-            if giro.completo and partenza - arrivo > 0:
-                usato = round(partenza - arrivo, 3)
+            residuo = round(float(carburante[fine - 1]), 3)
+        if giro.completo:
+            # Il giro finisce dove comincia il successivo: si misura fino al primo
+            # campione del giro dopo, altrimenti si perde l'ultimo centesimo di giro.
+            chiusura = min(fine, (usato_serie if usato_serie is not None else
+                                  carburante if carburante is not None else
+                                  canali[POSIZIONE]).size - 1)
+            if usato_serie is not None:
+                differenza = float(usato_serie[chiusura]) - float(usato_serie[inizio])
+                if differenza > 0:
+                    usato = round(differenza, 3)
+            elif carburante is not None:
+                differenza = float(carburante[inizio]) - float(carburante[chiusura])
+                if differenza > 0:
+                    usato = round(differenza, 3)
+                    consumo_da_serbatoio = True
 
         ai_box = bool(in_pit[inizio:fine].max() > 0) if in_pit is not None else False
         giri.append(Giro(
@@ -210,7 +298,7 @@ def bundle_da_canali(
     incompleti = [g for g in giri_canali if not g.completo]
     if incompleti:
         assunzioni.append(
-            f"{len(incompleti)} giri incompleti (registrazione iniziata o finita a metà "
+            f"{_giri(len(incompleti))} incompleti (registrazione iniziata o finita a metà "
             f"pista): contati, ma senza tempo confrontabile"
         )
     if scarti:
@@ -220,13 +308,29 @@ def bundle_da_canali(
         )
     if senza_tempo_ufficiale:
         assunzioni.append(
-            f"{senza_tempo_ufficiale} giri senza tempo ufficiale nella pagina grafica → "
+            f"{_giri(senza_tempo_ufficiale)} senza tempo ufficiale nella pagina grafica "
+            f"(di solito l'ultimo: la registrazione finisce prima che ACC lo pubblichi) → "
             f"tempo preso dal cronometro della registrazione"
         )
-    if carburante is None:
+    if carburante is None and usato_serie is None:
         assunzioni.append("carburante non registrato: consumo per giro non calcolabile")
+    elif consumo_da_serbatoio:
+        assunzioni.append(
+            "consumo ricavato dal serbatoio (`fuel`), che il documento Kunos dichiara in kg "
+            "mentre il gioco mostra litri: unità da verificare a schermo")
+    if terzi_ricavati:
+        assunzioni.append(
+            f"giri {terzi_ricavati}: il terzo settore è ricavato per differenza dal tempo "
+            f"sul giro (la registrazione finisce prima del traguardo successivo)")
+    if senza_settori:
+        assunzioni.append(
+            f"{_giri(senza_settori)} senza settori leggibili (canale `lastSectorTime` assente "
+            f"o settori che non sommano al tempo del giro)")
     if FRENO not in canali:
         assunzioni.append("canale del freno assente: niente punti di frenata")
+    mescola, nota_mescola = _mescola(canali, metadati)
+    if nota_mescola:
+        assunzioni.append(nota_mescola)
 
     frequenza = float(metadati.get("frequenza_hz") or 0) or 100.0
     campioni = int(canali[POSIZIONE].size)
@@ -239,6 +343,8 @@ def bundle_da_canali(
         tipo_sessione=_tipo_sessione(metadati),
         durata_s=round(float(canali[TEMPO][-1]) / 1000.0, 1),
         condizioni=_condizioni(canali),
+        mescola=mescola,
+        piattaforma=Piattaforma.PC,
     )
     return SessionBundle(
         meta=meta,
@@ -264,7 +370,7 @@ def canali_del_bundle(bundle: SessionBundle) -> dict[str, np.ndarray] | None:
     """
     from app.telemetria.registratore import cartella_telemetria, leggi_canali
 
-    if bundle.canali is None or bundle.meta.fonte is not Fonte.ACC_SHARED_MEMORY:
+    if bundle.canali is None or bundle.meta.fonte not in (Fonte.ACC_SHARED_MEMORY, Fonte.DEMO):
         return None
     cartella = (cartella_telemetria() / bundle.canali.file).parent
     if not (cartella / "canali.npz").exists() or not (cartella / "sessione.json").exists():

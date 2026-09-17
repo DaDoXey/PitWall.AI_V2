@@ -24,9 +24,11 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
-# Versione del formato. Si alza quando un bundle già scritto smette di essere
-# leggibile così com'è; i bundle salvati portano la versione con cui sono nati.
-SCHEMA_VERSION = "1.0"
+# Versione del formato. Il numero principale si alza quando un bundle già scritto
+# smette di essere leggibile così com'è; il secondo quando si aggiungono campi
+# opzionali (un bundle 1.0 si legge ancora). I bundle salvati portano la versione con
+# cui sono nati. 1.1 (16/09/2026): mescola, piattaforma, racconto del pilota.
+SCHEMA_VERSION = "1.1"
 
 
 class BundleVersionError(ValueError):
@@ -42,6 +44,20 @@ class Fonte(str, Enum):
     MOTEC = "motec"                    # export .ld/.ldx (L5)
     DEMO = "demo"                      # sessione dimostrativa di PitWall
     MANUALE = "manuale"                # inserito a mano dal pilota
+
+
+class Piattaforma(str, Enum):
+    """Dove gioca il pilota. Decide da dove possono arrivare i dati: su PC i file e la
+    shared memory di ACC, su console solo il setup e il racconto del pilota."""
+
+    PC = "pc"
+    PLAYSTATION = "playstation"
+    XBOX = "xbox"
+
+
+class Mescola(str, Enum):
+    ASCIUTTO = "asciutto"
+    BAGNATO = "bagnato"
 
 
 class TipoSessione(str, Enum):
@@ -86,6 +102,10 @@ class Meta(_Base):
     iniziata_il: datetime | None = None
     durata_s: float | None = Field(default=None, ge=0)
     condizioni: Condizioni = Field(default_factory=Condizioni)
+    # Mescola montata: decide contro quale finestra si giudicano le gomme (la finestra
+    # Kunos vale solo sull'asciutto). None = non nota, e allora non si giudica.
+    mescola: Mescola | None = None
+    piattaforma: Piattaforma | None = None
 
     @field_validator("car", "track")
     @classmethod
@@ -180,6 +200,29 @@ class Evento(_Base):
     nota: str | None = None
 
 
+class Racconto(_Base):
+    """Il pilota che racconta la sessione, con parole sue.
+
+    È il dato principale di chi gioca su console, dove non esistono né i file né la
+    shared memory di ACC: il motore di analisi non lo interpreta (non inventa numeri
+    da un testo), lo passa a Gigi insieme al report. Ogni campo è una fase di guida,
+    così il racconto arriva ordinato invece che come un paragrafo unico.
+    """
+
+    andamento: str | None = Field(default=None, max_length=2000)   # la sessione, dall'inizio alla fine
+    frenata: str | None = Field(default=None, max_length=1000)
+    ingresso: str | None = Field(default=None, max_length=1000)
+    centro: str | None = Field(default=None, max_length=1000)
+    uscita: str | None = Field(default=None, max_length=1000)
+    gomme: str | None = Field(default=None, max_length=1000)
+    curve_critiche: list[str] = Field(default_factory=list, max_length=12)
+    note: str | None = Field(default=None, max_length=1000)
+
+    def vuoto(self) -> bool:
+        return not any([self.andamento, self.frenata, self.ingresso, self.centro,
+                        self.uscita, self.gomme, self.curve_critiche, self.note])
+
+
 class Canali(_Base):
     """Riferimento alle serie temporali (L3). Il bundle non le porta dentro di sé:
     i canali stanno in un file colonnare a parte, qui c'è solo come leggerlo."""
@@ -200,6 +243,7 @@ class SessionBundle(_Base):
     setup: Setup | None = None
     eventi: list[Evento] = Field(default_factory=list)
     canali: Canali | None = None
+    racconto: Racconto | None = None
     # Ciò che l'import ha dovuto interpretare, o che il file non permette di sapere.
     # Va mostrato al pilota: un dato mancante dichiarato vale più di uno inventato.
     assunzioni: list[str] = Field(default_factory=list)
@@ -219,8 +263,9 @@ class SessionBundle(_Base):
         return [g for g in self.giri if g.valido and g.tempo_ms]
 
     def ha_dati_utili(self) -> bool:
-        """Un bundle senza giri e senza setup non dice niente a nessuno."""
-        return bool(self.giri) or bool(self.setup and self.setup.valori)
+        """Un bundle senza giri, senza setup e senza racconto non dice niente a nessuno."""
+        return (bool(self.giri) or bool(self.setup and self.setup.valori)
+                or bool(self.racconto and not self.racconto.vuoto()))
 
     def to_json(self, indent: int | None = 2) -> str:
         return self.model_dump_json(indent=indent, exclude_none=False)

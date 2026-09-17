@@ -129,6 +129,11 @@ class VoceVerdetto:
     titolo: str
     prova: str
     azione: str
+    # La curva a cui la voce si riferisce e quanto costa a giro: il motore li usa per
+    # ordinare il verdetto unico senza dover rileggere il titolo (dove «curva 1» sta
+    # anche dentro «curva 12»).
+    curva: int | None = None
+    perdita_ms: float = 0.0
 
 
 @dataclass
@@ -542,6 +547,8 @@ def _verdetto(
                    f"su {riga.giri_considerati} giri"),
             azione=("Rifai il tuo giro migliore in questa curva: la differenza è tua, "
                     "non della macchina."),
+            curva=riga.curva,
+            perdita_ms=riga.perdita_media_ms,
         ))
 
     # costanza del punto di frenata
@@ -560,6 +567,8 @@ def _verdetto(
                    f"(deviazione standard su {riga.giri_considerati} giri)"),
             azione=("Scegli un riferimento fisso a bordo pista e frena sempre lì: "
                     "prima la ripetibilità, poi il ritardo della staccata."),
+            curva=riga.curva,
+            perdita_ms=riga.perdita_media_ms,
         ))
 
     # v-min: dove si perde velocità in mezzo alla curva
@@ -574,6 +583,8 @@ def _verdetto(
                    f"deviazione {riga.dispersione_vmin:.1f} km/h"),
             azione=("Guarda l'ingresso: se la v-min cambia così tanto, stai variando "
                     "il punto di rilascio del freno."),
+            curva=riga.curva,
+            perdita_ms=riga.perdita_media_ms,
         ))
 
     # coasting: tempo speso senza né freno né gas
@@ -588,5 +599,8 @@ def _verdetto(
                    f"è senza freno e senza gas"),
             azione=("Passa dal freno al gas senza pause: il coasting è tempo regalato, "
                     "non stabilità."),
+            curva=peggiore.curva,
+            perdita_ms=next((r.perdita_media_ms for r in riepilogo
+                             if r.curva == peggiore.curva), 0.0),
         ))
     return voci

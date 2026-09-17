@@ -58,6 +58,12 @@ class Riassunto(BaseModel):
     parametri_setup: int = 0
     assunzioni: int = 0
     importato_il: str | None = None
+    iniziata_il: str | None = None
+    mescola: str | None = None
+    piattaforma: str | None = None
+    ha_canali: bool = False
+    ha_racconto: bool = False
+    demo: bool = False
 
 
 def cartella() -> Path:
@@ -136,6 +142,12 @@ def _riassumi(id_sessione: str, bundle: SessionBundle) -> Riassunto:
         parametri_setup=len(bundle.setup.valori) if bundle.setup else 0,
         assunzioni=len(bundle.assunzioni) + (len(bundle.setup.assunzioni) if bundle.setup else 0),
         importato_il=bundle.meta.importato_il.isoformat() if bundle.meta.importato_il else None,
+        iniziata_il=bundle.meta.iniziata_il.isoformat() if bundle.meta.iniziata_il else None,
+        mescola=bundle.meta.mescola.value if bundle.meta.mescola else None,
+        piattaforma=bundle.meta.piattaforma.value if bundle.meta.piattaforma else None,
+        ha_canali=bundle.canali is not None,
+        ha_racconto=bool(bundle.racconto and not bundle.racconto.vuoto()),
+        demo=bundle.meta.fonte.value == "demo",
     )
 
 

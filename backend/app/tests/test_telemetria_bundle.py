@@ -152,7 +152,8 @@ test("B18 …e la cosa è dichiarata nelle assunzioni",
      any("incompleti" in a for a in bundle_tagliato.assunzioni),
      f"{bundle_tagliato.assunzioni}")
 
-senza_carburante = {k: v for k, v in canali.items() if k != "physics.fuel"}
+senza_carburante = {k: v for k, v in canali.items()
+                    if k not in ("physics.fuel", "graphics.usedFuel")}
 test("B19 senza il canale del carburante lo dichiara invece di stimare",
      any("carburante" in a for a in
          bundle_da_canali(senza_carburante, metadati).assunzioni))
@@ -200,8 +201,10 @@ test("B26 lo squilibrio fra i lati entra nel verdetto",
      f"{[v.titolo for v in report_gomme.voci]}")
 test("B27 …con la prova numerica e l'azione",
      all(v.prova and v.azione for v in report_gomme.voci))
-test("B28 la finestra «ottimale» non verificata non viene usata per giudicare",
-     "non è pubblicata" in g.nota_finestra)
+test("B28 la finestra usata per giudicare è quella Kunos, e la fonte è citata",
+     "Kunos" in g.nota_finestra and g.finestra_pressione is not None
+     and (g.finestra_pressione.min, g.finestra_pressione.max) == (26.0, 27.0),
+     g.nota_finestra)
 
 senza_gomme = {k: v for k, v in canali.items() if "wheelPressure" not in k}
 test("B29 senza le pressioni lo dichiara invece di tacere",
