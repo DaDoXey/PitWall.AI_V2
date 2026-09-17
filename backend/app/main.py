@@ -16,7 +16,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from app import config
-from app.api import analysis, catalog, session, sessions, setup, telemetria, vision
+from app.api import analysis, catalog, sessions, setup, telemetria, vision
 from app.logging_config import request_id, setup_logging
 from app.telemetria import registratore as telemetria_reg
 
@@ -33,7 +33,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-for _router in (session.router, sessions.router, analysis.router, setup.router,
+for _router in (sessions.router, analysis.router, setup.router,
                 vision.router, catalog.router, telemetria.router):
     app.include_router(_router, prefix="/api")
 
@@ -62,6 +62,18 @@ async def request_context(request: Request, call_next):
         return response
     finally:
         request_id.reset(token)
+
+
+@app.on_event("startup")
+def prepara_demo():
+    """La sessione DEMO nello stesso archivio delle altre (L4). Se manca o è di una
+    versione vecchia del generatore, si ricrea: qualche secondo, una volta sola."""
+    from app.bundle.demo import assicura_demo
+
+    try:
+        assicura_demo()
+    except Exception:   # una demo che non si crea non deve impedire all'app di partire
+        log.exception("sessione demo non creata")
 
 
 @app.on_event("startup")

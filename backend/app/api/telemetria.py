@@ -32,7 +32,7 @@ import numpy as np
 from fastapi import APIRouter, HTTPException, Query
 
 from app.analisi.curve import CurveNonCalcolabili, analizza_curve
-from app.bundle import store
+from app.bundle import demo, store
 from app.bundle.adapters.acc_telemetria import (
     TelemetriaNonConvertibile,
     bundle_da_registrazione,
@@ -221,6 +221,9 @@ def importa(id_sessione: str):
     mondi (L3 · Fase 4).
     """
     _presidio()
+    if demo.e_demo(id_sessione):
+        raise HTTPException(status_code=409,
+                            detail="La demo è già nell'archivio delle sessioni")
     cartella = _cartella(id_sessione)
     try:
         bundle, _canali = bundle_da_registrazione(cartella)
@@ -241,6 +244,8 @@ def importa(id_sessione: str):
 def cancella(id_sessione: str):
     import shutil
 
+    if demo.e_demo(id_sessione):
+        raise HTTPException(status_code=403, detail="La registrazione demo non si cancella")
     cartella = _cartella(id_sessione)
     shutil.rmtree(cartella)
     log.info("registrazione cancellata: %s", id_sessione)

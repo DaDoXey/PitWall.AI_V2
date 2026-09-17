@@ -243,7 +243,9 @@ os.environ["PITWALL_ALLOW_IMPORT"] = "1"
 # ---------------------------------------------------------------------------
 # 5. Le rotte di prima non si sono rotte
 # ---------------------------------------------------------------------------
-test("S41 GET /api/session (demo) risponde ancora", client.get("/api/session").status_code == 200)
+# L4 (16/09/2026): i numeri demo scritti a mano non esistono più, la demo è una sessione
+# dell'archivio. La vecchia rotta deve essere sparita, non restare a servire dati finti.
+test("S41 GET /api/session (demo della v1) non esiste più", client.get("/api/session").status_code == 404)
 test("S42 GET /api/setup-params risponde ancora", client.get("/api/setup-params").status_code == 200)
 test("S43 GET /api/catalog risponde ancora", client.get("/api/catalog").status_code == 200)
 test("S44 la rotta CSV eliminata resta 404", client.post("/api/csv/parse").status_code == 404)

@@ -2,7 +2,7 @@
 
 Serve il catalogo di `core/catalog.py`: liste compatte per i selettori e schede
 complete per la singola vettura/circuito. Nessun dato di sessione qui (quelli
-restano su /api/session): questa è l'anagrafica statica.
+stanno su /api/sessions): questa è l'anagrafica statica.
 """
 
 from fastapi import APIRouter, HTTPException

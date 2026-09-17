@@ -1,12 +1,20 @@
-"""api/sessions.py — importare e consultare le sessioni (L1 · Fase 4).
+"""api/sessions.py — importare e consultare le sessioni (L1 · Fase 4, L4 · Fasi 1-2).
 
 Rotte:
 - `POST /api/sessions/import/setup`   — un setup di ACC diventa una sessione
 - `POST /api/sessions/import/results` — un file di risultati diventa una sessione
-- `GET  /api/sessions`                — elenco, dalla più recente
+- `POST /api/sessions/manuale`        — una sessione scritta dal pilota (console: setup,
+                                        tempi se li ha, racconto della guida)
+- `GET  /api/sessions`                — elenco, dalla più recente (la DEMO in fondo)
 - `GET  /api/sessions/{id}`           — il bundle intero
 - `GET  /api/sessions/{id}/analisi`   — il report del motore (L2, + curve e gomme se ci sono i canali)
-- `DELETE /api/sessions/{id}`         — rimuove una sessione
+- `GET  /api/sessions/{id}/tracce`    — canali di alcuni giri, sulla distanza (per i grafici)
+- `GET  /api/riferimenti/fisica`      — le soglie di gomme e freni: Kunos e community, separate
+- `DELETE /api/sessions/{id}`         — rimuove una sessione (la DEMO no)
+
+**La sessione DEMO** (`bundle/demo.py`) vive nello stesso archivio con un id fisso. Si
+crea all'avvio, si ricrea se manca, non si cancella: è la sessione di chi non ne ha
+ancora una sua, e la vetrina pubblica mostra solo lei.
 
 **Presidio.** Queste rotte scrivono su disco e non toccano né la chiave né la rete,
 quindi NON passano dal presidio della demo-mode (che serve a proteggere la
@@ -24,10 +32,11 @@ invece di sceglierne una a caso: è il frontend a far scegliere, poi richiama co
 import logging
 import os
 
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, File, Form, HTTPException, Query, UploadFile
+from pydantic import BaseModel, Field
 
 from app.analisi import analizza
-from app.bundle import store
+from app.bundle import demo, store
 from app.bundle.adapters import (
     ResultsAccError,
     canali_del_bundle,
@@ -36,7 +45,19 @@ from app.bundle.adapters import (
     leggi_results_acc,
     leggi_setup_acc,
 )
-from app.bundle.schema import Fonte, Meta, SessionBundle
+from app.bundle.schema import (
+    Fonte,
+    Giro,
+    Mescola,
+    Meta,
+    Piattaforma,
+    Racconto,
+    SessionBundle,
+    Setup,
+    TipoSessione,
+    ValoreSetup,
+)
+from app.core import riferimenti_fisica
 
 router = APIRouter()
 log = logging.getLogger("pitwall.sessions")
@@ -143,14 +164,35 @@ async def importa_risultati(
     }
 
 
-@router.get("/sessions")
-async def elenco_sessioni(limite: int = 50):
-    limite = max(1, min(limite, 200))
-    return {"sessioni": store.elenca(limite)}
+class GiroManuale(BaseModel):
+    numero: int = Field(ge=1)
+    tempo_ms: int | None = Field(default=None, gt=0)
+    splits_ms: list[int] = Field(default_factory=list, max_length=3)
+    valido: bool = True
 
 
-@router.get("/sessions/{id_sessione}")
-async def leggi_sessione(id_sessione: str):
+class SessioneManuale(BaseModel):
+    """Una sessione raccontata dal pilota: il percorso di chi gioca su console.
+
+    Funziona esattamente come le altre (stesso bundle, stesso motore, stesse
+    schermate): semplicemente contiene meno misure, e il report lo dice.
+    """
+
+    piattaforma: Piattaforma
+    car: str | None = None
+    track: str | None = None
+    tipo_sessione: TipoSessione = TipoSessione.PROVE
+    mescola: Mescola | None = None
+    temp_aria_c: float | None = Field(default=None, ge=-20, le=60)
+    temp_pista_c: float | None = Field(default=None, ge=-20, le=90)
+    giri: list[GiroManuale] = Field(default_factory=list, max_length=200)
+    setup: dict[str, float] = Field(default_factory=dict)
+    racconto: Racconto | None = None
+
+
+def _leggi_o_errore(id_sessione: str) -> SessionBundle:
+    if demo.e_demo(id_sessione):
+        demo.assicura_demo()
     try:
         return store.leggi(id_sessione)
     except store.SessioneNonTrovata:
@@ -159,15 +201,63 @@ async def leggi_sessione(id_sessione: str):
         raise HTTPException(status_code=400, detail=str(e))
 
 
+@router.post("/sessions/manuale")
+async def crea_sessione_manuale(corpo: SessioneManuale):
+    """Una sessione scritta a mano: setup, tempi (se ci sono) e racconto della guida."""
+    _presidio()
+    racconto = corpo.racconto if corpo.racconto and not corpo.racconto.vuoto() else None
+    setup = None
+    if corpo.setup:
+        # Valori così come li ha scritti il pilota, dalla pagina Setup: si conservano
+        # grezzi e non verificati (decisione 7 del rework), come quelli dei file.
+        setup = Setup(car=corpo.car, nome="Setup inserito a mano",
+                      valori={k: ValoreSetup(raw=v) for k, v in corpo.setup.items()},
+                      raw=dict(corpo.setup),
+                      assunzioni=["setup inserito a mano: valori non letti da un file di ACC"])
+    bundle = SessionBundle(
+        meta=Meta(
+            fonte=Fonte.MANUALE, car=corpo.car, track=corpo.track,
+            tipo_sessione=corpo.tipo_sessione, mescola=corpo.mescola,
+            piattaforma=corpo.piattaforma,
+            condizioni={"temp_aria_c": corpo.temp_aria_c, "temp_pista_c": corpo.temp_pista_c},
+        ),
+        giri=[Giro(**g.model_dump()) for g in corpo.giri],
+        setup=setup,
+        racconto=racconto,
+        assunzioni=["sessione inserita a mano dal pilota: tempi e setup non letti dal gioco"],
+    )
+    if not bundle.ha_dati_utili():
+        raise HTTPException(status_code=400,
+                            detail="Servono almeno i tempi, il setup o il racconto della sessione")
+    id_sessione = store.salva(bundle)
+    log.info("sessione manuale creata: %s (%s, %d giri, setup %s, racconto %s)",
+             id_sessione, corpo.piattaforma.value, len(bundle.giri),
+             "sì" if setup else "no", "sì" if racconto else "no")
+    return {"id": id_sessione, "riassunto": store.riassunto(id_sessione)}
+
+
+@router.get("/sessions")
+async def elenco_sessioni(limite: int = 50):
+    limite = max(1, min(limite, 200))
+    demo.assicura_demo()
+    return {"sessioni": store.elenca(limite), "demo_id": demo.DEMO_ID}
+
+
+@router.get("/riferimenti/fisica")
+async def riferimenti():
+    """Le soglie di gomme e freni, divise per affidabilità (Kunos | community)."""
+    return riferimenti_fisica.come_json()
+
+
+@router.get("/sessions/{id_sessione}")
+async def leggi_sessione(id_sessione: str):
+    return _leggi_o_errore(id_sessione)
+
+
 @router.get("/sessions/{id_sessione}/analisi")
 async def analisi_sessione(id_sessione: str):
     """Il report deterministico della sessione: nessuna rete, nessun modello, zero spesa."""
-    try:
-        bundle = store.leggi(id_sessione)
-    except store.SessioneNonTrovata:
-        raise HTTPException(status_code=404, detail="Sessione non trovata")
-    except store.ArchivioError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    bundle = _leggi_o_errore(id_sessione)
     # Se la sessione viene da una registrazione, i suoi canali sono ancora sul disco:
     # il report cresce (curve, gomme, freni) invece di restare quello dei soli tempi.
     canali = canali_del_bundle(bundle)
@@ -178,8 +268,85 @@ async def analisi_sessione(id_sessione: str):
     return report
 
 
+# Canali che si possono chiedere per i grafici: quelli che una schermata disegna
+# davvero sulla distanza. Una lista chiusa, così una richiesta non trascina fuori
+# 200 colonne per sbaglio.
+CANALI_TRACCE = (
+    "physics.speedKmh", "physics.brake", "physics.gas", "physics.steerAngle", "physics.gear",
+)
+
+
+@router.get("/sessions/{id_sessione}/tracce")
+async def tracce_sessione(
+    id_sessione: str,
+    giri: str = Query(..., description="numeri dei giri separati da virgola (max 4)"),
+    canali: str = Query(default="physics.speedKmh,physics.brake,physics.gas"),
+    punti: int = Query(default=800, ge=100, le=2000),
+):
+    """I canali di alcuni giri ricampionati sulla **stessa griglia di posizione**.
+
+    È ciò che serve per sovrapporre due giri curva per curva: nel tempo scivolerebbero,
+    sulla distanza no. La posizione è in quota di giro (0-1) e, se la lunghezza del
+    tracciato si stima, anche in metri.
+    """
+    from app.analisi.curve import (
+        CurveNonCalcolabili,
+        dividi_in_giri,
+        griglia,
+        lunghezza_stimata,
+        su_distanza,
+    )
+
+    bundle = _leggi_o_errore(id_sessione)
+    serie = canali_del_bundle(bundle)
+    if not serie:
+        raise HTTPException(status_code=409,
+                            detail="Questa sessione non ha canali: niente tracce da disegnare")
+    try:
+        numeri = [int(n) for n in giri.split(",") if n.strip()]
+    except ValueError:
+        raise HTTPException(status_code=400, detail="giri: numeri separati da virgola")
+    if not numeri or len(numeri) > 4:
+        raise HTTPException(status_code=400, detail="giri: da 1 a 4")
+    nomi = [n.strip() for n in canali.split(",") if n.strip()]
+    sconosciuti = [n for n in nomi if n not in CANALI_TRACCE]
+    if sconosciuti or not nomi:
+        raise HTTPException(status_code=400,
+                            detail=f"canali ammessi: {', '.join(CANALI_TRACCE)}")
+
+    per_numero = {g.numero: g for g in dividi_in_giri(serie)}
+    fuori = []
+    lunghezza = None
+    for numero in numeri:
+        giro = per_numero.get(numero)
+        if giro is None or not giro.completo:
+            raise HTTPException(status_code=404, detail=f"giro {numero} assente o incompleto")
+        try:
+            profilo = su_distanza(serie, giro, nomi + ["physics.speedKmh"], punti)
+        except CurveNonCalcolabili as e:
+            raise HTTPException(status_code=422, detail=str(e))
+        if lunghezza is None:
+            lunghezza = lunghezza_stimata(profilo, giro.tempo_ms)
+        fuori.append({
+            "giro": numero,
+            "tempo_ms": giro.tempo_ms,
+            "canali": {n: [round(float(v), 3) for v in profilo[n]] for n in nomi if n in profilo},
+        })
+    posizioni = griglia(punti)
+    return {
+        "id": id_sessione,
+        "punti": punti,
+        "posizione": [round(float(p), 5) for p in posizioni],
+        "metri": ([round(float(p) * lunghezza, 1) for p in posizioni] if lunghezza else None),
+        "lunghezza_stimata_m": round(lunghezza, 1) if lunghezza else None,
+        "giri": fuori,
+    }
+
+
 @router.delete("/sessions/{id_sessione}")
 async def cancella_sessione(id_sessione: str):
+    if demo.e_demo(id_sessione):
+        raise HTTPException(status_code=403, detail="La sessione demo non si cancella")
     try:
         store.cancella(id_sessione)
     except store.SessioneNonTrovata:
