@@ -114,16 +114,28 @@ print("\n" + "=" * 60)
 print("SCHEDA DEL SINGOLO CIRCUITO")
 print("=" * 60)
 
-r = client.get("/api/catalog/track/monza")
-test("GET /api/catalog/track/monza risponde 200", r.status_code == 200, f"status {r.status_code}")
-monza = r.json() if r.status_code == 200 else {}
+# Silverstone: nessuna guida e nessun layout verificato — il caso «scheda
+# onesta e basta», che deve restare servibile come tutti gli altri.
+r = client.get("/api/catalog/track/silverstone")
+test("GET /api/catalog/track/silverstone risponde 200", r.status_code == 200, f"status {r.status_code}")
+silver = r.json() if r.status_code == 200 else {}
 test(
     "la scheda porta le bandierine e il nome breve",
-    monza.get("short_name") == "Monza"
-    and monza.get("ha_guida") is False
-    and monza.get("mappa_verificata") is False,
-    f"short_name={monza.get('short_name')} ha_guida={monza.get('ha_guida')} "
-    f"mappa={monza.get('mappa_verificata')}",
+    silver.get("short_name") == "Silverstone"
+    and silver.get("ha_guida") is False
+    and silver.get("mappa_verificata") is False,
+    f"short_name={silver.get('short_name')} ha_guida={silver.get('ha_guida')} "
+    f"mappa={silver.get('mappa_verificata')}",
+)
+
+# Monza: guida sì (blocco 2), layout ancora no. Le due bandierine sono
+# indipendenti e la scheda deve saperlo dire.
+r = client.get("/api/catalog/track/monza")
+monza = r.json() if r.status_code == 200 else {}
+test(
+    "Monza ha la guida ma non ancora il layout verificato",
+    monza.get("ha_guida") is True and monza.get("mappa_verificata") is False,
+    f"ha_guida={monza.get('ha_guida')} mappa={monza.get('mappa_verificata')}",
 )
 
 r = client.get("/api/catalog/track/Spa-Francorchamps")
@@ -162,7 +174,7 @@ test(
     f"settori={len(guida.get('settori') or [])} curve={len(guida.get('curve') or [])}",
 )
 
-r = client.get("/api/catalog/track/monza/guida")
+r = client.get("/api/catalog/track/silverstone/guida")
 test(
     "un circuito senza guida dà 404, non un finto contenuto",
     r.status_code == 404,

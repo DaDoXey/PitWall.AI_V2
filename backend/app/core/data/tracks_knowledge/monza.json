@@ -1,0 +1,473 @@
+{
+  "id": "monza",
+  "verifica_catalogo": {
+    "lunghezza_confermata": true,
+    "curve_confermate": true,
+    "fonte_lunghezza": "https://en.wikipedia.org/wiki/Monza_Circuit",
+    "note": "Catalogo e fonti concordano: 5,793 km e 11 curve. Le due guide ACC lette concordano anche sul senso di ogni curva (7 a destra, 4 a sinistra), il che rende verificabile il lato gomma di tutte e 11 le curve."
+  },
+  "senso_marcia": "orario",
+  "dislivello_m": null,
+  "rettilineo_piu_lungo_m": 1120,
+  "variante_acc": "ACC ha un solo layout di Monza, quello del Gran Premio. Il riasfaltamento del 2024 e le modifiche successive non sono state verificate in gioco: da controllare a schermo prima di darle per presenti.",
+  "settori": [
+    {
+      "n": 1,
+      "carattere": "Il rettilineo dei box, la staccata della Variante del Rettifilo e la Curva Grande fino all'ingresso della Roggia. Velocita' pura interrotta da una sola frenata pesantissima.",
+      "cosa_decide": "La staccata della prima variante. E' il punto di sorpasso principale e la frenata piu' violenta del giro: si arriva da circa 330 km/h e si scende sotto i 90.",
+      "errore_costoso": "Bloccare l'anteriore alla T1 o tagliare la variante. Nel primo caso si perde l'uscita e mezzo settore, nel secondo arriva la penalita'."
+    },
+    {
+      "n": 2,
+      "carattere": "Dalla Variante della Roggia alle due Lesmo, fino al tratto del Serraglio. E' il settore piu' tecnico di Monza: due curve di media velocita' senza riferimenti chiari.",
+      "cosa_decide": "L'uscita della Lesmo 2, che lancia sul tratto lungo verso l'Ascari.",
+      "errore_costoso": "Prendere la salsiccia interna della Roggia: la macchina decolla e il giro finisce li'."
+    },
+    {
+      "n": 3,
+      "carattere": "La Variante Ascari, il rettilineo posteriore e la Parabolica. Due sequenze in cui conta solo l'uscita, separate dal tratto piu' veloce del giro.",
+      "cosa_decide": "L'uscita della Parabolica, che comanda tutto il rettilineo dei box e quindi anche la difesa alla T1 del giro dopo.",
+      "errore_costoso": "Allargare oltre la linea bianca all'uscita dell'Ascari o della Parabolica: sono i due punti dove i track limits vengono contestati piu' spesso."
+    }
+  ],
+  "curve": [
+    {
+      "n": 1,
+      "nome": "Variante del Rettifilo",
+      "direzione": "destra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Cartello dei 150 m sulla destra: si frena appena prima, arrivando da circa 330 km/h. E' la staccata piu' lunga del giro e il punto in cui si guadagna o si butta via il giro.",
+      "insidia": "Bloccaggio dell'anteriore facilissimo: si arriva a 330 e si scende sotto i 90 km/h in poche decine di metri. Girare dentro troppo presto rovina non solo la curva ma tutta la sequenza fino all'uscita della seconda parte. I cordoli a salsiccia all'interno fanno rimbalzare la macchina e svegliano il controllo di trazione.",
+      "costo_errore": "Molto alto. Sbagliare qui costa l'intera esse e il lancio sulla Curva Grande; in gara e' anche il punto in cui si perdono le posizioni appena guadagnate in scia.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "E' IL punto di sorpasso di Monza: scia sul rettilineo e staccata all'interno destro. Si puo' attaccare anche da lontano, perche' la zona di frenata e' lunghissima.",
+        "come_ci_si_difende": "Interno e frenata anticipata, accettando di perdere l'uscita. Attenzione: difendersi qui vuol dire uscire male e riconsegnare la posizione alla Roggia."
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Il carico si sposta sull'anteriore sinistro in ingresso e poi sul destro nella parte a sinistra: la variante scalda e consuma entrambi gli anteriori in pochi metri."
+      },
+      "freni": {
+        "stress": "molto alto",
+        "note": "La frenata piu' pesante del campionato ACC per energia dissipata: si arriva da 330 km/h."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Tagliare la variante e' il taglio piu' sorvegliato della pista."
+      },
+      "differenza_gara_qualifica": "In qualifica si stacca al limite e si accetta di allargare in uscita. In gara conviene arretrare un filo il riferimento: con il pieno la macchina frena molto peggio e qui i contatti al primo giro sono la regola.",
+      "progressione": {
+        "prendi_il_giro": "Frena al cartello dei 150 m, senza eroismi, e concentrati sull'uscita: se esci bene qui, hai gia' un decimo sulla Curva Grande.",
+        "guadagni": "Sposta la frenata avanti a piccoli passi, un metro alla volta, tenendo d'occhio il bloccaggio dell'anteriore. Gira piu' tardi e prendi l'apice tardi.",
+        "al_limite": "Frenata al limite del bloccaggio con rilascio progressivo fino all'apice, primo cordolo attaccato con decisione. Chi va forte tocca la salsiccia interna senza farsi destabilizzare: e' quello il decimo che manca."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 2,
+      "nome": "Variante del Rettifilo (uscita)",
+      "direzione": "sinistra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Nessuna frenata a se': si arriva scarichi dal primo apice e si gira subito a sinistra. Il riferimento e' il primo cordolo, non un cartello.",
+      "insidia": "E' una curva sola con la T1: se sei entrato storto qui non c'e' niente da recuperare. Il cordolo di uscita a sinistra e' invitante ma scarica la macchina proprio mentre dai gas.",
+      "costo_errore": "Alto: si paga in velocita' su tutta la Curva Grande e fino alla Roggia.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": "Chi e' entrato all'interno alla T1 tiene la posizione uscendo largo e coprendo l'interno della T2."
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Il cambio di direzione carica l'anteriore destro subito dopo aver caricato il sinistro: e' il punto di Monza che stressa di piu' gli anteriori."
+      },
+      "freni": {
+        "stress": "medio",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "L'uscita a sinistra ha una linea bianca che si supera facilmente quando si esagera col cordolo."
+      },
+      "differenza_gara_qualifica": "In gara e' il punto in cui si perde il posteriore uscendo con il pieno: molta piu' pazienza sul gas.",
+      "progressione": {
+        "prendi_il_giro": "Esci pulito senza cercare il cordolo: la macchina dritta e il gas pieno prima.",
+        "guadagni": "Usa il cordolo interno di sinistra per raddrizzare prima e anticipare il gas.",
+        "al_limite": "Cordolo pieno e gas gia' in appoggio mentre la macchina e' ancora piegata, accettando un filo di pattinamento: qui si guadagna il lancio per tutto il primo settore."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 3,
+      "nome": "Curva Grande",
+      "direzione": "destra",
+      "tipo": "veloce",
+      "marcia_indicativa": "6a",
+      "riferimento_frenata": "Nessun cartello: si arriva in pieno. Il riferimento e' il cordolo interno, che si segue per tutta la curva.",
+      "insidia": "Sembra banale e non lo e': e' una curva lunghissima a raggio costante che si fa a circa 230 km/h di minima. Ogni correzione di volante costa velocita' fino alla Roggia. In gara, con il pieno e le gomme usate, un alleggerimento del gas e' piu' veloce che tenerlo spalancato e allargare.",
+      "costo_errore": "Medio. Non fa perdere il giro, ma toglie velocita' proprio dove la velocita' vale di piu'.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": "Non e' un punto di sorpasso, ma chi insegue in scia esce piu' forte: la difesa vera si fa entrando bene, non qui."
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Carico laterale lungo e costante: e' la curva che scalda l'anteriore sinistro piu' di ogni altra a Monza."
+      },
+      "freni": {
+        "stress": "basso",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "In qualifica, con poca benzina, e' piatta. In gara quasi sempre serve un accenno di rilascio: e' la differenza di riferimento piu' netta di tutto il tracciato.",
+      "progressione": {
+        "prendi_il_giro": "Alleggerisci il gas e stai largo: passare puliti vale piu' che passare veloci.",
+        "guadagni": "Riduci il rilascio a un accenno e stringi l'interno, tenendo il volante fermo.",
+        "al_limite": "Piatta in qualifica, con il cordolo interno sfiorato per tutta la curva. Il volante non si muove piu': ogni correzione e' velocita' persa fino alla Roggia."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 4,
+      "nome": "Variante della Roggia (ingresso)",
+      "direzione": "sinistra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a-3a",
+      "riferimento_frenata": "Cartello dei 150 m: si frena subito dopo. Attenzione: le guide non concordano — c'e' chi indica il cartello dei 50 m con una marcia piu' alta. Prendi il riferimento piu' prudente e spostalo avanti a piccoli passi.",
+      "insidia": "Si arriva in fondo a un tratto velocissimo e la macchina e' leggera in ingresso. Il cordolo a salsiccia all'interno manda la macchina per aria: e' l'errore che finisce in testacoda piu' spesso a Monza.",
+      "costo_errore": "Alto in gara (la variante e' il secondo punto di sorpasso), medio in qualifica.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "Secondo punto di sorpasso vero: chi esce bene dalla Curva Grande arriva in scia e stacca all'interno sinistro.",
+        "come_ci_si_difende": "Interno e ingresso lento, sacrificando l'uscita verso le Lesmo."
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": null
+      },
+      "freni": {
+        "stress": "alto",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "alto",
+        "note": "Tagliare la variante e' sorvegliato: la penalita' arriva anche quando sembra di aver solo sfiorato."
+      },
+      "differenza_gara_qualifica": "In gara e' il punto dove ci si difende dopo aver perso la T1: ingresso lento, uscita compromessa. In qualifica conta solo l'uscita.",
+      "progressione": {
+        "prendi_il_giro": "Frena presto e sta' lontano dalle salsicce interne: qui il volo costa piu' di qualunque decimo.",
+        "guadagni": "Rilascia il freno fino all'apice per far ruotare la macchina, invece di frenare tutto dritto.",
+        "al_limite": "Ingresso sacrificato e tutto sull'uscita: si tocca il cordolo piatto interno senza prendere la salsiccia, e si apre il gas prima della seconda parte."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 5,
+      "nome": "Variante della Roggia (uscita)",
+      "direzione": "destra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Nessuna frenata a se': si gira subito a destra sul filo del primo apice.",
+      "insidia": "L'uscita e' tutto: da qui parte il tratto verso le Lesmo. Il cordolo esterno a sinistra scarica la macchina mentre si da' gas, e la linea bianca fuori e' uno dei punti di taglio piu' controllati.",
+      "costo_errore": "Alto: si paga fino all'ingresso della Lesmo 1.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": "Chi ha l'interno tiene la posizione uscendo largo, ma paga il lancio."
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": null
+      },
+      "freni": {
+        "stress": "medio",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "alto",
+        "note": "Superare la linea bianca in uscita e' facilissimo quando si esagera col gas."
+      },
+      "differenza_gara_qualifica": "In gara, con il pieno, il posteriore scappa in uscita: gas piu' progressivo.",
+      "progressione": {
+        "prendi_il_giro": "Macchina dritta prima del gas: qui la fretta si paga con un mezzo testacoda.",
+        "guadagni": "Anticipa il gas di poco e usa il cordolo interno per raddrizzare prima.",
+        "al_limite": "Gas in appoggio con la macchina ancora piegata, cordolo pieno, e si accetta di arrivare al limite della linea bianca in uscita — al limite, non oltre."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 6,
+      "nome": "Curva di Lesmo 1",
+      "direzione": "destra",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Cartello dei 50 m circa. E' una curva senza veri riferimenti visivi: si va a memoria, e per questo e' una delle piu' difficili da ripetere uguale giro dopo giro.",
+      "insidia": "Il fondo scende verso l'apice e la macchina si alleggerisce proprio dove serve appoggio. Chi entra forte si ritrova largo in uscita e perde tutto il tratto verso la Lesmo 2.",
+      "costo_errore": "Medio in qualifica, alto in gara (l'uscita lancia verso la Lesmo 2 e il tratto del Serraglio).",
+      "sorpasso": {
+        "possibile": true,
+        "come": "Si puo' provare all'interno destro se chi precede ha sbagliato l'uscita della Roggia, ma e' un sorpasso di ripiego: la curva e' stretta e in uscita si e' indifesi.",
+        "come_ci_si_difende": "Interno, e uscita larga sfruttando l'asfalto in uscita."
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": null
+      },
+      "freni": {
+        "stress": "medio-alto",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "In uscita si puo' usare cordolo ed erba sintetica: qui i tagli sono trattati con indulgenza."
+      },
+      "differenza_gara_qualifica": "In gara la mancanza di riferimenti si sente: si tende a entrare piano per non allargare. In qualifica si cerca l'apice tardi e l'uscita piena.",
+      "progressione": {
+        "prendi_il_giro": "Entra piano e fissa un riferimento tuo (un cartello, un palo): a Monza questa e' la curva che si sbaglia per distrazione, non per velocita'.",
+        "guadagni": "Sposta l'apice piu' avanti e apri il gas prima, usando il cordolo esterno in uscita.",
+        "al_limite": "Ingresso pieno con la macchina che scarica sul dosso in discesa, apice tardo e uscita che finisce sull'erba sintetica. Qui va tenuto il volante fermissimo."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 7,
+      "nome": "Curva di Lesmo 2",
+      "direzione": "destra",
+      "tipo": "media",
+      "marcia_indicativa": "3a-4a",
+      "riferimento_frenata": "Cartello dei 50 m. Si arriva con poca frenata: piu' che frenare, si imposta.",
+      "insidia": "E' piu' corta e piu' chiusa della Lesmo 1, ma ha un filo di sopraelevazione che aiuta. Il cordolo destabilizza la macchina se lo si prende con il gas gia' aperto.",
+      "costo_errore": "Alto: l'uscita lancia sul lungo tratto verso l'Ascari, uno dei punti dove si guadagna di piu'.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": "Non e' un punto di attacco: chi sbaglia qui viene ripreso in fondo al rettilineo."
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "La sopraelevazione aiuta, ma il carico resta sull'anteriore sinistro."
+      },
+      "freni": {
+        "stress": "medio",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": null
+      },
+      "differenza_gara_qualifica": "Con il pieno la macchina sottosterza in ingresso: si arriva piu' piano e si lavora sull'uscita.",
+      "progressione": {
+        "prendi_il_giro": "Un accenno di freno, marcia giusta, e pensa solo a uscire dritto.",
+        "guadagni": "Usa piu' cordolo di quanto sembri possibile: la sopraelevazione tiene.",
+        "al_limite": "Cordolo pieno e gas aperto prima dell'apice, con la macchina che si appoggia sulla sopraelevazione: da qui parte il tratto piu' veloce del giro."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 8,
+      "nome": "Variante Ascari (ingresso)",
+      "direzione": "sinistra",
+      "tipo": "lenta",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Cartello dei 100 m. E' l'ultima staccata vera prima della Parabolica.",
+      "insidia": "L'Ascari non e' una curva ma una sequenza: si imposta l'ingresso pensando all'uscita della terza parte. Le salsicce interne sono ingannevoli e destabilizzano la macchina proprio dove serve precisione.",
+      "costo_errore": "Molto alto: sbagliare l'ingresso rovina tutte e tre le curve e il lancio sul rettilineo.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": "Sequenza velocissima e stretta: attaccare qui e' azzardato, difendersi e' solo questione di non sbagliare."
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": null
+      },
+      "freni": {
+        "stress": "alto",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": null
+      },
+      "differenza_gara_qualifica": "In gara, in mezzo al traffico, e' il punto peggiore dove trovarsi dietro: si perde appoggio e si arriva male sul rettilineo.",
+      "progressione": {
+        "prendi_il_giro": "Frena ai 100 m e prendi le tre curve come una sola cosa, senza inseguire l'apice della prima.",
+        "guadagni": "Sacrifica ancora di piu' l'ingresso: ogni km/h all'uscita della terza vale su tutto il rettilineo.",
+        "al_limite": "Si sfiora la salsiccia interna tenendo un filo di gas per stabilizzare il posteriore, e si passa dalla prima alla terza curva senza mai raddrizzare davvero il volante."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 9,
+      "nome": "Variante Ascari (centro)",
+      "direzione": "destra",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Nessuna frenata vera: un accenno di rilascio, poi si tiene la velocita'.",
+      "insidia": "E' la curva che decide l'ingresso della terza: tenere la velocita' qui e' l'unico modo per aprire la traiettoria dopo. Chi arriva troppo dentro si chiude la porta da solo.",
+      "costo_errore": "Alto, ma indiretto: si paga all'uscita della curva successiva.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": null
+      },
+      "freni": {
+        "stress": "basso",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": null
+      },
+      "differenza_gara_qualifica": "Poche differenze fra gara e qualifica: cambia il carico, non la traiettoria.",
+      "progressione": {
+        "prendi_il_giro": "Non frenare: alleggerisci e tieni la macchina in appoggio.",
+        "guadagni": "Tieni piu' velocita' al centro, accettando di allargare un po' verso l'esterno.",
+        "al_limite": "Piatta o quasi, con la macchina che scorre da un appoggio all'altro: e' il pezzo che separa chi fa 1:47 da chi fa 1:48."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 10,
+      "nome": "Variante Ascari (uscita)",
+      "direzione": "sinistra",
+      "tipo": "media",
+      "marcia_indicativa": "3a-4a",
+      "riferimento_frenata": "Nessun cartello: si sale di marcia poco prima del centro della curva, con il gas gia' in apertura.",
+      "insidia": "E' l'uscita che conta: da qui parte il rettilineo verso la Parabolica. Chi esce largo finisce oltre la linea bianca, e a Monza l'uscita dell'Ascari e' sorvegliata.",
+      "costo_errore": "Molto alto: e' la curva che pesa di piu' sul tempo sul giro dopo la Parabolica.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": "Chi esce meglio da qui sorpassa in fondo al rettilineo o alla Parabolica."
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": null
+      },
+      "freni": {
+        "stress": "basso",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "alto",
+        "note": "Limiti stretti in uscita: e' uno dei due punti dove le penalita' arrivano piu' spesso."
+      },
+      "differenza_gara_qualifica": "In gara con gomme usate il posteriore scappa in uscita proprio mentre si sale di marcia.",
+      "progressione": {
+        "prendi_il_giro": "Esci dentro la linea bianca anche a costo di perdere un decimo: la penalita' costa molto di piu'.",
+        "guadagni": "Apri il gas prima e allunga la traiettoria fino al limite dell'asfalto.",
+        "al_limite": "Gas pieno con la macchina ancora piegata e le ruote esterne sulla linea bianca, mai oltre. Qui si vince il rettilineo."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 11,
+      "nome": "Curva Parabolica (Alboreto)",
+      "direzione": "destra",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Cartello dei 100 m sulla sinistra per iniziare a frenare, e si gira verso il cartello dei 50 m. E' la curva piu' importante del giro: l'uscita comanda tutto il rettilineo dei box.",
+      "insidia": "E' una curva lunghissima a raggio crescente: si entra e non si finisce mai. Prendere il cordolo interno destabilizza; fuori, appena oltre l'erba sintetica, c'e' una salsiccia gialla che aspetta chi allarga.",
+      "costo_errore": "Massimo. E' l'errore che si paga due volte: in uscita e per tutto il rettilineo, dove si arriva indifesi in scia.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "Si puo' attaccare all'interno destro in staccata, ma e' un sorpasso da ultimo giro: chi entra dentro esce male e viene ripreso sul rettilineo.",
+        "come_ci_si_difende": "Interno e uscita pulita. Difendere qui costa pochissimo se si tiene la traiettoria; costa tutto se si allarga."
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Carico laterale lungo, la curva piu' impegnativa del giro per l'anteriore sinistro."
+      },
+      "freni": {
+        "stress": "medio-alto",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "alto",
+        "note": "La linea bianca in uscita e' uno dei due punti piu' sorvegliati della pista."
+      },
+      "differenza_gara_qualifica": "In qualifica si entra al limite e si apre il gas prestissimo. In gara, con il pieno, si entra piu' piano e si pensa solo a uscire dentro i limiti.",
+      "progressione": {
+        "prendi_il_giro": "Frena ai 100 m, apice presto, gas progressivo: uscire dentro la linea bianca vale piu' di ogni cosa.",
+        "guadagni": "Ritarda la frenata e rendi il gas piu' deciso dall'apice in poi, allungando la traiettoria fino all'asfalto esterno.",
+        "al_limite": "Frenata tardissima, rilascio lungo fino all'apice, gas gia' in appoggio a meta' curva e uscita che sfrutta tutta la larghezza disponibile: i migliori escono al filo della linea bianca."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    }
+  ],
+  "track_limits_generale": "Monza si gioca su due punti: l'uscita della Variante Ascari e l'uscita della Parabolica, dove la linea bianca e' il confine vero e l'erba sintetica non e' pista. Le due varianti hanno cordoli a salsiccia interni: passarci sopra non e' solo un taglio, e' un rischio per la macchina. Alle Lesmo, invece, l'uscita e' trattata con molta piu' indulgenza.",
+  "pit": {
+    "tempo_perso_s": null,
+    "limite_kmh": 50,
+    "lato_box": null,
+    "note": "Limite standard ACC di 50 km/h, segnalato da linee bianche e cartelli. Il tempo perso complessivo a Monza non e' documentato da nessuna fonte affidabile: va misurato in gioco, non stimato.",
+    "fonte": "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  },
+  "traffico_multiclass": "Monza e' il circuito piu' facile su cui gestire il traffico: i due rettilinei lunghi danno spazio per farsi passare senza perdere il giro. I posti sbagliati sono la Variante Ascari, dove non c'e' spazio per due traiettorie, e la Parabolica, dove trovarsi dietro a qualcuno significa perdere tutto il rettilineo successivo.",
+  "meteo_e_luce": {
+    "condizioni_tipiche": null,
+    "sul_bagnato": "Le staccate pesanti diventano il problema: alla Variante del Rettifilo si arriva da oltre 300 km/h con pochissima aderenza, e la traiettoria asciutta e' strettissima. Le salsicce delle varianti sul bagnato sono ancora piu' insidiose.",
+    "punti_acqua": null,
+    "di_notte": null,
+    "al_tramonto": null
+  },
+  "gomme_e_freni_pista": "Monza e' la pista che stressa meno le gomme in curva e di piu' i freni in staccata: poche curve, quasi tutte a destra, e quattro frenate pesanti in un giro. Il carico laterale sta quasi sempre sull'anteriore sinistro (7 curve a destra su 11), che e' l'anteriore da tenere d'occhio nelle temperature e nelle pressioni. I freni, con la staccata da 330 km/h della prima variante, sono l'elemento da gestire: e' il circuito dove si arriva piu' facilmente a fine gara con le pastiglie al limite.",
+  "errore_del_principiante": "Pensare che Monza sia facile perche' e' fatta di rettilinei. Il giro si fa nelle quattro frenate e nelle due uscite (Ascari e Parabolica), non sui rettilinei: li' vanno tutti uguali. Il secondo errore classico e' inseguire l'apice della prima parte di ogni variante invece di impostare l'uscita della seconda.",
+  "gt3_ref_lap_time": {
+    "valore": "1:47.5",
+    "contesto": "Passo di riferimento GT3 in hotlap su pista ottimale: i riferimenti pubblicati parlano di circa 1:46.8 per un pilota di vertice, 1:47.5 per un pilota veloce e 1:48.5 per un pilota esperto. In gara, con il pieno, si sta sopra di un secondo abbondante.",
+    "fonte": "https://www.fullgripmotorsport.com/academy/trackguides/monza"
+  },
+  "gt3_fuel_per_lap_l": {
+    "valore": null,
+    "contesto": "Nessuna fonte affidabile pubblica il consumo per giro a Monza: dipende da vettura, mappa motore e passo. Va misurato dalle sessioni vere, non stimato.",
+    "fonte": null
+  },
+  "chicche": [
+    {
+      "testo": "Dal 2021 la Parabolica si chiama ufficialmente Curva Alboreto, in memoria di Michele Alboreto.",
+      "perche_interessa_al_pilota": "Nelle guide e nei commenti la trovi con tutti e due i nomi: e' la stessa curva, l'ultima del giro.",
+      "fonte": "https://en.wikipedia.org/wiki/Monza_Circuit"
+    },
+    {
+      "testo": "Il cordolo a salsiccia all'esterno della Parabolica venne rimosso dopo che, in una gara di Formula 3 del 2019, lanciò in aria la vettura di Alex Peroni.",
+      "perche_interessa_al_pilota": "Spiega perche' oggi fuori dalla Parabolica trovi asfalto ed erba sintetica: l'errore si paga con i track limits, non con un volo.",
+      "fonte": "https://www.formula1.com/en/latest/article.sausage-kerbing-removed-from-parabolica-after-big-f3-crash.56tuSsCZHmOjYFi1uw81wS.html"
+    },
+    {
+      "testo": "Monza e' in attivita' dal 1922 ed e' uno dei circuiti permanenti piu' antichi del mondo ancora in uso.",
+      "perche_interessa_al_pilota": "Il disegno e' vecchio quanto le auto che lo hanno costruito: da qui i rettilinei lunghissimi e le poche curve, un tracciato pensato per la velocita' e non per il ritmo.",
+      "fonte": "https://en.wikipedia.org/wiki/Monza_Circuit"
+    }
+  ],
+  "fonti": [
+    "https://coachdaveacademy.com/tutorials/autodromo-nazionale-monza-track-guide/",
+    "https://www.fullgripmotorsport.com/academy/trackguides/monza",
+    "https://en.wikipedia.org/wiki/Monza_Circuit",
+    "https://coachdaveacademy.com/acc-lap-times/",
+    "https://www.formula1.com/en/latest/article.sausage-kerbing-removed-from-parabolica-after-big-f3-crash.56tuSsCZHmOjYFi1uw81wS.html",
+    "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  ]
+}

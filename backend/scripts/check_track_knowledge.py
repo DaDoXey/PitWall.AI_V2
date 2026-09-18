@@ -62,6 +62,14 @@ CAMPI_CURVA = ["n", "nome", "tipo", "marcia_indicativa", "riferimento_frenata",
 # sequenze che girano nei due sensi.
 DIREZIONI = {"destra", "sinistra"}
 
+# `progressione` e' il secondo campo chiesto dal blocco 2 (18/09/2026): gli stessi
+# metri di pista raccontati a tre livelli — come si prende il giro, cosa si sposta
+# per guadagnare, cosa fa chi va al limite. Serve a far crescere il pilota invece
+# di dargli un unico riferimento buono per tutti. Stesso trattamento di
+# `direzione`: una guida che non ce l'ha proprio e' una consegna vecchia (un
+# rilievo solo), non quindici errori.
+LIVELLI_PROGRESSIONE = ["prendi_il_giro", "guadagni", "al_limite"]
+
 # Sezioni di pista chieste dal blocco 2 in poi. NON sono errori se mancano: le
 # guide del blocco 1 sono arrivate prima che le chiedessimo, e non si invalida
 # all'indietro una consegna che era conforme quando e' stata fatta.
@@ -135,13 +143,29 @@ def controlla_lato_gomma(cid: str, curva: dict, e: Esito) -> None:
                        f"in curva a {senso} si carica l'anteriore {atteso}")
 
 
-def controlla_curva(cid: str, curva: dict, e: Esito, salta_direzione: bool = False) -> None:
+def controlla_progressione(cid: str, curva: dict, e: Esito) -> None:
+    """I tre livelli ci sono e dicono qualcosa."""
+    dove = f"{cid} T{curva.get('n')}"
+    prog = curva.get("progressione")
+    if not isinstance(prog, dict):
+        e.errore(dove, "`progressione` non e' un oggetto coi tre livelli "
+                       f"({', '.join(LIVELLI_PROGRESSIONE)})")
+        return
+    vuoti = [l for l in LIVELLI_PROGRESSIONE if not str(prog.get(l) or "").strip()]
+    if vuoti:
+        e.errore(dove, "progressione senza " + ", ".join(f"`{l}`" for l in vuoti))
+
+
+def controlla_curva(cid: str, curva: dict, e: Esito, salta_direzione: bool = False,
+                    salta_progressione: bool = False) -> None:
     dove = f"{cid} T{curva.get('n')}"
     for campo in CAMPI_CURVA:
         if campo == "direzione" and salta_direzione:
             continue          # gia' segnalato una volta sola per l'intera guida
         if campo not in curva:
             e.errore(dove, f"manca il campo `{campo}`")
+    if not salta_progressione:
+        controlla_progressione(cid, curva, e)
     if "direzione" in curva and curva["direzione"] is not None:
         if str(curva["direzione"]).strip().lower() not in DIREZIONI:
             e.errore(dove, f"direzione «{curva['direzione']}» fuori da "
@@ -210,8 +234,17 @@ def controlla_pista(percorso: Path, tracks: dict, e: Esito) -> None:
     elif cieche:
         e.errore(cid, f"`direzione` manca su {len(cieche)} curve su {len(curve)}: "
                       f"T{', T'.join(str(c.get('n')) for c in cieche)}")
+    senza_prog = [c for c in curve if "progressione" not in c]
+    if curve and len(senza_prog) == len(curve):
+        e.errore(cid, f"nessuna delle {len(curve)} curve ha `progressione`: guida "
+                      f"consegnata prima che i tre livelli fossero chiesti, "
+                      f"in attesa del retrofit")
+    elif senza_prog:
+        e.errore(cid, f"`progressione` manca su {len(senza_prog)} curve su {len(curve)}: "
+                      f"T{', T'.join(str(c.get('n')) for c in senza_prog)}")
     for curva in curve:
-        controlla_curva(cid, curva, e, salta_direzione=bool(cieche))
+        controlla_curva(cid, curva, e, salta_direzione=bool(cieche),
+                        salta_progressione=bool(senza_prog))
 
     # --- settori
     settori = dati.get("settori") or []
