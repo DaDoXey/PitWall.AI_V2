@@ -1976,6 +1976,40 @@ scostamenti sono uguali fra sinistra e destra: ciò che si chiede è ciò che si
 
 ---
 
+## Entry #041 — Foto del circuito stirata nella scheda del tracciato
+
+| Campo | Valore |
+|---|---|
+| Data | 18/09/2026 |
+| Agente dev | Claude Code (claude-opus-5) |
+| Area | `frontend/src/app/(app)/tracciati/[id]/page.tsx` |
+| Commit | vedi sotto |
+| Contesto | Segnalazione di Edoardo: «la foto di imola appare stretchata (foto del circuito reale e non track map)». |
+
+**Catalogo messaggi:**
+1. «la foto di imola appare stretchata… fixala» → diagnosi misurata e correzione.
+
+**Modifica:** nella scheda del circuito la foto non usa piu' le percentuali di `crops.json`
+(larghezza e altezza indipendenti) ma **`object-cover`**, con il ritaglio scelto a mano conservato
+come punto d'interesse in `object-position` (funzione `puntoDiInteresse`). La lista dei tracciati e
+le card di sessione restano col ritaglio esatto: li' il riquadro ha davvero le proporzioni della
+banda 540×280 su cui i ritagli sono stati scelti.
+
+**Motivazione:** la foto sta in una colonna flex accanto al testo, e il flex **stira il riquadro**
+all'altezza della colonna (347 px invece di 197). Le percentuali del ritaglio si adeguavano al
+riquadro deformato e deformavano l'immagine: Imola misurava rapporto naturale **1,500** contro
+**0,849** renderizzato. Non era un difetto del file, e non riguardava solo Imola: capitava su ogni
+circuito con il testo piu' alto della foto.
+
+**Risultato osservato:** Imola `object-fit: cover @ 50% 61.1%`, immagine proporzionata; idem Monza e
+Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate tutte).
+
+**Verifica:** `tsc --noEmit` 0 errori · rapporti misurati nel browser, non giudicati a occhio.
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push».
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
