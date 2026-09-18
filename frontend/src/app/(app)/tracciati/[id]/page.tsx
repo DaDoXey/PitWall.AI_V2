@@ -24,7 +24,7 @@ import {
   type GuidaTracciato,
   type TrackSheet,
 } from "@/lib/api";
-import { useAssets, useCrop } from "@/lib/assets";
+import { useAssets, useCrop, type Crop } from "@/lib/assets";
 
 const DOWNFORCE_LABEL: Record<string, string> = {
   low: "bassa",
@@ -60,6 +60,24 @@ function Sezione({
 
 function Prosa({ children }: { children: React.ReactNode }) {
   return <p className="text-sm leading-relaxed text-subtle">{children}</p>;
+}
+
+/** Il centro del ritaglio scelto a mano, in coordinate `object-position`.
+ *
+ * `crops.json` descrive il ritaglio come «immagine larga w% e alta h% del
+ * riquadro, spostata di l% e t%»: funziona solo se il riquadro ha le
+ * proporzioni della banda su cui il ritaglio è stato scelto. Qui il riquadro è
+ * più alto (lo stira il testo accanto), quindi di quelle percentuali si tiene
+ * solo l'informazione che conta davvero — dove guardava Edoardo quando ha
+ * scelto — e il resto lo fa `object-cover`, che ritaglia invece di stirare.
+ * Senza ritaglio salvato si sta al centro, come prima.
+ */
+function puntoDiInteresse(crop?: Crop): string {
+  if (!crop || !crop.w || !crop.h) return "50% 50%";
+  const x = ((50 - crop.l) / crop.w) * 100;
+  const y = ((50 - crop.t) / crop.h) * 100;
+  const dentro = (v: number) => Math.min(100, Math.max(0, v));
+  return `${dentro(x).toFixed(1)}% ${dentro(y).toFixed(1)}%`;
 }
 
 export default function TracciatoPage() {
@@ -154,10 +172,16 @@ export default function TracciatoPage() {
         className="flex flex-col gap-4"
       >
         {/* Foto + identità + numeri del catalogo.
-            La foto sta in colonna e non a tutta larghezza: i ritagli di
-            crops.json sono stati scelti a mano su una banda 540×280, e su una
-            scheda larga il doppio quella proporzione si mangerebbe mezza
-            schermata. Larghezza fissa = ritaglio esatto come nelle card. */}
+            La foto sta in colonna, e la colonna è PIÙ ALTA della banda per cui
+            i ritagli sono stati scelti: in un flex il riquadro viene stirato
+            all'altezza del testo, e le percentuali di crops.json — larghezza e
+            altezza indipendenti — ci si adeguano deformando l'immagine (Imola:
+            rapporto naturale 1,50 renderizzato 0,85).
+            Qui quindi NON si usano le percentuali: si usa `object-cover`, che
+            non stira mai, e il ritaglio scelto a mano si conserva come punto
+            d'interesse tramite `object-position`. La lista dei tracciati e le
+            card di sessione continuano a usare il crop esatto, perché lì il
+            riquadro ha davvero le proporzioni della banda. */}
         <motion.section
           variants={fadeInUp}
           className="overflow-hidden rounded-xl border border-line bg-surface lg:flex"
@@ -172,17 +196,8 @@ export default function TracciatoPage() {
                 src={assets.photo}
                 alt={`Il circuito di ${track.short_name || track.name}`}
                 onError={() => setFotoRotta(true)}
-                className="absolute max-w-none opacity-90"
-                style={
-                  crop
-                    ? {
-                        width: `${crop.w}%`,
-                        height: `${crop.h}%`,
-                        left: `${crop.l}%`,
-                        top: `${crop.t}%`,
-                      }
-                    : { inset: 0, width: "100%", height: "100%", objectFit: "cover" }
-                }
+                className="absolute inset-0 h-full w-full object-cover opacity-90"
+                style={{ objectPosition: puntoDiInteresse(crop) }}
               />
             </div>
           )}
