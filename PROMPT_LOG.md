@@ -1926,6 +1926,56 @@ scostamenti sono uguali fra sinistra e destra: ciò che si chiede è ciò che si
 
 ---
 
+## Entry #040 — Guide dei tracciati: Monza, retrofit delle 4 guide vecchie, mappa nel riquadro
+
+| Campo | Valore |
+|---|---|
+| Data | 18/09/2026 |
+| Agente dev | Claude Code (claude-opus-5) |
+| Area | `core/data/tracks_knowledge/` (NEW `monza.json`; `imola`, `spa_francorchamps`, `zandvoort`, `zolder` retrofittate) · `scripts/check_track_knowledge.py` (`progressione` obbligatoria dal blocco 2) · `app/tests/test_tracciati.py` · frontend `CurvaGuida.tsx` (progressione + senso della curva), `lib/api.ts`, `tracciati/[id]/page.tsx` (riquadro del layout) |
+| Commit | `ae032c3` + `ecfe603` (Monza, pushati); retrofit non ancora committato |
+| Contesto | Passo 2 del filone guide: prima guida cercata dal terminale, poi retrofit delle quattro del blocco 1. |
+
+**Catalogo messaggi:**
+1. «ok push, poi fai la ricerca della guida di monza» → guida di Monza da fonti community, validata, a schermo.
+2. «ok push, poi fai il retrofit delle 4 guide vecchie» → `direzione` + `progressione` su 62 curve.
+3. «meglio seguire le fonti come coachdave… allineiamo tutto quanto con le fonti più autorevoli senza andare a riscrivere tutto ogni volta… per le sezioni mancanti metteremo sempre le guide seguendo queste fonti» → **regola nuova: le guide community (Coach Dave in testa) sono la fonte primaria**; correzioni a mano solo per errori gravi.
+4. «mi dà la mappa di zolder fuori dal riquadro… riduciamo i possibili errori a 0» → riquadro del layout rifatto e verificato **misurando** su tutti e cinque i circuiti con mappa.
+
+**Modifica:**
+- **Monza**: 11 curve, `direzione` su tutte (le due guide ACC concordano: 7 destre, 4 sinistre) e `progressione` a tre livelli. Consumo, tempo perso ai box, lato box e dislivello restano `null`: nessuna fonte seria li pubblica.
+- **Retrofit**: `direzione` su 71 curve su 73 (restano Imola T19 e Zandvoort T14, le pieghe finali che nessuna fonte qualifica), `progressione` su **tutte e 73**.
+- **Due errori scovati dall'incrocio direzione↔lato gomma**, entrambi corretti allineando alla fonte: *Zandvoort T7 Mastersbocht* dichiarava carico sull'anteriore destro su una curva a destra (ribaltato, come La Source); *Spa T3 Raidillon* diceva «anteriore destro in cima» sulla destra della sequenza — riscritto in «anteriore sinistro nel Raidillon, anteriore destro nella sinistra in cima».
+- **Imola T1 corretta**: l'avevo letta come destra sulla mappa, Coach Dave la dichiara «left-hand kink». Vince la fonte.
+- **Riquadro del layout**: la placca avorio ora si adatta al disegno (`w-fit`) e l'immagine ha **altezza** fissa con larghezza derivata — `zolder_map.svg` dichiara solo il `viewBox`, e con la larghezza in automatico il browser lo riduceva a un quadratino.
+- **Validatore**: `progressione` obbligatoria dal blocco 2, con lo stesso trattamento di `direzione` (un rilievo per guida, non uno per curva).
+
+**Motivazione:** il campo `direzione` esisteva per rendere verificabile il lato gomma, che è il dato con cui si leggono le temperature. Su 73 curve ne ha sbattuti fuori due sbagliati.
+
+**Verifica:** validatore da 8 errori a **zero** · `test_tracciati` **38/38** · `tsc --noEmit` 0 · riquadro misurato su spa, imola, zandvoort, zolder, kyalami: immagine dentro la placca e placca dentro la sezione, nessun overflow orizzontale · nessuna chiamata LLM.
+
+**Chiuse su decisione di Edoardo (stessa sessione):**
+- *Zandvoort T12 Kumhobocht* → si segue la **fonte ufficiale**: è a sinistra. Allineati il testo
+  («curva a destra» → «curva a sinistra») e il lato gomma («lato sinistro» → «lato destro»).
+- *Numerazione di Zandvoort riallineata* a quella ufficiale, che è anche quella stampata sulla mappa
+  mostrata in pagina: lo **Scheivlak conta come due curve** (6 e 7, la seconda è la discesa verso la
+  staccata del Masters, marcata `origine: mestiere`), tutte le successive scalano di uno e **l'ultima
+  è l'Arie Luyendijkbocht (14)**. La vecchia T14 («l'immissione sul rettilineo») è stata **eliminata**:
+  non è una curva, e quel che diceva vive ora nella progressione dell'ultima. Totale invariato: 14,
+  come dichiara il catalogo. Validatore su Zandvoort: **nessun errore**.
+- *Imola T19* → **leggera piega a destra**, su indicazione diretta di Edoardo (nessuna fonte scritta la
+  qualifica). Con questa il validatore e' **pulito su tutte e cinque le guide**: `direzione` e
+  `progressione` su tutte le 73 curve.
+- *Quattro campi di pista* (`senso_marcia`, `dislivello_m`, `rettilineo_piu_lungo_m`, `variante_acc`)
+  sulle quattro guide del blocco 1: rimandati al prossimo giro, insieme al blocco B2.
+
+**Da sapere:** tre fonti community lette (Full Grip su Zolder e su Imola, SoloX su Zolder) danno la prima curva di Zolder a destra, ma si chiama **Eerste Links** ed è una sinistra; Full Grip dà anche la Rivazza 2 a destra, mentre la Rivazza è doppia sinistra. Coach Dave si è invece dimostrato affidabile su Monza e Imola. Restano da decidere: la numerazione di Zandvoort sfasata rispetto alla mappa ufficiale, e Zandvoort T12 Kumhobocht (il testo dice destra, il sito ufficiale sinistra).
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☐ in attesa di verifica a schermo e «ok push» per il retrofit.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
