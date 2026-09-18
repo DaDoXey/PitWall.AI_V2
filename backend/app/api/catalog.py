@@ -37,5 +37,32 @@ def get_track(track_id: str):
     if not track:
         raise HTTPException(status_code=404, detail=f"Circuito non trovato: {track_id}")
     # short_name non è nel JSON (è derivato): va aggiunto anche qui, non solo
-    # nell'indice, altrimenti il client lo riceve solo a volte.
-    return {**track, "short_name": cat.short_name_track(track)}
+    # nell'indice, altrimenti il client lo riceve solo a volte. Stesso motivo
+    # per le due bandierine: la scheda deve poter dire da sola se esiste una
+    # guida e se il layout è stato verificato, senza che il client indovini.
+    return {
+        **track,
+        "short_name": cat.short_name_track(track),
+        "ha_guida": cat.has_guide(track),
+        "mappa_verificata": cat.map_verified(track),
+    }
+
+
+@router.get("/catalog/track/{track_id}/guida")
+def get_track_guide(track_id: str):
+    """La guida di un circuito: settori, curva per curva, pit, meteo, chicche.
+
+    Rotta separata dalla scheda perché una guida pesa 15-29 KB e serve solo a
+    chi apre davvero il circuito. 404 quando la guida non c'è ancora: sono 4
+    su 25, e il client mostra la scheda senza inventare niente.
+    """
+    track = cat.resolve_track(track_id)
+    if not track:
+        raise HTTPException(status_code=404, detail=f"Circuito non trovato: {track_id}")
+    guida = cat.track_guide(track.get("id"))
+    if guida is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Guida non disponibile per il circuito: {track.get('id')}",
+        )
+    return guida

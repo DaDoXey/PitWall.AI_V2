@@ -263,6 +263,10 @@ def track_summary(track: dict[str, Any]) -> dict[str, Any]:
         "downforce_level": track.get("downforce_level"),
         "dlc": bool(track.get("dlc")),
         "dlc_pack": track.get("dlc_pack"),
+        # Due bandierine per la lista dei tracciati: dicono cosa il circuito
+        # ha davvero, senza costringere il client a chiedere 25 schede.
+        "ha_guida": has_guide(track),
+        "mappa_verificata": map_verified(track),
     }
 
 
@@ -282,3 +286,68 @@ def catalog_index() -> dict[str, Any]:
             "by_category": categories,
         },
     }
+
+
+# ─────────────────────────────────────────────
+# GUIDE DEI TRACCIATI — le nozioni curva per curva (data/tracks_knowledge/)
+# ─────────────────────────────────────────────
+# Una guida è un JSON per circuito e pesa 15-29 KB: troppo per l'indice e
+# troppo per la scheda, che vengono chiesti anche solo per popolare un
+# selettore. Si serve quindi su una rotta sua (`/catalog/track/{id}/guida`),
+# e qui resta soltanto il sapere SE c'è — che invece serve alla lista, per
+# dire quali circuiti hanno già la guida e quali no.
+#
+# Le guide sono contenuto da MOSTRARE al pilota (decisione dell'11/09/2026),
+# non contesto per l'LLM: nessuno le infila in un prompt.
+_KNOW_DIR = _DATA_DIR / "tracks_knowledge"
+
+_GUIDES_CACHE: dict[str, dict[str, Any] | None] = {}
+_GUIDE_IDS_CACHE: set[str] | None = None
+
+
+def track_ids_with_guide() -> set[str]:
+    """Gli slug dei circuiti per cui esiste una guida a disco."""
+    global _GUIDE_IDS_CACHE
+    if _GUIDE_IDS_CACHE is None:
+        try:
+            _GUIDE_IDS_CACHE = {p.stem for p in _KNOW_DIR.glob("*.json")}
+        except OSError:
+            _GUIDE_IDS_CACHE = set()
+    return _GUIDE_IDS_CACHE
+
+
+def track_guide(track_id: str | None) -> dict[str, Any] | None:
+    """La guida di un circuito, o None se non c'è (o è illeggibile).
+
+    Come per il catalogo: una guida rotta non deve far cadere l'API, la
+    scheda del circuito resta valida anche senza.
+    """
+    if not track_id:
+        return None
+    if track_id not in _GUIDES_CACHE:
+        path = _KNOW_DIR / f"{track_id}.json"
+        try:
+            with open(path, encoding="utf-8") as f:
+                data = json.load(f)
+            _GUIDES_CACHE[track_id] = data if isinstance(data, dict) else None
+        except Exception:
+            _GUIDES_CACHE[track_id] = None
+    return _GUIDES_CACHE[track_id]
+
+
+def has_guide(track: dict[str, Any]) -> bool:
+    return (track.get("id") or "") in track_ids_with_guide()
+
+
+def map_verified(track: dict[str, Any]) -> bool:
+    """Vero solo se il layout a disco è stato GUARDATO e approvato.
+
+    Le mappe scaricate a suo tempo sul nome del file erano in gran parte il
+    circuito sbagliato (Spa = rallycross, Imola = 1992, Kyalami = 1968): da
+    qui la regola «meglio nessuna mappa che una sbagliata». Mostra l'immagine
+    solo chi trova `status: "verificata"`, scritto a mano dopo la scelta a
+    occhio nel provino.
+    """
+    assets = track.get("assets") or {}
+    mappa = assets.get("map") or {}
+    return mappa.get("status") == "verificata"
