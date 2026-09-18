@@ -114,6 +114,40 @@ export default function CurvaGuida({ curva }: { curva: GuidaCurva }) {
         <Riga label="Gara / qualifica">{curva.differenza_gara_qualifica}</Riga>
       )}
 
+      {/* La progressione è la parte «corso»: gli stessi metri di pista raccontati
+          a tre livelli, così si sa cosa spostare quando il giro pulito c'è già.
+          Le guide del blocco 1 non ce l'hanno e semplicemente non la mostrano. */}
+      {curva.progressione &&
+        (curva.progressione.prendi_il_giro ||
+          curva.progressione.guadagni ||
+          curva.progressione.al_limite) && (
+          <Riga label="Come si spinge">
+            <div className="flex flex-col gap-2">
+              {(
+                [
+                  ["Prendi il giro", curva.progressione.prendi_il_giro],
+                  ["Guadagni", curva.progressione.guadagni],
+                  ["Al limite", curva.progressione.al_limite],
+                ] as const
+              )
+                .filter(([, testo]) => !!testo)
+                .map(([titolo, testo], i) => (
+                  <div key={titolo} className="flex gap-3">
+                    <span className="mt-0.5 font-mono text-[0.55rem] uppercase tracking-widest text-accent">
+                      {i + 1}
+                    </span>
+                    <p>
+                      <span className="font-mono text-[0.55rem] uppercase tracking-widest text-muted">
+                        {titolo} ·{" "}
+                      </span>
+                      {testo}
+                    </p>
+                  </div>
+                ))}
+            </div>
+          </Riga>
+        )}
+
       {/* Onestà sulla fonte: i consigli che nessuna fonte documenta sono
           «mestiere», e lo dicono. Il pilota deve poter pesare quello che legge. */}
       {curva.origine === "mestiere" && (

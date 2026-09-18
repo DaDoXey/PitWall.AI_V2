@@ -625,7 +625,14 @@ export type GuidaCurva = {
   freni?: { stress?: string | null; note?: string | null } | null;
   track_limits?: { rischio?: string | null; note?: string | null } | null;
   differenza_gara_qualifica?: string | null;
-  /** "documentata" | "mestiere": i consigli senza fonte sono marcati. */
+  /** Come si cresce su quella curva: dal giro pulito al limite. Chiesta dal
+   *  blocco 2 in poi; le quattro guide del blocco 1 non ce l'hanno. */
+  progressione?: {
+    prendi_il_giro?: string | null;
+    guadagni?: string | null;
+    al_limite?: string | null;
+  } | null;
+  /** "fonte" | "mestiere": i consigli senza fonte sono marcati. */
   origine?: string | null;
   confidence?: string | null;
 };
