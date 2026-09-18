@@ -54,7 +54,13 @@
       },
       "differenza_gara_qualifica": "In gara al primo giro e' la curva piu' pericolosa del calendario: dietro non vedi niente e arrivano tutti insieme. Lascia margine, non c'e' gara che si vinca a La Source.",
       "origine": "mestiere",
-      "confidence": "alta"
+      "confidence": "alta",
+      "direzione": "destra",
+      "progressione": {
+        "prendi_il_giro": "Stacca un filo prima di quanto sembri: si arriva in discesa e la macchina e' scarica.",
+        "guadagni": "Rilascia il freno progressivamente per non mettere il posteriore di traverso, e cerca l'apice tardi.",
+        "al_limite": "Frenata tarda in discesa con rilascio lunghissimo e trazione piena in uscita: qui non perdi il tempo della curva, lo perdi su tutto il Kemmel."
+      }
     },
     {
       "n": 2,
@@ -83,7 +89,13 @@
       },
       "differenza_gara_qualifica": "In gara, se stai seguendo un'altra auto, perdi carico proprio nel punto in cui ti serve tutto: lascia un po' di spazio o esci storto sul Kemmel.",
       "origine": "mestiere",
-      "confidence": "alta"
+      "confidence": "alta",
+      "direzione": "sinistra",
+      "progressione": {
+        "prendi_il_giro": "Nessuna frenata se la macchina e' a posto: un accenno di rilascio e tieni il volante fermo.",
+        "guadagni": "Riduci il rilascio e stringi l'ingresso ai piedi della salita.",
+        "al_limite": "Piena, con la compressione che schiaccia la macchina sull'asfalto: regge solo se altezze e molle sono giuste."
+      }
     },
     {
       "n": 3,
@@ -99,8 +111,8 @@
         "come_ci_si_difende": null
       },
       "gomme": {
-        "stress": "anteriore destro in cima",
-        "note": null
+        "stress": "anteriore sinistro nel Raidillon, anteriore destro nella sinistra in cima",
+        "note": "Il Raidillon e' la destra della sequenza sinistra-destra-sinistra: carica il sinistro. Il «destro in cima» del testo originale si riferiva alla sinistra successiva, e ora il campo lo dice."
       },
       "freni": {
         "stress": "nullo",
@@ -112,7 +124,13 @@
       },
       "differenza_gara_qualifica": "Con il pieno di benzina l'auto e' piu' pesante proprio nella compressione: nei primi giri di gara e' sensibilmente meno facile che in qualifica a serbatoio scarico.",
       "origine": "mestiere",
-      "confidence": "alta"
+      "confidence": "alta",
+      "direzione": "destra",
+      "progressione": {
+        "prendi_il_giro": "In cima non accelerare mentre stai ancora girando: e' li' che si perde il posteriore.",
+        "guadagni": "Apri il gas un attimo prima, ma progressivo, mentre la macchina si alleggerisce.",
+        "al_limite": "Gas pieno gia' in cima con la macchina scarica che gira ancora: e' la parte che separa i piloti veloci dagli altri, e si paga cara."
+      }
     },
     {
       "n": 4,
@@ -141,7 +159,13 @@
       },
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
-      "confidence": "media"
+      "confidence": "media",
+      "direzione": "sinistra",
+      "progressione": {
+        "prendi_il_giro": "Esci dritto sul Kemmel: conta solo quello.",
+        "guadagni": "Allarga il raccordo per allineare prima la macchina.",
+        "al_limite": "Nessuna correzione fino al Kemmel: ogni movimento costa velocita' fino a Les Combes."
+      }
     },
     {
       "n": 5,
@@ -170,7 +194,13 @@
       },
       "differenza_gara_qualifica": "In gara e' il punto in cui devi decidere se attaccare o restare attaccato: se sbagli sei fuori pista con la ghiaia vicina.",
       "origine": "mestiere",
-      "confidence": "alta"
+      "confidence": "alta",
+      "direzione": "destra",
+      "progressione": {
+        "prendi_il_giro": "La salita aiuta a fermare la macchina, ma la prima staccata dopo l'out lap ha i freni freddi: frena presto.",
+        "guadagni": "Sposta la frenata avanti a piccoli passi, tenendo d'occhio la temperatura dei freni.",
+        "al_limite": "Staccata tardissima da oltre 250 km/h, con l'ingresso sacrificato per non rovinare tutta la sequenza fino a Malmedy."
+      }
     },
     {
       "n": 6,
@@ -199,7 +229,13 @@
       },
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
-      "confidence": "alta"
+      "confidence": "alta",
+      "direzione": "sinistra",
+      "progressione": {
+        "prendi_il_giro": "Poco cordolo alla 5 per arrivare qui composto: e' la seconda parte della esse.",
+        "guadagni": "Raddrizza prima e apri il gas verso Malmedy.",
+        "al_limite": "Traiettoria unica fra le due parti, con la macchina mai davvero dritta."
+      }
     },
     {
       "n": 7,
@@ -228,7 +264,13 @@
       },
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
-      "confidence": "media"
+      "confidence": "media",
+      "direzione": "destra",
+      "progressione": {
+        "prendi_il_giro": "Piu' un rilascio deciso che una staccata: la macchina scarica sul davanti.",
+        "guadagni": "Riduci il rilascio e tieni piu' velocita' in appoggio.",
+        "al_limite": "Presa quasi in scorrimento, accettando un posteriore nervoso in inserimento: in uscita c'e' poco spazio prima della discesa."
+      }
     },
     {
       "n": 8,
@@ -257,7 +299,13 @@
       },
       "differenza_gara_qualifica": "In gara e' un buon punto per difendersi, perche' chi ti segue non vede l'apice.",
       "origine": "mestiere",
-      "confidence": "alta"
+      "confidence": "alta",
+      "direzione": "destra",
+      "progressione": {
+        "prendi_il_giro": "Usa un riferimento a bordo pista: la curva e' cieca e si frena in discesa.",
+        "guadagni": "Ritarda la frenata rilasciando progressivamente, senza girare mentre stacchi.",
+        "al_limite": "Frenata tardissima in discesa con la macchina leggerissima dietro: staccare e girare insieme qui vuol dire testacoda."
+      }
     },
     {
       "n": 9,
@@ -286,7 +334,13 @@
       },
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
-      "confidence": "media"
+      "confidence": "media",
+      "direzione": "sinistra",
+      "progressione": {
+        "prendi_il_giro": "La discesa ti fa arrivare piu' veloce di quanto ti aspetti: tienila larga.",
+        "guadagni": "Prendila in scorrimento pieno senza toccare il freno.",
+        "al_limite": "Piena in discesa, impostata solo in funzione dell'ingresso di Pouhon."
+      }
     },
     {
       "n": 10,
@@ -315,7 +369,13 @@
       },
       "differenza_gara_qualifica": "Con il pieno l'auto sottosterza in ingresso e sovrasterza in uscita: non e' il setup che e' cambiato, e' il carburante. Non inseguire questa sensazione con modifiche.",
       "origine": "mestiere",
-      "confidence": "alta"
+      "confidence": "alta",
+      "direzione": "sinistra",
+      "progressione": {
+        "prendi_il_giro": "Non frenare: alleggerisci. Se stai frenando a Pouhon, arrivi male dalla 9.",
+        "guadagni": "Riduci il rilascio e fidati del carico che cresce mentre la pista scende.",
+        "al_limite": "Doppia sinistra cieca presa in pieno appoggio: e' il punto dove un posteriore instabile ti tradisce a velocita' altissima."
+      }
     },
     {
       "n": 11,
@@ -344,7 +404,13 @@
       },
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
-      "confidence": "alta"
+      "confidence": "alta",
+      "direzione": "sinistra",
+      "progressione": {
+        "prendi_il_giro": "Sii gia' in accelerazione progressiva sul secondo apice.",
+        "guadagni": "Anticipa il gas e allarga l'uscita verso le Fagnes.",
+        "al_limite": "Trazione piena dal secondo apice con la macchina larga fino all'asfalto esterno."
+      }
     },
     {
       "n": 12,
@@ -373,7 +439,13 @@
       },
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
-      "confidence": "media"
+      "confidence": "media",
+      "direzione": "destra",
+      "progressione": {
+        "prendi_il_giro": "Rilascio corto e ingresso misurato: la curva sale e si stringe.",
+        "guadagni": "Entra un filo piu' forte, ma lascia pista per la sinistra successiva.",
+        "al_limite": "Ingresso al limite con l'uscita gia' impostata sulla 13: le due Fagnes sono legate, sbagli la prima e le perdi entrambe."
+      }
     },
     {
       "n": 13,
@@ -402,7 +474,13 @@
       },
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
-      "confidence": "media"
+      "confidence": "media",
+      "direzione": "sinistra",
+      "progressione": {
+        "prendi_il_giro": "Se sei arrivato pulito dalla 12, si prende in scorrimento.",
+        "guadagni": "Allarga l'uscita per arrivare meglio alla staccata di Campus.",
+        "al_limite": "Scorrimento pieno senza correzioni."
+      }
     },
     {
       "n": 14,
@@ -431,7 +509,13 @@
       },
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
-      "confidence": "media"
+      "confidence": "media",
+      "direzione": "destra",
+      "progressione": {
+        "prendi_il_giro": "Rallenta piu' di quanto ti sembri giusto: il ritmo del settore veloce ti porta a entrare troppo forte.",
+        "guadagni": "Ritarda la staccata e cerca l'apice tardi.",
+        "al_limite": "Ingresso lento e uscita in trazione piena verso Stavelot: si paga a lungo, fino a Blanchimont."
+      }
     },
     {
       "n": 15,
@@ -460,7 +544,13 @@
       },
       "differenza_gara_qualifica": "In gara, uscire bene da qui vale un tentativo di sorpasso alla Bus Stop. E' la curva su cui costruire l'attacco.",
       "origine": "mestiere",
-      "confidence": "alta"
+      "confidence": "alta",
+      "direzione": "destra",
+      "progressione": {
+        "prendi_il_giro": "Rilascia e tieni la macchina in appoggio: ogni km/h perso qui te lo porti fino alla Bus Stop.",
+        "guadagni": "Riduci il rilascio e allarga la traiettoria.",
+        "al_limite": "Piena in appoggio: e' la curva che decide la velocita' massima del giro."
+      }
     },
     {
       "n": 16,
@@ -489,7 +579,13 @@
       },
       "differenza_gara_qualifica": "Sul bagnato o con gomme finite non e' piu' a fondo: e' la curva dove si scopre di aver esagerato con lo stint.",
       "origine": "mestiere",
-      "confidence": "alta"
+      "confidence": "alta",
+      "direzione": "sinistra",
+      "progressione": {
+        "prendi_il_giro": "Con la GT3 asciutta si passa a fondo o quasi, se la macchina e' stabile.",
+        "guadagni": "Togli anche l'accenno di rilascio, ma solo con il posteriore a posto.",
+        "al_limite": "Piena con le barriere a un metro: diventa terribile in scia o con la macchina nervosa."
+      }
     },
     {
       "n": 17,
@@ -518,7 +614,13 @@
       },
       "differenza_gara_qualifica": "In gara la Bus Stop e' anche l'ingresso ai box: attenzione a chi rallenta davanti a te nella finestra dei pit stop.",
       "origine": "mestiere",
-      "confidence": "alta"
+      "confidence": "alta",
+      "direzione": "destra",
+      "progressione": {
+        "prendi_il_giro": "Prendi un cartello e usa sempre quello: e' la frenata piu' lunga del circuito, da oltre 280 a poco piu' di 60 km/h.",
+        "guadagni": "Sposta il riferimento avanti a piccoli passi, sempre lo stesso cartello.",
+        "al_limite": "Staccata al limite del bloccaggio con la macchina dritta: chi sbaglia qui sbaglia di tanto."
+      }
     },
     {
       "n": 18,
@@ -547,7 +649,13 @@
       },
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
-      "confidence": "alta"
+      "confidence": "alta",
+      "direzione": "sinistra",
+      "progressione": {
+        "prendi_il_giro": "Sacrifica l'ingresso per uscire dritto: e' qui che si guadagna, non nella prima parte.",
+        "guadagni": "Anticipa il gas e raddrizza prima, usando il cordolo interno.",
+        "al_limite": "Cordolo pieno e trazione gia' aperta in appoggio: l'uscita porta sul rettilineo del traguardo e poi su La Source."
+      }
     },
     {
       "n": 19,
@@ -576,7 +684,13 @@
       },
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
-      "confidence": "media"
+      "confidence": "media",
+      "progressione": {
+        "prendi_il_giro": "Prendila in accelerazione senza correzioni: non e' una curva, e' un'uscita.",
+        "guadagni": "Allarga per non perdere velocita' sul traguardo.",
+        "al_limite": "Una linea sola dalla Bus Stop al traguardo: comanda la scia di chi ti segue."
+      },
+      "direzione": "destra"
     }
   ],
   "track_limits_generale": "I punti caldi sono tre: uscita di Pouhon, uscita di Stavelot, cordolo interno della Bus Stop. Sulla Bus Stop non barare: e' il taglio piu' controllato del circuito. Su Raidillon e Les Combes i cordoli si possono aggredire senza problemi. Verifica sempre in sessione libera dove ACC mette il limite nella tua versione, perche' cambia fra un aggiornamento e l'altro.",

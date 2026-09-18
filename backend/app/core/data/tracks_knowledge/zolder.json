@@ -1,12 +1,10 @@
 {
   "id": "zolder",
-
   "verifica_catalogo": {
     "lunghezza_confermata": true,
     "curve_confermate": true,
     "note": "Zolder e' il circuito piu' pulito del blocco: Wikipedia attribuisce alla configurazione '2002-present' 4.010 km e 10 curve, contro i 4.011 km e 10 curve del catalogo. Coincide. La differenza di 1 m e' arrotondamento (la voce Wikipedia usa 4.011 km nel testo e 4.010 nell'infobox). Avvertenza sulla NUMERAZIONE: le fonti nominano piu' punti di quanti siano i 10 numeri ufficiali, perche' contano le chicane come una curva sola. LapMeta arriva addirittura a contare 16 turns per lo stesso tracciato. Ho quindi mappato 10 voci a complessi, non a singoli apici, e lasciato nome: null dove l'abbinamento numero-nome non era verificabile."
   },
-
   "settori": [
     {
       "n": 1,
@@ -27,7 +25,6 @@
       "errore_costoso": "Uscire male dalla chicane finale: perdi tutto il rettilineo del traguardo."
     }
   ],
-
   "curve": [
     {
       "n": 1,
@@ -42,12 +39,27 @@
         "come": "Staccata all'interno sinistro dopo il rettilineo dei box. E' uno dei due punti di sorpasso veri.",
         "come_ci_si_difende": "Interno e frenata anticipata. Attenzione: difendere qui costa moltissimo in uscita perche' la curva si chiude."
       },
-      "gomme": { "stress": "anteriore destro", "note": null },
-      "freni": { "stress": "alto", "note": null },
-      "track_limits": { "rischio": "medio", "note": null },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": null
+      },
+      "freni": {
+        "stress": "alto",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": null
+      },
       "differenza_gara_qualifica": "Alla partenza e' il punto di massimo caos: e' documentato come la curva piu' interessante del tracciato proprio per questo. Primo giro: sopravvivi.",
       "origine": "mestiere",
-      "confidence": "alta"
+      "confidence": "alta",
+      "direzione": "sinistra",
+      "progressione": {
+        "prendi_il_giro": "Frena presto ai cartelli e imposta il volante in due tempi: la curva si stringe, e chi gira una volta sola va lungo.",
+        "guadagni": "Ritarda la staccata di poco e accompagna il raggio che si chiude, rilasciando il freno fino all'apice.",
+        "al_limite": "Frenata tarda con rilascio lungo, volante progressivo fino al secondo apice e gas gia' in appoggio: e' la curva che decide il primo settore."
+      }
     },
     {
       "n": 2,
@@ -57,13 +69,32 @@
       "riferimento_frenata": "Alleggerimento dopo un tratto breve. Non c'e' il tempo di respirare dopo l'Eerste.",
       "insidia": "Destra a DOPPIO APICE, piu' larga dell'Eerste. Se punti il primo apice come se fosse una curva normale, il secondo ti arriva addosso.",
       "costo_errore": "Medio.",
-      "sorpasso": { "possibile": false, "come": null, "come_ci_si_difende": null },
-      "gomme": { "stress": "lato sinistro", "note": null },
-      "freni": { "stress": "medio", "note": null },
-      "track_limits": { "rischio": "medio", "note": null },
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "lato sinistro",
+        "note": null
+      },
+      "freni": {
+        "stress": "medio",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": null
+      },
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
-      "confidence": "media"
+      "confidence": "media",
+      "direzione": "destra",
+      "progressione": {
+        "prendi_il_giro": "Pensala come una curva sola con due apici: punta il secondo, non il primo.",
+        "guadagni": "Anticipa il gas fra i due apici, tenendo la macchina larga in mezzo.",
+        "al_limite": "Scorrimento pieno senza mai raddrizzare, sfruttando tutta la pista in uscita per lanciarti sulla Kanaal."
+      }
     },
     {
       "n": 3,
@@ -73,13 +104,32 @@
       "riferimento_frenata": null,
       "insidia": "Curva breve che segue subito la precedente: il tratto rettilineo in mezzo e' cosi' corto che la macchina non si raddrizza mai davvero.",
       "costo_errore": "Medio.",
-      "sorpasso": { "possibile": false, "come": null, "come_ci_si_difende": null },
-      "gomme": { "stress": null, "note": null },
-      "freni": { "stress": "medio", "note": null },
-      "track_limits": { "rischio": "medio", "note": null },
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": null,
+        "note": null
+      },
+      "freni": {
+        "stress": "medio",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": null
+      },
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
-      "confidence": "media"
+      "confidence": "media",
+      "direzione": "destra",
+      "progressione": {
+        "prendi_il_giro": "Non cercare di raddrizzare fra la 2 e la 3: tienila in appoggio e passa pulito.",
+        "guadagni": "Allarga l'ingresso per uscire piu' dritto e aprire il gas prima.",
+        "al_limite": "Una linea sola dalle due curve precedenti, con la macchina sempre piegata e il gas che non si chiude mai del tutto."
+      }
     },
     {
       "n": 4,
@@ -94,12 +144,27 @@
         "come": "Punto di sorpasso principale. Frenata al 100% in linea retta, poi rilascio progressivo entrando in curva.",
         "come_ci_si_difende": "Coprire l'interno destro presto e frenare dritti."
       },
-      "gomme": { "stress": "anteriore sinistro", "note": null },
-      "freni": { "stress": "molto alto", "note": "La frenata piu' impegnativa del giro." },
-      "track_limits": { "rischio": "medio", "note": null },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": null
+      },
+      "freni": {
+        "stress": "molto alto",
+        "note": "La frenata piu' impegnativa del giro."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": null
+      },
       "differenza_gara_qualifica": "In gara l'uscita conta piu' dell'ingresso: lancia verso la Kleine Chicane, dove ti riprendono se hai forzato.",
       "origine": "mestiere",
-      "confidence": "alta"
+      "confidence": "alta",
+      "direzione": "destra",
+      "progressione": {
+        "prendi_il_giro": "Frena dritto al cartello dei 100 m: la stabilita' in staccata qui vale piu' della velocita' d'ingresso.",
+        "guadagni": "Sposta la frenata avanti a piccoli passi e cerca l'apice tardi: conta solo l'uscita sul rettilineo posteriore.",
+        "al_limite": "Staccata al limite con la macchina perfettamente dritta, apice tardissimo e trazione piena appena la pista si apre."
+      }
     },
     {
       "n": 5,
@@ -114,12 +179,27 @@
         "come": "E' storicamente una delle principali occasioni di sorpasso del circuito.",
         "come_ci_si_difende": "Interno e uscita pulita. Non entrare aggressivo sui cordoli mentre ti difendi: la macchina salta."
       },
-      "gomme": { "stress": "alternato", "note": null },
-      "freni": { "stress": "alto", "note": null },
-      "track_limits": { "rischio": "alto", "note": "I cordoli interni si possono 'abusare' per raddrizzare la traiettoria: attenzione a dove il gioco taglia il limite." },
+      "gomme": {
+        "stress": "alternato",
+        "note": null
+      },
+      "freni": {
+        "stress": "alto",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "alto",
+        "note": "I cordoli interni si possono 'abusare' per raddrizzare la traiettoria: attenzione a dove il gioco taglia il limite."
+      },
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
-      "confidence": "media"
+      "confidence": "media",
+      "direzione": null,
+      "progressione": {
+        "prendi_il_giro": "Frena presto e prendi la chicane pulita, senza salire sui cordoli.",
+        "guadagni": "Raddrizza la traiettoria usando i cordoli interni, accettando il rimbalzo.",
+        "al_limite": "Cordoli pieni e traiettoria quasi dritta: la macchina rimbalza e va tenuta, ma qui si guadagna piu' che altrove."
+      }
     },
     {
       "n": 6,
@@ -129,13 +209,32 @@
       "riferimento_frenata": "Nessuna: e' la salita ripida della Sacramentshelling e poi la sinistra veloce del Butte.",
       "insidia": "Salita ripida seguita da una picchiata. La macchina si scarica in cima proprio dove la pista piega. E' il punto piu' alto del giro.",
       "costo_errore": "Alto.",
-      "sorpasso": { "possibile": false, "come": null, "come_ci_si_difende": null },
-      "gomme": { "stress": null, "note": null },
-      "freni": { "stress": "basso", "note": null },
-      "track_limits": { "rischio": "medio", "note": null },
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": null,
+        "note": null
+      },
+      "freni": {
+        "stress": "basso",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": null
+      },
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
-      "confidence": "media"
+      "confidence": "media",
+      "progressione": {
+        "prendi_il_giro": "Tieni la macchina al centro della salita e non correggere in cima, dove si alleggerisce.",
+        "guadagni": "Entra piu' veloce nella salita e lascia che la picchiata ti porti fuori, senza toccare il volante sul culmine.",
+        "al_limite": "Piatta, con la macchina che si scarica in cima mentre e' gia' angolata: serve fiducia e un posteriore stabile."
+      },
+      "direzione": "sinistra"
     },
     {
       "n": 7,
@@ -145,13 +244,32 @@
       "riferimento_frenata": "Staccata decisa subito dopo il tratto veloce del Butte.",
       "insidia": "Chicane destra-sinistra stretta, con cordoli interni molto aggredibili. Arrivi lanciato dal Butte e devi piantare tutto.",
       "costo_errore": "Alto.",
-      "sorpasso": { "possibile": false, "come": null, "come_ci_si_difende": null },
-      "gomme": { "stress": "alternato", "note": null },
-      "freni": { "stress": "alto", "note": null },
-      "track_limits": { "rischio": "alto", "note": "Cordoli interni sfruttabili ma punitivi." },
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "alternato",
+        "note": null
+      },
+      "freni": {
+        "stress": "alto",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "alto",
+        "note": "Cordoli interni sfruttabili ma punitivi."
+      },
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
-      "confidence": "media"
+      "confidence": "media",
+      "direzione": null,
+      "progressione": {
+        "prendi_il_giro": "Pianta tutto presto: arrivi lanciato dal Butte e la chicane e' piu' stretta di quanto sembri.",
+        "guadagni": "Ritarda la frenata e usa il cordolo interno della prima parte per raddrizzare.",
+        "al_limite": "Frenata tardissima e cordoli aggrediti in tutte e due le parti, uscendo gia' in trazione verso la Terlamen."
+      }
     },
     {
       "n": 8,
@@ -161,13 +279,32 @@
       "riferimento_frenata": "Nessuna frenata: destra in pieno.",
       "insidia": "Non e' difficile in se'. E' facile prenderla stretta e arrivare male al tornante che segue.",
       "costo_errore": "Medio.",
-      "sorpasso": { "possibile": false, "come": null, "come_ci_si_difende": null },
-      "gomme": { "stress": "lato sinistro", "note": null },
-      "freni": { "stress": "nullo", "note": null },
-      "track_limits": { "rischio": "medio", "note": null },
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "lato sinistro",
+        "note": null
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": null
+      },
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
-      "confidence": "media"
+      "confidence": "media",
+      "direzione": "destra",
+      "progressione": {
+        "prendi_il_giro": "Prendila larga: e' facile stringerla e arrivare male al tornante che segue.",
+        "guadagni": "Allarga ancora l'ingresso per uscire piu' veloce verso la Bolderberg.",
+        "al_limite": "Piena senza esitazioni, con la traiettoria impostata solo in funzione della staccata successiva."
+      }
     },
     {
       "n": 9,
@@ -177,13 +314,32 @@
       "riferimento_frenata": "Staccata dopo il breve tratto in pendenza che segue Terlamen.",
       "insidia": "Tornante destro molto chiuso, la curva piu' lenta del giro. Si sbaglia entrando forte e perdendo l'uscita.",
       "costo_errore": "Alto: e' il punto di trazione piu' importante del giro.",
-      "sorpasso": { "possibile": true, "come": "Interno, ma serve arrivarci gia' accostati da Terlamen.", "come_ci_si_difende": "Interno e uscita paziente." },
-      "gomme": { "stress": "posteriori in uscita", "note": "E' qui che si legge il degrado posteriore in gara lunga." },
-      "freni": { "stress": "alto", "note": null },
-      "track_limits": { "rischio": "medio", "note": null },
+      "sorpasso": {
+        "possibile": true,
+        "come": "Interno, ma serve arrivarci gia' accostati da Terlamen.",
+        "come_ci_si_difende": "Interno e uscita paziente."
+      },
+      "gomme": {
+        "stress": "posteriori in uscita",
+        "note": "E' qui che si legge il degrado posteriore in gara lunga."
+      },
+      "freni": {
+        "stress": "alto",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": null
+      },
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
-      "confidence": "media"
+      "confidence": "media",
+      "direzione": "destra",
+      "progressione": {
+        "prendi_il_giro": "Entra piano: e' la curva piu' lenta del giro e conta solo come esci.",
+        "guadagni": "Sacrifica ancora l'ingresso e cerca la trazione prima, raddrizzando il volante appena puoi.",
+        "al_limite": "Ingresso lentissimo e uscita in trazione piena con la macchina dritta: e' il punto di trazione piu' importante del giro."
+      }
     },
     {
       "n": 10,
@@ -193,18 +349,35 @@
       "riferimento_frenata": "Alleggerimento per la Jochen Rindt, poi staccata per la chicane finale.",
       "insidia": "La Jochen Rindtbocht e' formalmente una sinistra-destra ma con la traiettoria giusta la sinistra quasi sparisce. Poi arriva la chicane finale: e' l'ultimo punto in cui butti via il giro.",
       "costo_errore": "Il piu' alto del giro in termini di tempo: da qui parte il rettilineo dei box.",
-      "sorpasso": { "possibile": false, "come": null, "come_ci_si_difende": "Non si passa, ma da qui si prepara l'attacco all'Eerste." },
-      "gomme": { "stress": "posteriori", "note": null },
-      "freni": { "stress": "medio", "note": null },
-      "track_limits": { "rischio": "alto", "note": "La chicane finale e' un punto classico di taglio e invalidazione." },
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": "Non si passa, ma da qui si prepara l'attacco all'Eerste."
+      },
+      "gomme": {
+        "stress": "posteriori",
+        "note": null
+      },
+      "freni": {
+        "stress": "medio",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "alto",
+        "note": "La chicane finale e' un punto classico di taglio e invalidazione."
+      },
       "differenza_gara_qualifica": "In gara: uscita pulita sempre, anche a costo di entrare piano. Il rettilineo che segue e' lungo mezzo chilometro.",
       "origine": "mestiere",
-      "confidence": "media"
+      "confidence": "media",
+      "direzione": null,
+      "progressione": {
+        "prendi_il_giro": "Passa pulito la Jochen Rindt e concentrati sulla chicane finale: e' l'ultimo posto dove si butta il giro.",
+        "guadagni": "Traiettoria che quasi cancella la sinistra, e uscita impostata sul rettilineo dei box.",
+        "al_limite": "Sequenza presa come una linea sola, cordoli pieni sulla chicane finale e gas gia' aperto in appoggio: da qui parte il traguardo."
+      }
     }
   ],
-
   "track_limits_generale": "Zolder e' un circuito di chicane, e le chicane hanno cordoli interni che invitano a raddrizzare la traiettoria. E' la caratteristica riconosciuta della pista: i cordoli si possono sfruttare parecchio. Ma e' anche il modo piu' facile per prendersi un'invalidazione o per far rimbalzare la macchina proprio dove serve trazione. Regola pratica: sfrutta i cordoli della Kleine Chicane e della Villeneuve solo quando sei sicuro del riferimento, mai in lotta.",
-
   "pit": {
     "tempo_perso_s": null,
     "limite_kmh": 50,
@@ -212,9 +385,7 @@
     "note": "Limite standard ACC. Il paddock di Zolder e' notoriamente stretto: aspettati una pit lane corta ma con poco margine. Tempo perso non verificato.",
     "fonte": "https://trinacriasimracing.wordpress.com/assetto-corsa-competition-how-to-make-a-perfect-pit-stop/"
   },
-
   "traffico_multiclass": "Il rettilineo dei box e quello posteriore sono gli unici posti sensati per far passare. Nelle chicane e nel tratto ondulato del Butte non c'e' spazio per due traiettorie. In qualifica, il traffico nella sequenza curve 1-2-3 ti rovina il giro perche' quelle tre sono di fatto un'unica curva lunga.",
-
   "meteo_e_luce": {
     "condizioni_tipiche": null,
     "sul_bagnato": "I dislivelli diventano il problema: la salita della Sacramentshelling e la discesa verso la Villeneuve tolgono e rimettono carico continuamente.",
@@ -222,23 +393,18 @@
     "di_notte": null,
     "al_tramonto": null
   },
-
   "gomme_e_freni_pista": "Zolder e' una pista start-and-stop: alterna staccate pesanti (Lucien Bianchi, Kleine Chicane, Bolderberg) a tratti brevi. E' un circuito da freni e da trazione, non da gomme. La lunghezza contenuta impedisce velocita' molto alte, quindi il carico laterale prolungato e' poco: le gomme soffrono piu' per i cicli di trazione che per la percorrenza. Assetto tipico GT3: carico medio-alto, priorita' alla stabilita' in staccata e alla trazione fuori dai tornanti, non alla velocita' di punta.",
-
   "errore_del_principiante": "Impostare l'Eerste come una curva normale. E' a raggio decrescente: se dai un solo colpo di volante in ingresso, ti trovi a chiudere il volante a meta' curva e vai lungo. Entra piu' piano di quanto vorresti e chiudi progressivamente. Secondo errore classico: aggredire i cordoli delle chicane fin dal primo giro perche' 'a Zolder si fa cosi'. Si fa cosi' quando conosci esattamente dove sono, altrimenti la macchina salta e perdi piu' di quanto guadagni.",
-
   "gt3_ref_lap_time": {
     "valore": null,
     "contesto": null,
     "fonte": null
   },
-
   "gt3_fuel_per_lap_l": {
     "valore": null,
     "contesto": null,
     "fonte": null
   },
-
   "chicche": [
     {
       "testo": "La Kanaalbocht si chiama cosi' perche' in quel punto il tracciato costeggia il Canale Alberto.",
@@ -256,7 +422,6 @@
       "fonte": "https://en.wikipedia.org/wiki/Circuit_Zolder"
     }
   ],
-
   "fonti": [
     "https://en.wikipedia.org/wiki/Circuit_Zolder",
     "https://f1.fandom.com/wiki/Circuit_Zolder",
