@@ -51,6 +51,14 @@ export function TitoloCurva({ curva }: { curva: GuidaCurva }) {
           {curva.marcia_indicativa}
         </span>
       )}
+      {/* Il senso della curva: è il dato con cui si legge tutto il resto (in
+          curva a destra si carica il lato sinistro). Manca sulle curve che
+          nessuna fonte qualifica, e lì non si mostra niente. */}
+      {curva.direzione && (
+        <span className="font-mono text-[0.6rem] uppercase tracking-wider text-muted">
+          {curva.direzione === "destra" ? "↱" : "↰"} {curva.direzione}
+        </span>
+      )}
     </span>
   );
 }

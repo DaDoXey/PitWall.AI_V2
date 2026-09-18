@@ -226,12 +226,27 @@ export default function TracciatoPage() {
             una mappa stampata appoggiata sul cruscotto. */}
         {track.mappa_verificata && assets.map && (
           <Sezione titolo="Il layout">
-            <div className="rounded-lg bg-[#f4f1ea] p-4">
+            {/* La placca si adatta al disegno, non il contrario: `w-fit` +
+                `w-auto` sull'immagine. Con una placca a larghezza piena il
+                layout galleggiava in mezzo a due bande avorio vuote.
+                I file hanno proporzioni molto diverse (Zandvoort è quasi
+                quadrata a 1920×1753, Spa panoramica, Zolder un SVG che
+                dichiara solo il viewBox e nessuna dimensione): l'altezza
+                massima e la larghezza automatica reggono tutti i casi, e
+                `overflow-hidden` è la cintura di sicurezza se un domani
+                arriva un file con proporzioni fuori scala. */}
+            <div className="mx-auto w-fit max-w-full overflow-hidden rounded-lg bg-[#f4f1ea] p-4">
               {/* eslint-disable-next-line @next/next/no-img-element -- asset statico locale */}
+              {/* ALTEZZA fissa e larghezza automatica, non il contrario.
+                  `zolder_map.svg` dichiara solo il viewBox, senza width né
+                  height: con la larghezza in automatico il browser non sa
+                  quanto è grande e lo riduce a un quadratino. Dando l'altezza
+                  ricava la larghezza dal rapporto del viewBox, e i PNG si
+                  comportano allo stesso modo. */}
               <img
                 src={assets.map}
                 alt={`Mappa del circuito di ${track.short_name || track.name}`}
-                className="mx-auto max-h-[420px] w-full object-contain"
+                className="block h-[min(420px,52vw)] w-auto max-w-full object-contain"
               />
             </div>
             <p className="mt-2 font-mono text-[0.55rem] uppercase tracking-widest text-muted">
