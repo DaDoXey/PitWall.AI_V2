@@ -1855,7 +1855,7 @@ scostamenti sono uguali fra sinistra e destra: ciò che si chiede è ciò che si
 | Data | 17/09/2026 |
 | Agente dev | Claude Code (claude-opus-5) |
 | Area | Backend: NEW `app/motec/` (`ld.py` lettore, `ldx.py` giri e nome file, `scrittura.py` scrittore con l'impaginazione di ACC, `esporta.py`) · NEW `bundle/adapters/motec.py` · `bundle/schema.py` 1.2 (`FonteCarburante`, `meta.riferimento`, `meta.ritaglio_i2`) · `bundle/store.py` · `bundle/adapters/acc_telemetria.py` · `analisi/motore.py` (fonte del consumo, giri buttati) · `analisi/gomme.py` (TYRE_TAIR a parte) · `telemetria/registratore.py` (riferimenti fuori dal tetto) · `api/sessions.py` (import e export MoTeC, tempo nelle tracce, cancellazione dei canali convertiti) · `api/telemetria.py` · NEW `scripts/valida_motec.py` · test NEW motec, motec_bundle, motec_export (+ `motec_finto.py`), `test_analisi`. Frontend: `AnalisiCurve` (confronto con altre sessioni, delta), Sessioni (import MoTeC, etichette, «MoTeC ↓»), Dashboard (fonte del consumo), `GommeFreni`, `GiriSessione`, Sidebar, `lib/sessione`, `lib/api`, `lib/formato`. Docs: `docs/04` §12, README. |
-| Commit | `2b38080` lettore, scrittore ed export · `c695336` import e motore · `0d5d730` API · `9ac2e0e` frontend + commit docs successivo — committati il 17/09, push in attesa |
+| Commit | `2b38080` lettore, scrittore ed export · `c695336` import e motore · `0d5d730` API · `9ac2e0e` frontend · `7d754cc` docs — **pushati il 17/09** con «ok push» |
 | Contesto | Lotto L5 del rework dati (dopo #037), primo filone dell'ordine deciso il 17/09: L5 → guide dei tracciati → range di setup + INC-V2-003 → chat di Gigi → Lotto 2; deploy per ultimo. |
 
 **Catalogo messaggi:**
@@ -1887,7 +1887,42 @@ scostamenti sono uguali fra sinistra e destra: ciò che si chiede è ciò che si
 - **Da sapere:** nell'archivio vero restano le 6 sessioni MoTeC di prova (Zandvoort ×3, Monza BMW, Spa BMW ×2), cancellabili dall'Archivio.
 
 **File protetti:** non toccati.
-**Decisione:** ☑ Mantenuto — «procedi con F5 poi appena finito committiamo ogni cosa». Push in attesa di «ok push».
+**Decisione:** ☑ Mantenuto — «procedi con F5 poi appena finito committiamo ogni cosa». **Pushati il 17/09** con «ok push».
+
+---
+
+## Entry #039 — Guide dei tracciati, passo 1: la sezione Tracciati (le guide finalmente a schermo)
+
+| Campo | Valore |
+|---|---|
+| Data | 18/09/2026 |
+| Agente dev | Claude Code (claude-opus-5) |
+| Area | Backend: `core/catalog.py` (guide dei tracciati, `map_verified`, bandierine nel `track_summary`) · `api/catalog.py` (`GET /api/catalog/track/{id}/guida`, bandierine nella scheda) · `core/data/tracks.json` (stato dei layout) · NEW `app/tests/test_tracciati.py`. Frontend: NEW `app/(app)/tracciati/page.tsx` e `tracciati/[id]/page.tsx` · NEW `components/ui/CurvaGuida.tsx` · NEW `lib/assets.ts` (manifest e ritagli condivisi) · `components/ui/SessionBriefing.tsx` (usa il modulo nuovo) · `lib/api.ts` (tipi della guida) · `Sidebar.tsx` + `NavIcons.tsx` (voce Tracciati). Asset: 20 layout non verificati tolti dal repo, `manifest.json` e `ATTRIBUTIONS.md` rigenerati. |
+| Commit | non ancora committato |
+| Contesto | Apertura del filone «guide dei tracciati» (2° dell'ordine deciso il 17/09), dopo cinque giri di domande. Passo 1 di 4: sezione a schermo → ricerca del blocco B2 → provino di ancoraggio → aggancio in sessione. |
+
+**Catalogo messaggi:**
+1. «leggi la memoria e riprendiamo il lavoro di pitwall» → status di rito e piano.
+2. Giri di domande 1-5 (26 domande, tutte con proposta motivata). Decisioni chiuse: **prima a schermo poi la raccolta**; sezione **/tracciati** nuova; circuiti senza guida = scheda onesta senza placeholder; `direzione`/lato gomma da verificare a mano sulle 38 curve; blocchi mappa+guida accoppiati; **le guide restano fuori dal contesto LLM**; aggancio agli errori nel tab Curve con **zoom sulla curva sbagliata** e navigazione a frecce fra più curve; abbinamento curva↔guida con **ancoraggio semiautomatico** (fallback: per settore); campo nuovo `progressione` a tre livelli; ordine dei blocchi B2→B6, Nordschleife parcheggiato.
+3. «per la ricerca perfetto così almeno non facciamo più il ping pong… 25 perfetto e vai con il passo 1» → **la ricerca delle guide passa da Claude Desktop a me** (fonti concordate, formato invariato, si parte da **Monza sola** per tarare); via libera al passo 1.
+
+**Modifica:**
+- **Catalogo**: `track_guide()` legge le guide da `data/tracks_knowledge/` con cache, `has_guide()`/`map_verified()` danno le due bandierine, che entrano sia nell'indice sia nella scheda. La guida si serve su una **rotta sua** (`/api/catalog/track/{id}/guida`): pesa 15-29 KB e non deve gravare su chi chiede il catalogo per popolare un selettore. 404 pulito per i 21 circuiti che non ce l'hanno.
+- **Layout**: `tracks.json` ora distingue `verificata` (5, con nome del file Commons e nota) da `da_verificare` (20). I 20 file non verificati sono **usciti dal repo** (spostati in `%LOCALAPPDATA%\PitWall\mappe_da_verificare`, non cancellati: se uno passa il provino si ripesca); `manifest.json` rigenerato con `scrivi_manifest()` e `ATTRIBUTIONS.md` ripulito delle 20 righe orfane.
+- **Frontend**: sezione **Tracciati** in sidebar → lista dei 25 con foto, dati e bandierine (filtri Tutti / Con guida / Ancora senza) → scheda con foto, **layout su placca chiara** solo se verificato, dati del catalogo, e la guida per intero: settori, curva per curva apribile, errore del principiante, gomme/freni, track limits, box, meteo, traffico, chicche e **fonti richiudibili**. `CurvaGuida` è un componente a sé perché lo stesso blocco servirà in sessione (passo 4).
+- **Igiene**: manifest e ritagli spostati in `lib/assets.ts`, una fetch sola condivisa fra SessionBriefing e Tracciati.
+
+**Motivazione:** le 4 guide e i 5 layout verificati esistevano dal 7-8 settembre e **non li leggeva nessuna riga di UI**. Senza vederli a schermo non si poteva decidere cosa chiedere nei blocchi successivi — da qui l'ordine «prima a schermo, poi la raccolta».
+
+**Risultato osservato:** `/tracciati` mostra 25 circuiti, «4 con la guida curva per curva»; Zolder apre mappa + 10 curve (T1 Eerste: riferimento, insidia, costo dell'errore, sorpasso e difesa, stress gomme/freni/track limits, gara vs qualifica, marcatura «consiglio di mestiere · confidenza alta»); Monza, senza guida, dice che le nozioni non ci sono ancora e non mostra alcun layout.
+
+**Verifica:**
+- Backend **891/891** in 18 file (858 di prima + `test_tracciati` 33/33), tutti offline. `tsc --noEmit` 0 errori.
+- Pagine a 200: `/ /tracciati /tracciati/zolder /tracciati/monza /sessioni /setup /telemetry /lezioni /crediti /console`. Console del browser pulita dopo il passaggio a `useParams` (la prop `params` in Next 15 è una Promise).
+- Nessuna chiamata LLM: spesa invariata. Nessun file protetto toccato.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☐ in attesa della verifica a schermo di Edoardo e di «ok push».
 
 ---
 
