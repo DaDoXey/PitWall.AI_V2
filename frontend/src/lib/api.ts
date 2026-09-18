@@ -542,6 +542,10 @@ export type CatalogTrack = {
   downforce_level: string | null;
   dlc: boolean;
   dlc_pack: string | null;
+  /** C'è una guida (nozioni curva per curva) per questo circuito. */
+  ha_guida: boolean;
+  /** Il layout a disco è stato guardato e approvato: si può mostrare. */
+  mappa_verificata: boolean;
 };
 
 export type Catalog = {
@@ -583,12 +587,101 @@ export type TrackSheet = CatalogTrack & {
   corners_confidence?: string;
 };
 
+// ─────────────────────────────────────────────
+// Guida del tracciato — le nozioni curva per curva
+// (backend: data/tracks_knowledge/<id>.json, servite da
+// /api/catalog/track/{id}/guida). Sono contenuto da MOSTRARE al pilota, non
+// contesto per l'LLM: quello che si legge qui è il testo della guida parola
+// per parola, non una riscrittura.
+//
+// Quasi tutti i campi sono opzionali per scelta: una nozione che nessuna fonte
+// documenta resta `null` invece di essere inventata, e la UI semplicemente non
+// disegna la riga.
+// ─────────────────────────────────────────────
+export type GuidaSettore = {
+  n: number;
+  carattere?: string | null;
+  cosa_decide?: string | null;
+  errore_costoso?: string | null;
+};
+
+export type GuidaCurva = {
+  n: number;
+  /** null quando il nome non è documentato: non si inventa. */
+  nome?: string | null;
+  tipo?: string | null;
+  marcia_indicativa?: string | null;
+  riferimento_frenata?: string | null;
+  insidia?: string | null;
+  costo_errore?: string | null;
+  /** Senso della curva; manca nelle guide del blocco 1. */
+  direzione?: string | null;
+  sorpasso?: {
+    possibile?: boolean | null;
+    come?: string | null;
+    come_ci_si_difende?: string | null;
+  } | null;
+  gomme?: { stress?: string | null; note?: string | null } | null;
+  freni?: { stress?: string | null; note?: string | null } | null;
+  track_limits?: { rischio?: string | null; note?: string | null } | null;
+  differenza_gara_qualifica?: string | null;
+  /** "documentata" | "mestiere": i consigli senza fonte sono marcati. */
+  origine?: string | null;
+  confidence?: string | null;
+};
+
+export type GuidaValoreConFonte = {
+  valore?: number | string | null;
+  contesto?: string | null;
+  fonte?: string | null;
+};
+
+export type GuidaTracciato = {
+  id: string;
+  verifica_catalogo?: {
+    lunghezza_confermata?: boolean | null;
+    curve_confermate?: boolean | null;
+    note?: string | null;
+  } | null;
+  settori?: GuidaSettore[];
+  curve?: GuidaCurva[];
+  track_limits_generale?: string | null;
+  pit?: {
+    tempo_perso_s?: number | null;
+    limite_kmh?: number | null;
+    lato_box?: string | null;
+    note?: string | null;
+    fonte?: string | null;
+  } | null;
+  traffico_multiclass?: string | null;
+  meteo_e_luce?: {
+    condizioni_tipiche?: string | null;
+    sul_bagnato?: string | null;
+    punti_acqua?: string | null;
+    di_notte?: string | null;
+    al_tramonto?: string | null;
+  } | null;
+  gomme_e_freni_pista?: string | null;
+  errore_del_principiante?: string | null;
+  gt3_ref_lap_time?: GuidaValoreConFonte | null;
+  gt3_fuel_per_lap_l?: GuidaValoreConFonte | null;
+  chicche?: { testo: string; perche_interessa_al_pilota?: string | null; fonte?: string | null }[];
+  fonti?: (string | { url?: string; titolo?: string })[];
+};
+
 export function getCatalogCar(id: string) {
   return getJSON<CarSheet>(`/api/catalog/car/${encodeURIComponent(id)}`);
 }
 
 export function getCatalogTrack(id: string) {
   return getJSON<TrackSheet>(`/api/catalog/track/${encodeURIComponent(id)}`);
+}
+
+/** La guida del circuito. Va a 404 (e quindi in errore) per i circuiti che non
+ *  ce l'hanno ancora: chi chiama tratta l'errore come «guida non disponibile»,
+ *  che è un'informazione vera, non un guasto. */
+export function getGuidaTracciato(id: string) {
+  return getJSON<GuidaTracciato>(`/api/catalog/track/${encodeURIComponent(id)}/guida`);
 }
 
 export function getSetupParams(car?: string, track?: string) {

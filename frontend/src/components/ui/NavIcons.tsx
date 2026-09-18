@@ -82,3 +82,13 @@ export function IconSetup({ size = 17 }: IconProps) {
     </svg>
   );
 }
+
+// Tracciati: un anello di pista (curva, controcurva, rettilineo dei box)
+export function IconTracks({ size = 17 }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" {...base}>
+      <path d="M6.5 18.5 C3.5 18.5 2.5 15.5 4.5 13.5 C6.5 11.5 9 12 11 10 C13 8 12 5.5 15 5.5 C18 5.5 19.5 7.5 19.5 10 C19.5 14.5 15.5 18.5 11 18.5 Z" />
+      <path d="M14.2 5.6 L15.8 5.4" />
+    </svg>
+  );
+}

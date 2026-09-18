@@ -12,6 +12,7 @@ import {
   IconSessions,
   IconSetup,
   IconTelemetry,
+  IconTracks,
 } from "@/components/ui/NavIcons";
 import SidebarSection from "@/components/ui/SidebarSection";
 import QuickNotes from "@/components/ui/QuickNotes";
@@ -27,6 +28,7 @@ const NAV = [
   { href: "/telemetry", label: "Telemetria", icon: IconTelemetry },
   { href: "/setup", label: "Setup", icon: IconSetup },
   { href: "/sessioni", label: "Sessioni", icon: IconSessions },
+  { href: "/tracciati", label: "Tracciati", icon: IconTracks },
   { href: "/lezioni", label: "Lezioni", icon: IconLessons },
 ];
 

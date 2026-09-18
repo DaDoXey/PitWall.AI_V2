@@ -13,77 +13,12 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { getCatalogCar, getCatalogTrack, type CarSheet, type TrackSheet } from "@/lib/api";
 import { fadeInUp } from "@/lib/motion";
+import { useAssets, useCrop, type Band, type Crop } from "@/lib/assets";
 
-// Indice degli asset scaricati (public/assets/manifest.json, generato da
-// fetch_assets.py). La copertura è parziale e l'estensione varia: senza indice
-// la UI dovrebbe tentare una URL e gestire il 404. Caricato una volta sola e
-// condiviso tra le card; se manca, le schede restano senza immagini.
-type Manifest = {
-  cars: Record<string, Record<string, string>>;
-  tracks: Record<string, Record<string, string>>;
-};
-
-let manifestPromise: Promise<Manifest | null> | null = null;
-
-function loadManifest(): Promise<Manifest | null> {
-  if (!manifestPromise) {
-    manifestPromise = fetch("/assets/manifest.json")
-      .then((r) => (r.ok ? (r.json() as Promise<Manifest>) : null))
-      .catch(() => null);
-  }
-  return manifestPromise;
-}
-
-function useAssets(kind: "cars" | "tracks", id: string | undefined) {
-  const [assets, setAssets] = useState<Record<string, string>>({});
-  useEffect(() => {
-    if (!id) return;
-    let alive = true;
-    loadManifest().then((m) => {
-      if (alive && m) setAssets(m[kind]?.[id] ?? {});
-    });
-    return () => {
-      alive = false;
-    };
-  }, [kind, id]);
-  return assets;
-}
-
-// Ritagli scelti a mano (public/assets/crops.json, export del tool generato da
-// backend/scripts/build_crop_tool.py). Ogni voce dice come piazzare l'immagine
-// dentro la banda, in percentuali del riquadro; `band` ne fissa il rapporto.
-// Se il file manca si va di ritaglio centrato: la UI non dipende dal tool.
-type Crop = { w: number; h: number; l: number; t: number };
-type Band = { w: number; h: number };
-type Crops = { band: Band; items: Record<string, Crop> };
-
-const BANDA_PREDEFINITA: Band = { w: 540, h: 128 };
-
-let cropsPromise: Promise<Crops | null> | null = null;
-
-function loadCrops(): Promise<Crops | null> {
-  if (!cropsPromise) {
-    cropsPromise = fetch("/assets/crops.json")
-      .then((r) => (r.ok ? (r.json() as Promise<Crops>) : null))
-      .catch(() => null);
-  }
-  return cropsPromise;
-}
-
-function useCrop(id: string | undefined) {
-  const [crops, setCrops] = useState<Crops | null>(null);
-  useEffect(() => {
-    let alive = true;
-    loadCrops().then((c) => alive && setCrops(c));
-    return () => {
-      alive = false;
-    };
-  }, []);
-  return {
-    crop: id && crops ? crops.items?.[id] : undefined,
-    band: crops?.band ?? BANDA_PREDEFINITA,
-  };
-}
+// Manifest degli asset e ritagli: stanno in lib/assets.ts dal 18/09, perché
+// li usa anche la sezione Tracciati e due copie vorrebbero dire due fetch e
+// due cache divergenti. Il comportamento è identico a prima: senza manifest o
+// senza crops la card resta senza immagine o col ritaglio centrato.
 
 const DOWNFORCE_LABEL: Record<string, string> = {
   low: "bassa",
