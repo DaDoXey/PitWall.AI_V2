@@ -1,0 +1,644 @@
+{
+  "id": "nurburgring_gp",
+  "verifica_catalogo": {
+    "lunghezza_confermata": true,
+    "curve_confermate": true,
+    "fonte_lunghezza": "https://en.wikipedia.org/wiki/N%C3%BCrburgring",
+    "note": "5,148 km confermati per la GP-Strecke con la Mercedes-Arena, in uso dal 2002. Coach Dave conta 15 curve, come il catalogo; la voce tedesca di Wikipedia ne conta 16. La numerazione e i nomi seguono Coach Dave; Full Grip e' stato scartato, perche' mette i nomi delle curve in posti sbagliati (l'NGK alla T10, l'Arena dalla T5). La mappa verificata (Circuit Nuerburgring-2013-GP.svg) numera invece 16 curve: nella Mercedes-Arena ne conta quattro (2-5) dove Coach Dave ne conta tre, e da li' in poi il suo numero e' quello della guida piu' uno. Deciso il 23/09/2026 di tenere 15, come Coach Dave, Wikipedia inglese (Schumacher-S = curve 8 e 9) e il catalogo. Il nome della T12, che Coach Dave non da', viene dalla mappa (Falkenbogen). I tre settori qui sotto sono una divisione descrittiva, non i settori di cronometraggio di ACC."
+  },
+  "senso_marcia": "orario",
+  "dislivello_m": 55,
+  "rettilineo_piu_lungo_m": null,
+  "variante_acc": "ACC riproduce la GP-Strecke con la Mercedes-Arena, in uso dal 2002: 5,148 km e 15 curve. Non e' la variante delle 24 ore senza Arena, ne' il tracciato combinato con la Nordschleife, che in ACC e' un circuito a parte.",
+  "fonti_campi_pista": {
+    "senso_marcia": {
+      "fonte": "https://trackdaytickets.com/tracks/nurburgring",
+      "fonte_singola": true,
+      "nota": "Coerente con i sensi delle curve di Coach Dave: 9 a destra, 6 a sinistra."
+    },
+    "dislivello_m": {
+      "fonte": "https://de.wikipedia.org/wiki/N%C3%BCrburgring",
+      "nota": "Voce tedesca di Wikipedia, variante del 2002 (Hoehenunterschied 55 m). Concorda trackdaytickets con 56 m."
+    },
+    "rettilineo_piu_lungo_m": {
+      "fonte": null,
+      "nota": "Trackdaytickets da' 600 m per il rettilineo del traguardo, ma non e' detto che sia il piu' lungo: il tratto in pieno dalla Bit-Kurve alla Veedol puo' esserlo. Null finche' non c'e' un dato ufficiale."
+    },
+    "variante_acc": {
+      "fonte": "https://en.wikipedia.org/wiki/N%C3%BCrburgring",
+      "nota": null
+    }
+  },
+  "settori": [
+    {
+      "n": 1,
+      "carattere": "La staccata della Castrol-S in discesa e il tratto lento e tortuoso della Mercedes-Arena.",
+      "cosa_decide": "La staccata della T1 e l'uscita della T4, che lancia verso la Valvoline-Kurve.",
+      "errore_costoso": "Sbagliare la frenata in discesa della T1, e perdere l'uscita della T4 per la fretta sul gas."
+    },
+    {
+      "n": 2,
+      "carattere": "Valvoline e Ford-Kurve sopraelevate, la discesa verso la Dunlop-Kehre, poi la risalita per la Schumacher-S fino alla Kumho-Kurve.",
+      "cosa_decide": "La frenata della Dunlop-Kehre, che non ha riferimenti, e la pulizia nella Schumacher-S.",
+      "errore_costoso": "Salire sul cordolo dell'apice della Schumacher-S: la macchina si scompone e si perde tutto il tratto."
+    },
+    {
+      "n": 3,
+      "carattere": "Bit-Kurve, la piega in pieno, la Veedol-Schikane e la Coca-Cola-Kurve verso il traguardo.",
+      "cosa_decide": "L'uscita della Bit-Kurve per il tratto veloce, e quella della Coca-Cola-Kurve per il rettilineo del traguardo.",
+      "errore_costoso": "Una ruota nella ghiaia in uscita dalla Bit-Kurve, o il blocco di cemento della Veedol."
+    }
+  ],
+  "curve": [
+    {
+      "n": 1,
+      "nome": "Castrol-S",
+      "direzione": "destra",
+      "tipo": "lenta",
+      "marcia_indicativa": "1a",
+      "riferimento_frenata": "Tenendosi a sinistra, cartello dei 100 m o inizio del cordolo bianco e rosso. La strada piega a destra proprio nel punto di frenata: bisogna guardare avanti. Frenata forte in linea retta, scalata in prima.",
+      "insidia": "E' un tornante a destra in discesa, e in frenata si sbaglia facilmente la misura. Si ritarda l'inserimento per un apice tardivo, con un po' di trail braking. All'apice c'e' un avvallamento: li' si torna sul gas, tanto quanto la trazione permette, aprendo lo sterzo. Finire larghi a sinistra in uscita costa poco: conta di piu' l'uscita.",
+      "costo_errore": "Medio. Si perde soprattutto l'uscita verso la Mercedes-Arena; al primo giro e' anche il punto dei contatti.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "E' il punto di sorpasso principale: la curva e' stata ridisegnata nel 2002 proprio per creare un'occasione di sorpasso. Scia sul rettilineo del traguardo e staccata all'interno destro.",
+        "come_ci_si_difende": "Chiudere l'interno prima della frenata. Il tornante lascia pero' l'incrocio a chi entra largo ed esce prima sul gas."
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Tornante a destra in frenata: anteriore sinistro caricato in ingresso, poi il lavoro passa alle posteriori in trazione."
+      },
+      "freni": {
+        "stress": "alto",
+        "note": "Staccata in fondo al rettilineo del traguardo, in discesa."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "In uscita a sinistra c'e' spazio: allargare non costa quasi niente."
+      },
+      "differenza_gara_qualifica": "In qualifica si stacca al limite. In gara, soprattutto al primo giro, e' un imbuto in discesa: meglio un riferimento un po' anticipato e l'uscita pulita.",
+      "progressione": {
+        "prendi_il_giro": "Frena al cartello dei 100 m in linea retta, metti la prima e gira tardi, pensando solo all'uscita.",
+        "guadagni": "Aggiungi un po' di trail braking fino all'apice e torna sul gas nell'avvallamento, aprendo lo sterzo.",
+        "al_limite": "Frenata al limite in discesa senza bloccare, apice tardivo preciso e gas al limite della trazione, lasciando correre la macchina verso sinistra."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 2,
+      "nome": "Mercedes-Arena",
+      "direzione": "sinistra",
+      "tipo": "media",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Non e' una staccata: il riferimento e' un piccolo pezzo di cordolo grigio all'esterno, dove si da' un tocco di freno per non allargare in uscita.",
+      "insidia": "Si entra dal centro-destra della pista, senza sacrificare l'uscita della T1 per allargare l'ingresso. Si resta in seconda, si prende l'apice presto e si sta sul cordolo interno tornando progressivamente sul gas. L'uscita si allarga: si apre lo sterzo e si lascia correre la macchina.",
+      "costo_errore": "Basso. Il rischio vero e' superare i limiti in uscita.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": null
+      },
+      "freni": {
+        "stress": "basso",
+        "note": "Solo un tocco di freno."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "La via di fuga in uscita si puo' usare, ma con almeno due ruote dentro la linea bianca."
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Tocco di freno al cordolo grigio, seconda, e resta vicino al cordolo interno.",
+        "guadagni": "Apice presto e gas progressivo gia' sul cordolo interno.",
+        "al_limite": "Uscita lasciata correre fino al limite della linea bianca, con la macchina gia' in posizione per la discesa verso la T3."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 3,
+      "nome": "Mercedes-Arena",
+      "direzione": "sinistra",
+      "tipo": "lenta",
+      "marcia_indicativa": "1a-2a",
+      "riferimento_frenata": "In discesa: il riferimento e' a sinistra, circa cinque metri prima del punto in cui la via di fuga verde torna tappeto grigio. Prima di frenare la macchina va gia' puntata verso l'apice.",
+      "insidia": "Sinistra in discesa e in contropendenza, che continua a chiudersi. Con la prima la macchina ruota di piu' ma e' difficile riprendere il gas in modo pulito; con la seconda e' il contrario: dipende dalla vettura. Le ruote interne vanno appena dentro il cordolo bianco e rosso, che aiuta a far girare la macchina. Niente fretta sul gas: un filo costante per tenere lo slancio.",
+      "costo_errore": "Medio. Un'uscita larga chiude la T4.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Sinistra in frenata e in contropendenza: anteriore destro caricato mentre la macchina gira."
+      },
+      "freni": {
+        "stress": "medio",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "Uguale nell'impostazione. In gara la contropendenza con il pieno fa scivolare di piu' l'anteriore: meglio un metro di frenata in piu'.",
+      "progressione": {
+        "prendi_il_giro": "Punta la macchina verso l'apice, frena al riferimento a sinistra e scegli la marcia con cui riesci a riprendere il gas senza scomporti.",
+        "guadagni": "Porta le ruote interne sul cordolo bianco e rosso per far girare la macchina.",
+        "al_limite": "Rotazione presa con il cordolo e gas costante dosato per aprire al massimo l'ingresso della T4."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 4,
+      "nome": "Mercedes-Arena",
+      "direzione": "destra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Nessuna frenata: dalla T3 si arriva a sinistra, e quando si gira si alza leggermente il gas.",
+      "insidia": "Si butta dentro la macchina il prima possibile (e se alla T3 si era in prima, si anticipa il passaggio in seconda). Se la macchina gira senza sottosterzo si torna subito in pieno, attaccando il cordolo e la zona grigia interna. In uscita la macchina lotta per la trazione: attenzione al sovrasterzo.",
+      "costo_errore": "Alto. Un'uscita buona qui vale per il rettilineo corto verso la T5 e la T6.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": null
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Si usa tutta la strada, via di fuga compresa, ma con due ruote dentro la linea bianca."
+      },
+      "differenza_gara_qualifica": "In gara la trazione conta piu' dell'aggressivita': un'uscita in sovrasterzo consuma le posteriori.",
+      "progressione": {
+        "prendi_il_giro": "Alza appena il piede, gira e torna sul gas quando la macchina e' dritta.",
+        "guadagni": "Inserimento anticipato e cordolo interno attaccato, con il gas pieno appena l'anteriore risponde.",
+        "al_limite": "Macchina buttata dentro al primo istante utile, gas pieno subito e uscita che usa tutta la via di fuga senza superare la linea bianca."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 5,
+      "nome": "Valvoline-Kurve",
+      "direzione": "sinistra",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Tenendosi a destra, si guarda la strada di fuga usata dal tracciato endurance: si frena appena prima del punto in cui finisce e torna cordolo. Terza, e si gira mentre si frena.",
+      "insidia": "Curva a sinistra in discesa, con una leggera sopraelevazione che da' aderenza. L'apice e' a meta' del cordolo interno: vicini, ma senza salirci, perche' scompone la macchina. All'apice si torna sul gas puntando a sinistra, per aprire la T6.",
+      "costo_errore": "Medio. Serve a preparare la Ford-Kurve.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": null
+      },
+      "freni": {
+        "stress": "medio",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Frena alla fine della strada di fuga, terza, e stai vicino al cordolo senza salirci.",
+        "guadagni": "Usa la sopraelevazione per portare piu' velocita' all'apice.",
+        "al_limite": "Velocita' di percorrenza al limite sulla sopraelevazione, e uscita puntata a sinistra per aprire la T6."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 6,
+      "nome": "Ford-Kurve",
+      "direzione": "destra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Si frena dove finisce il cordolo all'esterno. Seconda.",
+      "insidia": "Anche qui c'e' una leggera sopraelevazione che aiuta a portare velocita' all'apice. Vicini al cordolo interno senza salirci; poi gas presto, lasciando che la compressione lanci la macchina sul cordolo di uscita. Troppo gas porta in sottosterzo; un apice troppo anticipato chiude l'uscita.",
+      "costo_errore": "Medio. L'uscita porta verso la discesa della Dunlop-Kehre.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": null
+      },
+      "freni": {
+        "stress": "medio",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "Il cordolo di uscita si usa tutto."
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Frena alla fine del cordolo esterno, seconda, e non anticipare l'apice.",
+        "guadagni": "Gas anticipato sulla compressione, senza arrivare al sottosterzo.",
+        "al_limite": "Apice preciso sulla sopraelevazione e uscita lanciata sul cordolo, con il gas al limite dell'anteriore."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 7,
+      "nome": "Dunlop-Kehre",
+      "direzione": "destra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Non c'e' un vero riferimento. Tenendosi ben a sinistra, si comincia a rallentare fra il punto in cui compare la chiazza d'asfalto grigio e l'inizio del cordolo di ingresso.",
+      "insidia": "Tornante a destra con ingresso in discesa, poi la pista risale verso la Schumacher-S. Si frena con la macchina gia' angolata verso la curva, con trail braking fino a un primo apice anticipato. Seconda: poi si lascia allargare un po' la macchina veleggiando. Quando e' girata si torna sul gas, molto progressivi per non pattinare, riavvicinandosi al cordolo interno.",
+      "costo_errore": "Alto. Si sbaglia facilmente la frenata, e l'uscita vale per la salita verso la Schumacher-S.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "Staccata all'interno destro in fondo alla discesa, per chi e' uscito meglio dalla Ford-Kurve.",
+        "come_ci_si_difende": "Chiudere l'interno. Chi difende pero' esce lento in salita, e alla Schumacher-S non c'e' spazio per rispondere."
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Tornante a destra in discesa: anteriore sinistro caricato in frenata."
+      },
+      "freni": {
+        "stress": "alto",
+        "note": "Frenata in discesa, senza un riferimento chiaro."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "In uscita si usano tutto il cordolo e la via di fuga verde."
+      },
+      "differenza_gara_qualifica": "In qualifica si cerca il primo apice aggressivo. In gara, in discesa e con il pieno, conviene anticipare la frenata e puntare tutto sulla trazione in uscita.",
+      "progressione": {
+        "prendi_il_giro": "Frena presto, fra la chiazza grigia e il cordolo, metti la seconda e aspetta che la macchina giri prima di dare gas.",
+        "guadagni": "Trail braking fino al primo apice e gas progressivo gia' mentre la macchina si allarga.",
+        "al_limite": "Frenata al limite senza riferimenti, rotazione completa al primo apice e uscita che usa cordolo e verde fino in fondo."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 8,
+      "nome": "Michael-Schumacher-S",
+      "direzione": "sinistra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Si arriva a destra, sul cordolo di ingresso, e si alza leggermente il gas mentre si gira.",
+      "insidia": "Chicane veloce sinistra-destra. Se la macchina gira bene si torna subito in pieno, con lo sterzo morbido. Il cordolo dell'apice interno va appena sfiorato: salirci scompone completamente la macchina.",
+      "costo_errore": "Alto. Un errore qui si porta dietro tutta la destra successiva.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": null
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Alza il piede in inserimento e resta lontano dal cordolo interno.",
+        "guadagni": "Torna in pieno appena la macchina e' girata, sfiorando il cordolo dell'apice.",
+        "al_limite": "Sollevata minima, gas pieno immediato e cordolo dell'apice baciato senza salirci."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 9,
+      "nome": "Michael-Schumacher-S",
+      "direzione": "destra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna frenata.",
+      "insidia": "In uscita dalla sinistra si punta la macchina sull'erba verde all'interno della destra. Il cordolo si puo' percorrere fino all'uscita, poi si usa la via di fuga all'esterno. Tutti i comandi morbidi per tenere la macchina stabile.",
+      "costo_errore": "Medio. L'uscita porta verso la Kumho-Kurve.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": null
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "La via di fuga esterna si usa, ma e' li' che si rischia di superare i limiti."
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Resta sul gas e segui il cordolo interno senza scatti.",
+        "guadagni": "Anticipa la linea verso l'erba verde interna e resta sul cordolo fino all'uscita.",
+        "al_limite": "Traiettoria che usa tutto il cordolo e tutta l'uscita, con lo sterzo sempre morbido."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 10,
+      "nome": "Kumho-Kurve",
+      "direzione": "sinistra",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Si arriva a destra: il riferimento e' il cartello dei 100 m. Prima di frenare si porta la macchina sulla striscia verde a destra, che apre la curva. Terza.",
+      "insidia": "Curva a sinistra in leggera salita. Si porta velocita' in ingresso, si taglia il cordolo interno e si mettono le gomme sulla via di fuga verde tornando sul gas. Il cordolo di uscita si puo' usare, ma senza allargare troppo: bisogna tornare a sinistra per la Bit-Kurve.",
+      "costo_errore": "Medio. Un'uscita larga rovina l'ingresso della Bit-Kurve.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": null
+      },
+      "freni": {
+        "stress": "medio",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "Qui si usano tutte le vie di fuga in ogni fase della curva."
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Frena al cartello dei 100 m, terza, e resta dentro la pista in uscita.",
+        "guadagni": "Allarga l'ingresso sulla striscia verde e taglia il cordolo interno.",
+        "al_limite": "Velocita' d'ingresso massima usando tutto il verde, e uscita calibrata per tornare a sinistra in tempo."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 11,
+      "nome": "Bit-Kurve",
+      "direzione": "destra",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Un tocco di freno per togliere un po' di velocita', restando in terza.",
+      "insidia": "Curva a destra in discesa, di media velocita'. L'apice e' a meta' del cordolo, senza mettere le ruote destre sull'erba interna. In inserimento la macchina va spesso in sovrasterzo: i trasferimenti di carico vanno fatti con dolcezza. Poi gas presto all'apice, lasciando allargare la macchina sul cordolo di uscita. Una ruota nella ghiaia in uscita compromette tutto il tratto fino alla Veedol.",
+      "costo_errore": "Alto. Da qui si esce sul tratto veloce che porta alla Veedol.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": null
+      },
+      "freni": {
+        "stress": "basso",
+        "note": "Solo un tocco di freno."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Ruote destre fuori dall'erba interna e nessuna ruota nella ghiaia in uscita."
+      },
+      "differenza_gara_qualifica": "In gara, con il pieno, il sovrasterzo d'ingresso e' piu' marcato: meglio un filo di freno in piu' e un'uscita pulita.",
+      "progressione": {
+        "prendi_il_giro": "Tocco di freno, terza, e apice a meta' cordolo senza erba.",
+        "guadagni": "Gas anticipato all'apice, lasciando correre la macchina sul cordolo di uscita.",
+        "al_limite": "Inserimento al limite controllando il sovrasterzo, e uscita che usa tutto il cordolo senza toccare la ghiaia."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 12,
+      "nome": "Falkenbogen",
+      "direzione": "destra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna frenata: e' una piega a destra in pieno.",
+      "insidia": "Nessuna difficolta' particolare: si resta sul gas e si prepara la staccata della Veedol.",
+      "costo_errore": "Basso.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": null
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Resta in pieno.",
+        "guadagni": "Prendi la piega sulla linea piu' corta.",
+        "al_limite": "Linea che arriva alla staccata della Veedol gia' spostata a destra."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 13,
+      "nome": "Veedol-Schikane",
+      "direzione": "sinistra",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Tenendosi a destra, si frena fra il cartello dei 100 m e quello dei 50 m. Terza.",
+      "insidia": "Si gira presto tagliando il cordolo interno, e si torna sul gas prima del primo apice per tirare dentro l'anteriore. Sul cordolo della parte sinistra c'e' un blocco di cemento: toccarlo scompone la macchina.",
+      "costo_errore": "Alto. L'errore alla prima parte si porta dietro la destra e l'ultima curva.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "Staccata all'interno dopo il tratto veloce dalla Bit-Kurve. E' un'occasione rara, e rischiosa.",
+        "come_ci_si_difende": "Chiudere l'interno. Chi attacca da lontano finisce facilmente sul blocco di cemento o lungo sulla chicane."
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Staccata a sinistra: anteriore destro caricato in frenata."
+      },
+      "freni": {
+        "stress": "alto",
+        "note": "Staccata in fondo al tratto piu' veloce del giro."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "La chicane va rispettata: tagliarla e' il taglio piu' sorvegliato del giro."
+      },
+      "differenza_gara_qualifica": "In qualifica si frena al cartello dei 50 m e si attacca il cordolo. In gara e' uno dei due punti di sorpasso: preparare la staccata gia' dall'uscita della Bit-Kurve.",
+      "progressione": {
+        "prendi_il_giro": "Frena al cartello dei 100 m, terza, e resta lontano dal blocco di cemento.",
+        "guadagni": "Sposta la frenata verso i 50 m e torna sul gas prima del primo apice.",
+        "al_limite": "Frenata al limite, cordolo interno tagliato senza toccare il cemento, e gas gia' prima dell'apice per tirare la macchina nella destra."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 14,
+      "nome": "Veedol-Schikane",
+      "direzione": "destra",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Nessuna frenata: si arriva dalla prima parte della chicane.",
+      "insidia": "Quando la macchina ha cambiato direzione ed e' rivolta verso la destra, si attacca con decisione il cordolo interno, a meno di avere un assetto molto basso. Si porta velocita' all'apice e, se serve, si usa il cordolo rialzato in uscita a sinistra, verso l'ultima curva.",
+      "costo_errore": "Medio. L'uscita porta direttamente alla staccata della Coca-Cola-Kurve.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": null
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Il cordolo rialzato di uscita si usa, ma non oltre."
+      },
+      "differenza_gara_qualifica": "In gara, con la macchina bassa e il pieno, attaccare il cordolo interno e' piu' rischioso: meglio una linea un filo piu' larga.",
+      "progressione": {
+        "prendi_il_giro": "Aspetta di essere dritto verso la destra, poi segui il cordolo senza salirci troppo.",
+        "guadagni": "Attacca il cordolo interno e porta piu' velocita' all'apice.",
+        "al_limite": "Cordolo interno aggredito e uscita sul cordolo rialzato, con la macchina gia' impostata per l'ultima staccata."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 15,
+      "nome": "Coca-Cola-Kurve",
+      "direzione": "destra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Non ci sono veri riferimenti di frenata: il punto giusto si impara con la pratica, misurando a occhio la distanza fra la macchina e l'apice.",
+      "insidia": "Seconda all'apice, ma la scalata va fatta tardi: scalare troppo in fretta scompone il posteriore. Si resta vicini al cordolo interno e al muretto dei box, sulla linea bianca, e si aumenta il gas poco alla volta. Quando l'uscita si apre, si apre lo sterzo verso il cordolo e la via di fuga. Il gas va dato morbido, per evitare il controllo di trazione e il sovrasterzo.",
+      "costo_errore": "Alto: comanda tutto il rettilineo del traguardo e quindi anche l'attacco alla T1.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "All'interno, se chi e' davanti esce male dalla Veedol.",
+        "come_ci_si_difende": "Tenere la linea interna sul muretto dei box senza sacrificare l'uscita: il rettilineo porta alla T1."
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": null
+      },
+      "freni": {
+        "stress": "medio",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "In uscita si usano cordolo e via di fuga."
+      },
+      "differenza_gara_qualifica": "In qualifica si cerca il gas il prima possibile. In gara conta l'uscita: un'accelerazione pattinata qui costa sul rettilineo e consuma le posteriori.",
+      "progressione": {
+        "prendi_il_giro": "Frena presto, scala con calma in seconda e dai gas solo quando la macchina e' dritta.",
+        "guadagni": "Ritarda le scalate per tenere il posteriore calmo e stai attaccato alla linea bianca vicino al muretto.",
+        "al_limite": "Frenata costruita a occhio al metro, gas progressivo senza intervento del controllo di trazione, e uscita che usa tutto il cordolo e la via di fuga."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    }
+  ],
+  "track_limits_generale": "Nella Mercedes-Arena (uscite della T2 e della T4) si puo' usare la via di fuga, ma con due ruote dentro la linea bianca. Nella Schumacher-S e alla Veedol il problema sono i cordoli: salire sull'apice della sinistra della Schumacher-S o toccare il blocco di cemento della Veedol scompone la macchina. Alla Bit-Kurve le ruote destre non vanno sull'erba interna, e in uscita non va messa nessuna ruota nella ghiaia.",
+  "pit": {
+    "tempo_perso_s": null,
+    "limite_kmh": 50,
+    "lato_box": null,
+    "note": "Limite standard ACC di 50 km/h. L'ultima curva si percorre vicini al muretto dei box. Il lato dei box e il tempo perso non sono dati da nessuna fonte: da vedere e misurare in gioco.",
+    "fonte": "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  },
+  "traffico_multiclass": "Il rettilineo del traguardo e il tratto veloce dalla Bit-Kurve alla Veedol sono i posti giusti per farsi passare. I posti sbagliati sono la Mercedes-Arena, lenta e senza spazio, e la Schumacher-S, dove due macchine affiancate non ci stanno.",
+  "meteo_e_luce": {
+    "condizioni_tipiche": "Il Nuerburgring sta in collina nell'Eifel: clima fresco tutto l'anno, poco sole, e dislivello sensibile fra il rettilineo del traguardo e il punto piu' basso della pista.",
+    "sul_bagnato": null,
+    "punti_acqua": null,
+    "di_notte": null,
+    "al_tramonto": null
+  },
+  "gomme_e_freni_pista": "Nove curve su quindici girano a destra, quindi la gomma piu' caricata e' l'anteriore sinistro. Ma al Nuerburgring GP pesa soprattutto la trazione: molte curve sono lente (Castrol-S, Mercedes-Arena, Ford-Kurve, Dunlop-Kehre, Coca-Cola-Kurve), e sono le posteriori a soffrire le uscite pattinate. Le frenate pesanti sono tre: la T1 in discesa, la Dunlop-Kehre e la Veedol.",
+  "errore_del_principiante": "Frenare a occhio dove non ci sono riferimenti. La T1 in discesa, la Dunlop-Kehre e la Coca-Cola-Kurve non hanno cartelli chiari: chi non si costruisce i propri riferimenti sbaglia la frenata ogni giro in modo diverso. Il secondo errore e' la fretta sul gas nelle curve lente, che qui sono tante.",
+  "gt3_ref_lap_time": {
+    "valore": "1:54.5",
+    "contesto": "Passo di riferimento GT3 in hotlap su pista ottimale: Full Grip indica circa 1:53.8 per un pilota di vertice, 1:54.5 per un pilota veloce e 1:55.5 per un pilota esperto. Il giro di riferimento di Coach Dave con l'Aston Martin V8 Vantage GT3 e' 1:52.8, piu' veloce anche del livello di vertice di Full Grip. Il tempo e' un ordine di grandezza, da confermare con una misura presa dalle sessioni vere.",
+    "fonte": "https://www.fullgripmotorsport.com/academy/trackguides/nurburgring"
+  },
+  "gt3_fuel_per_lap_l": {
+    "valore": null,
+    "contesto": "Nessuna fonte affidabile pubblica il consumo per giro al Nuerburgring GP: dipende da vettura, mappa motore e passo. Va misurato dalle sessioni vere, non stimato.",
+    "fonte": null
+  },
+  "chicche": [
+    {
+      "testo": "Nel 2002 la vecchia chicane alla fine del rettilineo del traguardo e' stata sostituita dal tornante della T1, proprio per creare un punto di sorpasso. Nello stesso anno e' nata la Mercedes-Arena, sul terreno della vecchia pista di kart.",
+      "perche_interessa_al_pilota": "Spiega perche' la T1 e' il punto di sorpasso principale del giro, e perche' la Mercedes-Arena e' cosi' lenta e tortuosa rispetto al resto.",
+      "fonte": "https://en.wikipedia.org/wiki/N%C3%BCrburgring"
+    },
+    {
+      "testo": "Dal 2007 le curve 8 e 9 si chiamano Michael-Schumacher-S.",
+      "perche_interessa_al_pilota": "In guide e video piu' vecchi la stessa chicane si trova con un nome diverso.",
+      "fonte": "https://en.wikipedia.org/wiki/N%C3%BCrburgring"
+    },
+    {
+      "testo": "La Veedol-Schikane e' stata per un periodo la NGK-Schikane, prima di tornare al nome originale.",
+      "perche_interessa_al_pilota": "Alcune guide la chiamano ancora NGK: e' la stessa chicane, la T13-T14.",
+      "fonte": "https://de.wikipedia.org/wiki/N%C3%BCrburgring"
+    },
+    {
+      "testo": "La mappa qui sopra numera 16 curve, questa guida 15. La differenza e' nella Mercedes-Arena: la mappa ci conta quattro curve (dalla 2 alla 5), la guida tre. Da li' in poi il numero sulla mappa e' quello della guida piu' uno: la Schumacher-S e' la 9-10 sulla mappa e la 8-9 qui, l'ultima curva e' la 16 sulla mappa e la 15 qui.",
+      "perche_interessa_al_pilota": "Se leggi un numero sulla mappa e cerchi la curva nella guida, togline uno dopo l'Arena.",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Circuit_N%C3%BCrburgring-2013-GP.svg"
+    },
+    {
+      "testo": "I nomi delle curve al Nuerburgring sono degli sponsor e cambiano nel tempo. Questa guida usa quelli di Coach Dave, i piu' diffusi nella community ACC; la mappa porta quelli attuali: Castrol-S = RAVENOL-S, Mercedes-Arena = AMG-Arena, Ford-Kurve = PAGID Racing Kurve, Dunlop-Kehre = Goodyear Kehre, Kumho-Kurve = Xiaomi Kurve, Bit-Kurve = BILSTEIN-Kurve, Coca-Cola-Kurve = Hyundai N Kurve.",
+      "perche_interessa_al_pilota": "La stessa curva la senti chiamare in due modi diversi a seconda di guida, video o telecronaca: e' sempre lei.",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Circuit_N%C3%BCrburgring-2013-GP.svg"
+    }
+  ],
+  "fonti": [
+    "https://coachdaveacademy.com/tutorials/nurburgring-grand-prix-circuit-track-guide/",
+    "https://en.wikipedia.org/wiki/N%C3%BCrburgring",
+    "https://de.wikipedia.org/wiki/N%C3%BCrburgring",
+    "https://trackdaytickets.com/tracks/nurburgring",
+    "https://www.fullgripmotorsport.com/academy/trackguides/nurburgring",
+    "https://coachdaveacademy.com/acc-lap-times/",
+    "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/",
+    "https://commons.wikimedia.org/wiki/File:Circuit_N%C3%BCrburgring-2013-GP.svg"
+  ]
+}

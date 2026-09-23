@@ -3,10 +3,11 @@
     "id": "barcelona_catalunya",
     "kind": "track",
     "role": "map",
-    "source_page": "https://commons.wikimedia.org/wiki/File:F1_circuits_2014-2018_-_Circuit_de_Barcelona-Catalunya_(version_2).svg",
+    "file": "frontend/public/assets/tracks/barcelona_catalunya_map.svg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_Catalunya_2007.svg",
     "license": "CC0",
-    "author": "Firkin",
-    "sha1": "367bc91b7a4adf392ba1776b2cfe0c657bb326a3"
+    "author": "AlexJ",
+    "sha1": "f22eef74509585407eaeb353400a726e3889f037"
   },
   {
     "id": "brands_hatch",
@@ -95,10 +96,11 @@
     "id": "monza",
     "kind": "track",
     "role": "map",
-    "source_page": "https://commons.wikimedia.org/wiki/File:Monza_track_map.svg",
-    "license": "CC BY-SA 3.0",
-    "author": "Will Pittenger",
-    "sha1": "050c7e28d3d84205e4571156af1931db89d63185"
+    "file": "frontend/public/assets/tracks/monza_map.svg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Monza-2021.svg",
+    "license": "CC BY-SA 4.0",
+    "author": "Anthony Alessio Tralongo",
+    "sha1": "abb29fa72ffda53ffac9aecc1fd734be6cd6dc50"
   },
   {
     "id": "mount_panorama",
@@ -113,10 +115,11 @@
     "id": "nurburgring_gp",
     "kind": "track",
     "role": "map",
-    "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_N%C3%BCrburgring-1995-GP.svg",
+    "file": "frontend/public/assets/tracks/nurburgring_gp_map.svg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_N%C3%BCrburgring-2013-GP.svg",
     "license": "CC BY-SA 3.0",
     "author": "Pitlane02",
-    "sha1": "0ab78b7c8459a232e59a59a173d0992362a51ac7"
+    "sha1": "44411503f6fbac7fcd394c81b3387a01a2f1f73f"
   },
   {
     "id": "nurburgring_nordschleife",
@@ -158,10 +161,11 @@
     "id": "silverstone",
     "kind": "track",
     "role": "map",
-    "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_Silverstone_2011.svg",
-    "license": "CC0",
-    "author": "AlexJ",
-    "sha1": "9461164651087efeb9374187b5e9ecd08de3a835"
+    "file": "frontend/public/assets/tracks/silverstone_map.png",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Silverstone_Circuit_2020.png",
+    "license": "CC BY-SA 4.0",
+    "author": "Antoine266",
+    "sha1": null
   },
   {
     "id": "snetterton",

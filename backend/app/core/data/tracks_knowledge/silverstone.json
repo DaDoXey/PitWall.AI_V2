@@ -1,0 +1,737 @@
+{
+  "id": "silverstone",
+  "verifica_catalogo": {
+    "lunghezza_confermata": true,
+    "curve_confermate": true,
+    "fonte_lunghezza": "https://en.wikipedia.org/wiki/Silverstone_Circuit",
+    "note": "Catalogo e fonti concordano: 5,891 km e 18 curve per il circuito Arena Grand Prix, in uso dal 2011. La numerazione e' quella attuale, con la T1 all'Abbey: Coach Dave e Driver61 la usano, Full Grip conta ancora dalla Copse come prima del 2011 e non e' stata seguita. I tre settori qui sotto sono una divisione descrittiva, non i settori di cronometraggio di ACC."
+  },
+  "senso_marcia": "orario",
+  "dislivello_m": null,
+  "rettilineo_piu_lungo_m": 770,
+  "variante_acc": "ACC riproduce il circuito Arena Grand Prix, in uso dal 2011: 5,891 km e 18 curve, traguardo fra Club e Abbey. Il riasfaltamento totale del giugno 2019 non e' stato verificato in gioco.",
+  "fonti_campi_pista": {
+    "senso_marcia": {
+      "fonte": "https://www.24hseries.com/circuits/silverstone",
+      "nota": null
+    },
+    "dislivello_m": {
+      "fonte": null,
+      "nota": "Nessuna fonte seria lo pubblica: il circuito e' un ex aeroporto, quasi pianeggiante."
+    },
+    "rettilineo_piu_lungo_m": {
+      "fonte": "https://www.silverstone.co.uk/news/formula-1-70-facts-70-years-silverstone",
+      "nota": "Sito ufficiale del circuito: \u00abLongest straight: Hangar Straight \u2013 770 metres\u00bb."
+    },
+    "variante_acc": {
+      "fonte": "https://en.wikipedia.org/wiki/Silverstone_Circuit",
+      "nota": null
+    }
+  },
+  "settori": [
+    {
+      "n": 1,
+      "carattere": "Dal traguardo all'Aintree: Abbey e Farm veloci, poi Village e la Loop, le due curve piu' lente del giro, e l'Aintree in pieno verso il Wellington Straight.",
+      "cosa_decide": "L'uscita della Loop, che vale per tutto il Wellington Straight.",
+      "errore_costoso": "Entrare troppo forte a Village: si perde la Loop e con lei il rettilineo."
+    },
+    {
+      "n": 2,
+      "carattere": "Brooklands e Luffield, la Woodcote, poi il tratto veloce: Copse e la sequenza Maggotts-Becketts-Chapel.",
+      "cosa_decide": "Il ritmo nelle esse di Maggotts-Becketts e l'uscita della Becketts destra, che comanda l'Hangar Straight.",
+      "errore_costoso": "Inseguire la prima curva delle esse invece dell'ultima: il tempo si perde tutto sull'Hangar Straight."
+    },
+    {
+      "n": 3,
+      "carattere": "L'Hangar Straight, la staccata della Stowe e il finale Vale-Club verso il traguardo.",
+      "cosa_decide": "La staccata della Stowe e l'uscita della Club verso il traguardo.",
+      "errore_costoso": "Arrivare lunghi alla Vale: la chicane finale si perde tutta insieme, e con lei il rettilineo del traguardo."
+    }
+  ],
+  "curve": [
+    {
+      "n": 1,
+      "nome": "Abbey",
+      "direzione": "destra",
+      "tipo": "veloce",
+      "marcia_indicativa": "5a",
+      "riferimento_frenata": "Non e' una staccata vera: in quinta, si alza progressivamente il piede (o si da' un tocco di freno) fra il cartello dei 100 m e quello dei 50 m, dove a sinistra finisce l'erba e comincia la strada di servizio. Li' si gira.",
+      "insidia": "L'apice e' nascosto e c'e' un dosso proprio li'. Le ruote interne vanno sulle salsicce arancioni, quelle esterne devono restare dentro la linea bianca: chi e' troppo avido esce dai limiti e si vede cancellare il giro.",
+      "costo_errore": "Medio. Non si perde molto tempo, ma si rischia il giro cancellato, e un'uscita larga compromette la Farm e la staccata di Village.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Curva veloce a destra: carico laterale sull'anteriore sinistro. Sterzo morbido per non strisciare l'anteriore."
+      },
+      "freni": {
+        "stress": "basso",
+        "note": "Al massimo un tocco: e' soprattutto un rilascio."
+      },
+      "track_limits": {
+        "rischio": "alto",
+        "note": "Ruote esterne dentro la linea bianca in uscita: e' il primo punto del giro in cui si perde il tempo per i track limits."
+      },
+      "differenza_gara_qualifica": "In qualifica si porta piu' velocita' e si rischia di piu' con la linea bianca. In gara, con il pieno, conviene un rilascio un filo piu' lungo: uscire larghi qui significa arrivare storti alla staccata di Village, dove si difende.",
+      "progressione": {
+        "prendi_il_giro": "Alza il piede al cartello dei 100 m, gira quando vedi la strada di servizio a sinistra e tieni le ruote esterne ben dentro la linea bianca.",
+        "guadagni": "Riduci il rilascio a un accenno e porta l'apice piu' tardi, con le ruote interne sulle salsicce arancioni.",
+        "al_limite": "Solo un tocco di gas in meno fra i 100 e i 50 m, sterzo dolcissimo per non strisciare l'anteriore, e uscita che sfiora la linea bianca senza superarla."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 2,
+      "nome": "Farm",
+      "direzione": "sinistra",
+      "tipo": "veloce",
+      "marcia_indicativa": "5a",
+      "riferimento_frenata": "Nessuna frenata: e' in pieno.",
+      "insidia": "Allargare in uscita. Bisogna restare stretti a sinistra per aprire l'ingresso di Village, la prima vera staccata del giro.",
+      "costo_errore": "Basso in se', ma un'uscita larga si paga subito nella staccata di Village.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Curva a sinistra in pieno: carico sull'anteriore destro, breve."
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica: e' in pieno. In gara, al primo giro, qui ci si mette gia' in fila per Village.",
+      "progressione": {
+        "prendi_il_giro": "Tieni il piede giu' e resta a sinistra: la curva serve a preparare Village, non a guadagnare tempo.",
+        "guadagni": "Sterzo piu' morbido possibile, per non togliere velocita' all'anteriore prima della staccata.",
+        "al_limite": "Traiettoria che resta attaccata a sinistra fino al punto di frenata di Village, senza mai sollevare il piede."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 3,
+      "nome": "Village",
+      "direzione": "destra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Tenendosi a sinistra, cartello dei 100 m: frenata forte e scalata dalla quinta alla seconda. Dal cartello dei 50 m si comincia a rilasciare il freno mentre si gira (trail braking).",
+      "insidia": "La curva invita a entrare veloci e poi si chiude verso l'apice. Non va squadrata: poco prima dell'apice si e' gia' fuori dal freno e con un filo di gas, per far girare la macchina senza perdere slancio. Non allargare in uscita: bisogna tornare a destra per la Loop.",
+      "costo_errore": "Alto. Arrivare lunghi rovina anche la Loop, e quindi l'uscita sul Wellington Straight.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "E' la prima staccata vera del giro e il primo punto di sorpasso: all'interno destro, dopo aver preso la scia in uscita dall'Abbey.",
+        "come_ci_si_difende": "Chiudere l'interno prima della frenata. Chi difende pero' esce male, e alla Loop chi attacca puo' incrociare."
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Curva a destra con frenata in appoggio: anteriore sinistro caricato in frenata e in percorrenza."
+      },
+      "freni": {
+        "stress": "medio-alto",
+        "note": "Prima staccata pesante del giro, dalla quinta alla seconda."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Si puo' usare tutto il cordolo, non la salsiccia."
+      },
+      "differenza_gara_qualifica": "In qualifica si frena al limite e si porta velocita' all'apice. In gara, soprattutto al primo giro, e' un imbuto: meglio un riferimento un metro prima e un'uscita pulita per la Loop.",
+      "progressione": {
+        "prendi_il_giro": "Frena al cartello dei 100 m in linea retta, scala con calma in seconda e pensa solo a non allargare in uscita.",
+        "guadagni": "Comincia il trail braking dal cartello dei 50 m e anticipa il gas di un soffio prima dell'apice, per far ruotare la macchina.",
+        "al_limite": "Frenata al limite con rilascio progressivo fino all'apice, gia' leggermente sul gas prima dell'apice, e uscita tenuta stretta per preparare la Loop."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 4,
+      "nome": "The Loop",
+      "direzione": "sinistra",
+      "tipo": "lenta",
+      "marcia_indicativa": "1a",
+      "riferimento_frenata": "La chiazza di erba sintetica verde all'interno e' insieme il punto di frenata e quello di inserimento. Quando ci si arriva di fianco si frena e si scala in prima.",
+      "insidia": "E' la curva piu' lenta del circuito. Serve trail braking per far girare l'anteriore. Bisogna girare prima di quanto sembri e prendere il cordolo interno. Chi manca l'apice va in sottosterzo sull'erba mentre cerca il gas.",
+      "costo_errore": "Alto. L'uscita della Loop vale per tutto l'Aintree e il Wellington Straight.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "Incrocio: se ti hanno passato a Village, entra piu' largo e piu' lento, e ripassa con un'uscita migliore verso l'Aintree.",
+        "come_ci_si_difende": "Non sacrificare l'uscita per tenere l'interno: chi esce meglio ti riprende sul Wellington Straight."
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Curva lenta a sinistra: carico sull'anteriore destro in ingresso, poi il lavoro passa alle posteriori in trazione."
+      },
+      "freni": {
+        "stress": "medio",
+        "note": "Si arriva da Village, a velocita' gia' bassa."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "Oltre il cordolo c'e' ancora asfalto, ma usarlo distrugge l'uscita."
+      },
+      "differenza_gara_qualifica": "In qualifica si cerca il gas il prima possibile. In gara conta la trazione ripetuta: un leggero shift anticipato in seconda salva le gomme posteriori.",
+      "progressione": {
+        "prendi_il_giro": "Frena di fianco all'erba sintetica, metti la prima, gira presto e apri il gas solo quando la macchina e' dritta.",
+        "guadagni": "Trail braking piu' deciso per far ruotare l'anteriore, cordolo interno preso, e gas appena la trazione lo permette.",
+        "al_limite": "Apice preso al centimetro, gas anticipato al limite della trazione, sterzo che si apre mentre si accelera per usare tutta l'uscita, e se serve shift anticipato in seconda."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 5,
+      "nome": "Aintree",
+      "direzione": "sinistra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna frenata: e' in pieno, in accelerazione dalla Loop.",
+      "insidia": "Allargare in uscita e superare i limiti. Si gira presto, si taglia il cordolo interno e si apre lo sterzo con dolcezza.",
+      "costo_errore": "Basso in tempo, ma il giro puo' essere cancellato.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Curva in pieno a sinistra: carico sull'anteriore destro mentre le posteriori spingono."
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "L'uscita e' il punto sorvegliato: si puo' usare il cordolo, non andare oltre."
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Tieni giu' il piede e resta dentro i limiti in uscita.",
+        "guadagni": "Gira un filo prima e usa tutto il cordolo interno per raddrizzare prima l'uscita sul Wellington Straight.",
+        "al_limite": "Traiettoria che taglia il cordolo interno e apre lo sterzo fino al bordo del cordolo di uscita, senza superarlo."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 6,
+      "nome": "Brooklands",
+      "direzione": "sinistra",
+      "tipo": "media",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Tenendosi a destra, si frena dopo il cartello dei 100 m e si comincia subito il trail braking mentre si gira.",
+      "insidia": "Si entra veloci e larghi, poi la curva si chiude. Con freno e sterzo insieme le scalate vanno dosate per tenere stabile il posteriore. L'apice e' molto tardivo (subito dopo la seconda piccola salsiccia arancione). Troppo gas all'apice fa pattinare: il carico laterale e' ancora alto.",
+      "costo_errore": "Alto. Allargare in uscita rende stretta la Luffield, e le due curve si perdono insieme.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "Staccata in fondo al Wellington Straight, all'interno sinistro dopo la scia.",
+        "come_ci_si_difende": "Chiudere l'interno. Chi difende pero' arriva alla Luffield sulla linea sbagliata."
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Frenata in appoggio a sinistra: anteriore destro caricato fino all'apice."
+      },
+      "freni": {
+        "stress": "alto",
+        "note": "Staccata in fondo al Wellington Straight, con frenata e sterzata sovrapposte."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "In uscita si puo' usare il cordolo; dietro c'e' erba sintetica e via di fuga."
+      },
+      "differenza_gara_qualifica": "In qualifica si porta piu' velocita' in ingresso. In gara ci si protegge l'interno, e conviene tenere la macchina stretta per non consegnare la Luffield.",
+      "progressione": {
+        "prendi_il_giro": "Frena dopo il cartello dei 100 m, metti la seconda e punta un apice tardivo, senza fretta sul gas.",
+        "guadagni": "Trail braking piu' lungo e scalate distese per tenere il posteriore calmo; tieni la macchina piu' stretta di quanto sembri.",
+        "al_limite": "Apice subito dopo la seconda salsiccia arancione, gas preso gia' all'apice senza pattinare, e uscita che va quasi dritta verso la Luffield."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 7,
+      "nome": "Luffield",
+      "direzione": "destra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "La strada interna che finisce nell'erba: dove finisce l'asfalto si da' un tocco di freno e si resta in seconda.",
+      "insidia": "E' una U lunga che si apre in uscita, e vuole pazienza. Si arriva vicini al cordolo, poi si lascia allargare un po' la macchina e si veleggia fino al terzo blocco arancione del cordolo interno. Li' si torna sul gas; al quarto blocco si e' in pieno. Chi apre il gas troppo presto allarga e spreca l'uscita.",
+      "costo_errore": "Alto. Porta sul vecchio rettilineo dei box e verso la Copse: un'uscita lenta si paga per tutto il rettilineo.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "Incrocio dopo la Brooklands: chi ha subito il sorpasso entra largo e prende un'uscita migliore.",
+        "come_ci_si_difende": "Tenere la linea interna fino al secondo apice senza allargare."
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Curva lunga a destra: carico prolungato sull'anteriore sinistro, che qui si scalda."
+      },
+      "freni": {
+        "stress": "basso",
+        "note": "Un tocco di freno, non una staccata."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "Il cordolo di uscita e' molto permissivo e si puo' usare anche l'erba sintetica verde."
+      },
+      "differenza_gara_qualifica": "In qualifica si cerca il doppio apice perfetto. In gara la priorita' e' non strisciare l'anteriore sinistro, perche' qui si consuma.",
+      "progressione": {
+        "prendi_il_giro": "Un tocco di freno a fine asfalto, seconda, e aspetta che la macchina si assesti prima di tornare sul gas.",
+        "guadagni": "Lascia allargare a centro curva e usa il terzo blocco arancione come segnale per il gas.",
+        "al_limite": "Pieno gas al quarto blocco arancione con lo sterzo gia' in apertura, e uscita che usa tutto il cordolo e l'erba sintetica."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 8,
+      "nome": "Woodcote",
+      "direzione": "destra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna frenata: e' in pieno.",
+      "insidia": "Sembra una curva da niente, ma qualcosa si guadagna. Si taglia il cordolo interno per accorciare la strada e si esce sul cordolo di sinistra. Chi sbaglia linea e alza il piede in uscita si gira verso il muretto interno.",
+      "costo_errore": "Basso se si resta sul gas. Molto alto se si alza il piede in uscita.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": null
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "In uscita c'e' asfalto di fuga a sinistra."
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica. Sul bagnato va rispettata: qui si sbaglia facilmente.",
+      "progressione": {
+        "prendi_il_giro": "Resta sul gas e segui la curva senza tagliare troppo.",
+        "guadagni": "Taglia il cordolo interno e lascia correre la macchina fino al cordolo di sinistra.",
+        "al_limite": "Traiettoria piu' corta possibile, piede mai sollevato, e uscita che usa tutto il cordolo di sinistra."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 9,
+      "nome": "Copse",
+      "direzione": "destra",
+      "tipo": "veloce",
+      "marcia_indicativa": "4a",
+      "riferimento_frenata": "Tenendosi a sinistra, sul cordolo a strisce per aprire la curva. Subito dopo il cartello dei 100 m c'e' una chiazza d'erba piu' chiara: li' si da' un colpo di freno e si scala in quarta prima di girare. Si inserisce lo sterzo al cartello dei 50 m.",
+      "insidia": "L'apice e' completamente cieco: il muretto della vecchia uscita dei box copre la visuale. L'apice va fra le due salsicce arancioni interne; si veleggia fino all'apice, poi gas. In uscita la macchina tende ad allargare in sottosterzo.",
+      "costo_errore": "Alto. Apre il tratto piu' veloce del circuito, e dopo c'e' un rettilineo corto dove un'uscita lenta costa molto.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": "Chi e' davanti tiene la linea: affiancarsi qui e' pericoloso, l'apice e' cieco e si esce veloci."
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Curva velocissima a destra: carico forte sull'anteriore sinistro."
+      },
+      "freni": {
+        "stress": "medio",
+        "note": "Un colpo di freno deciso a velocita' molto alta."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Ruota interna dentro la linea bianca continua in uscita: cosi' non si superano i limiti."
+      },
+      "differenza_gara_qualifica": "In qualifica il colpo di freno diventa piu' corto. In gara, con il pieno, il posteriore e' meno piantato: meglio un frenata leggermente piu' lunga che un'uscita sul cordolo.",
+      "progressione": {
+        "prendi_il_giro": "Colpo di freno alla chiazza d'erba chiara dopo il cartello dei 100 m, quarta, e gira al cartello dei 50 m.",
+        "guadagni": "Accorcia il colpo di freno e veleggia fino all'apice fra le due salsicce.",
+        "al_limite": "Frenata ridotta al minimo, sterzata piena al cartello dei 50 m sull'apice cieco, e gas appena all'apice controllando il sottosterzo in uscita."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 10,
+      "nome": "Maggotts",
+      "direzione": "sinistra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna frenata: si entra in pieno.",
+      "insidia": "E' l'inizio della sequenza piu' famosa del circuito. Si arriva a destra e si gira presto, guardando lontano per anticipare le curve che seguono. Questa sinistra serve ad aprire la destra successiva.",
+      "costo_errore": "Medio. Un errore qui si porta dietro tutta la sequenza fino alla Chapel.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": null
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "Si puo' usare tutto il cordolo a sinistra, non la salsiccia."
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Entra in pieno, gira presto e pensa gia' alla curva dopo.",
+        "guadagni": "Sterzo piu' dolce possibile, per non scomporre la macchina all'inizio della sequenza.",
+        "al_limite": "Traiettoria tesa sul cordolo di sinistra, che lascia la macchina dritta e gia' in posizione per la destra successiva."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 11,
+      "nome": "Maggotts",
+      "direzione": "destra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Passato il cordolo dell'apice della sinistra precedente, si frena e si scala di una marcia.",
+      "insidia": "Si taglia il cordolo interno e si torna subito in pieno gas all'apice. In uscita bisogna trovarsi a centro pista per l'ingresso della sinistra di Becketts.",
+      "costo_errore": "Medio. La posizione sbagliata in uscita rovina la Becketts.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": null
+      },
+      "freni": {
+        "stress": "basso",
+        "note": "Una frenata breve in mezzo alla sequenza."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "L'apice e' segnato dalle piccole protuberanze rosse: il cordolo normale si usa, le protuberanze no."
+      },
+      "differenza_gara_qualifica": "In qualifica si riduce la frenata al minimo. In gara, con la macchina piu' pesante, vale la pena frenare un attimo di piu' e restare in linea.",
+      "progressione": {
+        "prendi_il_giro": "Frena dopo l'apice della sinistra, scala una marcia e punta il cordolo interno.",
+        "guadagni": "Gas pieno all'apice, con la macchina che esce a centro pista.",
+        "al_limite": "Frenata ridotta a un tocco, cordolo interno tagliato e gas pieno all'apice, uscita esattamente a centro pista per la Becketts."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 12,
+      "nome": "Becketts",
+      "direzione": "sinistra",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Quando finisce l'erba sintetica verde all'interno si frena di nuovo e si scala in terza.",
+      "insidia": "L'apice e' a meta' curva, sopra le due salsicce arancioni. Qui si sacrifica un po' di velocita' per preparare l'uscita della destra successiva: e' la curva da non inseguire.",
+      "costo_errore": "Medio in se', alto per l'effetto sulla curva dopo.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": null
+      },
+      "freni": {
+        "stress": "medio",
+        "note": "Frenata in cambio di direzione, a velocita' alta."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "Uguale nell'impostazione: in qualifica si limano i metri di frenata, in gara si pensa solo all'uscita della curva dopo.",
+      "progressione": {
+        "prendi_il_giro": "Frena alla fine dell'erba sintetica, terza, e rinuncia a un po' di velocita' qui.",
+        "guadagni": "Porta l'apice a meta' curva sopra le salsicce, senza allargare.",
+        "al_limite": "Velocita' di percorrenza calibrata per mettere la macchina esattamente sulla linea della destra successiva."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 13,
+      "nome": "Becketts",
+      "direzione": "destra",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Si arriva in rilascio, senza vera frenata.",
+      "insidia": "E' la curva che conta di piu' nella sequenza: tutto e' per l'uscita. Si arriva vicini alla prima parte del cordolo, due ruote in pista e due sul cordolo, e si apre subito il gas. All'ultimo blocco arancione del cordolo si e' in pieno.",
+      "costo_errore": "Molto alto. Da qui si esce verso la Chapel e l'Hangar Straight, il rettilineo piu' lungo del circuito.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": null
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica: e' la curva che fa il tempo sull'Hangar Straight.",
+      "progressione": {
+        "prendi_il_giro": "Veleggia in ingresso, metti due ruote sul cordolo e apri il gas con calma.",
+        "guadagni": "Anticipa il gas: devi essere in pieno all'ultimo blocco arancione del cordolo.",
+        "al_limite": "Gas aperto subito sul cordolo e macchina lasciata correre verso la Chapel: e' qui che si guadagna sull'Hangar Straight."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 14,
+      "nome": "Chapel",
+      "direzione": "sinistra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna frenata: si esce dalla Becketts in pieno e si attraversa la Chapel.",
+      "insidia": "Il cordolo dell'apice e' aggressivo. In uscita si puo' usare il cordolo e l'erba sintetica.",
+      "costo_errore": "Alto: e' l'ingresso dell'Hangar Straight.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": null
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "In uscita si usano cordolo ed erba sintetica, ma senza esagerare."
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Tieni il piede giu' e lascia correre la macchina verso l'esterno.",
+        "guadagni": "Apri lo sterzo il prima possibile e usa tutto il cordolo di uscita.",
+        "al_limite": "Uscita che sfrutta cordolo ed erba sintetica, senza mai scomporre la macchina sul cordolo aggressivo dell'apice."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 15,
+      "nome": "Stowe",
+      "direzione": "destra",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Tenendosi a sinistra, si frena dopo il cartello dei 100 m. La pista gira leggermente nella zona di frenata: si frena un po' di traverso. La frenata va finita presto, con scalate ben cadenzate.",
+      "insidia": "Curva lunga a destra su un leggero dosso, con visuale difficile. Si gira appena si rallenta e si raggiunge il cordolo interno prima del primo blocco arancione, gia' tornando sul gas. Dopo l'ultimo blocco arancione si e' in pieno, e si usa tutta la pista in uscita tenendo due ruote dentro la linea bianca.",
+      "costo_errore": "Alto. La velocita' portata fin qui serve per la Vale.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "E' il punto di sorpasso migliore del circuito: scia sull'Hangar Straight e staccata all'interno.",
+        "come_ci_si_difende": "Chiudere l'interno prima della frenata. La curva e' lunga: chi difende all'interno esce piu' lento e si espone alla Vale."
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Curva lunga a destra dopo una staccata: anteriore sinistro caricato a lungo."
+      },
+      "freni": {
+        "stress": "alto",
+        "note": "Staccata in fondo al rettilineo piu' lungo del circuito."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Due ruote dentro la linea bianca in uscita. L'erba sintetica e' scivolosa, soprattutto sul bagnato."
+      },
+      "differenza_gara_qualifica": "In qualifica si stacca al limite e si porta velocita' fino a Club. In gara e' il punto dove si attacca e si viene attaccati: conviene preparare la staccata gia' dall'uscita della Becketts.",
+      "progressione": {
+        "prendi_il_giro": "Frena dopo il cartello dei 100 m restando a sinistra, terza, e aspetta il cordolo prima di spingere.",
+        "guadagni": "Finisci la frenata prima e anticipa l'inserimento, puntando il cordolo prima del primo blocco arancione.",
+        "al_limite": "Frenata leggermente di traverso al limite, gas gia' all'apice, e uscita che usa tutta la pista fino alla linea bianca."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 16,
+      "nome": "Vale",
+      "direzione": "sinistra",
+      "tipo": "lenta",
+      "marcia_indicativa": "1a",
+      "riferimento_frenata": "Tenendosi a destra, si frena poco prima del cartello dei 100 m. Frenata forte e scalata rapida dalla quarta alla prima. La frenata e' in discesa e un po' sconnessa.",
+      "insidia": "Si gira presto e si sta attaccati al cordolo interno, non alla salsiccia. Dopo l'apice la macchina resta stretta per aprire la destra successiva: la sinistra si sacrifica per la destra.",
+      "costo_errore": "Alto. Arrivare lunghi qui compromette tutta l'uscita sul rettilineo del traguardo.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "Staccata all'interno sinistro dopo la Stowe, per chi ha preso la scia in uscita dalla Stowe.",
+        "come_ci_si_difende": "Chiudere l'interno. La destra di Club che segue pero' premia chi esce meglio, non chi entra per primo."
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Staccata a sinistra: anteriore destro caricato in frenata."
+      },
+      "freni": {
+        "stress": "alto",
+        "note": "La frenata piu' dura del giro rispetto alla velocita' d'arrivo, in discesa e sul sconnesso."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "Non usare la salsiccia interna."
+      },
+      "differenza_gara_qualifica": "In qualifica si frena al limite. In gara, con il pieno e i freni caldi, la discesa allunga lo spazio di frenata: meglio anticipare di qualche metro.",
+      "progressione": {
+        "prendi_il_giro": "Frena prima del cartello dei 100 m in linea retta, scala in prima e gira presto.",
+        "guadagni": "Scalate piu' rapide e cordolo interno preso piu' vicino, senza la salsiccia.",
+        "al_limite": "Frenata al limite sul sconnesso senza bloccare, apice preso stretto e macchina gia' posizionata per la destra successiva."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 17,
+      "nome": "Club",
+      "direzione": "destra",
+      "tipo": "lenta",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna vera frenata: prima della curva si alza leggermente il piede per far entrare l'anteriore.",
+      "insidia": "Poi si torna sul gas il prima possibile, stando attenti al pattinamento: la macchina lotta per la trazione. L'apice e' dove il cemento verde incontra il cordolo. Si punta il cordolo di uscita e lo si usa per aprire l'ingresso dell'ultima curva. Non bisogna cadere sull'erba sintetica: la pista continua a girare, e tornare in pista e' difficile.",
+      "costo_errore": "Alto: e' l'inizio dell'uscita sul rettilineo del traguardo.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": null
+      },
+      "freni": {
+        "stress": "basso",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Oltre il cordolo di uscita c'e' erba sintetica, facile da prendere."
+      },
+      "differenza_gara_qualifica": "In gara la trazione conta piu' dell'aggressivita': un'uscita pattinata qui costa sul rettilineo e consuma le posteriori.",
+      "progressione": {
+        "prendi_il_giro": "Alza appena il piede, fai girare la macchina e apri il gas con dolcezza.",
+        "guadagni": "Anticipa il gas dosandolo per non pattinare e usa il cordolo di uscita.",
+        "al_limite": "Gas al limite della trazione subito dopo l'apice, e uscita sul cordolo che imposta gia' la linea dell'ultima curva."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 18,
+      "nome": "Club",
+      "direzione": "destra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna frenata: e' in pieno.",
+      "insidia": "Piu' difficile di quanto sembri. Troppo sterzo o troppo cordolo interno fanno scappare il posteriore; troppo poco sterzo e si finisce la strada in uscita, superando i limiti appena prima del traguardo. Chi esce troppo presto e alza il piede si gira verso il muretto dei box.",
+      "costo_errore": "Medio in tempo; alto se costa il giro cancellato o il muro.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Curva in accelerazione a destra: anteriore sinistro al limite dell'aderenza."
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "alto",
+        "note": "Superare i limiti in uscita, appena prima del traguardo, e' l'errore classico di fine giro."
+      },
+      "differenza_gara_qualifica": "In qualifica si porta la macchina al limite dell'anteriore. In gara, con il pieno, il posteriore e' piu' nervoso: meglio un filo di sterzo in meno sul cordolo interno.",
+      "progressione": {
+        "prendi_il_giro": "Tieni il piede giu' con uno sterzo moderato e resta lontano dal bordo in uscita.",
+        "guadagni": "Guida la macchina al limite dell'anteriore, senza caricare il cordolo interno.",
+        "al_limite": "Sterzo dolcissimo, gas pieno, e uscita che sfiora il limite senza superarlo: si chiude il giro senza regalare niente."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    }
+  ],
+  "track_limits_generale": "Silverstone si gioca sulla linea bianca: le uscite di Abbey, Aintree, Copse, Stowe e dell'ultima curva sono i punti in cui il giro viene cancellato. Le ruote esterne devono restare dentro la linea, e il cordolo si usa solo fin li'. Alla Luffield, invece, l'uscita e' molto permissiva e si puo' usare anche l'erba sintetica. Le salsicce interne di Village, Loop, Vale e Club non si toccano.",
+  "pit": {
+    "tempo_perso_s": null,
+    "limite_kmh": 50,
+    "lato_box": null,
+    "note": "Limite standard ACC di 50 km/h. I box sono nella Silverstone Wing, sul rettilineo del traguardo fra la Club e l'Abbey. Il lato dei box e il tempo perso non sono dati da nessuna fonte: da vedere e misurare in gioco.",
+    "fonte": "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  },
+  "traffico_multiclass": "I due rettilinei lunghi, il Wellington e l'Hangar, sono i posti giusti per farsi passare o passare senza perdere tempo. I posti sbagliati sono la sequenza Maggotts-Becketts-Chapel, dove non c'e' spazio per due traiettorie e si perde tutto l'Hangar Straight, e la chicane Vale-Club, dove si esce lenti sul traguardo.",
+  "meteo_e_luce": {
+    "condizioni_tipiche": null,
+    "sul_bagnato": "L'erba sintetica in uscita dalla Stowe e dalla Club diventa scivolosissima: sul bagnato si resta sul cordolo. La frenata della Vale, in discesa e sconnessa, si allunga molto. Alla Woodcote si sbaglia facilmente la linea e ci si gira.",
+    "punti_acqua": null,
+    "di_notte": null,
+    "al_tramonto": null
+  },
+  "gomme_e_freni_pista": "Silverstone e' una pista da gomme piu' che da freni. Dieci curve su diciotto girano a destra, e le piu' veloci (Abbey, Copse, Stowe, Club, la Luffield lunga) caricano l'anteriore sinistro, che e' la gomma da tenere d'occhio nelle temperature e nelle pressioni. Le frenate pesanti sono quattro (Village, Brooklands, Stowe, Vale), nessuna estrema come a Monza: i freni lavorano ma non sono il limite.",
+  "errore_del_principiante": "Guidare ogni curva per conto suo. A Silverstone quasi ogni curva ne prepara un'altra: Village prepara la Loop, la Brooklands prepara la Luffield, e in Maggotts-Becketts si sacrifica una curva per la successiva, fino all'uscita verso l'Hangar Straight. Chi insegue l'apice perfetto di ogni singola curva perde il tempo sui rettilinei.",
+  "gt3_ref_lap_time": {
+    "valore": "1:58.0",
+    "contesto": "Passo di riferimento GT3 in hotlap su pista ottimale: Full Grip indica circa 1:57.3 per un pilota di vertice, 1:58.0 per un pilota veloce e 1:59.0 per un pilota esperto. Attenzione: la stessa guida conta le curve dalla Copse e contiene errori sul senso di alcune curve. Il tempo e' un ordine di grandezza, da confermare con una misura presa dalle sessioni vere.",
+    "fonte": "https://www.fullgripmotorsport.com/academy/trackguides/silverstone"
+  },
+  "gt3_fuel_per_lap_l": {
+    "valore": null,
+    "contesto": "Nessuna fonte affidabile pubblica il consumo per giro a Silverstone: dipende da vettura, mappa motore e passo. Va misurato dalle sessioni vere, non stimato.",
+    "fonte": null
+  },
+  "chicche": [
+    {
+      "testo": "Silverstone e' nata su un aeroporto militare della Seconda guerra mondiale, la RAF Silverstone. Le prime gare si correvano sulle piste di decollo.",
+      "perche_interessa_al_pilota": "Spiega perche' e' cosi' piatta e aperta: pochi riferimenti naturali, quindi si guida sui cartelli, sui cordoli e sulle chiazze d'erba sintetica.",
+      "fonte": "https://coachdaveacademy.com/tutorials/silverstone-track-guide/"
+    },
+    {
+      "testo": "Dal 2011 i box e il traguardo stanno nella Silverstone Wing, fra la Club e l'Abbey. Per questo oggi la T1 e' l'Abbey; prima si contava dalla Copse.",
+      "perche_interessa_al_pilota": "Molte guide e video contano ancora le curve dalla Copse: se una T1 non torna, e' quasi sempre per questo.",
+      "fonte": "https://en.wikipedia.org/wiki/Silverstone_Circuit"
+    },
+    {
+      "testo": "L'Hangar Straight, 770 m, e' il rettilineo piu' lungo del circuito.",
+      "perche_interessa_al_pilota": "E' il motivo per cui l'uscita della Becketts e la staccata della Stowe contano piu' di ogni altro punto del giro.",
+      "fonte": "https://www.silverstone.co.uk/news/formula-1-70-facts-70-years-silverstone"
+    }
+  ],
+  "fonti": [
+    "https://coachdaveacademy.com/tutorials/silverstone-track-guide/",
+    "https://driver61.com/circuit-guide/silverstone-gp/",
+    "https://en.wikipedia.org/wiki/Silverstone_Circuit",
+    "https://www.silverstone.co.uk/news/formula-1-70-facts-70-years-silverstone",
+    "https://www.24hseries.com/circuits/silverstone",
+    "https://www.fullgripmotorsport.com/academy/trackguides/silverstone",
+    "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  ]
+}

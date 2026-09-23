@@ -26,7 +26,9 @@
         "commons_category": "Category:Maps of Autodromo Nazionale Monza",
         "preferred_format": "svg",
         "license_expected": "CC BY-SA (da confermare)",
-        "status": "da_verificare"
+        "status": "verificata",
+        "commons_file": "Monza-2021.svg",
+        "verificata_nota": "layout GP 2000-oggi, scelto nel provino del 23/09/2026"
       },
       "photo": {
         "commons_query": "Autodromo Nazionale Monza",
@@ -48,7 +50,7 @@
     "dlc_pack": null,
     "length_km": 7.004,
     "corners": 19,
-    "corners_confidence": "media",
+    "corners_confidence": "alta",
     "grid_size": 82,
     "pole_side": "destra",
     "lap_record_real": "2:18.578",
@@ -127,7 +129,7 @@
     "dlc_pack": null,
     "length_km": 5.148,
     "corners": 15,
-    "corners_confidence": "media",
+    "corners_confidence": "alta",
     "grid_size": 30,
     "pole_side": "destra",
     "lap_record_real": "1:56.385",
@@ -143,7 +145,9 @@
         "commons_category": "Category:Maps of Nürburgring",
         "preferred_format": "svg",
         "license_expected": "CC BY-SA (da confermare)",
-        "status": "da_verificare"
+        "status": "verificata",
+        "commons_file": "Circuit Nürburgring-2013-GP.svg",
+        "verificata_nota": "GP-Strecke con Mercedes-Arena 2002-oggi, scelto nel provino del 23/09/2026"
       },
       "photo": {
         "commons_query": "Nurburgring Grand Prix circuit",
@@ -165,8 +169,8 @@
     "dlc_pack": null,
     "length_km": 4.655,
     "corners": 16,
-    "corners_confidence": "da_verificare",
-    "corners_note": "ACC usa il layout con chicane finale; il numero di curve dipende dal layout esatto. DA VERIFICARE.",
+    "corners_confidence": "alta",
+    "corners_note": "ACC usa il Grand Prix Circuit 2007-2020, con la chicane finale: 4,655 km e 16 curve. Confermato il 23/09/2026 da Coach Dave, da Wikipedia e dalla mappa verificata.",
     "grid_size": 29,
     "pole_side": "destra",
     "lap_record_real": "1:43.667",
@@ -182,7 +186,9 @@
         "commons_category": "Category:Maps of Circuit de Barcelona-Catalunya",
         "preferred_format": "svg",
         "license_expected": "CC BY-SA (da confermare)",
-        "status": "da_verificare"
+        "status": "verificata",
+        "commons_file": "Circuit Catalunya 2007.svg",
+        "verificata_nota": "layout GP 2007-2020 con chicane finale, scelto nel provino del 23/09/2026"
       },
       "photo": {
         "commons_query": "Circuit de Barcelona-Catalunya",
@@ -357,7 +363,7 @@
     "dlc_pack": null,
     "length_km": 5.891,
     "corners": 18,
-    "corners_confidence": "media",
+    "corners_confidence": "alta",
     "grid_size": 36,
     "pole_side": "destra",
     "lap_record_real": "1:56.637",
@@ -366,14 +372,16 @@
     "fuel_status": "da_misurare",
     "downforce_level": "high",
     "setup_focus_it": "Serve appoggio ad alta velocità per il complesso Maggots-Becketts-Chapel. Sacrifica un po' di punta per la stabilità in cambio di direzione rapido.",
-    "description_it": "Casa del motorsport britannico, con alcune delle curve più famose al mondo. Il complesso Maggots-Becketts-Chapel mette alla prova la capacità dell'auto di cambiare direzione a velocità altissima. Nel finale il tornante di Luffield, dopo Brooklands, chiede invece trazione pulita.",
+    "description_it": "Casa del motorsport britannico, con alcune delle curve più famose al mondo. Il complesso Maggots-Becketts-Chapel mette alla prova la capacità dell'auto di cambiare direzione a velocità altissima. A metà giro, la lunga Luffield dopo la Brooklands chiede invece trazione pulita.",
     "assets": {
       "map": {
         "commons_query": "Silverstone circuit map",
         "commons_category": "Category:Maps of Silverstone Circuit",
         "preferred_format": "svg",
         "license_expected": "CC BY-SA (da confermare)",
-        "status": "da_verificare"
+        "status": "verificata",
+        "commons_file": "Silverstone Circuit 2020.png",
+        "verificata_nota": "layout Arena GP 2011-oggi, scelto nel provino del 23/09/2026"
       },
       "photo": {
         "commons_query": "Silverstone Circuit",
@@ -436,7 +444,7 @@
     "dlc_pack": null,
     "length_km": 4.011,
     "corners": 10,
-    "corners_confidence": "media",
+    "corners_confidence": "alta",
     "grid_size": 34,
     "pole_side": "sinistra",
     "lap_record_real": "1:28.363",
@@ -476,7 +484,7 @@
     "dlc_pack": "2020 GT World Challenge Pack",
     "length_km": 4.909,
     "corners": 19,
-    "corners_confidence": "media",
+    "corners_confidence": "alta",
     "grid_size": 30,
     "pole_side": "sinistra",
     "lap_record_real": "1:40.513",

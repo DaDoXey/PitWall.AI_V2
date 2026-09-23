@@ -64,6 +64,54 @@
       "height": 706,
       "format": "png",
       "note": "scelto a occhio nel provino (candidato Claude Desktop)"
+    },
+    {
+      "id": "monza",
+      "titolo_file": "File:Monza-2021.svg",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/04/Monza-2021.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Monza-2021.svg",
+      "license": "CC BY-SA 4.0",
+      "author": "Anthony Alessio Tralongo",
+      "width": 512,
+      "height": 287,
+      "format": "svg",
+      "note": "scelto a occhio nel provino del 23/09/2026 (candidati del blocco 2, cercati dal terminale)"
+    },
+    {
+      "id": "silverstone",
+      "titolo_file": "File:Silverstone Circuit 2020.png",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Silverstone_Circuit_2020.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Silverstone_Circuit_2020.png",
+      "license": "CC BY-SA 4.0",
+      "author": "Antoine266",
+      "width": 1665,
+      "height": 1200,
+      "format": "png",
+      "note": "scelto a occhio nel provino del 23/09/2026 (candidati del blocco 2, cercati dal terminale)"
+    },
+    {
+      "id": "nurburgring_gp",
+      "titolo_file": "File:Circuit Nürburgring-2013-GP.svg",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/36/Circuit_N%C3%BCrburgring-2013-GP.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_N%C3%BCrburgring-2013-GP.svg",
+      "license": "CC BY-SA 3.0",
+      "author": "Pitlane02",
+      "width": 512,
+      "height": 473,
+      "format": "svg",
+      "note": "scelto a occhio nel provino del 23/09/2026 (candidati del blocco 2, cercati dal terminale)"
+    },
+    {
+      "id": "barcelona_catalunya",
+      "titolo_file": "File:Circuit Catalunya 2007.svg",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/e/e8/Circuit_Catalunya_2007.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_Catalunya_2007.svg",
+      "license": "CC0",
+      "author": "AlexJ",
+      "width": 800,
+      "height": 600,
+      "format": "svg",
+      "note": "scelto a occhio nel provino del 23/09/2026 (candidati del blocco 2, cercati dal terminale)"
     }
   ]
 }

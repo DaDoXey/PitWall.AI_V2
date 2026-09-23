@@ -6,14 +6,15 @@ Quel che si prova qui è la promessa fatta al pilota nella pagina Tracciati:
 * la lista dei 25 circuiti dice, per ognuno, se ha una **guida** e se il suo
   **layout è stato verificato** — sono le due bandierine su cui la UI decide
   cosa mostrare;
-* `mappa_verificata` è vero SOLO per i cinque layout guardati a occhio nel
-  provino del 07/09/2026, e per quei cinque il file esiste davvero a disco
+* `mappa_verificata` è vero SOLO per i layout guardati a occhio nei provini
+  (cinque il 07/09/2026, quattro il 23/09/2026), e per quelli il file esiste
+  davvero a disco
   (una bandierina verde su un file mancante sarebbe peggio del file mancante);
 * nessun layout non verificato è rimasto in `public/assets/tracks/`: la regola
   è «meglio nessuna mappa che una sbagliata», e finché il file sta lì prima o
   poi qualcuno lo mostra;
 * la guida si serve sulla sua rotta, con 404 pulito per i circuiti che non ce
-  l'hanno ancora (21 su 25), e ha la forma che la pagina si aspetta;
+  l'hanno ancora (17 su 25), e ha la forma che la pagina si aspetta;
 * le regole di contenuto già decise valgono per le guide a disco: numerazione
   senza buchi, nomi di curva mai inventati (assente = null, mai stringa vuota)
   e consigli di mestiere che dichiarano la propria confidence.
@@ -59,10 +60,11 @@ REPO = BACKEND.parent
 MAPPE_DIR = REPO / "frontend" / "public" / "assets" / "tracks"
 GUIDE_DIR = BACKEND / "app" / "core" / "data" / "tracks_knowledge"
 
-# I cinque layout scelti a occhio nel provino del 07/09/2026. Se un giorno il
-# provino ne approva altri, questa lista cresce INSIEME a tracks.json: il test
-# esiste proprio per non far divergere le due cose.
-VERIFICATE_ATTESE = {"spa_francorchamps", "imola", "zandvoort", "zolder", "kyalami"}
+# I layout scelti a occhio nei provini: cinque il 07/09/2026 (blocco 1), quattro
+# il 23/09/2026 (blocco 2). Se un provino ne approva altri, questa lista cresce
+# INSIEME a tracks.json: il test esiste proprio per non far divergere le due cose.
+VERIFICATE_ATTESE = {"spa_francorchamps", "imola", "zandvoort", "zolder", "kyalami",
+                     "monza", "silverstone", "nurburgring_gp", "barcelona_catalunya"}
 
 print("\n" + "=" * 60)
 print("CATALOGO DEI TRACCIATI — lista, bandierine, mappe")
@@ -82,7 +84,7 @@ test(
 
 verificate = {t["id"] for t in tracks if t.get("mappa_verificata")}
 test(
-    "mappa_verificata solo per i cinque layout approvati",
+    "mappa_verificata solo per i layout approvati nei provini",
     verificate == VERIFICATE_ATTESE,
     f"attese {sorted(VERIFICATE_ATTESE)}, trovate {sorted(verificate)}",
 )
@@ -114,28 +116,33 @@ print("\n" + "=" * 60)
 print("SCHEDA DEL SINGOLO CIRCUITO")
 print("=" * 60)
 
-# Silverstone: nessuna guida e nessun layout verificato — il caso «scheda
-# onesta e basta», che deve restare servibile come tutti gli altri.
-r = client.get("/api/catalog/track/silverstone")
-test("GET /api/catalog/track/silverstone risponde 200", r.status_code == 200, f"status {r.status_code}")
-silver = r.json() if r.status_code == 200 else {}
+# Nordschleife: nessuna guida e nessun layout verificato — il caso «scheda
+# onesta e basta», che deve restare servibile come tutti gli altri. E' il
+# circuito parcheggiato per ultimo nell'ordine delle guide, quindi resta
+# senza guida piu' a lungo di tutti (prima era Silverstone, che dal blocco 2
+# la guida ce l'ha).
+r = client.get("/api/catalog/track/nurburgring_nordschleife")
+test("GET /api/catalog/track/nurburgring_nordschleife risponde 200", r.status_code == 200, f"status {r.status_code}")
+nords = r.json() if r.status_code == 200 else {}
 test(
     "la scheda porta le bandierine e il nome breve",
-    silver.get("short_name") == "Silverstone"
-    and silver.get("ha_guida") is False
-    and silver.get("mappa_verificata") is False,
-    f"short_name={silver.get('short_name')} ha_guida={silver.get('ha_guida')} "
-    f"mappa={silver.get('mappa_verificata')}",
+    nords.get("short_name") == "Nordschleife"
+    and nords.get("ha_guida") is False
+    and nords.get("mappa_verificata") is False,
+    f"short_name={nords.get('short_name')} ha_guida={nords.get('ha_guida')} "
+    f"mappa={nords.get('mappa_verificata')}",
 )
 
-# Monza: guida sì (blocco 2), layout ancora no. Le due bandierine sono
-# indipendenti e la scheda deve saperlo dire.
-r = client.get("/api/catalog/track/monza")
-monza = r.json() if r.status_code == 200 else {}
+# Kyalami: layout verificato (blocco 1), guida ancora no. Le due bandierine
+# sono indipendenti e la scheda deve saperlo dire. (Fino al 23/09 il caso era
+# rovesciato su Monza, guida si' e layout no: col provino del blocco 2 anche
+# Monza ha la mappa.)
+r = client.get("/api/catalog/track/kyalami")
+kyalami = r.json() if r.status_code == 200 else {}
 test(
-    "Monza ha la guida ma non ancora il layout verificato",
-    monza.get("ha_guida") is True and monza.get("mappa_verificata") is False,
-    f"ha_guida={monza.get('ha_guida')} mappa={monza.get('mappa_verificata')}",
+    "Kyalami ha il layout verificato ma non ancora la guida",
+    kyalami.get("ha_guida") is False and kyalami.get("mappa_verificata") is True,
+    f"ha_guida={kyalami.get('ha_guida')} mappa={kyalami.get('mappa_verificata')}",
 )
 
 r = client.get("/api/catalog/track/Spa-Francorchamps")
@@ -174,7 +181,7 @@ test(
     f"settori={len(guida.get('settori') or [])} curve={len(guida.get('curve') or [])}",
 )
 
-r = client.get("/api/catalog/track/silverstone/guida")
+r = client.get("/api/catalog/track/nurburgring_nordschleife/guida")
 test(
     "un circuito senza guida dà 404, non un finto contenuto",
     r.status_code == 404,
