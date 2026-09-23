@@ -1933,7 +1933,7 @@ scostamenti sono uguali fra sinistra e destra: ciò che si chiede è ciò che si
 | Data | 18/09/2026 |
 | Agente dev | Claude Code (claude-opus-5) |
 | Area | `core/data/tracks_knowledge/` (NEW `monza.json`; `imola`, `spa_francorchamps`, `zandvoort`, `zolder` retrofittate) · `scripts/check_track_knowledge.py` (`progressione` obbligatoria dal blocco 2) · `app/tests/test_tracciati.py` · frontend `CurvaGuida.tsx` (progressione + senso della curva), `lib/api.ts`, `tracciati/[id]/page.tsx` (riquadro del layout) |
-| Commit | `ae032c3` + `ecfe603` (Monza, pushati); retrofit non ancora committato |
+| Commit | `ae032c3` + `ecfe603` (Monza) · `5d08e8a` retrofit · `add62ec` riquadro del layout · `557d5c7` docs — **pushati il 18/09** con «ok push» |
 | Contesto | Passo 2 del filone guide: prima guida cercata dal terminale, poi retrofit delle quattro del blocco 1. |
 
 **Catalogo messaggi:**
@@ -1972,7 +1972,7 @@ scostamenti sono uguali fra sinistra e destra: ciò che si chiede è ciò che si
 **Da sapere:** tre fonti community lette (Full Grip su Zolder e su Imola, SoloX su Zolder) danno la prima curva di Zolder a destra, ma si chiama **Eerste Links** ed è una sinistra; Full Grip dà anche la Rivazza 2 a destra, mentre la Rivazza è doppia sinistra. Coach Dave si è invece dimostrato affidabile su Monza e Imola. Restano da decidere: la numerazione di Zandvoort sfasata rispetto alla mappa ufficiale, e Zandvoort T12 Kumhobocht (il testo dice destra, il sito ufficiale sinistra).
 
 **File protetti:** ☑ nessuno toccato.
-**Decisione:** ☐ in attesa di verifica a schermo e «ok push» per il retrofit.
+**Decisione:** ☑ Mantenuto — verificato a schermo e **pushato il 18/09** con «ok push».
 
 ---
 
@@ -2007,6 +2007,55 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 **Verifica:** `tsc --noEmit` 0 errori · rapporti misurati nel browser, non giudicati a occhio.
 **File protetti:** ☑ nessuno toccato.
 **Decisione:** ☑ Mantenuto — «ok push».
+
+---
+
+## Entry #042 — Guide dei tracciati, blocco B2: campi di pista, Silverstone, Nürburgring GP, Barcelona e le loro mappe
+
+| Campo | Valore |
+|---|---|
+| Data | 23/09/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `core/data/tracks_knowledge/` (NEW `silverstone.json`, `nurburgring_gp.json`, `barcelona_catalunya.json`; campi di pista su `imola`, `monza`, `spa_francorchamps`, `zandvoort`, `zolder`) · `core/data/tracks.json` (4 mappe verificate, `corners_confidence`, nota di Barcelona, descrizione di Silverstone) · `scripts/check_track_knowledge.py` (`fonti_campi_pista`) · `scripts/maps.json` + `scripts/maps_choice.json` · `app/tests/test_tracciati.py` · frontend `lib/api.ts`, `tracciati/[id]/page.tsx` (sezione «La pista») |
+| Commit | vedi sotto |
+| Contesto | Ripresa dal blocco B2 del filone guide (ordine del 17/09). Ricerca fatta dal terminale, fonte primaria Coach Dave (regola del 18/09). |
+
+**Catalogo messaggi:**
+1. «leggi la memoria e riprendiamo il lavoro di pitwall» → status di rito e piano.
+2. «ok procedi, prima i 4 campi poi il B2» → ricerca dei quattro campi di pista sulle guide del blocco 1.
+3. «1 sì, 2 segnala fonte singola, 3 null, 4 dopo il B2» → blocco `fonti_campi_pista` anche su Monza; le fonti singole restano a vista nel validatore; `lato_box` senza fonte a `null`; la numerazione di Spa secondo Coach Dave rimandata a dopo il B2.
+4. «ho fatto con l'esportazione del json ora puoi ricominciare» → mappe del B2 applicate e confrontate con le guide.
+5. «1 va bene, 2 va bene, 3 sì, 4 va bene, giusto, correggiamola» → Nürburgring a 15 curve con nota sulla mappa; nomi di Coach Dave più la tabella dei nomi attuali; tre nomi di Barcelona dalla mappa; sezione «La pista» nella scheda; `corners_confidence` ad «alta» dove la guida conferma; descrizione di Silverstone corretta.
+
+**Modifica:**
+- **Quattro campi di pista** (`senso_marcia`, `dislivello_m`, `rettilineo_piu_lungo_m`, `variante_acc`) sulle quattro guide del blocco 1, e blocco nuovo **`fonti_campi_pista`** su tutte le guide: per ogni campo il link, oppure una nota che dice perché manca, e `fonte_singola` quando c'è un solo riscontro. Dove due fonti non concordano il valore e' `null` con tutti e due i numeri in nota (rettilineo di Zandvoort 690/850 m; dislivello e rettilineo di Zolder). Dove Wikipedia e un sito minore non concordano vince Wikipedia, che per i dati di pista e' la fonte di riferimento (dislivello di Zandvoort 8,9 m contro 18).
+- **`lato_box`** di Spa e Imola a `null` («da vedere in gioco»); **fonte della lunghezza** aggiunta a Zandvoort e Zolder.
+- **Validatore**: legge `fonti_campi_pista`. Un valore senza fonte né nota è da controllare, un link che non è un link è un errore, una fonte singola resta nell'elenco «da controllare a occhio».
+- **Tre guide nuove**, stesso schema di Monza (`direzione` e `progressione` su ogni curva):
+  - *Silverstone*: 18 curve, numerazione moderna (T1 = Abbey). Coach Dave + Driver61; Hangar Straight 770 m dal sito ufficiale.
+  - *Nürburgring GP*: 15 curve, GP-Strecke con Mercedes-Arena. Coach Dave; dislivello 55 m (Wikipedia tedesca, concorda trackdaytickets con 56).
+  - *Barcelona*: 16 curve. **Chiuso il dubbio del catalogo**: ACC usa il Grand Prix Circuit 2007-2020 con la chicane finale (4,655 km), confermato da Coach Dave, da Wikipedia e dalla mappa. Rettilineo dei box 1047 m.
+  - Full Grip scartato per le curve (sbaglia sensi, marce e nomi a Silverstone e al Nürburgring): se ne tengono solo i tempi di riferimento, come per Monza, scrivendo il limite nella nota.
+- **Mappe del B2** scelte a occhio da Edoardo nel provino e applicate: `Monza-2021.svg`, `Silverstone Circuit 2020.png`, `Circuit Nürburgring-2013-GP.svg`, `Circuit Catalunya 2007.svg`. `tracks.json` le segna «verificata»; `maps_choice.json` tiene ora i due blocchi (9 scelte); `maps.json` aggiornato per i crediti. Il provino e' stato costruito con candidati cercati dal terminale, con le trappole di confronto marcate (Silverstone 2004-09, Nürburgring 24h senza Arena, Barcelona 2021 e 2023).
+- **Confronto mappe ↔ guide**: Monza 11 su 11; Silverstone senza numeri, nomi concordi; Barcelona 16 su 16. **Nürburgring**: la mappa numera 16 curve (conta quattro curve nella Mercedes-Arena, Coach Dave tre) e usa i nomi degli sponsor attuali. Deciso di tenere 15 (Coach Dave, Wikipedia inglese, catalogo) e di spiegarlo in due chicche: la numerazione della mappa (dopo l'Arena il numero sulla mappa e' quello della guida più uno) e la tabella dei nomi vecchi e attuali.
+- **Nomi dalla mappa** dove la guida aveva `null`: Barcelona T12 Banc de Sabadell, T13 Europcar, T16 New Holland; Nürburgring T12 Falkenbogen.
+- **Catalogo**: `corners_confidence` ad «alta» su Spa, Imola, Zolder, Silverstone, Nürburgring GP e Barcelona, cioè dove la guida ha `curve_confermate: true` (la scheda non scrive più «da verificare» accanto al numero di curve); nota di Barcelona riscritta; descrizione di Silverstone corretta («nel finale il tornante di Luffield» → «a metà giro, la lunga Luffield»: la Luffield e' la T7 e non e' un tornante).
+- **Scheda del circuito**: sezione nuova **«La pista»** subito dopo il layout (senso di marcia, dislivello, rettilineo più lungo, variante in ACC). I valori `null` non si disegnano, e una riga in fondo dice quali valori vengono da una fonte singola.
+- **Test**: in `test_tracciati` l'esempio di «circuito senza guida» passa da Silverstone alla Nordschleife (l'ultima dell'ordine); i layout verificati attesi passano da 5 a 9; il caso «guida sì, mappa no» (Monza, che ora ha la mappa) e' diventato «mappa sì, guida no» su Kyalami.
+
+**Motivazione:** chiudere il blocco B2 seguendo le regole del 18/09: fonte community per la guida, fonti ufficiali per i dati di pista, e ogni contraddizione con la mappa o col nome della curva segnalata invece che copiata.
+
+**Risultato osservato:** guide **8/25**, mappe verificate **9/25**. Le tre schede nuove e la sezione «La pista» verificate a schermo (Spa con la riga della fonte singola, Silverstone senza «da verificare» e con la descrizione corretta, Nürburgring con le due chicche e la T12 Falkenbogen).
+
+**Verifica:** validatore **senza errori**, 5 fonti singole a vista (dislivello di Barcelona, rettilineo di Monza e di Spa, senso di marcia di Nürburgring e Zolder) · **908/908** test in 18 file (`test_tracciati` 38 → **50**: le regole di contenuto si applicano a ogni guida in più) · `tsc --noEmit` 0 · backend riavviato a mano dopo le modifiche al catalogo · nessuna chiamata LLM.
+
+**Da sapere:**
+- Coach Dave numera Spa diversamente dalla nostra guida (Eau Rouge/Raidillon 2-4, Les Combes 5-7, Bus Stop 18-19): rimandato a dopo il B2, su decisione di Edoardo.
+- Le `commons_category` scritte in `tracks.json` restano quelle vecchie e inesistenti (`Category:Maps of ...`), come nel blocco 1: quelle vere si chiamano `Category:<circuito> circuit maps`.
+- Il provino delle mappe dice ancora «Claude Desktop» nei testi fissi: da quando la ricerca la faccio dal terminale non e' più vero.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» (commit `d952964` campi di pista · `f890f28` blocco B2 e mappe · `ead585c` sezione La pista · docs).
 
 ---
 

@@ -39,10 +39,10 @@ backend/       FastAPI
     telemetria/  # shared memory di ACC: strutture, lettore, dizionario, registratore, banco sintetico
     motec/       # file MoTeC: lettore .ld/.ldx, scrittore con l'impaginazione esatta di ACC, export
     analisi/     # motore deterministico: ritmo, costanza, curve, gomme e freni; contesto di Gigi
-    tests/       # 858 test offline: observability 24, budget 31, bundle 37, adattatori 86,
+    tests/       # 908 test offline: observability 24, budget 31, bundle 37, adattatori 86,
                  # analisi 59, analisi_l4 45, demo 38, gigi 32, sessions 50, telemetria 97,
                  # riferimenti 73, registratore 69, curve 62, telemetria_bundle 50,
-                 # motec 43, motec_bundle 45, motec_export 17
+                 # motec 43, motec_bundle 45, motec_export 17, tracciati 50
   scripts/       # pipeline delle immagini, validatore delle guide, validazione MoTeC sui file veri
 frontend/      Next.js 15.5 (App Router) + TypeScript + Tailwind + Recharts + Framer Motion
   src/
