@@ -643,12 +643,31 @@ export type GuidaValoreConFonte = {
   fonte?: string | null;
 };
 
+/** Da dove viene un campo di pista: il link, oppure una nota che dice perché
+ *  il link non c'è. `fonte_singola` = un solo riscontro, da confermare. */
+export type GuidaFonteCampo = {
+  fonte?: string | null;
+  fonte_singola?: boolean | null;
+  nota?: string | null;
+};
+
 export type GuidaTracciato = {
   id: string;
   verifica_catalogo?: {
     lunghezza_confermata?: boolean | null;
     curve_confermate?: boolean | null;
     note?: string | null;
+  } | null;
+  /** I quattro campi di pista (dal blocco 2; retrofit sulle guide vecchie il 23/09). */
+  senso_marcia?: string | null;
+  dislivello_m?: number | null;
+  rettilineo_piu_lungo_m?: number | null;
+  variante_acc?: string | null;
+  fonti_campi_pista?: {
+    senso_marcia?: GuidaFonteCampo | null;
+    dislivello_m?: GuidaFonteCampo | null;
+    rettilineo_piu_lungo_m?: GuidaFonteCampo | null;
+    variante_acc?: GuidaFonteCampo | null;
   } | null;
   settori?: GuidaSettore[];
   curve?: GuidaCurva[];

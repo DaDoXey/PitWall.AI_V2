@@ -289,6 +289,45 @@ export default function TracciatoPage() {
 
         {guida && (
           <>
+            {/* I dati di pista della guida. Un valore senza fonte seria è null
+                e non si disegna; uno che ha un solo riscontro si mostra, ma lo
+                dice sotto — stessa regola del validatore delle guide. */}
+            {(guida.senso_marcia || guida.dislivello_m != null ||
+              guida.rettilineo_piu_lungo_m != null || guida.variante_acc) && (
+              <Sezione titolo="La pista">
+                <div className="flex flex-wrap gap-x-8 gap-y-3">
+                  {guida.senso_marcia && <Fact label="Senso di marcia" value={guida.senso_marcia} />}
+                  {guida.dislivello_m != null && (
+                    <Fact label="Dislivello" value={`${guida.dislivello_m} m`} />
+                  )}
+                  {guida.rettilineo_piu_lungo_m != null && (
+                    <Fact label="Rettilineo più lungo" value={`${guida.rettilineo_piu_lungo_m} m`} />
+                  )}
+                </div>
+                {guida.variante_acc && (
+                  <div className="mt-3">
+                    <div className="font-mono text-[0.55rem] uppercase tracking-widest text-muted">
+                      In ACC
+                    </div>
+                    <p className="mt-0.5 text-sm leading-relaxed text-subtle">{guida.variante_acc}</p>
+                  </div>
+                )}
+                {(() => {
+                  const f = guida.fonti_campi_pista ?? {};
+                  const singole = ([
+                    ["senso di marcia", f.senso_marcia],
+                    ["dislivello", f.dislivello_m],
+                    ["rettilineo più lungo", f.rettilineo_piu_lungo_m],
+                  ] as const).filter(([, v]) => v?.fonte_singola);
+                  return singole.length > 0 ? (
+                    <p className="mt-3 font-mono text-[0.55rem] uppercase tracking-widest text-muted">
+                      fonte singola, da confermare: {singole.map(([nome]) => nome).join(" · ")}
+                    </p>
+                  ) : null;
+                })()}
+              </Sezione>
+            )}
+
             {guida.settori && guida.settori.length > 0 && (
               <Sezione titolo="I settori">
                 <div className="flex flex-col gap-3">
