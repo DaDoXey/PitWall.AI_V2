@@ -3,7 +3,31 @@
   "verifica_catalogo": {
     "lunghezza_confermata": true,
     "curve_confermate": true,
+    "fonte_lunghezza": "https://en.wikipedia.org/wiki/Circuit_Zolder",
     "note": "Zolder e' il circuito piu' pulito del blocco: Wikipedia attribuisce alla configurazione '2002-present' 4.010 km e 10 curve, contro i 4.011 km e 10 curve del catalogo. Coincide. La differenza di 1 m e' arrotondamento (la voce Wikipedia usa 4.011 km nel testo e 4.010 nell'infobox). Avvertenza sulla NUMERAZIONE: le fonti nominano piu' punti di quanti siano i 10 numeri ufficiali, perche' contano le chicane come una curva sola. LapMeta arriva addirittura a contare 16 turns per lo stesso tracciato. Ho quindi mappato 10 voci a complessi, non a singoli apici, e lasciato nome: null dove l'abbinamento numero-nome non era verificabile."
+  },
+  "senso_marcia": "orario",
+  "dislivello_m": null,
+  "rettilineo_piu_lungo_m": null,
+  "variante_acc": "ACC riproduce il tracciato Grand Prix attuale (configurazione 2002): 4,011 km e 10 curve, come il catalogo.",
+  "fonti_campi_pista": {
+    "senso_marcia": {
+      "fonte": "https://trackdaytickets.com/tracks/zolder",
+      "fonte_singola": true,
+      "nota": null
+    },
+    "dislivello_m": {
+      "fonte": null,
+      "nota": "Le fonti non concordano: 8 m per trackdaytickets, \u00abcirca 20 m\u00bb altrove senza provenienza."
+    },
+    "rettilineo_piu_lungo_m": {
+      "fonte": null,
+      "nota": "Le fonti non concordano: 500 m per trackdaytickets, 550 m altrove, e nessuna dice come e' misurato."
+    },
+    "variante_acc": {
+      "fonte": "https://en.wikipedia.org/wiki/Circuit_Zolder",
+      "nota": null
+    }
   },
   "settori": [
     {

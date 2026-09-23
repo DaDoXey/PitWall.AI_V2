@@ -6,6 +6,29 @@
     "note": "7.004 km e 19 curve coincidono con il tracciato Grand Prix in uso dal 2007. Wikipedia riporta 7.004 km per il layout usato nelle gare F2 2018, e le configurazioni storiche (6.968 km 1995-2003, 6.976 km 2004-2006) sono tutte diverse: il nostro dato punta correttamente al layout attuale. Avvertenza sulla NUMERAZIONE: i nomi qui sotto sono ufficiali o storicamente consolidati, ma l'abbinamento nome-numero segue lo schema F1/SRO pubblicato e non l'ho potuto verificare su una mappa numerata (nessun candidato Commons ne ha). Prima di mostrare i numeri in app, incrociali con la mappa scelta. I nomi sono affidabili, i numeri vanno confermati.",
     "fonte_lunghezza": "https://en.wikipedia.org/wiki/Circuit_de_Spa-Francorchamps"
   },
+  "senso_marcia": "orario",
+  "dislivello_m": 102,
+  "rettilineo_piu_lungo_m": 1050,
+  "variante_acc": "ACC riproduce il tracciato Grand Prix in uso dal 2007 (pit lane nuova e Bus Stop ridisegnata): 7,004 km e 19 curve, come il catalogo. Le modifiche successive alle vie di fuga non sono state verificate in gioco.",
+  "fonti_campi_pista": {
+    "senso_marcia": {
+      "fonte": "https://www.24hseries.com/circuits/circuit-de-spa-francorchamps",
+      "nota": null
+    },
+    "dislivello_m": {
+      "fonte": "https://coachdaveacademy.com/tutorials/circuit-de-spa-francorchamps-track-guide/",
+      "nota": "Coach Dave: 102,2 m fra il punto piu' alto e il piu' basso del tracciato."
+    },
+    "rettilineo_piu_lungo_m": {
+      "fonte": "https://oversteer48.com/kemmel-straight-spa-francorchamps/",
+      "fonte_singola": true,
+      "nota": "Il Kemmel, misurato dall'uscita del Raidillon all'ingresso di Les Combes, kink compreso. Unica fonte che dia il numero e dica come e' misurato."
+    },
+    "variante_acc": {
+      "fonte": "https://en.wikipedia.org/wiki/Circuit_de_Spa-Francorchamps",
+      "nota": null
+    }
+  },
   "settori": [
     {
       "n": 1,
@@ -697,8 +720,8 @@
   "pit": {
     "tempo_perso_s": null,
     "limite_kmh": null,
-    "lato_box": "sinistra",
-    "note": "L'ingresso ai box e' alla Bus Stop, quindi la corsia si stacca proprio nel punto di sorpasso: nella finestra dei pit stop stai attento a chi alza il piede davanti a te. Il lato box e' desumibile dalla planimetria (la pit lane corre all'interno del rettilineo del traguardo), ma trattalo come dato da confermare in gioco.",
+    "lato_box": null,
+    "note": "L'ingresso ai box e' alla Bus Stop, quindi la corsia si stacca proprio nel punto di sorpasso: nella finestra dei pit stop stai attento a chi alza il piede davanti a te. Il lato dei box non e' dato da nessuna fonte: da vedere in gioco.",
     "fonte": null
   },
   "traffico_multiclass": "Il tratto Kemmel e il rettilineo Stavelot-Blanchimont sono i punti dove far passare: c'e' spazio e non ci sono traiettorie da rovinare. Non lasciare passare a Pouhon ne' a Eau Rouge, e' pericoloso per entrambi. In qualifica il traffico peggiore e' quello lento nel secondo settore: se ti trovi un'auto a Pouhon il giro e' finito, meglio abortire subito e rilanciare.",
@@ -746,6 +769,9 @@
   ],
   "fonti": [
     "https://en.wikipedia.org/wiki/Circuit_de_Spa-Francorchamps",
-    "https://en.wikipedia.org/wiki/2018_Spa-Francorchamps_Formula_2_round"
+    "https://en.wikipedia.org/wiki/2018_Spa-Francorchamps_Formula_2_round",
+    "https://www.24hseries.com/circuits/circuit-de-spa-francorchamps",
+    "https://coachdaveacademy.com/tutorials/circuit-de-spa-francorchamps-track-guide/",
+    "https://oversteer48.com/kemmel-straight-spa-francorchamps/"
   ]
 }

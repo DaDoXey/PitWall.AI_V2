@@ -10,6 +10,25 @@
   "dislivello_m": null,
   "rettilineo_piu_lungo_m": 1120,
   "variante_acc": "ACC ha un solo layout di Monza, quello del Gran Premio. Il riasfaltamento del 2024 e le modifiche successive non sono state verificate in gioco: da controllare a schermo prima di darle per presenti.",
+  "fonti_campi_pista": {
+    "senso_marcia": {
+      "fonte": "https://www.24hseries.com/circuits/autodromo-nazionale-monza",
+      "nota": null
+    },
+    "dislivello_m": {
+      "fonte": null,
+      "nota": "Nessuna fonte seria lo pubblica."
+    },
+    "rettilineo_piu_lungo_m": {
+      "fonte": "https://eu.drivingexperience.hyundai.com/blogs/news/monza-circuit-guide",
+      "fonte_singola": true,
+      "nota": "Il rettilineo dei box, \u00ab1.12 km start/finish straight\u00bb."
+    },
+    "variante_acc": {
+      "fonte": null,
+      "nota": "ACC ha un solo layout di Monza: il dato e' del gioco, non di una fonte esterna."
+    }
+  },
   "settori": [
     {
       "n": 1,
@@ -468,6 +487,8 @@
     "https://en.wikipedia.org/wiki/Monza_Circuit",
     "https://coachdaveacademy.com/acc-lap-times/",
     "https://www.formula1.com/en/latest/article.sausage-kerbing-removed-from-parabolica-after-big-f3-crash.56tuSsCZHmOjYFi1uw81wS.html",
-    "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+    "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/",
+    "https://www.24hseries.com/circuits/autodromo-nazionale-monza",
+    "https://eu.drivingexperience.hyundai.com/blogs/news/monza-circuit-guide"
   ]
 }

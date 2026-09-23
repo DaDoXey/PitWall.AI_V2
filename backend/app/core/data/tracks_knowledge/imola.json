@@ -7,6 +7,28 @@
     "fonte_lunghezza": "https://en.wikipedia.org/wiki/2025_Imola_Formula_3_round",
     "fonte_numerazione": "https://lapmeta.com/en/track/variation/193/track_map"
   },
+  "senso_marcia": "antiorario",
+  "dislivello_m": null,
+  "rettilineo_piu_lungo_m": null,
+  "variante_acc": "ACC riproduce il tracciato Grand Prix attuale: 4,909 km e 19 curve, come il catalogo, in senso antiorario.",
+  "fonti_campi_pista": {
+    "senso_marcia": {
+      "fonte": "https://www.24hseries.com/circuits/autodromo-enzo-e-dino-ferrari",
+      "nota": "Concorda anche la voce italiana di Wikipedia (\u00abSi corre in senso antiorario\u00bb)."
+    },
+    "dislivello_m": {
+      "fonte": null,
+      "nota": "Nessuna fonte seria lo pubblica: il \u00abcirca 40 m\u00bb che circola non ha provenienza."
+    },
+    "rettilineo_piu_lungo_m": {
+      "fonte": null,
+      "nota": "L'unico numero trovato (358 m) non dice come e' misurato e sembra corto per il rettilineo dei box: scartato finche' non c'e' una fonte."
+    },
+    "variante_acc": {
+      "fonte": "https://en.wikipedia.org/wiki/Imola_Circuit",
+      "nota": null
+    }
+  },
   "settori": [
     {
       "n": 1,
@@ -698,8 +720,8 @@
   "pit": {
     "tempo_perso_s": null,
     "limite_kmh": null,
-    "lato_box": "destra",
-    "note": "Dato non verificato su fonte, ricavato dalla planimetria: la pit lane corre a destra del rettilineo del traguardo (senso antiorario). Da confermare in gioco prima di darlo al pilota.",
+    "lato_box": null,
+    "note": "Il lato dei box non e' dato da nessuna fonte: da vedere in gioco.",
     "fonte": null
   },
   "traffico_multiclass": "I punti sensati per farsi superare sono i rettilinei: quello del traguardo e la salita fra Tosa e Piratella. Non lasciare passare in nessuna delle due varianti del primo settore, ne' alla Variante Alta: non c'e' spazio e i cordoli fanno il resto. In qualifica il traffico ad Acque Minerali o alla Variante Alta rovina irrimediabilmente il giro, perche' sono i due punti in cui non puoi recuperare con la potenza.",
@@ -750,6 +772,8 @@
     "https://lapmeta.com/en/track/variation/193/track_map",
     "https://plantrackday.com/en/circuits/imola-50",
     "https://www.racingcircuits.info/europe/italy/imola.html",
-    "https://www.total-motorsport.com/emilia-romagna-grand-prix-track-guide-imola/"
+    "https://www.total-motorsport.com/emilia-romagna-grand-prix-track-guide-imola/",
+    "https://www.24hseries.com/circuits/autodromo-enzo-e-dino-ferrari",
+    "https://it.wikipedia.org/wiki/Autodromo_Enzo_e_Dino_Ferrari"
   ]
 }

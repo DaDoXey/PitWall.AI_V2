@@ -214,6 +214,22 @@ def controlla_pista(percorso: Path, tracks: dict, e: Esito) -> None:
                          + ", ".join(f"`{c}`" for c in mancanti_racc))
     if dati.get("senso_marcia") and str(dati["senso_marcia"]).lower() not in SENSI_MARCIA:
         e.errore(cid, f"senso_marcia «{dati['senso_marcia']}» fuori da {sorted(SENSI_MARCIA)}")
+    # Ogni campo di pista dice da dove viene: un valore senza fonte ne' nota e'
+    # un dato assertivo che nessuno puo' ricontrollare. La fonte singola non e'
+    # un errore, ma resta a vista finche' non arriva un riscontro.
+    presenti = [c for c in CAMPI_PISTA_RACCOMANDATI if c in dati]
+    fonti_pista = dati.get("fonti_campi_pista")
+    if presenti and fonti_pista is None:
+        e.controlla(cid, "campi di pista senza `fonti_campi_pista`: non si sa da dove vengono")
+    for campo in presenti if fonti_pista is not None else []:
+        voce = fonti_pista.get(campo) or {}
+        fonte = voce.get("fonte")
+        if fonte and not str(fonte).startswith("http"):
+            e.errore(cid, f"fonti_campi_pista.{campo}: fonte non e' un link: {fonte}")
+        if dati[campo] is not None and not fonte and not voce.get("nota"):
+            e.controlla(cid, f"`{campo}`={dati[campo]!r} senza fonte ne' nota")
+        if voce.get("fonte_singola"):
+            e.controlla(cid, f"`{campo}`={dati[campo]!r} da una fonte singola: {fonte}")
 
     # --- curve: quante, numerate come, senza buchi
     curve = dati.get("curve") or []

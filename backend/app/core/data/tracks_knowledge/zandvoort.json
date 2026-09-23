@@ -3,7 +3,30 @@
   "verifica_catalogo": {
     "lunghezza_confermata": true,
     "curve_confermate": true,
+    "fonte_lunghezza": "https://en.wikipedia.org/wiki/Circuit_Zandvoort",
     "note": "Risolto il 07/09/2026 verificando in gioco: la curva finale (Arie Luyendijkbocht) e' sopraelevata, quindi ACC riproduce il layout 2020 (riprofilamento Zaffelli) — 4.259 km, 14 curve. Il catalogo portava 4.307 km, cioe' la lunghezza del pre-2020, ed e' stato corretto. La consegna aveva segnalato il dato ibrido del catalogo: la segnalazione era giusta, il dubbio e' chiuso. Numerazione riallineata il 18/09/2026 a quella ufficiale del circuito, che è anche quella stampata sulla mappa mostrata in pagina: lo Scheivlak conta come due curve (6 e 7) e l'ultima è l'Arie Luyendijkbocht (14)."
+  },
+  "senso_marcia": "orario",
+  "dislivello_m": 8.9,
+  "rettilineo_piu_lungo_m": null,
+  "variante_acc": "ACC riproduce il layout 2020 (riprofilamento per il ritorno della F1): Hugenholtzbocht e Arie Luyendijkbocht sopraelevate, 4,259 km e 14 curve. Verificato in gioco il 07/09/2026: la curva finale e' sopraelevata.",
+  "fonti_campi_pista": {
+    "senso_marcia": {
+      "fonte": "https://trackdaytickets.com/tracks/zandvoort",
+      "nota": "Riscontro indiretto su Wikipedia: il Tulip Rally correva a Zandvoort in senso antiorario proprio come eccezione."
+    },
+    "dislivello_m": {
+      "fonte": "https://en.wikipedia.org/wiki/Circuit_Zandvoort",
+      "nota": "Le fonti non concordano: trackdaytickets da' 18 m. Tenuto il dato di Wikipedia, che per i dati di pista e' la fonte di riferimento."
+    },
+    "rettilineo_piu_lungo_m": {
+      "fonte": null,
+      "nota": "Le fonti non concordano: 690 m per oversteer48 (dall'uscita della T14 all'ingresso della T1), 850 m per trackdaytickets. Nessuna delle due e' autorevole: null finche' non c'e' un dato ufficiale."
+    },
+    "variante_acc": {
+      "fonte": "https://en.wikipedia.org/wiki/Circuit_Zandvoort",
+      "nota": null
+    }
   },
   "settori": [
     {
@@ -568,6 +591,8 @@
     "https://f1chronicle.substack.com/p/zandvoort-dutch-grand-prix-f1-track",
     "https://steamcommunity.com/app/805550/discussions/0/3038229380323840051/",
     "https://commons.wikimedia.org/wiki/Category:Circuit_Park_Zandvoort_circuit_maps",
-    "https://trinacriasimracing.wordpress.com/assetto-corsa-competition-how-to-make-a-perfect-pit-stop/"
+    "https://trinacriasimracing.wordpress.com/assetto-corsa-competition-how-to-make-a-perfect-pit-stop/",
+    "https://trackdaytickets.com/tracks/zandvoort",
+    "https://oversteer48.com/zandvoort-track-layout/"
   ]
 }
