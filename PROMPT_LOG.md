@@ -2059,6 +2059,52 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #043 — Guide dei tracciati, blocco B3: Misano, Brands Hatch, Hungaroring, Paul Ricard e le loro mappe
+
+| Campo | Valore |
+|---|---|
+| Data | 24/09/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `core/data/tracks_knowledge/` (NEW `misano.json`, `brands_hatch.json`, `hungaroring.json`, `paul_ricard.json`) · `core/data/tracks.json` (4 mappe verificate, `corners_confidence`, record e descrizione di Paul Ricard) · `scripts/maps.json` + `scripts/maps_choice.json` · `app/tests/test_tracciati.py` · README, README.it, `docs/03` |
+| Commit | vedi sotto |
+| Contesto | Ripresa dal blocco B3 del filone guide (ordine del 17/09). Ricerca dal terminale, fonte primaria Coach Dave (regola del 18/09). |
+
+**Catalogo messaggi:**
+1. «leggi la memoria e dimmi lo status attuale di pitwall» → status di rito.
+2. «partiamo dal blocco B3» → verifica dei layout: tre concordano col catalogo, Paul Ricard no (Wikipedia mette il record GT3 sotto il layout senza chicane); Coach Dave non ha una guida di Paul Ricard; due sospetti errori di Coach Dave (Misano, Hungaroring).
+3. «1 sì c'è la chicane, 2 fonti secondarie, 3 sì, 4 sì» → Paul Ricard con la chicane del Mistral; guida da fonti secondarie con confidence dichiarata; correzioni solo con mappa numerata + seconda fonte; record di Paul Ricard a null con nota.
+4. «1 sul rettilineo principale appena si esce da curva 15 [...] 2 [...] sembra piatta. 3 correggi come per silverstone» → ingresso box di Paul Ricard visto in gioco; dislivello a null; descrizione del catalogo corretta.
+5. «ho esportato il json, puoi procedere» → mappe applicate, confronto con le guide, test, verifica a schermo.
+
+**Modifica:**
+- **Quattro guide nuove**, schema del B2 (`direzione` e `progressione` su ogni curva, campi di pista con `fonti_campi_pista`):
+  - *Misano*: 16 curve, GP 2008-oggi in senso orario. Coach Dave. Nel suo riassunto iniziale Coach Dave scrive «6 destre e 10 sinistre»; la sua descrizione curva per curva e la mappa numerata danno il contrario (10 destre, 6 sinistre): vale la descrizione, scritto in nota. Sensi di T4 (Rio, doppia destra) e T7 dalla mappa. Rettilineo 565 m (Coach Dave + trackdaytickets).
+  - *Brands Hatch*: 9 curve, Grand Prix Circuit 2003-oggi (non l'Indy). Coach Dave, sensi confermati da Wikipedia italiana e dalla mappa numerata. Dislivello 32 m da Wikipedia tedesca (fonte singola, a vista).
+  - *Hungaroring*: 14 curve, GP 2003-oggi. Coach Dave, riscontro Driver61 (che numera 16). **Il dubbio sulla T13 era mio ed era sbagliato**: la mappa numerata la da' a sinistra, come Coach Dave. Rettilineo 908 m (Wikipedia inglese + trackdaytickets; la tedesca dice 788,9, in nota); dislivello 36 m (Wikipedia tedesca; trackdaytickets 33).
+  - *Paul Ricard*: 15 curve, layout 1C-V2 con la chicane Montréal sul Mistral (confermata in gioco da Edoardo). Coach Dave non ha la guida: contenuto dalle guide GT3 di RaceControl e della wiki di Le Mans Ultimate, solo dove concordano con la mappa numerata di Commons, confidence «media» (T12-T14 «bassa»). La wiki LMU da' la T1 a destra, mappa e RaceControl a sinistra; RaceControl dalla Beausset in poi sposta i nomi di una curva: parti scartate e scritte in nota. Tempo di riferimento da Track Titan (una vettura, dichiarato). Ingresso box: in ACC e' quello pre-2019, sul rettilineo appena usciti dal Pont, sulla destra, segnato dalla striscia bianca (Edoardo in gioco); `lato_box` = destra. Dislivello a null (Wikipedia 33 m, trackdaytickets 8 m, pista piatta in gioco).
+  - Full Grip usato solo per i tempi, come nel B2 (la sua pagina di Paul Ricard mostra Monza, quella di Brands Hatch conta 12 curve, e da' la Quercia di Misano a destra).
+  - Tolte prima della consegna due frasi mie senza fonte (una chicca sulla mappa di Misano, una sugli onboard di Brands Hatch) e un'affermazione sulla T12 dell'Hungaroring che la fonte non sostiene.
+- **Mappe del B3** scelte a occhio da Edoardo nel provino e applicate: `Misano World Circuit.svg`, `Brands Hatch.svg`, `Hungaroring.svg`, `Le Castellet circuit map Formula One 2018 without corner names English 29 06 2021.svg` (la 2018 perche' ha l'ingresso box sul rettilineo, come ACC). Provino costruito con candidati cercati dal terminale e trappole marcate (Misano 2001-2006 e 2007, Brands Hatch Indy e 1999-2002, Hungaroring 1986-1988 e 1989-2002, Paul Ricard senza chicane e storici). `maps_choice.json` ora ha tre blocchi (13 scelte); `maps.json` aggiornato per i crediti.
+- **Confronto mappe ↔ guide**: tutte e quattro le mappe numerano le curve come le guide, con gli stessi sensi.
+- **Catalogo**: `corners_confidence` ad «alta» su Misano, Brands Hatch e Hungaroring; Paul Ricard: `lap_record_real` a null con `lap_record_note` (il 1:39.914 era Rosberg in F1 nel 1985 sul tracciato originale) e descrizione corretta («i suoi 15 curvoni» → «le sue 15 curve»).
+- **Test**: in `test_tracciati` i layout verificati attesi passano da 9 a 13.
+- **Docs**: README e README.it a 924 test (`tracciati` 66); `docs/03` a 12 guide su 25 e — debito trovato — a 18 file e 924 test (diceva ancora 14 file e 751 test, fermo a prima di L5).
+
+**Motivazione:** chiudere il blocco B3 con le regole del 18/09 e del 23/09, verificando ogni senso di curva sulla mappa numerata prima di scriverlo.
+
+**Risultato osservato:** guide **12/25**, mappe verificate **13/25**. Le quattro schede verificate a schermo (layout sulla placca, sezione «La pista» con i valori e la riga «fonte singola» su Misano e Brands Hatch, «Record reale» assente su Paul Ricard, ingresso box a schermo). Accesso demo impostato solo nella sessione della scheda di prova, senza il pulsante demo, per non cancellare il profilo in localStorage.
+
+**Verifica:** validatore **senza errori** su 12 guide, fonti singole a vista (dislivello di Brands Hatch e Misano, piu' le 5 del B2) · **924/924** test in 18 file (`test_tracciati` 50 → **66**) · `tsc --noEmit` 0 · rotte `/ /tracciati /crediti /login` 200 · backend riavviato a mano dopo le modifiche al catalogo · nessuna chiamata LLM.
+
+**Da sapere:**
+- La mappa dell'Hungaroring colora il tracciato a tratti: sono i settori del disegno, non quelli di ACC.
+- Resta rimandata la numerazione di Spa secondo Coach Dave; il provino dice ancora «Claude Desktop» nei testi fissi (nelle note delle scelte del B3 l'ho corretto a mano in `maps_choice.json`).
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» (commit `0497a4a` blocco B3 e mappe · docs).
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
