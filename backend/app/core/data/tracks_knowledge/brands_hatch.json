@@ -1,0 +1,419 @@
+{
+  "id": "brands_hatch",
+  "verifica_catalogo": {
+    "lunghezza_confermata": true,
+    "curve_confermate": true,
+    "fonte_lunghezza": "https://en.wikipedia.org/wiki/Brands_Hatch",
+    "note": "Catalogo e fonti concordano: ACC usa il Grand Prix Circuit (2003-oggi), 3,916 km e 9 curve, non il circuito Indy da 1,944 km. Lo dicono Coach Dave, che descrive il GP curva per curva con la stessa numerazione, e Wikipedia inglese. La mappa numerata di Commons (Brands Hatch.svg) numera anch'essa 9 curve, con gli stessi nomi e gli stessi sensi. Pilgrim's Drop, Hailwood Hill, Dingle Dell e Clearways non hanno un numero: sono tratti fra una curva e l'altra, e compaiono nel testo delle curve vicine. La Wikipedia tedesca da' 3,908 km: resta la lunghezza dell'inglese, che e' anche quella di Coach Dave. I tre settori qui sotto sono una divisione descrittiva, non i settori di cronometraggio di ACC."
+  },
+  "senso_marcia": "orario",
+  "dislivello_m": 32,
+  "rettilineo_piu_lungo_m": null,
+  "variante_acc": "ACC riproduce il Grand Prix Circuit in uso dal 2003: 3,916 km e 9 curve, con il giro esterno nel bosco (Hawthorn, Westfield, Sheene). Non il circuito Indy, che dopo la Surtees torna verso i box dalla McLaren.",
+  "fonti_campi_pista": {
+    "senso_marcia": {
+      "fonte": "https://en.wikipedia.org/wiki/Brands_Hatch",
+      "nota": "Dal 1954 il circuito gira in senso orario: e' stato invertito proprio allora, ed e' cosi' che e' nata la Paddock Hill Bend. Concorda la freccia della mappa numerata di Commons."
+    },
+    "dislivello_m": {
+      "fonte": "https://de.wikipedia.org/wiki/Brands_Hatch",
+      "fonte_singola": true,
+      "nota": "Wikipedia tedesca, voce «Höhenunterschied». Wikipedia inglese non da' il dislivello totale, solo le pendenze (8% alla Paddock Hill Bend, circa 7% alla Hawthorn Hill)."
+    },
+    "rettilineo_piu_lungo_m": {
+      "fonte": null,
+      "nota": "Nessuna fonte seria pubblica la lunghezza dei rettilinei di Brands Hatch. Il Brabham Straight dei box e' leggermente curvo e il tratto veloce e' la discesa di Pilgrim's Drop verso la Hawthorn: da misurare in gioco."
+    },
+    "variante_acc": {
+      "fonte": "https://en.wikipedia.org/wiki/Brands_Hatch",
+      "nota": "Concorda Coach Dave (Brands Hatch GP Track Guide)."
+    }
+  },
+  "settori": [
+    {
+      "n": 1,
+      "carattere": "La discesa cieca della Paddock Hill Bend, la salita verso il tornante della Druids e la Graham Hill Bend in discesa: il tratto dell'anfiteatro, tutto dislivelli.",
+      "cosa_decide": "La staccata della Paddock e la trazione in uscita dalla Druids.",
+      "errore_costoso": "Troppo cordolo interno alla Graham Hill Bend: interviene il controllo di trazione, o ci si gira."
+    },
+    {
+      "n": 2,
+      "carattere": "La Surtees in salita e contropendenza, la discesa di Pilgrim's Drop e la Hawthorn Bend, la curva piu' veloce del giro.",
+      "cosa_decide": "L'uscita della Surtees, che vale per tutto il rettilineo in discesa fino alla Hawthorn.",
+      "errore_costoso": "Troppo cordolo in uscita dalla Surtees: il controllo di trazione taglia e la macchina salta, e si perde tempo fino alla Hawthorn."
+    },
+    {
+      "n": 3,
+      "carattere": "Il giro nel bosco: la Westfield, la discesa di Dingle Dell, la Sheene cieca in salita, poi la Stirling's sopraelevata e la Clark Curve che riporta sul traguardo.",
+      "cosa_decide": "Portare velocita' nella Sheene senza allargare, e l'uscita della Clark Curve sul rettilineo dei box.",
+      "errore_costoso": "Allargare in uscita dalla Sheene: non c'e' cordolo, solo erba, e il giro e' finito."
+    }
+  ],
+  "curve": [
+    {
+      "n": 1,
+      "nome": "Paddock Hill Bend",
+      "direzione": "destra",
+      "tipo": "veloce",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Si arriva dal Brabham Straight tenendosi a destra, e passato il traguardo ci si sposta a sinistra. Si frena appena dopo il cartello «2» e si comincia gia' a girare un filo. Si scalano due marce fino alla terza e si aumenta lo sterzo passando i banner neri all'interno.",
+      "insidia": "Curva a destra in discesa, completamente cieca in frenata: bisogna restare larghi per un apice tardivo. L'apice e' a meta' fra i due banner rossi all'interno, con l'anteriore destro sul cordolo bianco e rosso. Il gas va ridato con progressivita', usando quanto piu' cordolo di uscita si riesce.",
+      "costo_errore": "Alto. E' una discesa con pendenze dell'8%: si arriva lunghi con niente, e un'uscita sbagliata si paga su tutta la salita verso la Druids.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "E' uno dei pochi punti di sorpasso della pista, grazie al rettilineo che la precede: staccata all'interno destro.",
+        "come_ci_si_difende": "Tenere l'interno in frenata. Chi attacca all'esterno in una discesa cieca rischia molto e ci prova di rado."
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Frenata in discesa girando a destra, con la compressione in fondo alla discesa: anteriore sinistro caricato."
+      },
+      "freni": {
+        "stress": "alto",
+        "note": "La staccata piu' impegnativa del giro, in discesa."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "In uscita il cordolo si usa tutto, ma non oltre."
+      },
+      "differenza_gara_qualifica": "In qualifica si frena al limite al cartello «2». In gara, e soprattutto al primo giro, e' il punto dei contatti: conviene un riferimento un po' anticipato.",
+      "progressione": {
+        "prendi_il_giro": "Spostati a sinistra dopo il traguardo, frena al cartello «2» e metti la terza. Punta a meta' fra i due banner rossi.",
+        "guadagni": "Comincia a girare gia' in frenata e resta largo per un apice piu' tardivo, con l'anteriore destro sul cordolo.",
+        "al_limite": "Frenata al limite appena dopo il cartello «2», sterzo che cresce ai banner neri e gas progressivo all'apice fino all'ultimo centimetro di cordolo in uscita."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 2,
+      "nome": "Druids",
+      "direzione": "destra",
+      "tipo": "lenta",
+      "marcia_indicativa": "1a",
+      "riferimento_frenata": "Si sale lungo la Hailwood Hill tenendosi a sinistra. Il riferimento e' il blocco arancione dei commissari sul guardrail esterno. Si scala dalla quarta alla prima per far mordere l'anteriore.",
+      "insidia": "Tornante a destra in cima alla salita. Si gira prima di quanto sembri e si segue il cordolo interno per un apice lungo, ma senza salirci troppo: scompone la macchina. Si tiene un filo di gas per non perdere slancio mentre la macchina ruota, e si torna sul gas solo quando si vede l'uscita.",
+      "costo_errore": "Medio. Oltre il cordolo bianco e rosso in uscita c'e' un muro di gomme, e ci si arriva in fretta.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Tornante a destra: anteriore sinistro caricato in frenata e in percorrenza."
+      },
+      "freni": {
+        "stress": "medio-alto",
+        "note": "Staccata in salita fino alla prima marcia."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "Non andare oltre il cordolo bianco e rosso in uscita: dietro c'e' il muro di gomme."
+      },
+      "differenza_gara_qualifica": "In gara la trazione in uscita conta di piu': con le gomme stanche il posteriore scappa prima.",
+      "progressione": {
+        "prendi_il_giro": "Frena al blocco arancione, metti la prima e aspetta di vedere l'uscita prima di dare gas.",
+        "guadagni": "Gira prima e resta vicino al cordolo interno per tutto l'apice, con un filo di gas per tenere lo slancio.",
+        "al_limite": "Apice lungo attaccato al cordolo senza salirci, e gas progressivo che usa tutto il cordolo di uscita senza superarlo."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 3,
+      "nome": "Graham Hill Bend",
+      "direzione": "sinistra",
+      "tipo": "media",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Dalla Druids si torna subito a destra, scendendo. Si frena in linea retta appena prima che cominci il cordolo esterno e si scala in seconda.",
+      "insidia": "Curva a sinistra in discesa e in contropendenza. Si butta dentro la macchina puntando un apice a meta' curva. Conta portare slancio e tornare presto sul gas. Il cordolo interno non si taglia: interviene il controllo di trazione e ci si puo' girare.",
+      "costo_errore": "Medio. L'uscita porta sul Cooper Straight verso la Surtees.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Curva a sinistra: anteriore destro caricato."
+      },
+      "freni": {
+        "stress": "medio",
+        "note": "Frenata in discesa, breve."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Cordolo e tappeto in uscita si usano, ma almeno le ruote interne devono restare dentro la linea bianca."
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica: la differenza la fa la pazienza sul cordolo interno.",
+      "progressione": {
+        "prendi_il_giro": "Frena dritto prima del cordolo esterno, seconda, e non toccare il cordolo interno.",
+        "guadagni": "Butta dentro la macchina con decisione e anticipa il gas.",
+        "al_limite": "Apice a meta' curva preciso, gas presto e uscita su cordolo e tappeto con le ruote interne dentro la linea bianca."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 4,
+      "nome": "Surtees",
+      "direzione": "sinistra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Tenendosi a destra, si frena appena dopo il cartello «1» e si gira un filo mentre si frena, in trail braking. Si scala in seconda puntando prima il centro della pista.",
+      "insidia": "Sinistra in salita e in contropendenza, molto tecnica, sconnessa in ingresso soprattutto vicino all'apice. Si sterza con decisione e si punta l'apice dove il cordolo interno passa da doppio a singolo, poi si resta attaccati al cordolo finche' non si assottiglia. In uscita si lascia allargare la macchina aprendo lo sterzo, ma senza esagerare col cordolo: troppo fa intervenire forte il controllo di trazione e fa saltare la macchina.",
+      "costo_errore": "Alto. L'uscita vale per tutta la discesa di Pilgrim's Drop fino alla Hawthorn.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Curva a sinistra: anteriore destro caricato."
+      },
+      "freni": {
+        "stress": "medio",
+        "note": "Frenata in salita, con i dossi in ingresso."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "Il limite vero e' il cordolo di uscita: troppo, e la macchina salta."
+      },
+      "differenza_gara_qualifica": "In gara conviene rinunciare a un po' di cordolo in uscita: la trazione pulita vale di piu' del metro guadagnato.",
+      "progressione": {
+        "prendi_il_giro": "Frena dopo il cartello «1», seconda, e punta il centro pista prima di girare.",
+        "guadagni": "Aggiungi il trail braking e punta l'apice dove il cordolo diventa singolo.",
+        "al_limite": "Resta sul cordolo interno finche' si assottiglia e apri lo sterzo col gas pieno, usando il cordolo di uscita senza far saltare la macchina."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 5,
+      "nome": "Hawthorn Bend",
+      "direzione": "destra",
+      "tipo": "veloce",
+      "marcia_indicativa": "4a",
+      "riferimento_frenata": "In fondo alla discesa della Hawthorn Hill, dal lato sinistro, si frena appena prima del cartello «1» e si tiene il trail braking fino al cordolo interno. Si scala in quarta, o in terza a seconda della macchina.",
+      "insidia": "E' di gran lunga la curva piu' veloce del giro: servono precisione e sterzo morbido. Si gira presto per stare stretti all'interno e tornare presto sul gas; la macchina porta da sola verso il cordolo di uscita, che si puo' usare.",
+      "costo_errore": "Alto. Alla velocita' piu' alta del giro ogni correzione costa tempo, e l'uscita porta verso la Westfield.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Curva veloce a destra: carico forte sull'anteriore sinistro."
+      },
+      "freni": {
+        "stress": "medio",
+        "note": "Frenata in fondo alla discesa, dalla velocita' massima del giro."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "In uscita capita di alzare un po' di polvere: va bene, purche' si resti nei limiti."
+      },
+      "differenza_gara_qualifica": "In gara, con il pieno, la frenata in fondo alla discesa si allunga: meglio anticipare un filo.",
+      "progressione": {
+        "prendi_il_giro": "Frena prima del cartello «1», metti la quarta (o la terza) e gira presto.",
+        "guadagni": "Tieni il trail braking fino al cordolo interno e anticipa il gas.",
+        "al_limite": "Sterzo morbidissimo, apice stretto e gas pieno presto, lasciando che la macchina arrivi da sola al cordolo di uscita."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 6,
+      "nome": "Westfield Bend",
+      "direzione": "destra",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Si arriva da sinistra, si cerca di nuovo il cartello «1», si frena forte e si scala in terza.",
+      "insidia": "Destra breve, di media-alta velocita'. Il segreto e' tagliare quanto piu' si puo' portando molto slancio: trail braking in ingresso e taglio del cordolo interno, fino a toccarlo con le ruote esterne. All'apice si torna sul gas per l'uscita in salita.",
+      "costo_errore": "Medio. L'uscita porta nella discesa di Dingle Dell verso la Sheene.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Curva a destra: anteriore sinistro caricato."
+      },
+      "freni": {
+        "stress": "medio",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "alto",
+        "note": "Cordolo di uscita e tappeto si usano tutti: e' il punto in cui conviene cercare davvero il limite, e quindi quello in cui lo si supera piu' facilmente."
+      },
+      "differenza_gara_qualifica": "In qualifica si cerca il limite in uscita. In gara conviene lasciare un margine: i track limits si pagano.",
+      "progressione": {
+        "prendi_il_giro": "Frena al cartello «1», terza, e usa il cordolo interno senza esagerare.",
+        "guadagni": "Taglia di piu' l'interno col trail braking, fino a toccare il cordolo con le ruote esterne.",
+        "al_limite": "Taglio massimo all'interno e uscita su tutto il cordolo e il tappeto, fino al limite esatto."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 7,
+      "nome": "Sheene Curve",
+      "direzione": "destra",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Dopo la discesa di Dingle Dell, arrivando da sinistra, si cerca il cartello «1» all'interno e si comincia a frenare dolcemente. Si gira appena si comincia a frenare, con un leggero trail braking verso l'apice, e si scala in terza.",
+      "insidia": "Destra cieca in salita, che puo' fare o disfare il giro. Il cordolo interno va tagliato con decisione. Si torna sul gas appena dopo l'apice e si lascia correre la macchina verso l'uscita.",
+      "costo_errore": "Molto alto: in uscita non c'e' cordolo, solo erba. Allargare vuol dire perdere il giro.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Curva a destra in salita: anteriore sinistro caricato."
+      },
+      "freni": {
+        "stress": "basso",
+        "note": "Frenata dolce, piu' che altro per impostare la curva."
+      },
+      "track_limits": {
+        "rischio": "alto",
+        "note": "Nessun cordolo di uscita: oltre la linea c'e' l'erba."
+      },
+      "differenza_gara_qualifica": "In gara conviene un filo di velocita' in meno: un'uscita sull'erba costa molto di piu' del decimo guadagnato.",
+      "progressione": {
+        "prendi_il_giro": "Frena dolcemente al cartello «1», terza, e punta il cordolo interno con calma.",
+        "guadagni": "Gira gia' mentre freni e taglia il cordolo interno con decisione.",
+        "al_limite": "Ingresso cieco a memoria, taglio pieno del cordolo e gas subito dopo l'apice, con l'uscita misurata al centimetro prima dell'erba."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 8,
+      "nome": "Stirling's Bend",
+      "direzione": "sinistra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Dopo la Sheene si torna a destra. Il riferimento e' appena prima del cartello «1». Qui non si guadagna in frenata: meglio frenare un po' prima e impostare l'uscita.",
+      "insidia": "Sinistra sopraelevata, la penultima curva. Si scala in seconda e si usa la sopraelevazione, con un leggero trail braking per portare l'anteriore sinistro sul cordolo interno e tornare presto sul gas.",
+      "costo_errore": "Medio. Alcune macchine toccano il fondo sul cordolo di uscita, che le risucchia verso l'esterno.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Curva a sinistra: anteriore destro caricato."
+      },
+      "freni": {
+        "stress": "medio",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Il cordolo di uscita si usa, ma con le macchine basse tocca il fondo e porta fuori."
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica: e' una curva da impostare, non da attaccare.",
+      "progressione": {
+        "prendi_il_giro": "Frena un po' prima del cartello «1», seconda, e pensa all'uscita.",
+        "guadagni": "Usa la sopraelevazione e porta l'anteriore sinistro sul cordolo interno.",
+        "al_limite": "Trail braking leggero, gas anticipato e cordolo di uscita usato fino a dove la tua macchina non tocca il fondo."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 9,
+      "nome": "Clark Curve",
+      "direzione": "destra",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Dal tratto di Clearways, arrivando da sinistra, si cerca il cartello «1». Si frena dolcemente e si scala in terza.",
+      "insidia": "Ultima curva, a destra, che riporta sul traguardo. Si gira prima di quanto sembri puntando il cordolo interno a meta', con trail braking, e poco prima dell'apice si ridà gas con progressivita'. In uscita c'e' tanto spazio, ma finisce in fretta se si porta troppa velocita' in percorrenza. Attenzione al sottosterzo col gas, che striscia le anteriori.",
+      "costo_errore": "Medio: comanda il rettilineo dei box e quindi la staccata della Paddock.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Curva a destra con sottosterzo facile in uscita: anteriore sinistro."
+      },
+      "freni": {
+        "stress": "basso",
+        "note": "Frenata dolce."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "Tanto spazio in uscita. Poi si torna a destra, attaccati al muretto dei box, per la strada piu' corta verso il traguardo."
+      },
+      "differenza_gara_qualifica": "In gara e' la curva da non sbagliare mai: chi esce meglio arriva in scia alla Paddock.",
+      "progressione": {
+        "prendi_il_giro": "Frena dolcemente al cartello «1», terza, e gira presto.",
+        "guadagni": "Trail braking fino a poco prima dell'apice, poi gas progressivo.",
+        "al_limite": "Apice a meta' cordolo e gas pieno senza sottosterzo, poi attaccato al muretto dei box fino al traguardo."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    }
+  ],
+  "track_limits_generale": "Brands Hatch perdona poco: i cordoli di uscita si possono usare quasi ovunque, ma alla Graham Hill Bend e alla Hawthorn le ruote interne devono restare dentro la linea bianca, e alla Westfield il limite si cerca apposta. I due punti che non perdonano sono la Sheene, dove in uscita non c'e' cordolo ma erba, e la Druids, dove oltre il cordolo c'e' il muro di gomme.",
+  "pit": {
+    "tempo_perso_s": null,
+    "limite_kmh": 50,
+    "lato_box": null,
+    "note": "Limite standard ACC di 50 km/h. La corsia box corre lungo il Brabham Straight, all'interno. Il lato dei box e il tempo perso non sono dati da nessuna fonte: da vedere e misurare in gioco.",
+    "fonte": "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  },
+  "traffico_multiclass": "Il giro e' corto e il traffico arriva presto, anche in qualifica. Il posto giusto per passare o farsi passare e' il Brabham Straight verso la Paddock Hill Bend; il secondo e' la discesa di Pilgrim's Drop verso la Hawthorn. I posti sbagliati sono il giro nel bosco, dalla Westfield alla Sheene, stretto e cieco, e la Druids, dove affiancarsi porta dritti al muro di gomme.",
+  "meteo_e_luce": {
+    "condizioni_tipiche": null,
+    "sul_bagnato": null,
+    "punti_acqua": null,
+    "di_notte": null,
+    "al_tramonto": null
+  },
+  "gomme_e_freni_pista": "Brands Hatch e' una pista da anteriore sinistro: sei curve su nove girano a destra, e fra queste la Paddock in discesa e la Hawthorn, la piu' veloce. I freni lavorano soprattutto in discesa, alla Paddock e alla Hawthorn, dove la pendenza allunga la frenata. Dossi e compressioni, soprattutto in fondo alla Paddock, chiedono un assetto che li sopporti.",
+  "errore_del_principiante": "Esagerare coi cordoli. Alla Graham Hill Bend e alla Surtees troppo cordolo fa intervenire il controllo di trazione e fa saltare la macchina, e alla Sheene allargare di un metro vuol dire finire sull'erba. Coach Dave lo riassume cosi': nell'ultima parte del giro si tratta soprattutto di tenere insieme il giro fino al traguardo.",
+  "gt3_ref_lap_time": {
+    "valore": "1:23.5",
+    "contesto": "Passo di riferimento GT3 in hotlap su pista ottimale: Full Grip indica circa 1:22.8 per un pilota di vertice, 1:23.5 per un pilota competitivo e 1:24.5 per un pilota esperto. Il giro di riferimento di Coach Dave con l'Aston Martin V8 Vantage GT3 e' 1:22.1. Attenzione: la stessa guida di Full Grip conta 12 curve invece di 9. Il tempo e' un ordine di grandezza, da confermare con una misura presa dalle sessioni vere.",
+    "fonte": "https://www.fullgripmotorsport.com/academy/trackguides/brands_hatch"
+  },
+  "gt3_fuel_per_lap_l": {
+    "valore": null,
+    "contesto": "Nessuna fonte affidabile pubblica il consumo per giro a Brands Hatch: dipende da vettura, mappa motore e passo. Va misurato dalle sessioni vere, non stimato.",
+    "fonte": null
+  },
+  "chicche": [
+    {
+      "testo": "Fino al 1954 il circuito girava in senso antiorario. Quando si decise di invertirlo nacque la Paddock Hill Bend: una destra veloce che si butta in discesa, con pendenze dell'8%.",
+      "perche_interessa_al_pilota": "Spiega perche' la prima curva e' cosi' strana: non e' stata disegnata come curva d'ingresso, e' il vecchio circuito percorso al contrario.",
+      "fonte": "https://en.wikipedia.org/wiki/Brands_Hatch"
+    },
+    {
+      "testo": "Brands Hatch ha due layout: il circuito Indy da 1,944 km, che dopo la Surtees torna verso i box dalla McLaren, e il Grand Prix da 3,916 km, che fa anche il giro nel bosco. ACC usa il Grand Prix.",
+      "perche_interessa_al_pilota": "Un onboard girato sull'Indy vale solo per le prime curve: prima di prenderne uno come riferimento, controlla che faccia il giro nel bosco.",
+      "fonte": "https://en.wikipedia.org/wiki/Brands_Hatch"
+    }
+  ],
+  "fonti": [
+    "https://coachdaveacademy.com/tutorials/brands-hatch-gp-track-guide/",
+    "https://en.wikipedia.org/wiki/Brands_Hatch",
+    "https://de.wikipedia.org/wiki/Brands_Hatch",
+    "https://it.wikipedia.org/wiki/Circuito_di_Brands_Hatch",
+    "https://www.fullgripmotorsport.com/academy/trackguides/brands_hatch",
+    "https://coachdaveacademy.com/acc-lap-times/",
+    "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/",
+    "https://commons.wikimedia.org/wiki/File:Brands_Hatch.svg"
+  ]
+}

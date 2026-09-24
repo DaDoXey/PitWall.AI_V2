@@ -112,6 +112,54 @@
       "height": 600,
       "format": "svg",
       "note": "scelto a occhio nel provino del 23/09/2026 (candidati del blocco 2, cercati dal terminale)"
+    },
+    {
+      "id": "misano",
+      "titolo_file": "File:Misano World Circuit.svg",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/56/Misano_World_Circuit.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Misano_World_Circuit.svg",
+      "license": "CC BY-SA 3.0",
+      "author": "Will Pittenger",
+      "width": 1451,
+      "height": 1017,
+      "format": "svg",
+      "note": "scelto a occhio nel provino del 24/09/2026 (candidati del blocco 3, cercati dal terminale)"
+    },
+    {
+      "id": "brands_hatch",
+      "titolo_file": "File:Brands Hatch.svg",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Brands_Hatch.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Brands_Hatch.svg",
+      "license": "Public domain",
+      "author": "Will Pittenger",
+      "width": 1198,
+      "height": 1457,
+      "format": "svg",
+      "note": "scelto a occhio nel provino del 24/09/2026 (candidati del blocco 3, cercati dal terminale)"
+    },
+    {
+      "id": "hungaroring",
+      "titolo_file": "File:Hungaroring.svg",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/9/91/Hungaroring.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Hungaroring.svg",
+      "license": "CC BY-SA 3.0",
+      "author": "Will Pittenger",
+      "width": 848,
+      "height": 893,
+      "format": "svg",
+      "note": "scelto a occhio nel provino del 24/09/2026 (candidati del blocco 3, cercati dal terminale)"
+    },
+    {
+      "id": "paul_ricard",
+      "titolo_file": "File:Le Castellet circuit map Formula One 2018 without corner names English 29 06 2021.svg",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Le_Castellet_circuit_map_Formula_One_2018_without_corner_names_English_29_06_2021.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Le_Castellet_circuit_map_Formula_One_2018_without_corner_names_English_29_06_2021.svg",
+      "license": "CC0",
+      "author": "HumanBodyPiloter5",
+      "width": 2191,
+      "height": 1951,
+      "format": "svg",
+      "note": "scelto a occhio nel provino del 24/09/2026 (candidati del blocco 3, cercati dal terminale); versione 2018 perche' in ACC l'ingresso box e' ancora sul rettilineo del traguardo"
     }
   ]
 }

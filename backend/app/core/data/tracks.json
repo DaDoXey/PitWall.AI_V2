@@ -210,7 +210,7 @@
     "dlc_pack": null,
     "length_km": 3.916,
     "corners": 9,
-    "corners_confidence": "media",
+    "corners_confidence": "alta",
     "grid_size": 32,
     "pole_side": "destra",
     "lap_record_real": "1:23.261",
@@ -226,7 +226,9 @@
         "commons_category": "Category:Maps of Brands Hatch",
         "preferred_format": "svg",
         "license_expected": "CC BY-SA (da confermare)",
-        "status": "da_verificare"
+        "status": "verificata",
+      "commons_file": "Brands Hatch.svg",
+      "verificata_nota": "layout GP 2003-oggi, scelto nel provino del 24/09/2026"
       },
       "photo": {
         "commons_query": "Brands Hatch",
@@ -248,7 +250,7 @@
     "dlc_pack": null,
     "length_km": 4.381,
     "corners": 14,
-    "corners_confidence": "media",
+    "corners_confidence": "alta",
     "grid_size": 27,
     "pole_side": "destra",
     "lap_record_real": "1:42.359",
@@ -264,7 +266,9 @@
         "commons_category": "Category:Maps of Hungaroring",
         "preferred_format": "svg",
         "license_expected": "CC BY-SA (da confermare)",
-        "status": "da_verificare"
+        "status": "verificata",
+      "commons_file": "Hungaroring.svg",
+      "verificata_nota": "layout GP 2003-oggi, scelto nel provino del 24/09/2026"
       },
       "photo": {
         "commons_query": "Hungaroring",
@@ -286,7 +290,7 @@
     "dlc_pack": null,
     "length_km": 4.226,
     "corners": 16,
-    "corners_confidence": "media",
+    "corners_confidence": "alta",
     "grid_size": 30,
     "pole_side": "destra",
     "lap_record_real": "1:33.138",
@@ -303,7 +307,9 @@
         "commons_category": "Category:Maps of Misano World Circuit",
         "preferred_format": "svg",
         "license_expected": "CC BY-SA (da confermare)",
-        "status": "da_verificare"
+        "status": "verificata",
+      "commons_file": "Misano World Circuit.svg",
+      "verificata_nota": "layout GP 2008-oggi, scelto nel provino del 24/09/2026"
       },
       "photo": {
         "commons_query": "Misano World Circuit Marco Simoncelli",
@@ -328,20 +334,23 @@
     "corners_confidence": "alta",
     "grid_size": 33,
     "pole_side": "sinistra",
-    "lap_record_real": "1:39.914",
+    "lap_record_real": null,
+    "lap_record_note": "Il catalogo riportava 1:39.914, il giro di Keke Rosberg in Formula 1 nel 1985 sul tracciato originale da 5,809 km, che non esiste piu'. Nessuna fonte da' un record reale per il layout 1C-V2 in GT3: Wikipedia elenca il record GT3 (1:53.750, Blancpain 2019) sotto il layout senza chicane, che in ACC non c'e'.",
     "gt3_ref_lap_time": null,
     "gt3_fuel_per_lap_l": null,
     "fuel_status": "da_misurare",
     "downforce_level": "medium",
     "setup_focus_it": "Il Mistral è lunghissimo: deportanza contenuta e buona efficienza aerodinamica. Attenzione alla stabilità in curva 10 a fine rettilineo.",
-    "description_it": "Sembra facile con le sue vie di fuga larghe e i suoi 15 curvoni, ma ogni curva ha sfumature che tradiscono. La destra veloce di curva 10, in fondo al Mistral, è quella che costa più giri annullati e più uscite lunghe. Circuito da precisione, non da coraggio.",
+    "description_it": "Sembra facile con le sue vie di fuga larghe e le sue 15 curve, ma ogni curva ha sfumature che tradiscono. La destra veloce di curva 10, in fondo al Mistral, è quella che costa più giri annullati e più uscite lunghe. Circuito da precisione, non da coraggio.",
     "assets": {
       "map": {
         "commons_query": "Circuit Paul Ricard map",
         "commons_category": "Category:Maps of Circuit Paul Ricard",
         "preferred_format": "svg",
         "license_expected": "CC BY-SA (da confermare)",
-        "status": "da_verificare"
+        "status": "verificata",
+      "commons_file": "Le Castellet circuit map Formula One 2018 without corner names English 29 06 2021.svg",
+      "verificata_nota": "layout 1C-V2 con la chicane sul Mistral, versione 2018 con l'ingresso box sul rettilineo come in ACC; scelto nel provino del 24/09/2026"
       },
       "photo": {
         "commons_query": "Circuit Paul Ricard",

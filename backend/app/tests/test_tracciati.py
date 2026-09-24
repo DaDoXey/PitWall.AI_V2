@@ -61,10 +61,12 @@ MAPPE_DIR = REPO / "frontend" / "public" / "assets" / "tracks"
 GUIDE_DIR = BACKEND / "app" / "core" / "data" / "tracks_knowledge"
 
 # I layout scelti a occhio nei provini: cinque il 07/09/2026 (blocco 1), quattro
-# il 23/09/2026 (blocco 2). Se un provino ne approva altri, questa lista cresce
-# INSIEME a tracks.json: il test esiste proprio per non far divergere le due cose.
+# il 23/09/2026 (blocco 2), quattro il 24/09/2026 (blocco 3). Se un provino ne
+# approva altri, questa lista cresce INSIEME a tracks.json: il test esiste proprio
+# per non far divergere le due cose.
 VERIFICATE_ATTESE = {"spa_francorchamps", "imola", "zandvoort", "zolder", "kyalami",
-                     "monza", "silverstone", "nurburgring_gp", "barcelona_catalunya"}
+                     "monza", "silverstone", "nurburgring_gp", "barcelona_catalunya",
+                     "misano", "brands_hatch", "hungaroring", "paul_ricard"}
 
 print("\n" + "=" * 60)
 print("CATALOGO DEI TRACCIATI — lista, bandierine, mappe")

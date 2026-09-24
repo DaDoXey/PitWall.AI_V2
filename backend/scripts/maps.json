@@ -13,10 +13,11 @@
     "id": "brands_hatch",
     "kind": "track",
     "role": "map",
-    "source_page": "https://commons.wikimedia.org/wiki/File:Brands_Hatch_Indy_2003.svg",
-    "license": "CC BY-SA 4.0",
-    "author": "John Chapman",
-    "sha1": "5d4c462d06adb256b1c9ba8104a0af08a559e6a3"
+    "file": "frontend/public/assets/tracks/brands_hatch_map.svg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Brands_Hatch.svg",
+    "license": "Public domain",
+    "author": "Will Pittenger",
+    "sha1": "10d05f16d670820003f4ba2fdac6f8c1389309da"
   },
   {
     "id": "cota",
@@ -40,10 +41,11 @@
     "id": "hungaroring",
     "kind": "track",
     "role": "map",
-    "source_page": "https://commons.wikimedia.org/wiki/File:Hungaroring_circuit_1989-2002.svg",
+    "file": "frontend/public/assets/tracks/hungaroring_map.svg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Hungaroring.svg",
     "license": "CC BY-SA 3.0",
-    "author": "Restu20",
-    "sha1": "7a7274302dac3845be8b86094b3c9a4d5c4cb83f"
+    "author": "Will Pittenger",
+    "sha1": "f9adf52772b34210276653067cb86d7913624983"
   },
   {
     "id": "imola",
@@ -87,10 +89,11 @@
     "id": "misano",
     "kind": "track",
     "role": "map",
-    "source_page": "https://commons.wikimedia.org/wiki/File:Misano_World_Circuit_2007.svg",
+    "file": "frontend/public/assets/tracks/misano_map.svg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Misano_World_Circuit.svg",
     "license": "CC BY-SA 3.0",
-    "author": "Misano_World_Circuit.svg: Will Pittenger derivative work: Gpmat",
-    "sha1": "2b6dfe85a9b5c3ea320e56438ee18424069a0cf9"
+    "author": "Will Pittenger",
+    "sha1": "f08758bb1ab8bcece6a861f0f1bdeacddf3dcdc4"
   },
   {
     "id": "monza",
@@ -143,10 +146,11 @@
     "id": "paul_ricard",
     "kind": "track",
     "role": "map",
-    "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_Paul_Ricard_2020_layout_map.svg",
-    "license": "CC BY-SA 4.0",
-    "author": "Antonsusi (talk)",
-    "sha1": "aa572a793d40b06dc95d60e82346cfa2e38540d0"
+    "file": "frontend/public/assets/tracks/paul_ricard_map.svg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Le_Castellet_circuit_map_Formula_One_2018_without_corner_names_English_29_06_2021.svg",
+    "license": "CC0",
+    "author": "HumanBodyPiloter5",
+    "sha1": "926fdb4dcd46b81533e7d5f4cfef8b179ea2ae85"
   },
   {
     "id": "red_bull_ring",

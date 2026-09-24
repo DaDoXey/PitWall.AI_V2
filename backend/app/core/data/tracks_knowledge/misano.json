@@ -1,0 +1,659 @@
+{
+  "id": "misano",
+  "verifica_catalogo": {
+    "lunghezza_confermata": true,
+    "curve_confermate": true,
+    "fonte_lunghezza": "https://en.wikipedia.org/wiki/Misano_World_Circuit",
+    "note": "Catalogo e fonti concordano: ACC usa il Grand Prix Circuit in uso dal 2008, 4,226 km e 16 curve, in senso orario. Lo dicono Coach Dave, Wikipedia inglese e 24hseries. La mappa numerata di Commons (Misano World Circuit.svg) numera 16 curve con la stessa sequenza di Coach Dave. Da segnalare: nel riassunto iniziale Coach Dave scrive «sei curve a destra e dieci a sinistra», ma la sua stessa descrizione curva per curva e la mappa danno il contrario, dieci a destra e sei a sinistra. Qui vale la descrizione curva per curva, che concorda con la mappa. I sensi di T4 e T7, che Coach Dave non dichiara, vengono dalla mappa. I nomi vengono da Coach Dave e dalla mappa; dove nessuna delle due ne da', il nome resta null. I tre settori qui sotto sono una divisione descrittiva, non i settori di cronometraggio di ACC."
+  },
+  "senso_marcia": "orario",
+  "dislivello_m": 4,
+  "rettilineo_piu_lungo_m": 565,
+  "variante_acc": "ACC riproduce il Grand Prix Circuit in uso dal 2008: 4,226 km e 16 curve, percorso in senso orario. Non il vecchio tracciato antiorario, ne' quello del 2007 da 4,180 km, ne' la variante corta per i camion da 4,048 km.",
+  "fonti_campi_pista": {
+    "senso_marcia": {
+      "fonte": "https://www.24hseries.com/circuits/misano-world-circuit-marco-simoncelli",
+      "nota": "Concordano Wikipedia inglese e trackdaytickets: il senso e' stato invertito in orario con i lavori del 2006."
+    },
+    "dislivello_m": {
+      "fonte": "https://trackdaytickets.com/tracks/misano",
+      "fonte_singola": true,
+      "nota": null
+    },
+    "rettilineo_piu_lungo_m": {
+      "fonte": "https://coachdaveacademy.com/tutorials/misano-world-circuit-track-guide/",
+      "nota": "Coach Dave: «The longest straight is 565 meters long». Concorda trackdaytickets («Main straight 565 m»)."
+    },
+    "variante_acc": {
+      "fonte": "https://en.wikipedia.org/wiki/Misano_World_Circuit",
+      "nota": null
+    }
+  },
+  "settori": [
+    {
+      "n": 1,
+      "carattere": "La Variante del Parco, destra-sinistra seguita da una lunga destra in pieno, e la Curva del Rio, doppia destra lenta che si chiude con la sinistra della T6.",
+      "cosa_decide": "L'uscita della T5, la parte della Rio che conta di piu' per il tempo e per il sorpasso alla Quercia.",
+      "errore_costoso": "Sbagliare la Rio: si perde tutto il tratto fino alla Quercia."
+    },
+    {
+      "n": 2,
+      "carattere": "La piega della T7, la staccata della Quercia, sinistra lenta, e la Curva del Tramonto, piega a destra e tornante a destra che lancia sul rettilineo posteriore.",
+      "cosa_decide": "L'uscita del tornante della T10, che vale per il rettilineo posteriore.",
+      "errore_costoso": "Cercare l'apice della piega della T9 invece di impostare il tornante."
+    },
+    {
+      "n": 3,
+      "carattere": "Il Curvone in pieno, le destre veloci T12-T13, il tornante della Curva del Carro, la sinistra veloce della T15 e la Curva del Misano che porta sul traguardo.",
+      "cosa_decide": "La T13, dove si stacca da alta velocita', e l'uscita della Curva del Misano.",
+      "errore_costoso": "Troppo gas in uscita dalla T13: si allarga e si finisce fuori dai limiti."
+    }
+  ],
+  "curve": [
+    {
+      "n": 1,
+      "nome": "Variante del Parco (ingresso)",
+      "direzione": "destra",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Si porta la macchina a sinistra sul rettilineo, con le ruote esterne sulla via di fuga rossa in cemento. Si frena appena prima del cartello dei 50 m e si comincia a girare subito, gia' in frenata. Terza marcia.",
+      "insidia": "Primo apice della variante: le ruote interne vanno sopra le salsicce. In uscita bisogna restare a destra, senza lasciar allargare la macchina: cosi' si apre l'ingresso della sinistra che segue. La macchina va raddrizzata prima di frenare di nuovo per la T2.",
+      "costo_errore": "Medio. Un'uscita larga rovina la T2 e la T3.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": null
+      },
+      "freni": {
+        "stress": "medio-alto",
+        "note": "Staccata in fondo al rettilineo del traguardo."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "L'interno si taglia sopra le salsicce, senza superare i limiti."
+      },
+      "differenza_gara_qualifica": "In gara, soprattutto al primo giro, la variante e' stretta per due: meglio uscirne puliti che vincere la frenata.",
+      "progressione": {
+        "prendi_il_giro": "Frena prima dei 50 m, terza, e resta a destra in uscita.",
+        "guadagni": "Gira gia' in frenata e metti le ruote interne sulle salsicce.",
+        "al_limite": "Frenata al limite dalla via di fuga rossa, apice sopra le salsicce e macchina raddrizzata in un attimo per la T2."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 2,
+      "nome": "Variante del Parco",
+      "direzione": "sinistra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Si frena di nuovo con la macchina dritta, scalando in seconda.",
+      "insidia": "Si gira presto per mettere le ruote interne sopra le salsicce, tagliando l'interno quanto piu' si puo' senza superare i limiti. Si torna sul gas il prima possibile: l'uscita decide la T3 e il tratto fino alla Rio.",
+      "costo_errore": "Medio.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": null
+      },
+      "freni": {
+        "stress": "medio",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Tagliare si', oltre le salsicce no."
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Frena con la macchina dritta, seconda, e gira presto.",
+        "guadagni": "Taglia l'interno sopra le salsicce.",
+        "al_limite": "Taglio massimo senza avviso dei track limits e gas pieno appena la macchina e' girata."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 3,
+      "nome": "Variante del Parco (uscita)",
+      "direzione": "destra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna frenata: dev'essere in pieno.",
+      "insidia": "Lunga destra in pieno. Si sfrutta la via di fuga interna quanto piu' si puo' senza prendere l'avviso dei track limits: cosi' si porta piu' velocita' e si tiene lo slancio della T1 e della T2. Quando la curva si apre si raddrizza lo sterzo e si usa il cordolo a strisce in uscita.",
+      "costo_errore": "Medio. Porta verso la staccata della Rio.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Curva lunga a destra in pieno: anteriore sinistro caricato."
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "alto",
+        "note": "La via di fuga interna si usa fino al limite dell'avviso: e' facile superarlo."
+      },
+      "differenza_gara_qualifica": "In qualifica si cerca il limite all'interno. In gara conviene un margine: gli avvisi si accumulano.",
+      "progressione": {
+        "prendi_il_giro": "Resta in pieno e usa il cordolo a strisce in uscita.",
+        "guadagni": "Sfrutta la via di fuga interna per portare piu' velocita'.",
+        "al_limite": "Interno fino al limite esatto dell'avviso e uscita piena sul cordolo a strisce."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 4,
+      "nome": "Curva del Rio (primo apice)",
+      "direzione": "destra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Si frena sul cordolo a strisce, dove finisce la via di fuga rossa sulla sinistra. Si puo' frenare piu' tardi, verso il cartello dei 50 m, ma serve molto trail braking. Seconda marcia.",
+      "insidia": "La Rio e' una sequenza delicata, che chiede controllo del gas e pazienza: sbagliata, costa molto sul rettilineo che segue. Qui si taglia il cordolo interno, si riprende un filo di gas all'apice e si apre un po' lo sterzo per lasciar andare la macchina verso il cordolo esterno. Cosi' si prepara la seconda parte, quella che conta.",
+      "costo_errore": "Alto: la Rio sbagliata si paga fino alla Quercia.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Doppia destra lenta: anteriore sinistro caricato a lungo."
+      },
+      "freni": {
+        "stress": "medio-alto",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "In gara conviene la frenata anticipata sul cordolo a strisce: quella ritardata ai 50 m chiede un trail braking che con le gomme stanche non regge.",
+      "progressione": {
+        "prendi_il_giro": "Frena sul cordolo a strisce, seconda, e taglia il cordolo interno.",
+        "guadagni": "Porta la frenata verso i 50 m con piu' trail braking.",
+        "al_limite": "Frenata tardiva ai 50 m, apice tagliato e macchina lasciata andare al cordolo esterno per il secondo apice."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 5,
+      "nome": "Curva del Rio (secondo apice)",
+      "direzione": "destra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Nessuna nuova frenata: dopo aver aperto lo sterzo si torna a girare con decisione.",
+      "insidia": "E' la parte piu' importante della Rio, per il tempo e per il sorpasso verso la Quercia. Si gira con decisione, senza avidita' col gas: il pedale va modulato mentre si sfrutta di nuovo il cordolo interno, che apre la sinistra che segue.",
+      "costo_errore": "Alto: decide tutto il tratto fino alla Quercia.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": null
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "In gara e' la curva che prepara l'attacco alla Quercia: chi ne esce meglio e' in scia.",
+      "progressione": {
+        "prendi_il_giro": "Gira deciso e dai gas con calma.",
+        "guadagni": "Sfrutta il cordolo interno per aprire la T6.",
+        "al_limite": "Gas modulato al limite della trazione e macchina gia' tutta a destra per la sinistra che segue."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 6,
+      "nome": "Curva del Rio (uscita)",
+      "direzione": "sinistra",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Nessuna frenata: si resta il piu' a destra possibile in uscita dalla T5 e si gira in fretta.",
+      "insidia": "Cambio di direzione rapido. Si taglia il cordolo interno della sinistra anticipando il passaggio in terza, e si resta sul gas: si modula solo se si sente il controllo di trazione. Con posizione e velocita' giuste la macchina va da sola sul cordolo di uscita. In sottosterzo si finisce sulle grosse salsicce in uscita, che la fanno decollare.",
+      "costo_errore": "Medio. Le salsicce in uscita lanciano la macchina e portano all'avviso dei track limits.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": null
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "alto",
+        "note": "Le grosse salsicce in uscita fanno decollare la macchina e portano oltre i limiti."
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Resta a destra, gira in fretta e tieni il gas.",
+        "guadagni": "Taglia il cordolo interno e passa in terza presto.",
+        "al_limite": "Gas pieno senza controllo di trazione e uscita esattamente sul cordolo, lontano dalle salsicce."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 7,
+      "nome": null,
+      "direzione": "sinistra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna frenata: e' solo una piega sul rettilineo verso la Quercia.",
+      "insidia": "Nessuna difficolta': si resta in pieno e ci si porta sulla destra per la staccata della Quercia.",
+      "costo_errore": "Basso.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "basso",
+        "note": null
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Resta in pieno.",
+        "guadagni": "Prendi la piega sulla linea piu' corta.",
+        "al_limite": "Linea che ti porta gia' tutto a destra per la staccata della Quercia."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 8,
+      "nome": "Curva della Quercia",
+      "direzione": "sinistra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Si arriva sulla destra, usando la via di fuga verde e salendo quasi del tutto sul cordolo. Si frena al cartello dei 100 m e si gira solo dopo il cartello dei 50 m.",
+      "insidia": "Sinistra lenta e stretta. Inserimento ritardato per un apice tardivo, in seconda, usando il cordolo interno per far ruotare la macchina. Si torna presto sul gas sfruttando il cordolo piatto in uscita, attenti a non far pattinare le posteriori.",
+      "costo_errore": "Medio. L'uscita porta verso il Tramonto.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "E' il punto di sorpasso naturale: si prepara con una buona uscita dalla Rio e si attacca in staccata all'interno sinistro.",
+        "come_ci_si_difende": "Chiudere l'interno. L'apice tardivo lascia pero' l'incrocio a chi entra largo ed esce prima sul gas."
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Staccata a sinistra: anteriore destro caricato."
+      },
+      "freni": {
+        "stress": "alto",
+        "note": "Staccata dai 100 m fino alla seconda."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "Il cordolo di uscita e' piatto e si usa tutto."
+      },
+      "differenza_gara_qualifica": "In gara e' la curva dove si attacca: chi si difende all'interno deve accettare un'uscita peggiore.",
+      "progressione": {
+        "prendi_il_giro": "Frena ai 100 m, seconda, e gira dopo i 50 m.",
+        "guadagni": "Arriva sul cordolo esterno e usa il cordolo interno per far ruotare la macchina.",
+        "al_limite": "Frenata al limite dal cordolo, apice tardivo preciso e gas anticipato su tutto il cordolo piatto senza pattinare."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 9,
+      "nome": "Curva del Tramonto (ingresso)",
+      "direzione": "destra",
+      "tipo": "media",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Ci si porta sul cordolo di sinistra per aprire l'ingresso, poi si mette la macchina in centro pista e si frena forte a meta' della piega a destra.",
+      "insidia": "Piega a destra che precede il tornante: il suo apice va ignorato. Conta solo impostare l'ingresso del tornante.",
+      "costo_errore": "Medio: cercare l'apice della piega rovina il tornante.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": null
+      },
+      "freni": {
+        "stress": "medio-alto",
+        "note": "Frenata forte in linea retta, dentro la piega."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Porta la macchina in centro pista e frena a meta' della piega.",
+        "guadagni": "Apri l'ingresso dal cordolo di sinistra e ignora l'apice della piega.",
+        "al_limite": "Frenata al limite in linea retta con la macchina gia' messa per l'inserimento tardivo del tornante."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 10,
+      "nome": "Curva del Tramonto",
+      "direzione": "destra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Si frena in linea retta dalla piega della T9 e si ritarda l'inserimento per un apice tardivo. Seconda marcia.",
+      "insidia": "Tornante lento a destra che lancia sul rettilineo posteriore. Le ruote interne vanno dentro il cordolo bianco e rosso, che aiuta la rotazione quando si molla il freno. Cordolo interno e via di fuga danno tanta aderenza: vanno usati per tornare sul gas il prima possibile. Poi gas progressivo, senza far scivolare il posteriore, e cordolo di uscita.",
+      "costo_errore": "Alto: l'uscita vale per tutto il rettilineo posteriore.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Tornante a destra: anteriore sinistro caricato."
+      },
+      "freni": {
+        "stress": "medio",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "Il cordolo interno e la via di fuga si usano tutti."
+      },
+      "differenza_gara_qualifica": "In gara una buona uscita da qui prepara il sorpasso piu' avanti, se si e' abbastanza vicini a chi precede.",
+      "progressione": {
+        "prendi_il_giro": "Frena dritto, seconda, e gira tardi.",
+        "guadagni": "Metti le ruote interne dentro il cordolo per far ruotare la macchina.",
+        "al_limite": "Rotazione sul cordolo e sulla via di fuga, gas anticipato senza scivolare e uscita su tutto il cordolo."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 11,
+      "nome": "Curvone",
+      "direzione": "destra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna frenata: e' in pieno senza difficolta'.",
+      "insidia": "Si taglia per accorciare il giro: ogni piccolo vantaggio conta. In uscita si torna subito sul cordolo di sinistra per preparare le due curve che seguono, molto piu' tecniche.",
+      "costo_errore": "Basso in se', ma decide la T12 e la T13.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Curva veloce a destra: anteriore sinistro caricato."
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Resta in pieno.",
+        "guadagni": "Taglia la curva per accorciare il giro.",
+        "al_limite": "Taglio pieno e ritorno immediato sul cordolo di sinistra."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 12,
+      "nome": null,
+      "direzione": "destra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna frenata.",
+      "insidia": "La T12 porta nella T13, ed e' fondamentale restare larghi senza girare troppo presto. L'apice della T12 non si prende: si resta piu' verso il centro pista per aprire l'ingresso della T13.",
+      "costo_errore": "Medio: un apice preso qui rovina la staccata della T13.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": null
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Resta largo e non cercare l'apice.",
+        "guadagni": "Tieni la macchina verso il centro pista per aprire la T13.",
+        "al_limite": "Linea che ti mette dritto, accanto al cordolo dipinto di sinistra, pronto a frenare per la T13."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 13,
+      "nome": null,
+      "direzione": "destra",
+      "tipo": "veloce",
+      "marcia_indicativa": "4a",
+      "riferimento_frenata": "Quando la macchina si raddrizza accanto al cordolo dipinto di sinistra si frena, in linea retta e restando larghi, scalando due marce fino alla quarta.",
+      "insidia": "Si ritarda un filo l'inserimento per un apice tardivo. Con i freni ancora pesanti non bisogna dare troppo sterzo, o il posteriore ruota troppo. In inserimento si taglia il cordolo interno e la via di fuga e si aspetta che la macchina si assesti prima del gas. Il cordolo si attacca senza problemi, ma il gas va modulato in uscita: troppo e troppo presto porta la macchina larga e fuori dai limiti.",
+      "costo_errore": "Alto: si puo' perdere il giro per i track limits.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Staccata e percorrenza veloce a destra: anteriore sinistro caricato."
+      },
+      "freni": {
+        "stress": "medio",
+        "note": "Frenata da alta velocita', di due marce."
+      },
+      "track_limits": {
+        "rischio": "alto",
+        "note": "Cordolo di uscita e via di fuga si usano, ma le ruote interne devono restare sul cordolo dipinto."
+      },
+      "differenza_gara_qualifica": "In gara conviene aspettare un attimo in piu' prima del gas: l'uscita larga costa un avviso.",
+      "progressione": {
+        "prendi_il_giro": "Frena dritto accanto al cordolo dipinto, quarta, e aspetta che la macchina si assesti.",
+        "guadagni": "Ritarda l'inserimento e taglia cordolo interno e via di fuga.",
+        "al_limite": "Frenata al limite senza sterzo di troppo, apice tardivo tagliato e gas modulato fino al limite esatto del cordolo dipinto."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 14,
+      "nome": "Curva del Carro",
+      "direzione": "destra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Il riferimento e' la linea bianca continua che attraversa la via di fuga rossa, piu' o meno all'altezza del cartello dei 50 m. Si frena in profondita', girando gia' mentre si frena, e si scala in seconda.",
+      "insidia": "Tornante a destra. Lo sterzo cresce avvicinandosi alla curva, per un apice tardivo. La macchina va raddrizzata il piu' possibile in uscita, per la trazione verso le ultime curve. Allargare troppo compromette la T15.",
+      "costo_errore": "Medio. Si paga alla T15 e alla Curva del Misano.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Tornante a destra dopo tre curve a destra: anteriore sinistro sotto carico da tutto il tratto."
+      },
+      "freni": {
+        "stress": "medio-alto",
+        "note": "Frenata profonda, girando."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "In gara la trazione in uscita conta piu' della frenata profonda.",
+      "progressione": {
+        "prendi_il_giro": "Frena alla linea bianca sulla via di fuga, seconda, e apice tardivo.",
+        "guadagni": "Gira gia' mentre freni e aumenta lo sterzo verso la curva.",
+        "al_limite": "Frenata al limite in profondita', apice tardivo esatto e macchina dritta in uscita senza allargare."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 15,
+      "nome": null,
+      "direzione": "sinistra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "In qualifica, con l'assetto giusto, si fa in pieno. In gara, con il pieno o le gomme consumate, serve un piccolo rilascio.",
+      "insidia": "Sinistra da veloce a media, che arriva prima di quanto sembri. Ci si porta a destra e si gira prima di quanto sembri possibile: il riferimento e' l'inizio della via di fuga verde sulla destra, e da li' si taglia il cordolo interno. Alcune macchine accettano le salsicce, altre no. Quando l'anteriore morde e non si allarga oltre l'apice, si torna sul gas.",
+      "costo_errore": "Medio. La via di fuga in uscita si puo' usare, ma troppo largo si finisce sull'erba e si rovina la Curva del Misano.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Curva veloce a sinistra: anteriore destro caricato."
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": "Al massimo un rilascio in gara."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "La via di fuga in uscita si usa, senza arrivare all'erba."
+      },
+      "differenza_gara_qualifica": "E' la differenza piu' netta del giro: in pieno in qualifica, con un rilascio in gara.",
+      "progressione": {
+        "prendi_il_giro": "Un piccolo rilascio, gira all'inizio della via di fuga verde e non toccare le salsicce.",
+        "guadagni": "Taglia il cordolo interno e ridai gas appena l'anteriore morde.",
+        "al_limite": "In pieno, con l'assetto giusto, e salsicce usate se la tua macchina le accetta."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 16,
+      "nome": "Curva del Misano",
+      "direzione": "sinistra",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Si frena appena prima del cartello dei 50 m, dove comincia il cordolo a strisce, e si scala in terza.",
+      "insidia": "Sinistra media, dove conta portare velocita' sfruttando la pendenza trasversale. Si gira presto e si punta il cordolo interno appena dopo la prima salsiccia, tornando subito sul gas. Si apre lo sterzo e si usa il cordolo di uscita per la trazione migliore. Attenzione alle grosse salsicce sulla via di fuga in uscita: scompongono la macchina.",
+      "costo_errore": "Alto: comanda il rettilineo del traguardo e la staccata della T1.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": null
+      },
+      "freni": {
+        "stress": "medio",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "In uscita il cordolo si usa, le salsicce sulla via di fuga no."
+      },
+      "differenza_gara_qualifica": "In gara e' la curva da non sbagliare: chi esce meglio arriva in scia alla T1.",
+      "progressione": {
+        "prendi_il_giro": "Frena ai 50 m, terza, e gira presto.",
+        "guadagni": "Punta il cordolo interno subito dopo la prima salsiccia e torna sul gas.",
+        "al_limite": "Velocita' in percorrenza sfruttando la pendenza, gas immediato e uscita su tutto il cordolo senza toccare le salsicce."
+      },
+      "origine": "fonte",
+      "confidence": "alta"
+    }
+  ],
+  "track_limits_generale": "Misano si guida sui tagli: la Variante del Parco, la T3, la Tramonto e la T13 chiedono di sfruttare cordoli e vie di fuga interne, fino al limite dell'avviso. Il problema sono le salsicce: quelle in uscita dalla T6 e dalla Curva del Misano fanno decollare la macchina, e alla T13 le ruote interne devono restare sul cordolo dipinto.",
+  "pit": {
+    "tempo_perso_s": null,
+    "limite_kmh": 50,
+    "lato_box": null,
+    "note": "Limite standard ACC di 50 km/h. I box sono sul rettilineo del traguardo, fra la Curva del Misano e la Variante del Parco. Il lato dei box e il tempo perso non sono dati da nessuna fonte: da vedere e misurare in gioco.",
+    "fonte": "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  },
+  "traffico_multiclass": "Il giro e' corto e i distacchi restano piccoli. Il posto giusto per passare o farsi passare e' il rettilineo verso la Quercia, dopo la Rio; il secondo e' il rettilineo posteriore dopo il Tramonto. I posti sbagliati sono la Rio, lenta e in sequenza, e il tratto dalla T12 alla Curva del Carro, dove non c'e' spazio per due traiettorie.",
+  "meteo_e_luce": {
+    "condizioni_tipiche": null,
+    "sul_bagnato": null,
+    "punti_acqua": null,
+    "di_notte": null,
+    "al_tramonto": null
+  },
+  "gomme_e_freni_pista": "Misano e' una pista da anteriore sinistro: dieci curve su sedici girano a destra, e dal Curvone alla Curva del Carro sono quattro destre di fila, con il carico sull'anteriore sinistro che non si scarica mai. La Rio, doppia destra lenta, e' l'altro punto dove l'anteriore sinistro lavora a lungo. I freni lavorano soprattutto alla Quercia e alla T1, senza estremi.",
+  "errore_del_principiante": "Avere fretta col gas. Alla Rio l'avidita' in uscita dalla T5 si paga fino alla Quercia, e alla T13 il gas troppo presto porta fuori dai limiti. Il secondo errore e' cercare ogni apice: alla T9 e alla T12 l'apice va lasciato perdere per impostare la curva che conta.",
+  "gt3_ref_lap_time": {
+    "valore": "1:33.5",
+    "contesto": "Passo di riferimento GT3 in hotlap su pista ottimale: Full Grip indica circa 1:32.8 per un pilota di vertice, 1:33.5 per un pilota competitivo e 1:34.5 per un pilota esperto. Il giro di riferimento di Coach Dave con l'Aston Martin V8 Vantage GT3 e' 1:32.8. Il tempo e' un ordine di grandezza, da confermare con una misura presa dalle sessioni vere.",
+    "fonte": "https://www.fullgripmotorsport.com/academy/trackguides/misano"
+  },
+  "gt3_fuel_per_lap_l": {
+    "valore": null,
+    "contesto": "Nessuna fonte affidabile pubblica il consumo per giro a Misano: dipende da vettura, mappa motore e passo. Va misurato dalle sessioni vere, non stimato.",
+    "fonte": null
+  },
+  "chicche": [
+    {
+      "testo": "Fino al 2006 Misano si correva in senso antiorario. Con i lavori per il ritorno del Motomondiale il senso e' stato invertito, e dal 2008 il tracciato misura 4,226 km.",
+      "perche_interessa_al_pilota": "Onboard e guide precedenti al 2007 descrivono il giro al contrario: non vanno presi come riferimento.",
+      "fonte": "https://en.wikipedia.org/wiki/Misano_World_Circuit"
+    }
+  ],
+  "fonti": [
+    "https://coachdaveacademy.com/tutorials/misano-world-circuit-track-guide/",
+    "https://en.wikipedia.org/wiki/Misano_World_Circuit",
+    "https://www.24hseries.com/circuits/misano-world-circuit-marco-simoncelli",
+    "https://trackdaytickets.com/tracks/misano",
+    "https://www.fullgripmotorsport.com/academy/trackguides/misano",
+    "https://coachdaveacademy.com/acc-lap-times/",
+    "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/",
+    "https://commons.wikimedia.org/wiki/File:Misano_World_Circuit.svg"
+  ]
+}
