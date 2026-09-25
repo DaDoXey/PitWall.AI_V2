@@ -156,10 +156,11 @@
     "id": "red_bull_ring",
     "kind": "track",
     "role": "map",
-    "source_page": "https://commons.wikimedia.org/wiki/File:Circuit_Red_Bull_Ring.svg",
-    "license": "CC BY-SA 3.0",
-    "author": "Pitlane02",
-    "sha1": "e62723f547f89950d21ba0e254c5997be2b1c7e0"
+    "file": "frontend/public/assets/tracks/red_bull_ring_map.svg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Spielberg_bare_map_numbers_contextless_2016_onwards.svg",
+    "license": "CC BY-SA 4.0",
+    "author": "I, User:HumanBodyPiloter5, created this SVG map as a derivative work based on the satellite image of the Spielberg circuit released by w:en:Planet Labs under CC-BY-SA 4.0 in 2018",
+    "sha1": "a72af450342435daaa6161eaa9c2e3743307cf34"
   },
   {
     "id": "silverstone",

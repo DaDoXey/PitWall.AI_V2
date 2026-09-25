@@ -1,0 +1,742 @@
+{
+  "id": "suzuka",
+  "verifica_catalogo": {
+    "lunghezza_confermata": true,
+    "curve_confermate": true,
+    "fonte_lunghezza": "https://www.suzukacircuit.jp/eng/course_s/",
+    "note": "Catalogo e fonti concordano: ACC usa il Grand Prix Circuit in uso dal 2003, 5,807 km e 18 curve. Lo dice il circuito stesso (pagina del tracciato e guida ufficiale in PDF, luglio 2026: 18 curve per le auto, 10 a destra e 8 a sinistra) e concorda Wikipedia inglese. La Wikipedia tedesca scrive 17 curve: resta il dato ufficiale. Numerazione e sensi vengono dalla mappa numerata di Commons (Suzuka circuit map--2005.svg), che conta 10 destre e 8 sinistre come il PDF ufficiale. I nomi sono quelli ufficiali di oggi, che per tre curve sono nomi di sponsor: la vecchia Dunlop Curve oggi e' la NIPPO Corner, l'Hairpin e' la NISSIN Brake Hairpin, il Casio Triangle e' la Astemo Chicane; il nome storico resta fra parentesi, perche' e' quello che si sente negli onboard. Coach Dave non ha una guida ACC di Suzuka: il contenuto curva per curva viene dalla guida ACC di SimRacingSetup (Ferrari 296 GT3), con i dati di Track Titan su tre GT3 come riscontro per marce e frenate. SimRacingSetup numera bene fino all'Hairpin, poi chiama 13 la 200R e mette insieme le due parti della Spoon: qui vale la mappa, e il testo e' stato riassegnato alle curve giuste. Full Grip non e' usato nemmeno per i nomi: numera 10 l'Hairpin e mette la sinistra prima della destra nella chicane. La chicane fra l'Hairpin e la 200R e' solo per le moto. I tre settori qui sotto sono una divisione descrittiva, non i settori di cronometraggio di ACC (il circuito ne usa quattro)."
+  },
+  "senso_marcia": null,
+  "dislivello_m": null,
+  "rettilineo_piu_lungo_m": 1000,
+  "variante_acc": "ACC riproduce il Grand Prix Circuit in uso dal 2003: 5,807 km e 18 curve, con la chicane finale nella versione del 2003, piu' veloce e piu' vicina alla 130R. La chicane per le moto fra l'Hairpin e la 200R non fa parte del giro delle auto.",
+  "fonti_campi_pista": {
+    "senso_marcia": {
+      "fonte": "https://en.wikipedia.org/wiki/Suzuka_Circuit",
+      "nota": "Suzuka e' un otto: il rettilineo ovest passa sopra la prima parte del circuito con un cavalcavia. La prima meta' del giro (dalla First Curve alle Degner) gira in senso orario, la seconda (Hairpin, Spoon, 130R) in senso antiorario. Nessuno dei due valori e' giusto per tutto il giro: il campo resta null."
+    },
+    "dislivello_m": {
+      "fonte": null,
+      "nota": "La guida ufficiale in PDF mostra il profilo altimetrico del giro, ma senza una scala leggibile, e nessun'altra fonte seria da' il dislivello totale. Si sa che il rettilineo del traguardo scende verso la First Curve e che la NIPPO Corner e' il tratto in salita piu' ripido del giro (guida ufficiale). Da lasciare null finche' non c'e' una misura."
+    },
+    "rettilineo_piu_lungo_m": {
+      "fonte": "https://www.suzukacircuit.jp/eng/course_s/pdf/suzuka_courseguide.pdf",
+      "fonte_singola": true,
+      "nota": "Guida ufficiale del circuito: rettilineo ovest (dalla Spoon verso la 130R) circa 1000 m, rettilineo del traguardo circa 800 m. Wikipedia inglese da' 1,2 km al rettilineo che passa sul cavalcavia: probabilmente misura un tratto piu' lungo. Vale il dato del circuito."
+    },
+    "variante_acc": {
+      "fonte": "https://en.wikipedia.org/wiki/Suzuka_Circuit",
+      "nota": "Concordano la guida ufficiale del circuito (18 curve per le auto) e la guida ACC di SimRacingSetup, che descrive la chicane finale del 2003 e non la chicane delle moto."
+    }
+  },
+  "settori": [
+    {
+      "n": 1,
+      "carattere": "La discesa del rettilineo verso la First Curve a doppio apice, poi le S, il tratto di ritmo piu' famoso del giro, fino alla sinistra lunga in salita della NIPPO Corner.",
+      "cosa_decide": "Il ritmo nelle S: ogni curva prepara la successiva, e un ingresso sbagliato alla prima si paga fino alla NIPPO Corner.",
+      "errore_costoso": "Troppo gas in uscita dalla NIPPO Corner: il cordolo esterno porta in ghiaia."
+    },
+    {
+      "n": 2,
+      "carattere": "Le due destre delle Degner, il passaggio sotto il cavalcavia, l'Hairpin, la curva piu' lenta del giro, la 200R in pieno e la Spoon a doppio apice che apre il rettilineo ovest.",
+      "cosa_decide": "L'uscita dalla seconda parte della Spoon, che vale per tutto il rettilineo ovest fino alla 130R.",
+      "errore_costoso": "Degner 1: si arriva a sinistra ad alta velocita', e se si da' gas prima di essere al sicuro dalla ghiaia di sinistra il giro finisce li'."
+    },
+    {
+      "n": 3,
+      "carattere": "Il rettilineo ovest sopra il cavalcavia, la 130R, la curva piu' veloce del giro, la Astemo Chicane e la Last Curve che riporta sul traguardo.",
+      "cosa_decide": "La staccata della chicane e la trazione in uscita, che si porta fino al traguardo attraverso la Last Curve.",
+      "errore_costoso": "Esagerare alla 130R per guadagnare pochi centesimi: e' la curva dove un errore costa di piu'."
+    }
+  ],
+  "curve": [
+    {
+      "n": 1,
+      "nome": "First Curve",
+      "direzione": "destra",
+      "tipo": "media",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Si arriva dal rettilineo del traguardo, in discesa. Si frena appena prima di cominciare a girare a destra e si comincia subito a rilasciare il freno, continuando a rallentare. Track Titan misura l'inizio della frenata a circa 290 metri dall'apice della doppia curva.",
+      "insidia": "E' la prima parte di una destra veloce a doppio apice: qui si rallenta ancora, con poco sterzo, lasciando che la macchina scivoli verso la sinistra della pista per preparare la seconda parte.",
+      "costo_errore": "Medio. Chi arriva troppo veloce allarga e rovina la Second Curve e l'ingresso nelle S.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "E' il primo punto di sorpasso del circuito secondo la guida ufficiale: scia lungo il rettilineo in discesa e frenata ritardata all'interno.",
+        "come_ci_si_difende": "Tenere l'interno in frenata. Al via e' il punto dove il gruppo si stringe di piu'."
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Frenata lunga girando a destra: anteriore sinistro caricato."
+      },
+      "freni": {
+        "stress": "alto",
+        "note": "La staccata arriva dal rettilineo del traguardo in discesa."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "In qualifica si frena al limite. Al via e al primo giro conviene un riferimento piu' prudente: e' il punto dei contatti.",
+      "progressione": {
+        "prendi_il_giro": "Frena in rettilineo prima di girare e lascia scorrere la macchina verso sinistra con poco sterzo.",
+        "guadagni": "Comincia a rilasciare il freno appena inizi a girare, continuando a rallentare fino alla seconda parte.",
+        "al_limite": "Frenata al limite con rilascio progressivo in ingresso, e la macchina che arriva a sinistra gia' al punto giusto per la Second Curve."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 2,
+      "nome": "Second Curve",
+      "direzione": "destra",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Nessuna frenata nuova: si continua a rallentare dalla First Curve e si aggiunge sterzo prima del secondo apice.",
+      "insidia": "Il secondo apice della doppia destra. Si taglia verso l'interno sfiorando il cordolo interno, poi si accelera con gradualita'; il cordolo di uscita si puo' usare tutto per dare gas prima. Track Titan misura qui la velocita' minima della doppia curva, circa 120 km/h, in 2a o 3a secondo la vettura.",
+      "costo_errore": "Medio. Un'uscita larga compromette l'ingresso nelle S.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Seconda destra di fila: l'anteriore sinistro resta caricato."
+      },
+      "freni": {
+        "stress": "basso",
+        "note": "Si rallenta ancora, ma la frenata e' gia' cominciata alla First Curve."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Il cordolo di uscita si usa tutto, ma non oltre."
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Metti la terza, sfiora il cordolo interno e aspetta ad accelerare finche' la macchina non e' composta.",
+        "guadagni": "Accelera con gradualita' dall'apice e usa tutto il cordolo di uscita.",
+        "al_limite": "Il minimo di velocita' dell'intera doppia curva cade qui: gas presto e progressivo fino all'ultimo centimetro di cordolo."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 3,
+      "nome": "S Curve (prima, sinistra)",
+      "direzione": "sinistra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Si arriva tenendosi a destra e si da' solo un tocco di freno mentre si gira verso l'apice.",
+      "insidia": "Apre le S, uno dei tratti piu' fluidi di ACC: si porta quanta piu' velocita' possibile e si accelera verso la destra che segue.",
+      "costo_errore": "Medio. Nelle S un errore alla prima curva si trascina fino all'ultima.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Sinistra veloce: anteriore destro caricato."
+      },
+      "freni": {
+        "stress": "basso",
+        "note": "Un tocco di freno in inserimento."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Tieniti a destra, un tocco di freno e gira verso l'apice senza forzare.",
+        "guadagni": "Porta piu' velocita' in ingresso e accelera subito verso la destra.",
+        "al_limite": "Solo una sfiorata di freno e gas presto: la velocita' di qui la ritrovi in tutte le S."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 4,
+      "nome": "S Curve (seconda, destra)",
+      "direzione": "destra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Si attraversa la pista verso destra frenando con circa il 60% della pressione.",
+      "insidia": "Si usa un po' di cordolo interno per accorciare il raggio e si dosa il gas per tutta la curva.",
+      "costo_errore": "Medio.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Destra con frenata in inserimento: anteriore sinistro caricato."
+      },
+      "freni": {
+        "stress": "medio",
+        "note": "Frenata parziale, circa il 60% della pressione."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "Il cordolo interno si usa per accorciare la curva."
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Frena mentre attraversi verso destra e resta lontano dal cordolo.",
+        "guadagni": "Usa un po' di cordolo interno per accorciare la curva.",
+        "al_limite": "Frenata parziale al 60% e gas dosato per tutta la curva, senza perdere la linea per la sinistra successiva."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 5,
+      "nome": "S Curve (terza, sinistra)",
+      "direzione": "sinistra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Solo un tocco leggerissimo di freno mentre si scorre verso l'apice di sinistra.",
+      "insidia": "Sinistra poco accentuata: si attraversa scorrendo, senza gas pieno e senza vera frenata.",
+      "costo_errore": "Basso.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Sinistra: anteriore destro caricato."
+      },
+      "freni": {
+        "stress": "basso",
+        "note": "Un tocco leggerissimo."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Un tocco di freno e lascia scorrere la macchina verso l'apice.",
+        "guadagni": "Riduci il tocco di freno al minimo.",
+        "al_limite": "Scorri verso l'apice con la macchina gia' messa per la destra che segue, la piu' lenta delle S."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 6,
+      "nome": "S Curve (quarta, destra)",
+      "direzione": "destra",
+      "tipo": "media",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Si frena di nuovo con il 50-60% della pressione, facendo ruotare la macchina nella destra.",
+      "insidia": "E' il punto piu' lento delle S: dopo averla chiusa si esce col gas pieno verso la NIPPO Corner.",
+      "costo_errore": "Medio. L'uscita di qui porta tutta la salita della NIPPO Corner.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Destra con frenata: anteriore sinistro caricato."
+      },
+      "freni": {
+        "stress": "medio",
+        "note": "Frenata parziale al 50-60%."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Frena con decisione, fai ruotare la macchina e accelera solo quando e' dritta.",
+        "guadagni": "Frenata parziale al 50-60% e rotazione in ingresso, per dare gas pieno prima.",
+        "al_limite": "Gas pieno all'uscita, perche' la NIPPO Corner si prende in accelerazione."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 7,
+      "nome": "Gyaku Bank e NIPPO Corner (ex Dunlop Curve)",
+      "direzione": "sinistra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "L'avvicinamento e' l'uscita della curva 6: si accelera forte e si alza appena il piede mentre si attraversa la pista da destra verso sinistra.",
+      "insidia": "Sinistra lunga in salita, la piu' ripida del giro secondo la guida ufficiale, con forte carico laterale. Dopo l'alzata si torna al gas pieno, alzando ancora un filo se la macchina scivola troppo verso destra. All'inizio c'e' la Gyaku Bank: una curva quasi piatta, che ad alta velocita' da' la sensazione di una pendenza al contrario.",
+      "costo_errore": "Alto. Chi e' troppo avido col gas va sul cordolo esterno e ne viene risucchiato in ghiaia.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Sinistra lunga ad alta velocita' con forte carico laterale: anteriore destro caricato."
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": "Si alza solo il piede."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Attenzione al cordolo esterno: porta in ghiaia."
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Alza il piede mentre attraversi la pista verso sinistra e torna al gas solo quando la macchina e' composta.",
+        "guadagni": "Un'alzata sola e breve, poi gas pieno per tutta la curva.",
+        "al_limite": "Gas pieno dosato solo col piede, lasciando scivolare la macchina senza mai toccare il cordolo esterno, poi a sinistra per preparare la Degner 1."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 8,
+      "nome": "Degner Curve 1",
+      "direzione": "destra",
+      "tipo": "veloce",
+      "marcia_indicativa": "3a-4a",
+      "riferimento_frenata": "Ci si avvicina tutti a sinistra e si frena forte prima di dare qualsiasi sterzo. Track Titan misura l'inizio della frenata a circa 100 metri dall'apice, con una minima intorno ai 178 km/h.",
+      "insidia": "La prima parte delle Degner, la piu' veloce, chiede una guida molto precisa. Si taglia verso l'interno passando sopra il cordolo per ridurre il raggio, e si accelera verso la seconda parte solo quando si e' sicuri di non finire nella ghiaia di sinistra.",
+      "costo_errore": "Alto. La ghiaia di sinistra in uscita e' vicina.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Destra veloce con frenata: anteriore sinistro caricato."
+      },
+      "freni": {
+        "stress": "medio-alto",
+        "note": "Frenata forte, in rettilineo, prima di sterzare."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Il cordolo interno si scavalca; il limite vero e' la ghiaia di sinistra in uscita."
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Tutti a sinistra, frena prima di sterzare e accelera solo quando la ghiaia di sinistra non e' piu' un rischio.",
+        "guadagni": "Passa sopra il cordolo interno per ridurre il raggio.",
+        "al_limite": "Frenata forte e corta, taglio sul cordolo interno e gas appena l'uscita e' sicura, gia' in linea per la Degner 2."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 9,
+      "nome": "Degner Curve 2",
+      "direzione": "destra",
+      "tipo": "media",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Frenata forte scalando in seconda. Track Titan misura l'inizio della frenata a circa 67 metri dall'apice, con una minima intorno ai 110 km/h.",
+      "insidia": "E' la piu' lenta delle due Degner, ma lascia piu' spazio per essere aggressivi. Si porta il freno in ingresso per far ruotare la macchina verso l'apice, poi si accelera forte appena si arriva al cordolo interno.",
+      "costo_errore": "Medio. In uscita c'e' spazio.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Destra con frenata in trail braking: anteriore sinistro caricato."
+      },
+      "freni": {
+        "stress": "medio-alto",
+        "note": "Frenata forte fino alla seconda."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "SimRacingSetup consiglia di usare in uscita tutti i cordoli e tutto lo spazio: in ACC la penalita' arriva quando tutte e quattro le ruote superano la linea bianca, e oltre i cordoli la si rischia."
+      },
+      "differenza_gara_qualifica": "In gara, o sul bagnato, conviene una cambiata anticipata in uscita se manca trazione.",
+      "progressione": {
+        "prendi_il_giro": "Frena in rettilineo, metti la seconda e accelera solo dopo l'apice.",
+        "guadagni": "Porta il freno in ingresso per far ruotare la macchina verso l'apice.",
+        "al_limite": "Trail braking fino all'apice e gas forte appena tocchi il cordolo interno, usando tutto il cordolo di uscita."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 10,
+      "nome": null,
+      "direzione": "destra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna frenata per questa curva: la frenata dell'Hairpin comincia subito dopo, mentre si sta ancora girando a destra.",
+      "insidia": "Piega a destra dopo il passaggio sotto il cavalcavia. Ci si porta a sinistra e poi si attraversa verso destra per prenderla: e' la preparazione della staccata dell'Hairpin.",
+      "costo_errore": "Basso, ma decide la staccata che segue.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Piega a destra che diventa frenata: anteriore sinistro caricato."
+      },
+      "freni": {
+        "stress": "basso",
+        "note": "La frenata e' quella dell'Hairpin, che comincia all'uscita di questa curva."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "A sinistra dopo il cavalcavia, poi verso destra, e comincia a frenare solo quando vedi l'Hairpin.",
+        "guadagni": "Prendi la piega con la macchina gia' messa per la staccata.",
+        "al_limite": "Frena forte appena esci dalla piega, ancora girando a destra, senza bloccare l'anteriore."
+      },
+      "origine": "fonte",
+      "confidence": "bassa"
+    },
+    {
+      "n": 11,
+      "nome": "NISSIN Brake Hairpin (Hairpin)",
+      "direzione": "sinistra",
+      "tipo": "lenta",
+      "marcia_indicativa": "1a",
+      "riferimento_frenata": "Appena passata la piega a destra, quando si vede il tornante, si frena forte girando ancora a destra e si scala fino alla prima. Track Titan misura l'inizio della frenata a circa 117 metri dall'apice, con una minima intorno ai 60 km/h, in prima su tutte e tre le vetture.",
+      "insidia": "La curva piu' lenta di Suzuka: una frenata difficile, perche' comincia mentre si gira a destra. Si porta il freno fino all'apice, usando i freni anteriori per far ruotare la macchina nella lunga sinistra, e prima di meta' curva si e' gia' fuori dal freno a pensare a quando accelerare. In uscita la trazione e' difficile con tutte le GT.",
+      "costo_errore": "Medio. Si perde soprattutto in uscita, dove comincia il tratto verso la 200R.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "Secondo la guida ufficiale qui si vedono spesso duelli in frenata: staccata all'interno, a sinistra.",
+        "come_ci_si_difende": "Tenere l'interno sinistro in frenata e non allargare in uscita, dove la trazione e' difficile per tutti."
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Tornante a sinistra: anteriore destro caricato in frenata e in percorrenza. L'uscita e' la piu' difficile del giro in trazione, e li' lavorano i posteriori."
+      },
+      "freni": {
+        "stress": "alto",
+        "note": "Frenata forte fino alla prima, cominciata in curva."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "In uscita evitare il cordolo di destra, che toglie trazione."
+      },
+      "differenza_gara_qualifica": "In gara, con le gomme che calano, la trazione in uscita peggiora: SimRacingSetup suggerisce di alzare il controllo di trazione o di cambiare in anticipo, dando gas con gradualita'.",
+      "progressione": {
+        "prendi_il_giro": "Frena appena vedi il tornante, metti la prima e accelera con gradualita' solo quando la macchina e' dritta.",
+        "guadagni": "Porta il freno fino all'apice per far ruotare la macchina, e sii fuori dal freno prima di meta' curva.",
+        "al_limite": "Frenata al limite ancora girando a destra, rotazione coi freni anteriori, gas progressivo dall'apice senza toccare il cordolo di destra in uscita."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 12,
+      "nome": "200R",
+      "direzione": "destra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna frenata: si prende col gas pieno.",
+      "insidia": "Piu' una piega a destra che una curva, da fare in pieno. Tenersi a destra da' la traiettoria piu' corta e prepara la Spoon. La chicane che si vede prima della curva e' solo per le moto.",
+      "costo_errore": "Basso.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Destra veloce in pieno: anteriore sinistro caricato."
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Gas pieno e tieniti a destra.",
+        "guadagni": "Traiettoria piu' corta possibile, gia' pensando alla staccata della Spoon.",
+        "al_limite": "Gas pieno sulla linea piu' corta e macchina gia' in posizione per frenare dritta alla Spoon."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 13,
+      "nome": "Spoon Curve (prima parte)",
+      "direzione": "sinistra",
+      "tipo": "media",
+      "marcia_indicativa": "2a-3a",
+      "riferimento_frenata": "Si frena forte, in linea retta, intorno al cartello dei 200-250 metri. Concorda Track Titan, che misura l'inizio della frenata a circa 250 metri dall'apice, con una minima fra 109 e 117 km/h.",
+      "insidia": "E' il primo apice di una sinistra a doppio apice. Si scorre senza gas fino al primo apice, poi si accelera intorno all'80% verso il secondo, lasciando scivolare la macchina verso destra per ridurre lo sterzo.",
+      "costo_errore": "Medio. Chi la sbaglia arriva male alla seconda parte, che apre il rettilineo ovest.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Sinistra lunga con frenata: anteriore destro caricato."
+      },
+      "freni": {
+        "stress": "alto",
+        "note": "Frenata forte e lunga in linea retta."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": null
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Frena dritto al cartello dei 250 metri e scorri fino al primo apice.",
+        "guadagni": "Sposta la frenata verso i 200 metri e accelera all'80% dopo il primo apice.",
+        "al_limite": "Frenata al limite, scorrimento fino al primo apice e gas parziale che porta la macchina a destra, gia' in linea per la seconda parte."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 14,
+      "nome": "Spoon Curve (seconda parte)",
+      "direzione": "sinistra",
+      "tipo": "media",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Si frena di nuovo, ma solo intorno al 65% della pressione. Track Titan misura una minima fra 140 e 146 km/h.",
+      "insidia": "Si fa ruotare la macchina verso l'apice scorrendo di nuovo, poi si pensa solo ad accelerare presto: l'uscita apre il rettilineo ovest, il piu' lungo del giro. Il cordolo di uscita si usa per dare gas prima.",
+      "costo_errore": "Alto. Una cattiva uscita si paga per tutto il rettilineo ovest fino alla 130R.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Seconda sinistra di fila: anteriore destro caricato, poi posteriori in trazione verso il rettilineo."
+      },
+      "freni": {
+        "stress": "medio",
+        "note": "Frenata parziale, intorno al 65%."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Il cordolo di uscita si usa tutto, ma non oltre."
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Frena di nuovo, fai ruotare la macchina e accelera quando e' dritta verso il rettilineo.",
+        "guadagni": "Frenata parziale al 65% e gas piu' presto, usando il cordolo di uscita.",
+        "al_limite": "Rotazione scorrendo e gas pieno il prima possibile: questa uscita vale tutto il rettilineo ovest."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 15,
+      "nome": "130R",
+      "direzione": "sinistra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Dopo il rettilineo ovest ci si tiene a destra; si inserisce deciso al cartello dei 50 metri, alzando il piede per un istante.",
+      "insidia": "La curva piu' veloce di Suzuka, intorno ai 250 km/h. Dopo l'alzata si torna al gas e si accelera usando tutta la larghezza della pista, poi ci si sposta a sinistra per la chicane. Dal 2003 non e' piu' un raggio unico: la guida ufficiale la descrive come una curva composta da un 85R e un 340R.",
+      "costo_errore": "Molto alto. E' la curva dove un errore costa di piu' in tutto il giro.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Sinistra velocissima con forte carico laterale: anteriore destro caricato."
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": "Solo un'alzata."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Si usa tutta la larghezza della pista in uscita."
+      },
+      "differenza_gara_qualifica": "In gara, con gomme usurate o nel traffico, l'alzata si allunga: il tempo si recupera alla chicane, non qui.",
+      "progressione": {
+        "prendi_il_giro": "Tieniti a destra, alza il piede al cartello dei 50 metri e torna al gas solo quando la macchina e' stabile.",
+        "guadagni": "Riduci l'alzata a un istante e usa tutta la larghezza della pista in uscita.",
+        "al_limite": "Inserimento deciso al cartello dei 50, alzata minima, gas pieno su tutta la larghezza, poi subito a sinistra per la staccata della chicane."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 16,
+      "nome": "Astemo Chicane, destra (ex Casio Triangle)",
+      "direzione": "destra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "I cartelli di frenata sono a sinistra: si frena forte al cartello dei 150 metri. Track Titan misura una minima intorno agli 80 km/h, in seconda su tutte e tre le vetture.",
+      "insidia": "Una chicane lenta da fare in modo aggressivo: nella prima parte, a destra, si taglia quanto piu' cordolo interno si riesce, anche se la macchina salta.",
+      "costo_errore": "Medio. La staccata piu' forte del giro insieme alla First Curve, alla fine del tratto piu' veloce.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "Per la guida ufficiale e' un punto di sorpasso: scia dopo la 130R e staccata all'interno, a destra.",
+        "come_ci_si_difende": "Chiudere l'interno a destra prima della staccata."
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Staccata forte e destra stretta: anteriore sinistro caricato."
+      },
+      "freni": {
+        "stress": "alto",
+        "note": "Staccata forte dopo la 130R."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Il cordolo interno si taglia, ma saltarlo tutto e' un taglio di chicane."
+      },
+      "differenza_gara_qualifica": "In gara e' il punto dei sorpassi: in difesa conviene staccare prima e tenere l'interno.",
+      "progressione": {
+        "prendi_il_giro": "Frena al cartello dei 150 metri, metti la seconda e passa sul cordolo interno senza esagerare.",
+        "guadagni": "Taglia piu' cordolo interno a destra, accettando che la macchina salti.",
+        "al_limite": "Frenata al limite, taglio aggressivo sul cordolo di destra e un filo di gas gia' verso la sinistra."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 17,
+      "nome": "Astemo Chicane, sinistra (ex Casio Triangle)",
+      "direzione": "sinistra",
+      "tipo": "lenta",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna nuova frenata: si da' un filo di gas dalla prima parte della chicane.",
+      "insidia": "Dopo aver saltato il primo apice si punta a saltare anche il cordolo della parte sinistra, poi si aspetta che la macchina si assesti prima di accelerare forte.",
+      "costo_errore": "Medio. L'uscita porta tutta la Last Curve e il rettilineo del traguardo.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Sinistra stretta: anteriore destro caricato."
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Come per la destra: il cordolo si salta, la chicane non si taglia."
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Un filo di gas, passa la sinistra e accelera quando la macchina e' dritta.",
+        "guadagni": "Salta anche il cordolo di sinistra, come quello di destra.",
+        "al_limite": "Filo di gas sui due cordoli e gas pieno appena la macchina si assesta."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 18,
+      "nome": "Last Curve",
+      "direzione": "destra",
+      "tipo": "media",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna frenata: si accelera forte dall'uscita della chicane.",
+      "insidia": "Lunga destra con un saliscendi, che porta sul rettilineo del traguardo, di circa 800 metri. Secondo la guida ufficiale l'uscita decide la velocita' su tutto il rettilineo. All'uscita della chicane, proprio in questa curva, c'e' l'ingresso box: una macchina davanti puo' rallentare all'improvviso per rientrare.",
+      "costo_errore": "Medio. Un'uscita larga si paga fino alla First Curve.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Destra lunga in accelerazione: anteriore sinistro caricato, posteriori in trazione."
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": null
+      },
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
+      "progressione": {
+        "prendi_il_giro": "Accelera con gradualita' finche' la macchina non si e' assestata dopo la chicane.",
+        "guadagni": "Gas pieno prima, appena la macchina e' composta.",
+        "al_limite": "Gas pieno dall'uscita della chicane su tutta la curva, per la massima velocita' sul rettilineo."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    }
+  ],
+  "track_limits_generale": "Nessuna fonte usata qui pubblica una lista dei limiti di pista di Suzuka in ACC. Vale la regola generale di ACC: la penalita' arriva quando tutte e quattro le ruote superano la linea bianca. I cordoli di uscita si usano quasi ovunque (Second Curve, Degner 2, Spoon, chicane); i punti che non perdonano sono il cordolo esterno della NIPPO Corner, che porta in ghiaia, e l'uscita della Degner 1, con la ghiaia a sinistra.",
+  "pit": {
+    "tempo_perso_s": null,
+    "limite_kmh": 50,
+    "lato_box": null,
+    "note": "Limite standard ACC di 50 km/h. In ACC l'ingresso box e' all'uscita della Astemo Chicane, dentro la Last Curve: chi rientra rallenta in piena curva, quindi li' bisogna farci attenzione, sia quando si entra sia quando si segue una macchina che potrebbe entrare (visto in gioco da Edoardo il 25/09/2026; concorda la guida ufficiale del circuito, che mette l'ingresso delle auto all'altezza della chicane). Il lato preciso e il tempo perso non sono dati da nessuna fonte: da misurare in gioco.",
+    "fonte": "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  },
+  "traffico_multiclass": "I posti giusti per passare o farsi passare sono i due rettilinei: quello del traguardo verso la First Curve, in discesa, e il rettilineo ovest verso la 130R e la chicane. La guida ufficiale indica come punti di sorpasso la First Curve, l'Hairpin e la chicane. I posti sbagliati per trovarsi affiancati sono le S e le Degner, dove una curva prepara la successiva e la ghiaia e' vicina, e la 130R. Attenzione anche alla Last Curve: l'ingresso box e' li', e chi rientra rallenta in curva.",
+  "meteo_e_luce": {
+    "condizioni_tipiche": null,
+    "sul_bagnato": null,
+    "punti_acqua": null,
+    "di_notte": null,
+    "al_tramonto": null
+  },
+  "gomme_e_freni_pista": "Dieci curve su diciotto girano a destra, ma quelle piu' veloci e cariche sono a sinistra: la NIPPO Corner in salita e la 130R. Le staccate forti sono quattro: la First Curve dal rettilineo in discesa, l'Hairpin, la prima parte della Spoon e la chicane. L'uscita dell'Hairpin e' la piu' dura in trazione per tutte le GT.",
+  "errore_del_principiante": "Rompere il ritmo delle S. Sono una sequenza in cui ogni curva prepara la successiva: un ingresso troppo veloce nella prima porta fuori linea tutte le altre e si paga fino alla NIPPO Corner. Il secondo errore tipico e' dare gas troppo presto alla Degner 1, prima di essere al sicuro dalla ghiaia di sinistra.",
+  "gt3_ref_lap_time": {
+    "valore": "1:59.2",
+    "contesto": "Passo di riferimento GT3 in ACC: SimRacingSetup, sui dati di Track Titan, indica 1:59.150 per il 5% piu' veloce dei piloti, 2:03.250 come tempo medio e 1:58.000 come record in prova a tempo. Track Titan da' valori simili per il 5% piu' veloce con tre vetture diverse: 1:59.257 la Ferrari 296 GT3, 1:59.772 la Porsche 911 (992) GT3 R, 1:59.377 la McLaren 720S GT3 Evo. Il tempo e' un ordine di grandezza, da confermare con una misura presa dalle sessioni vere.",
+    "fonte": "https://simracingsetup.com/assetto-corsa/acc-suzuka-track-guide/"
+  },
+  "gt3_fuel_per_lap_l": {
+    "valore": null,
+    "contesto": "Nessuna fonte affidabile pubblica il consumo per giro a Suzuka: dipende da vettura, mappa motore e passo. Va misurato dalle sessioni vere, non stimato.",
+    "fonte": null
+  },
+  "chicche": [
+    {
+      "testo": "Suzuka e' disegnata a otto: il rettilineo ovest scavalca la prima parte del circuito con un cavalcavia. E' l'unico circuito di grado 1 FIA con questa forma.",
+      "perche_interessa_al_pilota": "Si passa due volte nello stesso punto: sotto il cavalcavia dopo le Degner, verso l'Hairpin, e sopra, sul rettilineo ovest verso la 130R.",
+      "fonte": "https://en.wikipedia.org/wiki/Suzuka_Circuit"
+    },
+    {
+      "testo": "Le Degner prendono il nome da Ernst Degner, che ci cadde con la sua Suzuki 50 nella prima gara del circuito, nel novembre del 1962. Erano una curva sola: dal 1987 sono due.",
+      "perche_interessa_al_pilota": "Spiega perche' si prendono come un'unica sequenza: la Degner 1 serve a mettere la macchina per la Degner 2.",
+      "fonte": "https://en.wikipedia.org/wiki/Suzuka_Circuit"
+    },
+    {
+      "testo": "La Gyaku Bank, all'inizio della NIPPO Corner, e' in realta' quasi piatta. Si chiama «banca al contrario» perche', ad alta velocita', al pilota sembra inclinata verso l'esterno.",
+      "perche_interessa_al_pilota": "La sensazione di poco appoggio e' normale: e' la curva che la da', non un problema dell'assetto.",
+      "fonte": "https://www.suzukacircuit.jp/eng/course_s/pdf/suzuka_courseguide.pdf"
+    }
+  ],
+  "fonti": [
+    "https://simracingsetup.com/assetto-corsa/acc-suzuka-track-guide/",
+    "https://www.suzukacircuit.jp/eng/course_s/",
+    "https://www.suzukacircuit.jp/eng/course_s/pdf/suzuka_courseguide.pdf",
+    "https://en.wikipedia.org/wiki/Suzuka_Circuit",
+    "https://de.wikipedia.org/wiki/Suzuka_International_Racing_Course",
+    "https://it.wikipedia.org/wiki/Circuito_di_Suzuka",
+    "https://app.tracktitan.io/track-guides/en/ferrari_296_gt3-suzuka-assettoCorsaCompetizione-Track-Guide",
+    "https://app.tracktitan.io/track-guides/en/porsche_992_gt3_r-suzuka-assettoCorsaCompetizione-Track-Guide",
+    "https://app.tracktitan.io/track-guides/en/mclaren_720s_gt3_evo-suzuka-assettoCorsaCompetizione-Track-Guide",
+    "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/",
+    "https://commons.wikimedia.org/wiki/File:Suzuka_circuit_map--2005.svg"
+  ]
+}

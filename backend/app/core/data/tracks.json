@@ -728,16 +728,17 @@
     "dlc_pack": "Intercontinental GT Pack",
     "length_km": 5.807,
     "corners": 18,
-    "corners_confidence": "media",
+    "corners_confidence": "alta",
     "grid_size": 51,
     "pole_side": "destra",
-    "lap_record_real": "2:03.611",
+    "lap_record_real": null,
+    "lap_record_note": "Il catalogo riportava 2:03.611, che nessuna fonte conferma. Il record ufficiale del circuito e' della Formula 1 (1:30.965, Antonelli, 2025), e il tempo di riferimento GT3 in ACC e' intorno a 1:58-1:59: nessuna fonte seria da' un record GT3 reale per questo layout.",
     "gt3_ref_lap_time": null,
     "gt3_fuel_per_lap_l": null,
     "fuel_status": "da_misurare",
     "downforce_level": "high",
     "setup_focus_it": "Carico alto per le esse e la 130R. Serve un'auto che cambi direzione senza ritardo e non scarichi il posteriore.",
-    "description_it": "Uno dei circuiti più celebri del Giappone e uno dei pochi al mondo con layout a otto, grazie al ponte che scavalca il rettilineo dopo curva 9. Le esse del primo settore sono un esame di ritmo, mentre la 200R e la 130R chiedono fiducia nell'appoggio. Ospita dal 2018 una 10 Ore dell'Intercontinental GT Challenge.",
+    "description_it": "Uno dei circuiti più celebri del Giappone e uno dei pochi al mondo con layout a otto, grazie al ponte che scavalca il rettilineo dopo curva 9. Le esse del primo settore sono un esame di ritmo, mentre la 200R e la 130R chiedono fiducia nell'appoggio. Ha ospitato la 10 Ore dell'Intercontinental GT Challenge nel 2018 e nel 2019.",
     "assets": {
       "map": {
         "commons_query": "Suzuka circuit map",
@@ -765,7 +766,6 @@
     "dlc": true,
     "dlc_pack": "Intercontinental GT Pack",
     "length_km": 4.522,
-    "length_confidence": "da_verificare",
     "corners": 16,
     "corners_confidence": "alta",
     "grid_size": 40,
@@ -964,6 +964,7 @@
     "length_confidence": "media",
     "corners": 10,
     "corners_confidence": "media",
+    "corners_note": "ACC usa il layout auto, identico a quello della Formula 1: senza la chicane delle moto dopo la curva 1 (verificato in gioco da Edoardo il 25/09/2026). La mappa verificata numera 10 curve, come Wikipedia.",
     "grid_size": 30,
     "pole_side": "sinistra",
     "lap_record_real": "1:05.619",
@@ -979,7 +980,9 @@
         "commons_category": "Category:Maps of Red Bull Ring",
         "preferred_format": "svg",
         "license_expected": "CC BY-SA (da confermare)",
-        "status": "da_verificare"
+        "status": "verificata",
+        "commons_file": "Spielberg bare map numbers contextless 2016 onwards.svg",
+        "verificata_nota": "configurazione auto 2016-oggi, scelta nel provino del 25/09/2026"
       },
       "photo": {
         "commons_query": "Red Bull Ring",

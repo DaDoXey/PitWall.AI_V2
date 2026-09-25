@@ -66,7 +66,8 @@ GUIDE_DIR = BACKEND / "app" / "core" / "data" / "tracks_knowledge"
 # per non far divergere le due cose.
 VERIFICATE_ATTESE = {"spa_francorchamps", "imola", "zandvoort", "zolder", "kyalami",
                      "monza", "silverstone", "nurburgring_gp", "barcelona_catalunya",
-                     "misano", "brands_hatch", "hungaroring", "paul_ricard"}
+                     "misano", "brands_hatch", "hungaroring", "paul_ricard",
+                     "red_bull_ring"}
 
 print("\n" + "=" * 60)
 print("CATALOGO DEI TRACCIATI — lista, bandierine, mappe")
