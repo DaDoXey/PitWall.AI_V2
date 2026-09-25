@@ -2105,6 +2105,51 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #044 — Guide dei tracciati, blocco B4: Suzuka, la mappa del Red Bull Ring e il catalogo
+
+| Campo | Valore |
+|---|---|
+| Data | 25/09/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `core/data/tracks_knowledge/` (NEW `suzuka.json`) · `core/data/tracks.json` (Suzuka: curve confermate, record e descrizione; Kyalami: lunghezza confermata; Red Bull Ring: mappa verificata e nota sul layout) · `scripts/maps.json` + `scripts/maps_choice.json` · `app/tests/test_tracciati.py` · README, README.it, `docs/03` |
+| Commit | vedi sotto |
+| Contesto | Ripresa dal blocco B4 del filone guide (kyalami, red_bull_ring, mount_panorama, suzuka). Coach Dave non ha guide ACC per nessuno dei quattro: il blocco e' stato diviso. |
+
+**Catalogo messaggi:**
+1. «passiamo a pitwall» → status di rito.
+2. «riprendiamo con il B4» → Coach Dave non copre il B4 (solo due guide iRacing di evento, senza curve); proposta di regola per le fonti secondarie.
+3. «1 sì usa chrome, 2 sì, 3 sì» → fonti lette anche dal Chrome di Edoardo; B4 insieme; controlli in gioco raccolti in una lista.
+4. «va bene la tua proposta, parti con suzuka» → trovata una sola guida ACC seria (SimRacingSetup, Suzuka): B4 diviso. Ora Suzuka, provino delle tre mappe e verifica del catalogo; Kyalami, Red Bull Ring e Bathurst parcheggiati finche' non c'e' una fonte.
+5. «ho esportato il json, puoi procedere» → nell'export c'e' solo il Red Bull Ring; chiesto se Suzuka e Bathurst erano scoperti apposta.
+6. «nessuna delle dei due circuiti aveva della mappe adatte» → applicata la sola mappa del Red Bull Ring.
+7. «1 non ce ne erano di adatte [...] 2 sì a entrambe, 3 confermo tutto, al rb ring non ci sta la chicane [...] a suzuka l'entrata dei box sta all'uscita dell'ultima chicane, nell'ultima curva» → record e descrizione di Suzuka corretti, scelte confermate, ingresso box e layout del Red Bull Ring annotati.
+
+**Fonti del B4 (verificate il 25/09):**
+- SimRacingSetup ha guide ACC solo per Spa, Valencia, Suzuka e Imola; SoloX mostra una pagina vuota anche in Chrome (non aggirata); Full Grip sbaglia la numerazione anche qui (Kyalami: T1 = Crowthorne; Suzuka: 10 = Hairpin e chicane invertita); il blog di Track Titan su Kyalami e' generico e sbagliato (Sunset e Mineshaft «tornanti»). Track Titan (app) resta buono per tempi, marce e punti di frenata, a segmenti senza numeri.
+- Per Kyalami, Red Bull Ring e Bathurst nessuna fonte spiega come si guidano in GT3: guide parcheggiate.
+
+**Modifica:**
+- **Guida nuova `suzuka.json`**, schema del B2: 18 curve, Grand Prix Circuit 2003-oggi. Numerazione e sensi dalla mappa numerata di Commons (`Suzuka circuit map--2005.svg`), che conta 10 destre e 8 sinistre come la guida ufficiale del circuito in PDF (luglio 2026). Contenuto curva per curva dalla guida ACC di SimRacingSetup (Ferrari 296 GT3), marce e frenate riscontrate su Track Titan con tre GT3 (Ferrari 296, Porsche 992, McLaren 720S). SimRacingSetup dopo l'Hairpin sfasa i numeri (chiama 13 la 200R e unisce le due parti della Spoon): testo riassegnato alle curve giuste e scritto in nota. Nomi ufficiali di oggi con il nome storico fra parentesi (NIPPO Corner ex Dunlop, NISSIN Brake Hairpin, Astemo Chicane ex Casio Triangle). Confidence «media», «bassa» sulla T10. Campi di pista: senso di marcia null (e' un otto: meta' giro orario, meta' antiorario); dislivello null (nessuna fonte); rettilineo piu' lungo 1000 m dalla guida ufficiale (rettilineo ovest; Wikipedia 1,2 km, in nota; fonte singola a vista). Ingresso box all'uscita della Astemo Chicane, dentro la Last Curve (visto in gioco da Edoardo); lato e tempo perso null.
+- **Catalogo**: Suzuka `corners_confidence` ad «alta»; `lap_record_real` a null con nota (il 2:03.611 non e' confermato da nessuna fonte; il record ufficiale e' della F1, 1:30.965); descrizione corretta («Ospita dal 2018 una 10 Ore» → «Ha ospitato la 10 Ore [...] nel 2018 e nel 2019»). Kyalami: tolto `length_confidence: da_verificare` (il sito ufficiale da' 4,522 km, 16 curve, senso antiorario; Wikipedia 4,529). Red Bull Ring: mappa verificata e `corners_note` (layout auto identico alla F1, senza la chicane delle moto, verificato in gioco da Edoardo).
+- **Provino delle mappe del B4** (Suzuka, Red Bull Ring, Bathurst: 39 candidati, trappole marcate). Scelto e applicato solo il Red Bull Ring: `Spielberg bare map numbers contextless 2016 onwards.svg`. Suzuka e Bathurst restano **senza mappa** per scelta di Edoardo: Suzuka aveva solo mappe coi settori della F1, Bathurst solo mappe vecchie.
+- **Test**: in `test_tracciati` i layout verificati attesi passano da 13 a 14.
+- **Docs**: README e README.it a 928 test (`tracciati` 70); `docs/03` a 13 guide su 25 e 928 test.
+
+**Motivazione:** chiudere del B4 la parte che ha fonti serie, senza scrivere guide «di mestiere» dove nessuna fonte spiega come si guida.
+
+**Risultato osservato:** guide **13/25**, mappe verificate **14/25**. Scheda di Suzuka verificata a schermo (settori, 18 curve con sensi e marce, riga «fonte singola» sul rettilineo, box, traffico, chicche); dopo il riavvio del backend il record reale non compare piu' e la descrizione e' corretta. Scheda del Red Bull Ring con la mappa sulla placca (10 curve numerate, corsia box). La mappa compare in /crediti.
+
+**Verifica:** validatore **senza errori** su 13 guide · **928/928** test in 18 file (`test_tracciati` 66 → **70**) · `tsc --noEmit` 0 · rotte `/ /tracciati /tracciati/suzuka /tracciati/red_bull_ring /crediti /login` 200 · backend riavviato a mano dopo le modifiche al catalogo · nessuna chiamata LLM.
+
+**Da sapere:**
+- Restano da fare, quando ci sara' una fonte: le guide di Kyalami, Red Bull Ring e Bathurst, e le mappe di Suzuka e Bathurst. A Bathurst due mappe numerate non danno lo stesso nome alle stesse curve (Griffins Bend e Quarry): da risolvere con la guida.
+- La numerazione di Spa secondo Coach Dave resta rimandata; il provino dice ancora «Claude Desktop» nei testi fissi (nella nota della scelta del Red Bull Ring l'ho corretto a mano in `maps_choice.json`).
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» (commit `68751dc` guida di Suzuka, mappa del Red Bull Ring e catalogo · docs).
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
