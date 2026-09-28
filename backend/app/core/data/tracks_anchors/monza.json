@@ -1,0 +1,178 @@
+{
+  "id": "monza",
+  "schema": 2,
+  "sessione_origine": "20260917-145307-monza_bmw_m4_gt3-bcf3",
+  "vettura": "bmw_m4_gt3",
+  "giro": 1,
+  "tempo_giro_ms": 106190,
+  "mappa_commons": "Monza-2021.svg",
+  "creato_il": "2026-09-28",
+  "nota": "Per ogni curva: inizio (punto di frenata, o inserimento se in pieno), apice e uscita sul giro (0-1, come graphics.normalizedCarPosition), e il punto sulla mappa verificata (frazioni di larghezza e altezza). Confermati a occhio nel provino delle ancore. G_LAT < 0 = curva a destra.",
+  "ancore": [
+    {
+      "n": 1,
+      "nome": "Variante del Rettifilo",
+      "inizio": 0.1292,
+      "metodo_inizio": "click",
+      "apice": 0.1605,
+      "metodo_apice": "picco_g_lat",
+      "uscita": 0.163,
+      "metodo_uscita": "carico",
+      "g_lat": -1.2,
+      "mappa": {
+        "x": 0.3826,
+        "y": 0.8642
+      }
+    },
+    {
+      "n": 2,
+      "nome": "Variante del Rettifilo (uscita)",
+      "inizio": 0.166,
+      "metodo_inizio": "inserimento",
+      "apice": 0.168,
+      "metodo_apice": "minimo",
+      "uscita": 0.1745,
+      "metodo_uscita": "carico",
+      "g_lat": 1.14,
+      "mappa": {
+        "x": 0.3725,
+        "y": 0.8375
+      }
+    },
+    {
+      "n": 3,
+      "nome": "Curva Grande",
+      "inizio": 0.2195,
+      "metodo_inizio": "inserimento",
+      "apice": 0.257,
+      "metodo_apice": "picco_g_lat",
+      "uscita": 0.3015,
+      "metodo_uscita": "carico",
+      "g_lat": -1.4,
+      "mappa": {
+        "x": 0.1745,
+        "y": 0.8174
+      }
+    },
+    {
+      "n": 4,
+      "nome": "Variante della Roggia (ingresso)",
+      "inizio": 0.343,
+      "metodo_inizio": "click",
+      "apice": 0.3715,
+      "metodo_apice": "minimo",
+      "uscita": 0.372,
+      "metodo_uscita": "carico",
+      "g_lat": 0.83,
+      "mappa": {
+        "x": 0.1067,
+        "y": 0.4197
+      }
+    },
+    {
+      "n": 5,
+      "nome": "Variante della Roggia (uscita)",
+      "inizio": 0.3755,
+      "metodo_inizio": "inserimento",
+      "apice": 0.3785,
+      "metodo_apice": "picco_g_lat",
+      "uscita": 0.385,
+      "metodo_uscita": "carico",
+      "g_lat": -1.19,
+      "mappa": {
+        "x": 0.0913,
+        "y": 0.4006
+      }
+    },
+    {
+      "n": 6,
+      "nome": "Curva di Lesmo 1",
+      "inizio": 0.42,
+      "metodo_inizio": "click",
+      "apice": 0.4425,
+      "metodo_apice": "minimo",
+      "uscita": 0.463,
+      "metodo_uscita": "carico",
+      "g_lat": -1.75,
+      "mappa": {
+        "x": 0.0413,
+        "y": 0.2052
+      }
+    },
+    {
+      "n": 7,
+      "nome": "Curva di Lesmo 2",
+      "inizio": 0.4798,
+      "metodo_inizio": "click",
+      "apice": 0.4975,
+      "metodo_apice": "minimo",
+      "uscita": 0.51,
+      "metodo_uscita": "carico",
+      "g_lat": -1.83,
+      "mappa": {
+        "x": 0.155,
+        "y": 0.1087
+      }
+    },
+    {
+      "n": 8,
+      "nome": "Variante Ascari (ingresso)",
+      "inizio": 0.6568,
+      "metodo_inizio": "click",
+      "apice": 0.685,
+      "metodo_apice": "minimo",
+      "uscita": 0.689,
+      "metodo_uscita": "carico",
+      "g_lat": 1.4,
+      "mappa": {
+        "x": 0.4404,
+        "y": 0.6368
+      }
+    },
+    {
+      "n": 9,
+      "nome": "Variante Ascari (centro)",
+      "inizio": 0.692,
+      "metodo_inizio": "inserimento",
+      "apice": 0.702,
+      "metodo_apice": "picco_g_lat",
+      "uscita": 0.708,
+      "metodo_uscita": "carico",
+      "g_lat": -1.54,
+      "mappa": {
+        "x": 0.4781,
+        "y": 0.6342
+      }
+    },
+    {
+      "n": 10,
+      "nome": "Variante Ascari (uscita)",
+      "inizio": 0.711,
+      "metodo_inizio": "inserimento",
+      "apice": 0.7145,
+      "metodo_apice": "picco_g_lat",
+      "uscita": 0.7315,
+      "metodo_uscita": "carico",
+      "g_lat": 1.55,
+      "mappa": {
+        "x": 0.5096,
+        "y": 0.6668
+      }
+    },
+    {
+      "n": 11,
+      "nome": "Curva Parabolica (Alboreto)",
+      "inizio": 0.866,
+      "metodo_inizio": "click",
+      "apice": 0.8975,
+      "metodo_apice": "minimo",
+      "uscita": 0.9535,
+      "metodo_uscita": "carico",
+      "g_lat": -1.63,
+      "mappa": {
+        "x": 0.8904,
+        "y": 0.6719
+      }
+    }
+  ]
+}

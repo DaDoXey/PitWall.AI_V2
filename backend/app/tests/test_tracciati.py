@@ -226,6 +226,198 @@ for tid in sorted(guide_a_disco):
         f"curve senza confidence: {senza_conf}",
     )
 
+print("\n" + "=" * 60)
+print("ANCORE DELLE CURVE — il file e il suo validatore")
+print("=" * 60)
+
+# Un file di ancore conforme, costruito sulla guida e sulla mappa vere di Monza:
+# ogni variante qui sotto rompe UNA regola e deve essere respinta.
+import copy  # noqa: E402
+
+import numpy as np  # noqa: E402
+
+from app.analisi import eventi_curva as ev  # noqa: E402
+from app.analisi.curve import FRENO, GAS, POSIZIONE, TEMPO, VELOCITA  # noqa: E402
+from app.core import ancore  # noqa: E402
+
+guida_monza = cat.track_guide("monza")
+mappa_monza = next(t for t in cat.all_tracks() if t["id"] == "monza")["assets"]["map"]
+buone = {
+    "id": "monza", "schema": ancore.SCHEMA, "sessione_origine": "sessione-di-prova",
+    "vettura": "bmw_m4_gt3", "giro": 1, "tempo_giro_ms": 106190,
+    "mappa_commons": mappa_monza["commons_file"], "creato_il": "2026-09-28",
+    "ancore": [{"n": c["n"], "nome": c["nome"],
+                "inizio": round(0.05 + 0.08 * i, 4), "metodo_inizio": "frenata",
+                "apice": round(0.07 + 0.08 * i, 4), "metodo_apice": "minimo",
+                "uscita": round(0.09 + 0.08 * i, 4), "metodo_uscita": "carico",
+                "g_lat": None, "mappa": {"x": 0.5, "y": 0.5}}
+               for i, c in enumerate(guida_monza["curve"])],
+}
+
+
+def respinte(modifica) -> list[str]:
+    dati = copy.deepcopy(buone)
+    modifica(dati)
+    return ancore.valida_ancore(dati, guida_monza, mappa_monza, atteso_id="monza")
+
+
+def _sposta(d, i, inizio):
+    # sposta una curva intera, fasi comprese
+    a = d["ancore"][i]
+    a["inizio"] = inizio
+    a["apice"] = round((inizio + 0.02) % 1, 4)
+    a["uscita"] = round((inizio + 0.04) % 1, 4)
+
+
+test("un file di ancore conforme passa il validatore",
+     ancore.valida_ancore(buone, guida_monza, mappa_monza, atteso_id="monza") == [],
+     f"{ancore.valida_ancore(buone, guida_monza, mappa_monza, atteso_id='monza')}")
+test("manca un'ancora: respinto (ne serve una per curva della guida)",
+     bool(respinte(lambda d: d["ancore"].pop())))
+test("due curve fuori ordine lungo il giro: respinto",
+     bool(respinte(lambda d: _sposta(d, 3, 0.01))))
+
+
+def _t1_prima_del_traguardo(d):
+    # la T1 prima della linea: gli inizi fanno UN salto all'indietro, ed e' lecito
+    for i in range(len(d["ancore"])):
+        _sposta(d, i, round((0.95 + 0.08 * i) % 1.0, 4))
+
+
+def _apice_prima(d):
+    a = d["ancore"][2]
+    a["apice"] = round(a["inizio"] - 0.01, 4)
+
+
+def _uscita_prima(d):
+    a = d["ancore"][2]
+    a["uscita"] = round(a["apice"] - 0.005, 4)
+
+
+test("un solo salto all'indietro (T1 prima del traguardo) è ammesso",
+     respinte(_t1_prima_del_traguardo) == [], f"{respinte(_t1_prima_del_traguardo)}")
+test("due salti all'indietro: respinto",
+     bool(respinte(lambda d: (_t1_prima_del_traguardo(d), _sposta(d, 6, 0.0)))))
+test("apice prima dell'inizio: respinto (le fasi vanno in fila)", bool(respinte(_apice_prima)))
+test("uscita prima dell'apice: respinto", bool(respinte(_uscita_prima)))
+test("punto sulla mappa fuori dall'immagine: respinto",
+     bool(respinte(lambda d: d["ancore"][0].update(mappa={"x": 1.2, "y": 0.5}))))
+test("punto sulla mappa mancante: respinto",
+     bool(respinte(lambda d: d["ancore"][0].update(mappa=None))))
+test("ancore prese su un'altra mappa: respinto (i punti vanno rifatti)",
+     bool(respinte(lambda d: d.update(mappa_commons="Monza 1995.svg"))))
+test("nome di curva diverso dalla guida: respinto (guida rinumerata)",
+     bool(respinte(lambda d: d["ancore"][2].update(nome="Curva inventata"))))
+test("inizio fuori da [0, 1): respinto",
+     bool(respinte(lambda d: d["ancore"][0].update(inizio=1.0))))
+test("metodo sconosciuto: respinto",
+     bool(respinte(lambda d: d["ancore"][0].update(metodo_inizio="a occhio"))))
+test("il file vecchio (schema 1, una sola posizione) è respinto",
+     bool(respinte(lambda d: d.update(schema=1))))
+
+for f in sorted(ancore.ANCORE_DIR.glob("*.json")) if ancore.ANCORE_DIR.exists() else []:
+    mappa = next((t for t in cat.all_tracks() if t["id"] == f.stem), {}).get("assets", {}).get("map")
+    errori = ancore.valida_ancore(json.loads(f.read_text(encoding="utf-8")),
+                                  cat.track_guide(f.stem), mappa, atteso_id=f.stem)
+    test(f"{f.stem}: le ancore a disco sono conformi", errori == [], f"{errori}")
+
+print("\n" + "=" * 60)
+print("ANCORE DELLE CURVE — le curve del giro e la proposta")
+print("=" * 60)
+
+
+def giro_sintetico(spostamento: float = 0.0, giri: int = 3, campioni: int = 6000,
+                   tocco: bool = False) -> dict:
+    """Tre giri uguali: un tornante a destra (0,20) con la staccata prima, un curvone a
+    destra in pieno (0,45), una chicane sinistra-destra (0,70) con la staccata prima.
+    G_LAT < 0 = destra, come in ACC. Con `tocco` c'è anche un colpetto di freno a metà
+    rettilineo (0,12) che non toglie velocità."""
+    x = (np.arange(campioni * giri) / campioni) % 1.0
+
+    def gauss(centro: float, largo: float) -> np.ndarray:
+        d = (x - centro - spostamento + 0.5) % 1.0 - 0.5
+        return np.exp(-(d / largo) ** 2)
+
+    v = 250 - 170 * gauss(0.20, 0.012) - 160 * gauss(0.70, 0.010) - 5 * gauss(0.45, 0.02)
+    g = (-1.8 * gauss(0.20, 0.010) - 2.0 * gauss(0.45, 0.020)
+         + 1.5 * gauss(0.694, 0.004) - 1.5 * gauss(0.708, 0.004))
+    freno = ((gauss(0.185, 0.008) > 0.5) | (gauss(0.685, 0.008) > 0.5)).astype(float)
+    if tocco:
+        freno = np.maximum(freno, (gauss(0.12, 0.002) > 0.5).astype(float) * 0.3)
+    dt = (5000 / campioni) / (v / 3.6)
+    return {POSIZIONE: x, VELOCITA: v, ev.G_LAT: g, FRENO: freno, GAS: 1 - freno,
+            TEMPO: np.cumsum(dt) * 1000}
+
+
+canali = giro_sintetico()
+prof = ev.profilo(canali, ev.giro_migliore(canali))
+eventi = ev.trova_eventi(prof)
+vicino = lambda pos: [e for e in eventi if abs(e.apice - pos) < 0.004]  # noqa: E731
+riassunto = [(round(e.inizio, 4), e.metodo_inizio, round(e.apice, 4), e.direzione) for e in eventi]
+
+# la staccata del tornante comincia dove il freno supera la soglia: 0,185 - 0,0067
+test("il tornante: l'inizio è il punto di frenata, prima dell'apice",
+     any(e.direzione == "destra" and e.frenata is not None and 0.176 <= e.inizio <= 0.181
+         and e.metodo_apice == "minimo" for e in vicino(0.20)), f"{riassunto}")
+test("il curvone in pieno: nessuna frenata, l'inizio è l'inserimento",
+     any(e.direzione == "destra" and e.frenata is None and e.metodo_inizio == "inserimento"
+         and e.inizio < e.apice for e in vicino(0.45)), f"{riassunto}")
+chicane = sorted((e for e in eventi if 0.69 <= e.apice <= 0.71), key=lambda e: e.apice)
+test("la chicane sono due curve di senso opposto",
+     {e.direzione for e in chicane} >= {"destra", "sinistra"}, f"{riassunto}")
+test("la staccata della chicane va alla sua prima parte, non alla seconda",
+     [e.frenata is not None for e in chicane][:2] == [True, False], f"{riassunto}")
+test("inizio ≤ apice ≤ uscita per ogni curva",
+     all((e.apice - e.inizio) % 1 <= 0.25 and (e.uscita - e.apice) % 1 <= 0.25 for e in eventi),
+     f"{[(e.inizio, e.apice, e.uscita) for e in eventi]}")
+
+con_tocco = giro_sintetico(tocco=True)
+eventi_tocco = ev.trova_eventi(ev.profilo(con_tocco, ev.giro_migliore(con_tocco)))
+t_tocco = [e for e in eventi_tocco if abs(e.apice - 0.20) < 0.004]
+test("un tocco di freno a metà rettilineo non diventa la staccata del tornante",
+     bool(t_tocco) and 0.176 <= t_tocco[0].inizio <= 0.181,
+     f"{[(e.inizio, e.apice) for e in t_tocco]}")
+
+guida_sint = [{"n": 1, "nome": None, "direzione": "destra", "tipo": "lenta"},
+              {"n": 2, "nome": None, "direzione": "destra", "tipo": "veloce"},
+              {"n": 3, "nome": None, "direzione": "sinistra", "tipo": "lenta"},
+              {"n": 4, "nome": None, "direzione": "destra", "tipo": "lenta"}]
+proposta = ev.proponi(guida_sint, eventi)
+test("la proposta abbina in ordine tutte e quattro le curve, senza avvisi",
+     [p["inizio"] is not None and not p["avviso"] for p in proposta] == [True] * 4
+     and [p["inizio"] for p in proposta] == sorted(p["inizio"] for p in proposta),
+     f"{proposta}")
+guida_sbagliata = copy.deepcopy(guida_sint)
+guida_sbagliata[0]["direzione"] = "sinistra"
+test("un senso sbagliato nella guida porta un avviso, non passa in silenzio",
+     bool(ev.proponi(guida_sbagliata, eventi)[0]["avviso"]),
+     f"{ev.proponi(guida_sbagliata, eventi)[0]}")
+
+ancore_sint = [{"n": p["n"], "nome": None, "apice": p["apice"],
+                "direzione": g["direzione"]} for p, g in zip(proposta, guida_sint)]
+for spostamento, attese in ((0.002, True), (0.02, False)):
+    altro = giro_sintetico(spostamento)
+    esiti = ev.verifica(ancore_sint, prof, ev.profilo(altro, ev.giro_migliore(altro)))
+    reggono = all(e["punto_ok"] and e["tratto_ok"] for e in esiti)
+    test(f"verifica su un'altra sessione spostata di {spostamento:.1%} di giro: "
+         f"{'reggono' if attese else 'non reggono'}",
+         reggono == attese, f"{esiti}")
+
+print("\n" + "=" * 60)
+print("SENSI DELLE CURVE VERIFICATI (28/09/2026)")
+print("=" * 60)
+
+# Fissati con fonti scritte, mappa numerata e accelerazione laterale in ACC: a
+# Zandvoort la guida ne aveva sei ribaltati (T5, T9, T10, T11, T12, T13), e la T13 era
+# stata «corretta» il 18/09 nel verso sbagliato. Questo test esiste perché non succeda
+# di nuovo in silenzio. La T1 di Imola è una leggera piega a destra (verificata in gioco).
+SENSI_ZANDVOORT = ["destra", "destra", "sinistra", "destra", "sinistra", "destra", "destra",
+                   "destra", "destra", "sinistra", "destra", "sinistra", "destra", "destra"]
+sensi = [c.get("direzione") for c in (cat.track_guide("zandvoort") or {}).get("curve", [])]
+test("zandvoort: i 14 sensi sono quelli verificati", sensi == SENSI_ZANDVOORT, f"{sensi}")
+imola_t1 = ((cat.track_guide("imola") or {}).get("curve") or [{}])[0].get("direzione")
+test("imola: la T1 è una piega a destra", imola_t1 == "destra", f"{imola_t1}")
+
 passed = sum(1 for _, ok in results if ok)
 total = len(results)
 failed = [name for name, ok in results if not ok]

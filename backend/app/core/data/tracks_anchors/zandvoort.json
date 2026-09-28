@@ -1,0 +1,223 @@
+{
+  "id": "zandvoort",
+  "schema": 2,
+  "sessione_origine": "20260917-145306-zandvoort_mclaren_720s_gt3_evo-5f1e",
+  "vettura": "mclaren_720s_gt3_evo",
+  "giro": 2,
+  "tempo_giro_ms": 98030,
+  "mappa_commons": "Zandvoort Circuit.png",
+  "creato_il": "2026-09-28",
+  "nota": "Per ogni curva: inizio (punto di frenata, o inserimento se in pieno), apice e uscita sul giro (0-1, come graphics.normalizedCarPosition), e il punto sulla mappa verificata (frazioni di larghezza e altezza). Confermati a occhio nel provino delle ancore. G_LAT < 0 = curva a destra.",
+  "ancore": [
+    {
+      "n": 1,
+      "nome": "Tarzanbocht",
+      "inizio": 0.051,
+      "metodo_inizio": "click",
+      "apice": 0.0885,
+      "metodo_apice": "minimo",
+      "uscita": 0.111,
+      "metodo_uscita": "carico",
+      "g_lat": -1.73,
+      "mappa": {
+        "x": 0.2967,
+        "y": 0.0863
+      }
+    },
+    {
+      "n": 2,
+      "nome": "Gerlachbocht",
+      "inizio": 0.1487,
+      "metodo_inizio": "click",
+      "apice": 0.163,
+      "metodo_apice": "picco_g_lat",
+      "uscita": 0.181,
+      "metodo_uscita": "carico",
+      "g_lat": -2,
+      "mappa": {
+        "x": 0.3101,
+        "y": 0.3584
+      }
+    },
+    {
+      "n": 3,
+      "nome": "Hugenholtzbocht",
+      "inizio": 0.1832,
+      "metodo_inizio": "click",
+      "apice": 0.201,
+      "metodo_apice": "minimo",
+      "uscita": 0.226,
+      "metodo_uscita": "carico",
+      "g_lat": 1.65,
+      "mappa": {
+        "x": 0.2176,
+        "y": 0.4364
+      }
+    },
+    {
+      "n": 4,
+      "nome": "Hunserug",
+      "inizio": 0.2407,
+      "metodo_inizio": "click",
+      "apice": 0.258,
+      "metodo_apice": "picco_g_lat",
+      "uscita": 0.2715,
+      "metodo_uscita": "carico",
+      "g_lat": -1.06,
+      "mappa": {
+        "x": 0.4174,
+        "y": 0.4651
+      }
+    },
+    {
+      "n": 5,
+      "nome": "Rob Slotemakerbocht",
+      "inizio": 0.2924,
+      "metodo_inizio": "click",
+      "apice": 0.3025,
+      "metodo_apice": "picco_g_lat",
+      "uscita": 0.3265,
+      "metodo_uscita": "carico",
+      "g_lat": 2.17,
+      "mappa": {
+        "x": 0.5669,
+        "y": 0.4906
+      }
+    },
+    {
+      "n": 6,
+      "nome": "Scheivlak",
+      "inizio": 0.3349,
+      "metodo_inizio": "click",
+      "apice": 0.3475,
+      "metodo_apice": "picco_g_lat",
+      "uscita": 0.363,
+      "metodo_uscita": "carico",
+      "g_lat": -2.23,
+      "mappa": {
+        "x": 0.743,
+        "y": 0.4132
+      }
+    },
+    {
+      "n": 7,
+      "nome": "Scheivlak",
+      "inizio": 0.3717,
+      "metodo_inizio": "click",
+      "apice": 0.4065,
+      "metodo_apice": "minimo",
+      "uscita": 0.44,
+      "metodo_uscita": "carico",
+      "g_lat": -2.07,
+      "mappa": {
+        "x": 0.9129,
+        "y": 0.4169
+      }
+    },
+    {
+      "n": 8,
+      "nome": "Mastersbocht",
+      "inizio": 0.4635,
+      "metodo_inizio": "frenata",
+      "apice": 0.4915,
+      "metodo_apice": "minimo",
+      "uscita": 0.5036,
+      "metodo_uscita": "click",
+      "g_lat": -1.66,
+      "mappa": {
+        "x": 0.8711,
+        "y": 0.7677
+      }
+    },
+    {
+      "n": 9,
+      "nome": null,
+      "inizio": 0.5154,
+      "metodo_inizio": "click",
+      "apice": 0.5425,
+      "metodo_apice": "minimo",
+      "uscita": 0.563,
+      "metodo_uscita": "carico",
+      "g_lat": -1.48,
+      "mappa": {
+        "x": 0.667,
+        "y": 0.7187
+      }
+    },
+    {
+      "n": 10,
+      "nome": null,
+      "inizio": 0.5775,
+      "metodo_inizio": "click",
+      "apice": 0.597,
+      "metodo_apice": "minimo",
+      "uscita": 0.63,
+      "metodo_uscita": "carico",
+      "g_lat": 1.52,
+      "mappa": {
+        "x": 0.855,
+        "y": 0.597
+      }
+    },
+    {
+      "n": 11,
+      "nome": "Hans Ernstbocht",
+      "inizio": 0.7074,
+      "metodo_inizio": "click",
+      "apice": 0.7325,
+      "metodo_apice": "picco_g_lat",
+      "uscita": 0.7395,
+      "metodo_uscita": "carico",
+      "g_lat": -1.54,
+      "mappa": {
+        "x": 0.3384,
+        "y": 0.6258
+      }
+    },
+    {
+      "n": 12,
+      "nome": "Hans Ernstbocht",
+      "inizio": 0.743,
+      "metodo_inizio": "click",
+      "apice": 0.7495,
+      "metodo_apice": "minimo",
+      "uscita": 0.764,
+      "metodo_uscita": "carico",
+      "g_lat": 1.65,
+      "mappa": {
+        "x": 0.2808,
+        "y": 0.583
+      }
+    },
+    {
+      "n": 13,
+      "nome": "Kumhobocht",
+      "inizio": 0.812,
+      "metodo_inizio": "click",
+      "apice": 0.8315,
+      "metodo_apice": "minimo",
+      "uscita": 0.8515,
+      "metodo_uscita": "carico",
+      "g_lat": -1.81,
+      "mappa": {
+        "x": 0.2863,
+        "y": 0.8859
+      }
+    },
+    {
+      "n": 14,
+      "nome": "Arie Luyendijkbocht",
+      "inizio": 0.8615,
+      "metodo_inizio": "inserimento",
+      "apice": 0.875,
+      "metodo_apice": "picco_g_lat",
+      "uscita": 0.9338,
+      "metodo_uscita": "click",
+      "g_lat": -2.05,
+      "mappa": {
+        "x": 0.0481,
+        "y": 0.8793
+      }
+    }
+  ]
+}

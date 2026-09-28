@@ -43,6 +43,12 @@ _ROOT = Path(__file__).resolve().parents[2]
 _DATA_DIR = _ROOT / "backend" / "app" / "core" / "data"
 KNOW_DIR = _DATA_DIR / "tracks_knowledge"
 
+# Le ancore delle curve (posizione sul giro + punto sulla mappa) hanno il loro
+# validatore in app/core/ancore.py, che non dipende da numpy: lo si usa da qui
+# cosi' un solo comando controlla guide e ancore insieme.
+sys.path.insert(0, str(_ROOT / "backend"))
+from app.core.ancore import ANCORE_DIR, valida_ancore  # noqa: E402
+
 TIPI = {"lenta", "media", "veloce"}
 CONFIDENZE = {"alta", "media", "bassa"}
 ORIGINI = {"fonte", "mestiere"}
@@ -345,10 +351,29 @@ def main() -> None:
     for f in file:
         controlla_pista(f, tracks, e)
 
+    # --- ancore: una guida rinumerata o una mappa sostituita le invalidano
+    file_ancore = sorted(ANCORE_DIR.glob("*.json")) if ANCORE_DIR.exists() else []
+    if args.solo:
+        file_ancore = [f for f in file_ancore if f.stem == args.solo]
+    for f in file_ancore:
+        guida_file = KNOW_DIR / f"{f.stem}.json"
+        guida = (json.loads(guida_file.read_text(encoding="utf-8"))
+                 if guida_file.exists() else None)
+        mappa = ((tracks.get(f.stem) or {}).get("assets") or {}).get("map")
+        try:
+            dati = json.loads(f.read_text(encoding="utf-8"))
+        except ValueError as err:
+            e.errore(f"{f.stem} ancore", f"JSON illeggibile: {err}")
+            continue
+        for r in valida_ancore(dati, guida, mappa, atteso_id=f.stem):
+            e.errore(f"{f.stem} ancore", r)
+
     presenti = {f.stem for f in KNOW_DIR.glob("*.json")}
     mancanti = [t for t in tracks if t not in presenti]
 
-    print(f"Guide controllate: {len(file)} — {', '.join(f.stem for f in file)}\n")
+    print(f"Guide controllate: {len(file)} — {', '.join(f.stem for f in file)}")
+    print(f"Ancore controllate: {len(file_ancore)}"
+          + (f" — {', '.join(f.stem for f in file_ancore)}" if file_ancore else "") + "\n")
 
     if e.errori:
         print(f"ERRORI ({len(e.errori)}) — vanno corretti nel file:")
