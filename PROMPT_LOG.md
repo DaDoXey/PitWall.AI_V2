@@ -2150,6 +2150,57 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #045 — Ancoraggio delle curve (Monza, Zandvoort) e sensi corretti nelle guide di Zandvoort e Imola
+
+| Campo | Valore |
+|---|---|
+| Data | 28/09/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | NEW `core/ancore.py` · NEW `analisi/eventi_curva.py` · NEW `core/data/tracks_anchors/` (`monza.json`, `zandvoort.json`) · NEW `scripts/build_anchors_proof.py`, `apply_anchors.py`, `verifica_ancore.py` · `scripts/check_track_knowledge.py` · `core/data/tracks_knowledge/zandvoort.json`, `imola.json` · `app/tests/test_tracciati.py` · README, README.it, `docs/03` |
+| Commit | vedi sotto |
+| Contesto | Passo 3 del filone guide: sapere, per ogni curva della guida, dove sta sul giro e sulla mappa, per agganciare poi la guida al verdetto del motore (che trova le curve dai minimi di velocità e le numera da sé). Scope chiuso il 25/09, corretto il 28/09 dopo il primo provino. |
+
+**Catalogo messaggi:**
+1. «riprendiamo pitwall» → status di rito; misurato il motore sulle 6 sessioni MoTeC: un solo giro completo ciascuna, su un giro solo il motore trova 10, 8 o 9 curve a Zandvoort, 6 minimi per 11 curve a Monza. Quattro domande.
+2. «1 va bene, 2 va bene, 3 va bene, 4 giusto, 5 a posto così. ok procedi» → provino v1 costruito; trovati sei sensi ribaltati nella guida di Zandvoort (telemetria e mappa numerata d'accordo, guida no).
+3. «le curve non devono essere rilevate solo dalla forza g [...] dovrebbero essere rilevate anche dagli input di frenata [...] cerca queste informazioni finché non sei CERTO» → ricerca (metodo di rilevamento, segno di G_LAT, fonti scritte sui sensi di Zandvoort, controllo di Imola e Zolder); correzioni del primo provino salvate; scoperto che l'aggancio automatico del clic aveva spostato un suo input.
+4. «1 sì, 2 sì esatto la curva va indicata all'inizio, gli altri input arrivano in seguito [...] 5 t1 di imola è a destra» → guide corrette, rilevamento rifatto con la frenata, ancore a tre fasi, provino v2 che riparte dalle sue correzioni.
+5. «1 sì ±1%, 2 sì solo informativo, 3 li controllo io» → tolleranza della verifica ±1%, controllo sul tratto del motore solo informativo.
+6. «non riesco a selezionarti i punti sulla track map che non riesco a zoommare» → zoom e spostamento sulla mappa, mappa a tutto schermo.
+7. «ho esportato entrambe e con le ancore che ho segnato rappresentano l'inizio della curva, procedi» → ancore applicate.
+
+**Ricerca (28/09):**
+- Fasi di una curva: frenata in rettilineo → inserimento → apice → uscita (Driver61, «The 6 phases of a corner»).
+- Rilevamento: metodo documentato di assetto-mcp (`docs/INTERNALS.md`, PR #56). Curve dal carico laterale, due tratti dello stesso senso uniti se il carico fra loro resta sopra il 70% della soglia; punto di frenata camminando dall'apice all'uscita della curva precedente, primo tratto di freno che toglie almeno un quarto della velocità tolta dal più pesante.
+- Segno di `motec.G_LAT`: Kunos non lo documenta (né il blog MoTeC né la documentazione della shared memory). Verificato sui dati di Monza, Zandvoort e Spa con curve dal senso indiscusso (Tarzan, La Source, Raidillon, Parabolica a destra; Eau Rouge a sinistra): **negativo = destra**, senza eccezioni.
+- Sensi di Zandvoort: Mercedes-AMG F1 (T5 sinistra, T9 destra, T11-12 destra-sinistra, T13 destra), F1 Chronicle (T5 sinistra, Hans Ernst destra-sinistra), FanAmp (Hans Ernst destra-sinistra, T13 destra; dà la T5 a destra, contraddetta da tutto il resto), All Fast Things (T10 sinistra, Kumho destra). Il sito ufficiale conferma i nomi 5 Slotemaker e 6-7 Scheivlak ma non scrive i sensi.
+- Controllo delle altre guide sistemate prima della regola «sensi dalla mappa numerata»: Monza e Spa tornano con la telemetria (Spa: 17 curve abbinate su 19, nessun contrasto), Imola e Zolder con le mappe numerate.
+
+**Modifica:**
+- **Guide.** Zandvoort: sensi di T5 (sinistra), T9 (destra), T10 (sinistra), T11 (destra), T12 (sinistra), T13 (destra); lato gomma e nota della T13 (la correzione del 18/09 citava il sito ufficiale, che il senso non lo scrive); geometria della Hans Ernst (destra a 45 gradi e tornante a sinistra, non «doppio tornantino»); nome della T10 a null («Renaultbocht» è il vecchio nome della T9); T10 «lega la 9», non la 8; quattro fonti aggiunte. Imola: T1 a destra (verificata in gioco da Edoardo; Coach Dave la chiama «left-hand kink», contrasto scritto nella nota). Diff limitati alle righe cambiate.
+- **Ancore (schema 2).** Per ogni curva della guida: **inizio** (punto di frenata, o inserimento se la curva è in pieno: è il clic di Edoardo), **apice**, **uscita** sul giro (0-1, come `normalizedCarPosition`) e **punto sulla mappa verificata** (frazioni di larghezza e altezza). Un file per pista in `data/tracks_anchors/`, legato a sessione, guida e mappa: se la guida viene rinumerata o la mappa cambia, il validatore lo respinge.
+- **Rilevamento** (`analisi/eventi_curva.py`): curve dal carico laterale e frenata attribuita come sopra; proposta automatica che abbina in ordine le curve della guida a quelle del giro premiando il senso giusto, con avviso quando il senso misurato contraddice la guida. Sulle 25 curve l'inizio proposto cade in media a 0,2% di giro dai clic di Edoardo, al massimo 0,45%.
+- **Provino** (`build_anchors_proof.py`): profilo di velocità, pedali, carico laterale e marcia del giro di origine, altre sessioni in grigio; clic = inizio **esatto** (tolto l'aggancio automatico del primo provino, che aveva spostato la T8 di Zandvoort), Maiusc+clic = apice, Alt+clic = uscita; mappa con zoom a rotella, trascinamento e schermo intero; bozze in `%LOCALAPPDATA%\PitWall\ancore_bozze` caricate sopra la proposta; «Esporta ancore» solo a lavoro completo (il pulsante dice cosa manca), «Esporta bozza» sempre.
+- **Applicazione e verifica**: `apply_anchors.py` valida e scrive (rifiuta le bozze); `verifica_ancore.py` riporta gli apici sulle altre sessioni della pista: tolleranza **±1%** (lo stesso punto si sposta di ~0,6% fra sessioni); il confronto col tratto del motore è **solo informativo** (su un giro solo il motore divide Gerlach e Hans Ernst in modo diverso da una sessione all'altra).
+- **Validatore**: `check_track_knowledge.py` controlla anche le ancore.
+- **Test** (`test_tracciati` 70 → 98): validatore delle ancore (ogni regola rotta una alla volta, motivo verificato), rilevamento su un giro sintetico (frenata, curva in pieno, chicane, un tocco di freno a metà rettilineo che non diventa staccata), proposta e verifica, ancore a disco conformi, sensi di Zandvoort e T1 di Imola bloccati.
+
+**Motivazione:** il primo provino confondeva le curve nelle grandi staccate (guardava solo il carico laterale) e salvava l'apice, mentre per chi guida la curva comincia dove si frena. E una guida col senso sbagliato dà una lettura ribaltata delle gomme: a Zandvoort erano sei curve.
+
+**Risultato osservato:** Monza 11 ancore e Zandvoort 14, confermate da Edoardo nel provino (sessioni `20260917-145307-monza_bmw_m4_gt3-bcf3` e `20260917-145306-zandvoort_mclaren_720s_gt3_evo-5f1e`). Punti sulla mappa controllati sulle mappe numerate: ognuno accanto al numero della sua curva. Zandvoort regge **14/14** su entrambe le altre sessioni (a ±1%); Monza ha una sola sessione, niente verifica incrociata. Nel provino le 14 curve di Zandvoort hanno il senso della guida uguale a quello misurato all'apice.
+
+**Verifica:** validatore senza errori su 13 guide e 2 file di ancore · **956/956** test in 18 file (`test_tracciati` 70 → 98) · provino verificato a schermo (clic esatto, Maiusc+clic, zoom, trascinamento, mappa grande, export intercettato senza download) · `apply_anchors.py --dry-run` e `verifica_ancore.py` sugli export veri · nessuna chiamata LLM · frontend non toccato (il provino sta in `public/assets/`, gitignorato).
+
+**Da sapere:**
+- Spa è esclusa dal provino finché non si rifà la numerazione secondo Coach Dave. Le altre 9 piste con guida e mappa aspettano una sessione registrata.
+- Da controllare in gioco (Edoardo, 28/09): nella guida di Zandvoort la T3 e la T14 dicono «layout pre-2020, non sopraelevato» mentre la mappa verificata è quella 2020; la T9 dice «senza mai chiudere il gas» ma nel giro registrato si frena da 173 a 95 km/h.
+- Prossimo passo: l'aggancio in sessione (testo della guida accanto al verdetto nel tab Curve, zoom sulla curva).
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☐ in attesa di «ok push».
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
