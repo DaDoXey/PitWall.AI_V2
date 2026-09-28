@@ -65,7 +65,7 @@
       },
       "gomme": {
         "stress": "basso",
-        "note": null
+        "note": "Leggerissima piega a destra sul rettilineo del traguardo: verificata in gioco da Edoardo (28/09/2026), e sulla mappa numerata verificata la piega a destra e' la prima. Coach Dave la chiama «left-hand kink»: fonte in contrasto, lasciata a vista."
       },
       "freni": {
         "stress": "nullo",
@@ -78,7 +78,7 @@
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
       "confidence": "media",
-      "direzione": "sinistra",
+      "direzione": "destra",
       "progressione": {
         "prendi_il_giro": "Passa a fondo e tieniti al centro: serve solo a impostare la staccata della Tamburello.",
         "guadagni": "Allarga la piega per arrivare piu' dritto alla frenata.",
@@ -774,6 +774,7 @@
     "https://www.racingcircuits.info/europe/italy/imola.html",
     "https://www.total-motorsport.com/emilia-romagna-grand-prix-track-guide-imola/",
     "https://www.24hseries.com/circuits/autodromo-enzo-e-dino-ferrari",
-    "https://it.wikipedia.org/wiki/Autodromo_Enzo_e_Dino_Ferrari"
+    "https://it.wikipedia.org/wiki/Autodromo_Enzo_e_Dino_Ferrari",
+    "https://coachdaveacademy.com/tutorials/autodromo-enzo-e-dino-ferrari-track-guide/"
   ]
 }

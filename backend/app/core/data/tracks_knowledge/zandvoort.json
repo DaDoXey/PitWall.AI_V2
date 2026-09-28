@@ -217,7 +217,7 @@
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
       "confidence": "media",
-      "direzione": "destra",
+      "direzione": "sinistra",
       "progressione": {
         "prendi_il_giro": "Prendila larga: se esci stretto, a Scheivlak sei fuori traiettoria.",
         "guadagni": "Allarga ancora e tieni piu' velocita' in cresta.",
@@ -357,7 +357,7 @@
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
       "confidence": "bassa",
-      "direzione": "sinistra",
+      "direzione": "destra",
       "progressione": {
         "prendi_il_giro": "Pulizia e basta: serve a rilanciare verso la parte finale del giro.",
         "guadagni": "Allarga per uscire piu' veloce.",
@@ -366,7 +366,7 @@
     },
     {
       "n": 10,
-      "nome": "Renaultbocht",
+      "nome": null,
       "tipo": "media",
       "marcia_indicativa": "3a",
       "riferimento_frenata": null,
@@ -392,11 +392,11 @@
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
       "confidence": "bassa",
-      "direzione": "destra",
+      "direzione": "sinistra",
       "progressione": {
         "prendi_il_giro": "Non e' difficile: e' facile farla male per distrazione. Dalle lo stesso riferimento ogni giro.",
         "guadagni": "Anticipa il gas e allarga l'uscita.",
-        "al_limite": "Scorrimento continuo che lega la 8 alla staccata della Hans Ernst."
+        "al_limite": "Scorrimento continuo che lega la 9 alla staccata della Hans Ernst."
       }
     },
     {
@@ -404,7 +404,7 @@
       "nome": "Hans Ernstbocht",
       "tipo": "lenta",
       "marcia_indicativa": "2a",
-      "riferimento_frenata": "Staccata secca. E' un tornantino doppio.",
+      "riferimento_frenata": "Staccata secca: destra stretta a 45 gradi, subito seguita dal tornante a sinistra della 12.",
       "insidia": "Sequenza lenta che spezza il ritmo. Chi arriva dalle curve veloci tende a entrare troppo forte.",
       "costo_errore": "Medio-alto: rovini l'uscita e ti trascini l'errore fino al Kumho.",
       "sorpasso": {
@@ -427,11 +427,11 @@
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
       "confidence": "media",
-      "direzione": "sinistra",
+      "direzione": "destra",
       "progressione": {
-        "prendi_il_giro": "Frena secco e prendi il doppio tornantino piano: arrivi dalle curve veloci e tendi a entrare troppo forte.",
+        "prendi_il_giro": "Frena secco e prendi la chicane piano: arrivi dalle curve veloci e tendi a entrare troppo forte.",
         "guadagni": "Sacrifica la prima parte per uscire meglio dalla seconda.",
-        "al_limite": "Ingresso lentissimo e trazione piena in uscita dal secondo tornantino: chi rovina qui si trascina l'errore fino al Kumho."
+        "al_limite": "Ingresso lentissimo e trazione piena in uscita dal tornante della 12: chi rovina qui si trascina l'errore fino al Kumho."
       }
     },
     {
@@ -440,7 +440,7 @@
       "tipo": "lenta",
       "marcia_indicativa": "2a",
       "riferimento_frenata": null,
-      "insidia": "Seconda parte del doppio tornantino. Trazione pura in uscita.",
+      "insidia": "Seconda parte della chicane: tornante a sinistra di 180 gradi. Trazione pura in uscita.",
       "costo_errore": "Medio.",
       "sorpasso": {
         "possibile": false,
@@ -462,7 +462,7 @@
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
       "confidence": "media",
-      "direzione": "destra",
+      "direzione": "sinistra",
       "progressione": {
         "prendi_il_giro": "Raddrizza appena puoi e apri il gas senza fretta: e' trazione pura.",
         "guadagni": "Apri il gas prima, accettando un filo di pattinamento.",
@@ -475,7 +475,7 @@
       "tipo": "media",
       "marcia_indicativa": "3a",
       "riferimento_frenata": null,
-      "insidia": "Curva a sinistra che prepara l'ultimo tratto. Da qui in poi ogni errore si paga sul rettilineo.",
+      "insidia": "Curva a destra che prepara l'ultimo tratto. Da qui in poi ogni errore si paga sul rettilineo.",
       "costo_errore": "Alto in termini di tempo.",
       "sorpasso": {
         "possibile": false,
@@ -483,8 +483,8 @@
         "come_ci_si_difende": null
       },
       "gomme": {
-        "stress": "lato destro",
-        "note": "Il sito ufficiale del circuito la dichiara a sinistra: il carico sta sul lato destro. Il testo e il lato gomma dicevano destra ed erano ribaltati."
+        "stress": "lato sinistro",
+        "note": "Curva a destra (Mercedes-AMG F1, FanAmp, All Fast Things; confermato dalla mappa numerata e dall'accelerazione laterale in ACC): il carico sta sul lato sinistro. La correzione del 18/09 a «sinistra» citava il sito ufficiale, che il senso non lo scrive: era sbagliata."
       },
       "freni": {
         "stress": "medio",
@@ -497,7 +497,7 @@
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
       "confidence": "bassa",
-      "direzione": "sinistra",
+      "direzione": "destra",
       "progressione": {
         "prendi_il_giro": "Passa pulito: da qui in poi ogni errore si paga sul rettilineo.",
         "guadagni": "Allarga l'uscita e anticipa il gas per lanciarti sull'ultima curva.",
@@ -593,6 +593,10 @@
     "https://commons.wikimedia.org/wiki/Category:Circuit_Park_Zandvoort_circuit_maps",
     "https://trinacriasimracing.wordpress.com/assetto-corsa-competition-how-to-make-a-perfect-pit-stop/",
     "https://trackdaytickets.com/tracks/zandvoort",
-    "https://oversteer48.com/zandvoort-track-layout/"
+    "https://oversteer48.com/zandvoort-track-layout/",
+    "https://www.circuitzandvoort.nl/en/corners/",
+    "https://www.mercedesamgf1.com/news/explained-how-the-zandvoort-corners-got-their-names",
+    "https://www.fanamp.com/articles/dutch-grand-prix-corner-names-and-history",
+    "https://allfastthings.com/sim-racing/blog-item/2023/10/16/Track-Guide-Zandvoort"
   ]
 }
