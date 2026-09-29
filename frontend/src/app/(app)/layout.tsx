@@ -16,8 +16,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <SessioneProvider>
         <div className="flex min-h-screen">
           <Sidebar />
-          <main className="max-w-6xl flex-1 px-6 py-6">
-            <MotionProvider>{children}</MotionProvider>
+          {/* Contenuto centrato con margini ampi (Entry #048): prima partiva a 24 px dalla
+              colonna e lasciava una banda vuota a destra. */}
+          <main className="min-w-0 flex-1 px-8 py-8 xl:px-12">
+            <div className="mx-auto max-w-6xl">
+              <MotionProvider>{children}</MotionProvider>
+            </div>
           </main>
         </div>
         <OnboardingFlow />
