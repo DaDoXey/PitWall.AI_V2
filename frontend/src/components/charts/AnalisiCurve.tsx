@@ -7,9 +7,24 @@
 //    `/tracce`: nel tempo due giri scivolerebbero, sulla stessa griglia di posizione no.
 //    Il giro B può venire da un'ALTRA sessione con la stessa vettura e la stessa pista —
 //    tipicamente un giro di riferimento importato da MoTeC (L5 · Fase 4).
+// Aggancio della guida (Entry #047): sulle piste con le ancore ogni tratto del motore
+// porta il nome delle curve della guida che contiene, un clic apre la scheda della curva
+// con la mappa zoomata, e il confronto segna l'inizio delle curve della guida.
 import { useEffect, useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { getBundle, getTracce, type Report, type Riassunto, type Tracce } from "@/lib/api";
+import {
+  getBundle,
+  getCatalogTrack,
+  getGuidaTracciato,
+  getTracce,
+  type Aggancio,
+  type GuidaTracciato,
+  type Report,
+  type Riassunto,
+  type Tracce,
+} from "@/lib/api";
+import { useAssets } from "@/lib/assets";
+import CurvaGuida, { TitoloCurva } from "@/components/ui/CurvaGuida";
 import { etichettaFonte, numero, secondi, tempoGiro } from "@/lib/formato";
 import { INSTRUMENT, STATE } from "@/lib/instrument";
 import { useSessione } from "@/lib/sessione";
@@ -19,6 +34,7 @@ import { Riquadro } from "@/components/charts/GiriSessione";
 const COLORE_B = COLORS.blue;
 const CANALI = ["physics.speedKmh", "physics.brake", "physics.gas", "pitwall.tempo_ms"];
 const PUNTI = 800;
+const ZOOM_MAPPA = 2.5;
 
 export default function AnalisiCurve({ report, idSessione }: { report: Report; idSessione: string }) {
   const curve = report.curve;
@@ -28,10 +44,13 @@ export default function AnalisiCurve({ report, idSessione }: { report: Report; i
       ? "Analisi per curva non disponibile."
       : "Questa sessione non ha la telemetria: le curve si ricavano dai canali registrati su PC (velocità e posizione in pista).");
 
+  const guida = useGuidaAgganciata(report.aggancio);
+
   return (
     <div className="flex flex-col gap-4">
+      {report.aggancio?.nota && <p className="text-[0.75rem] text-subtle">{report.aggancio.nota}</p>}
       {curve ? (
-        <TabellaCurve report={report} />
+        <TabellaCurve report={report} guida={guida} />
       ) : (
         <Riquadro titolo="Curve">
           <p className="text-sm text-subtle">{motivo}</p>
@@ -43,18 +62,52 @@ export default function AnalisiCurve({ report, idSessione }: { report: Report; i
   );
 }
 
-function TabellaCurve({ report }: { report: Report }) {
+/** La guida della pista agganciata e la sua mappa, se il layout è verificato. */
+function useGuidaAgganciata(aggancio: Aggancio | null) {
+  const pista = aggancio && aggancio.curve.length > 0 ? aggancio.pista : undefined;
+  const [guida, setGuida] = useState<GuidaTracciato | null>(null);
+  const [mappaVerificata, setMappaVerificata] = useState(false);
+  const assets = useAssets("tracks", pista);
+  useEffect(() => {
+    setGuida(null);
+    setMappaVerificata(false);
+    if (!pista) return;
+    let vivo = true;
+    getGuidaTracciato(pista)
+      .then((g) => vivo && setGuida(g))
+      .catch(() => vivo && setGuida(null));
+    getCatalogTrack(pista)
+      .then((t) => vivo && setMappaVerificata(t.mappa_verificata))
+      .catch(() => vivo && setMappaVerificata(false));
+    return () => {
+      vivo = false;
+    };
+  }, [pista]);
+  // Meglio nessuna mappa che una non verificata: stessa regola della sezione Tracciati.
+  return { guida, mappa: mappaVerificata ? assets.map : undefined };
+}
+
+type GuidaAgganciata = ReturnType<typeof useGuidaAgganciata>;
+
+function TabellaCurve({ report, guida }: { report: Report; guida: GuidaAgganciata }) {
   const curve = report.curve!;
+  const aggancio = report.aggancio && report.aggancio.curve.length > 0 ? report.aggancio : null;
   const perNumero = new Map(curve.curve.map((c) => [c.numero, c]));
   const peggiore = Math.max(...curve.riepilogo.map((r) => r.perdita_media_ms));
+  const [scelta, setScelta] = useState<number | null>(null);
+  const trattoScelto = aggancio?.curve.find((c) => c.n === scelta)?.tratto ?? null;
+  // Il clic su un tratto apre la prima curva della guida che contiene.
+  const primaDelTratto = (tratto: number) =>
+    aggancio?.curve.filter((c) => c.tratto === tratto).sort((a, b) => a.n - b.n)[0]?.n ?? null;
 
   return (
     <Riquadro titolo={`Curve riconosciute · ${curve.curve.length}`}>
       <div className="pw-scroll overflow-x-auto">
-        <table className="w-full min-w-[640px] border-collapse font-mono text-[0.78rem]">
+        <table className={`w-full ${aggancio ? "min-w-[820px]" : "min-w-[640px]"} border-collapse font-mono text-[0.78rem]`}>
           <thead>
             <tr className="border-b border-line text-left text-[0.58rem] uppercase tracking-widest text-muted">
               <th className="py-2 pr-3">Curva</th>
+              {aggancio && <th className="py-2 pr-3">Guida</th>}
               <th className="py-2 pr-3">Apice</th>
               <th className="py-2 pr-3">Tratto migliore</th>
               <th className="py-2 pr-3">Tratto medio</th>
@@ -66,9 +119,22 @@ function TabellaCurve({ report }: { report: Report }) {
           <tbody>
             {curve.riepilogo.map((r) => {
               const c = perNumero.get(r.curva);
+              const nome = aggancio?.tratti[String(r.curva)] ?? null;
+              const prima = nome ? primaDelTratto(r.curva) : null;
+              const attiva = trattoScelto === r.curva;
               return (
-                <tr key={r.curva} className="border-b border-line/60">
+                <tr
+                  key={r.curva}
+                  onClick={prima !== null ? () => setScelta(attiva ? null : prima) : undefined}
+                  className={`border-b border-line/60 ${prima !== null ? "cursor-pointer transition hover:bg-raised" : ""} ${attiva ? "bg-raised" : ""}`}
+                  aria-selected={attiva}
+                >
                   <td className="py-1.5 pr-3 text-white">C{r.curva}</td>
+                  {aggancio && (
+                    <td className="max-w-[16rem] py-1.5 pr-3 font-sans text-[0.78rem] text-white">
+                      {nome ?? <span className="text-muted">—</span>}
+                    </td>
+                  )}
                   <td className="py-1.5 pr-3 text-subtle">{c?.apice_m !== null && c?.apice_m !== undefined ? `${numero(c.apice_m, 0)} m` : "—"}</td>
                   <td className="py-1.5 pr-3" style={{ color: STATE.best }}>{secondi(r.tempo_migliore_ms)}</td>
                   <td className="py-1.5 pr-3 text-white">{secondi(r.tempo_medio_ms)}</td>
@@ -90,8 +156,97 @@ function TabellaCurve({ report }: { report: Report }) {
       <p className="mt-2 text-[0.7rem] text-muted">
         Le curve sono ricavate dal profilo di velocità, non da una mappa. Perdita = tempo medio sul tratto meno il tuo
         passaggio migliore sullo stesso tratto. Tracciato stimato {curve.lunghezza_stimata_m ? `${numero(curve.lunghezza_stimata_m / 1000, 3)} km` : "—"}.
+        {aggancio && " Guida: le curve della guida il cui apice cade nel tratto. Clic su una riga per la scheda della curva."}
       </p>
+      {aggancio && scelta !== null && <SchedaGuida aggancio={aggancio} n={scelta} onCambia={setScelta} guida={guida} />}
     </Riquadro>
+  );
+}
+
+/** La scheda di una curva della guida: la mappa zoomata sul punto dell'ancora e il testo
+ *  della guida, con le frecce per scorrere le curve nell'ordine della guida. */
+function SchedaGuida({
+  aggancio,
+  n,
+  onCambia,
+  guida,
+}: {
+  aggancio: Aggancio;
+  n: number;
+  onCambia: (n: number | null) => void;
+  guida: GuidaAgganciata;
+}) {
+  const ordinate = [...aggancio.curve].sort((a, b) => a.n - b.n);
+  const i = ordinate.findIndex((c) => c.n === n);
+  const curva = ordinate[i];
+  if (!curva) return null;
+  const testo = guida.guida?.curve?.find((g) => g.n === n) ?? null;
+  const prec = ordinate[i - 1];
+  const succ = ordinate[i + 1];
+  const freccia =
+    "rounded-md border border-line px-2.5 py-1 font-mono text-sm text-subtle transition hover:border-accent hover:text-white disabled:opacity-30 disabled:hover:border-line disabled:hover:text-subtle";
+  const conMappa = Boolean(guida.mappa && curva.mappa);
+
+  return (
+    <div className="mt-4 rounded-lg border border-line bg-inset p-3">
+      <div className="flex items-center gap-3">
+        <button className={freccia} disabled={!prec} onClick={() => prec && onCambia(prec.n)} aria-label="Curva precedente">
+          ←
+        </button>
+        <div className="min-w-0 flex-1">
+          {testo ? (
+            <TitoloCurva curva={testo} />
+          ) : (
+            <span className="font-display text-sm font-bold">
+              T{curva.n} {curva.nome ?? ""}
+            </span>
+          )}
+          {curva.tratto !== null && (
+            <span className="ml-2 font-mono text-[0.6rem] uppercase tracking-widest text-muted">nel tratto C{curva.tratto}</span>
+          )}
+        </div>
+        <button className={freccia} disabled={!succ} onClick={() => succ && onCambia(succ.n)} aria-label="Curva successiva">
+          →
+        </button>
+        <button className={freccia} onClick={() => onCambia(null)} aria-label="Chiudi la scheda">
+          ✕
+        </button>
+      </div>
+      <div className={`mt-3 grid gap-4 ${conMappa ? "md:grid-cols-[minmax(0,20rem)_1fr]" : ""}`}>
+        {conMappa && <MappaZoom src={guida.mappa!} x={curva.mappa!.x} y={curva.mappa!.y} alt={`Mappa del circuito, curva T${curva.n}`} />}
+        <div className="min-w-0">
+          {testo ? (
+            <CurvaGuida curva={testo} />
+          ) : (
+            <p className="text-sm text-subtle">{guida.guida ? "La guida non descrive questa curva." : "Caricamento della guida…"}</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** La mappa verificata ingrandita sul punto dell'ancora, che resta al centro del riquadro.
+ *  Il riquadro prende le proporzioni dell'immagine (larghezza piena, altezza automatica):
+ *  così le frazioni x/y dell'ancora cadono sul disegno e non su una banda vuota. */
+function MappaZoom({ src, x, y, alt }: { src: string; x: number; y: number; alt: string }) {
+  return (
+    <div className="self-start overflow-hidden rounded-lg bg-[#f4f1ea]">
+      <div
+        className="relative transition-transform duration-300 ease-out"
+        style={{
+          transformOrigin: `${x * 100}% ${y * 100}%`,
+          transform: `translate(${(0.5 - x) * 100}%, ${(0.5 - y) * 100}%) scale(${ZOOM_MAPPA})`,
+        }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element -- asset statico locale */}
+        <img src={src} alt={alt} className="block h-auto w-full" />
+        <span
+          className="absolute h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-1 ring-white"
+          style={{ left: `${x * 100}%`, top: `${y * 100}%`, background: STATE.alarm }}
+        />
+      </div>
+    </div>
   );
 }
 
@@ -206,10 +361,18 @@ function Confronto({ report, idSessione }: { report: Report; idSessione: string 
     // Delta B − A in secondi allo stesso punto della pista: sopra zero, B è indietro.
     delta: tempoA && tempoB ? (tempoB[i] - tempoB[0] - (tempoA[i] - tempoA[0])) / 1000 : undefined,
   }));
-  const apici = (report.curve?.curve ?? []).map((c) => ({
-    n: c.numero,
-    x: tracceA?.metri ? c.apice_m : c.apice * 100,
-  }));
+  // Con la guida agganciata le linee segnano l'INIZIO delle sue curve (dove si frena, o si
+  // inserisce se la curva è in pieno), sulla stessa scala dell'asse; senza, come prima,
+  // l'apice dei tratti del motore.
+  const curveGuida =
+    report.aggancio && report.aggancio.curve.length > 0 ? [...report.aggancio.curve].sort((p, q) => p.n - q.n) : null;
+  const lunghezza = tracceA?.lunghezza_stimata_m ?? null;
+  const apici = curveGuida
+    ? curveGuida.map((c) => ({ chiave: `T${c.n}`, x: tracceA?.metri && lunghezza ? c.inizio * lunghezza : c.inizio * 100 }))
+    : (report.curve?.curve ?? []).map((c) => ({
+        chiave: `C${c.numero}`,
+        x: tracceA?.metri ? c.apice_m : c.apice * 100,
+      }));
 
   const sessioneB = fonteB === idSessione ? questa : altre.find((s) => s.id === fonteB) ?? null;
   const ritaglio = Boolean(questa?.ritaglio_i2 || sessioneB?.ritaglio_i2);
@@ -290,7 +453,10 @@ function Confronto({ report, idSessione }: { report: Report; idSessione: string 
           <Pista titolo="Freno · 0-1" righe={righe} linee={[["fa", STATE.best], ["fb", COLORE_B]]} altezza={90} dominio={[0, 1]} apici={apici} unita={unita} />
           <Pista titolo="Gas · 0-1" righe={righe} linee={[["ga", STATE.best], ["gb", COLORE_B]]} altezza={90} dominio={[0, 1]} apici={apici} unita={unita} asseX />
           <p className="mt-1 text-[0.7rem] text-muted">
-            Linee verticali: apice delle curve (C1…). I due giri sono ricampionati sugli stessi {PUNTI} punti di posizione;
+            {curveGuida
+              ? `Linee verticali: inizio delle curve della guida — ${curveGuida.map((c) => `T${c.n}${c.nome ? ` ${c.nome}` : ""}`).join(" · ")}.`
+              : "Linee verticali: apice delle curve (C1…)."}{" "}
+            I due giri sono ricampionati sugli stessi {PUNTI} punti di posizione;
             {fonteB !== idSessione ? " B viene da un'altra sessione, e la sua posizione in pista può essere ricavata dalla velocità (MoTeC)." : ""}
           </p>
         </div>
@@ -315,7 +481,7 @@ function Pista({
   linee: [string, string][];
   altezza: number;
   dominio?: [number, number];
-  apici: { n: number; x: number | null | undefined }[];
+  apici: { chiave: string; x: number | null | undefined }[];
   unita: string;
   asseX?: boolean;
   zero?: boolean;
@@ -347,11 +513,11 @@ function Pista({
           {apici.map((a) =>
             a.x !== null && a.x !== undefined ? (
               <ReferenceLine
-                key={a.n}
+                key={a.chiave}
                 x={a.x}
                 stroke={INSTRUMENT.track}
                 strokeDasharray="3 3"
-                label={titolo.startsWith("Velocità") ? { value: `C${a.n}`, position: "top", fill: COLORS.muted, fontSize: 9 } : undefined}
+                label={titolo.startsWith("Velocità") ? { value: a.chiave, position: "top", fill: COLORS.muted, fontSize: 9 } : undefined}
               />
             ) : null,
           )}

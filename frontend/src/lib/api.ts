@@ -229,6 +229,28 @@ export type ReportCurve = {
   dati_mancanti: string[];
 };
 
+/** Una curva della guida con la sua ancora (Entry #047): dove comincia, l'apice e
+ *  l'uscita sul giro (0-1), il punto sulla mappa verificata, e il tratto del motore
+ *  che ne contiene l'apice (null senza analisi per curva). */
+export type CurvaAgganciata = {
+  n: number;
+  nome: string | null;
+  inizio: number;
+  apice: number;
+  uscita: number;
+  mappa: { x: number; y: number } | null;
+  tratto: number | null;
+};
+
+/** La guida del tracciato agganciata ai tratti del motore. `tratti`: numero del tratto
+ *  (come testo, è JSON) → il suo nome secondo la guida, es. «T8-T10 Variante Ascari». */
+export type Aggancio = {
+  pista: string;
+  curve: CurvaAgganciata[];
+  tratti: Record<string, string>;
+  nota: string | null;
+};
+
 export type Finestra = {
   grandezza: "pressione" | "temperatura_core";
   min: number;
@@ -317,6 +339,7 @@ export type Report = {
   ha_racconto: boolean;
   curve: ReportCurve | null;
   gomme_e_freni: GommeEFreni | null;
+  aggancio: Aggancio | null;
   ha_canali: boolean;
 };
 
