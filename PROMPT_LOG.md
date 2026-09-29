@@ -2294,7 +2294,7 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 | Data | 29/09/2026 |
 | Agente dev | Claude Code (claude-opus-5-5) |
 | Area | `frontend/src/components/ui/Sidebar.tsx` · `UserChip.tsx` · NEW `PannelloPista.tsx` · DEL `SidebarSection.tsx` · `app/(app)/layout.tsx` · `core/data/tracks_knowledge/monza.json` · `core/data/tracks_anchors/monza.json` · `app/tests/test_aggancio.py` · `docs/03` · archivio dati (fuori repo) |
-| Commit | non ancora committato |
+| Commit | vedi sotto |
 | Contesto | Dopo la #047 Edoardo: «la colonna a sinistra sta diventando troppo piena [...] il riquadro per le sessioni ora è troppo confusionario». Regole di riferimento: #008 e #010 (niente duplicati, navigazione sempre visibile, pochi blocchi). |
 
 **Catalogo messaggi:**
@@ -2328,6 +2328,34 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 **Da sapere:**
 - Prossimo, deciso da Edoardo: rivedere le pagine una alla volta dopo il riordino della colonna.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» il 29/09 («ora va benissimo»): `71610c7` Curva Alboreto · `0fe52c5` colonna di sinistra e pannello della pista · `f2d64ae` docs. Nota: la cancellazione di `SidebarSection.tsx` è finita in `71610c7` (era già in stage da prima del primo commit) invece che in `0fe52c5`; il contenuto è corretto, la storia pushata non si riscrive.
+
+---
+
+## Entry #049 — Dalla demo alla guida: invito nel tab Curve e tab che resta al cambio di sessione
+
+| Campo | Valore |
+|---|---|
+| Data | 29/09/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `frontend/src/components/charts/AnalisiCurve.tsx` · `frontend/src/components/ui/Tabs.tsx` · `frontend/src/app/(app)/telemetry/page.tsx` |
+| Commit | non ancora committato |
+| Contesto | Dopo la #048 Edoardo: «adesso mancano le curve nella telemetria, non ci sta lo zoom che volevo e su cui avevamo lavorato». Stava guardando la DEMO, la sessione di partenza della modalità demo, dove l'aggancio è escluso per scelta (scope del 28/09: circuito generato, la Parabolica a 0,934 invece di 0,8975). Verificato: sulla Ferrari di Monza colonna «Guida», scheda e zoom funzionano. |
+
+**Catalogo messaggi:**
+1. «ok però adesso mancano le curve nella telemetria, non ci sta lo zoom che volevo e su cui avevamo lavorato.» → diagnosi (demo senza aggancio per scelta), tre strade proposte: invito nel tab Curve, partire da una sessione vera, agganciare anche la demo (file protetto). Scelta: **invito nel tab Curve**.
+
+**Modifica:**
+- **Invito** (`AnalisiCurve.tsx`, `InvitoGuida`): sulla demo, al posto della riga di nota, un riquadro con il perché («Sulla demo la guida non si aggancia…») e il bottone **«Apri Monza · Ferrari 488 GT3 Evo con la guida →»**: la sessione vera della stessa pista con telemetria e più giri, a parità la più recente (Ferrari 25/01/2026 prima dell'Audi 30/03/2025). La demo resta com'è: verdetto, numeri e cache di Gigi invariati, nessun file protetto.
+- **Tab che resta** (`Tabs.tsx`, `telemetry/page.tsx`): il tab scelto vive nella pagina (i `Tabs` accettano `value`/`onChange`), perché mentre la sessione nuova carica la pagina smonta i tab e al ritorno ripartivano da «Giri». Ora cambiando sessione si resta sul tab dov'eri; i contenuti (Giri, Curve, Gomme e freni) ripartono puliti con `key={idSessione}`, così la scheda di una curva non resta aperta su un'altra pista.
+
+**Motivazione:** chi entra in demo parte dalla demo, e sulla demo la guida non c'è: senza un invito non trovava mai la cosa appena costruita.
+
+**Risultato osservato** (a schermo, 1536×639): demo → Telemetria → Curve: riquadro con il bottone; clic → Ferrari di Monza, **sempre sul tab Curve**, colonna «Guida» (C1 «T1-T3 Variante del Rettifilo · Curva Grande» … C6 «T11 Curva Alboreto») e linee T1…T11 nel confronto. Console senza errori.
+
+**Verifica:** `tsc --noEmit` 0 errori · percorso provato nel browser · backend non toccato.
 
 **File protetti:** ☑ nessuno toccato.
 **Decisione:** ☐ in attesa di «ok push».
