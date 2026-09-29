@@ -2253,7 +2253,7 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 | Data | 29/09/2026 |
 | Agente dev | Claude Code (claude-opus-5-5) |
 | Area | NEW `backend/app/analisi/aggancio.py` · `analisi/curve.py` · `analisi/motore.py` · NEW `app/tests/test_aggancio.py` · `frontend/src/components/charts/AnalisiCurve.tsx` · `frontend/src/lib/api.ts` · README, README.it, `docs/03` |
-| Commit | non ancora committato |
+| Commit | vedi sotto |
 | Contesto | Passo 4 del filone guide, dopo l'ancoraggio (#045) e i giri di ritmo nelle curve (#046). Scope chiuso il 28/09: (a) tabella del tab Curve + scheda della guida con mappa zoomata e frecce, (b) linee della guida nel confronto, (c) nomi della guida nel verdetto; niente sulla demo. Ora si vede su dati veri (le tre sessioni della #046). |
 
 **Catalogo messaggi:**
@@ -2281,6 +2281,53 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 **Da sapere:**
 - La T11 di Monza si chiama «Curva Parabolica (Alboreto)» nella guida: nel titolo del verdetto viene «in curva 6 (T11 Curva Parabolica (Alboreto))», con le parentesi doppie. Da decidere con Edoardo.
 - Edoardo vuole rivedere l'ordine delle schermate e della colonna di sinistra, che si sono riempite: la colonna «Guida» va giudicata dentro quel riordino.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» il 29/09 (commit `328ad35` aggancio nel motore · `8a9161b` tab Curve e confronto · `bdb078e` docs). Colonna «Guida» e scheda approvate da Edoardo; parentesi doppie della Parabolica: si corregge la guida (entry successiva).
+
+---
+
+## Entry #048 — Colonna di sinistra riordinata, archivio ripulito, T11 di Monza «Curva Alboreto»
+
+| Campo | Valore |
+|---|---|
+| Data | 29/09/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `frontend/src/components/ui/Sidebar.tsx` · `UserChip.tsx` · NEW `PannelloPista.tsx` · DEL `SidebarSection.tsx` · `app/(app)/layout.tsx` · `core/data/tracks_knowledge/monza.json` · `core/data/tracks_anchors/monza.json` · `app/tests/test_aggancio.py` · `docs/03` · archivio dati (fuori repo) |
+| Commit | non ancora committato |
+| Contesto | Dopo la #047 Edoardo: «la colonna a sinistra sta diventando troppo piena [...] il riquadro per le sessioni ora è troppo confusionario». Regole di riferimento: #008 e #010 (niente duplicati, navigazione sempre visibile, pochi blocchi). |
+
+**Catalogo messaggi:**
+1. «1 va bene anche se la colonna a sinistra sta diventando troppo piena, tocca sistemarla [...] 2 va bene, 3 ok push» → push della #047; diagnosi della colonna, proposta con schema e sei domande; domanda sul nome della T11.
+2. «va bene la proposta ora vediamo come verrà a schermo. 1 va bene, 2 va bene, 3 sì, 4 va bene, 5 ok, 6 controlliamo dopo aver riorganizzato. va bene A. ok procedi.» → costruito.
+3. «segnalo come riferimento, invece per la colonna e l'impostazione della pagina molto meglio ma risulta ancora disordinata e troppo attaccata. dagli un'occhiata e aggiusta il tutto» → McLaren marcata come riferimento; seconda passata su colonna e impaginazione (sotto).
+4. «già meglio però risulta ancora vuota la sidebar, risolviamo questo problema una volta per tutte» → misurato il vuoto (~360 px su una finestra 1080p); tre strade proposte (mappa della pista, numeri della sessione, colonna più stretta): scelta **mappa della pista**.
+5. «non vedo le modifiche che hai fatto, non vedo la pista.» → errore mio: il pannello era tarato per sparire sugli schermi bassi e l'avevo provato solo simulando uno schermo alto; lo schermo di Edoardo è quello del browser di prova (1536×639-695). Terza passata, misurata sullo schermo reale (sotto).
+6. «continua a risultare troppo vuota, ti ho fatto uno screenshot adesso, guardalo e poi aggiusta tutto. non possiamo rimanere bloccati su questo.» → screenshot `Catture di schermata/Screenshot 2026-09-29 174932.png` (1920×1080 al 125% = 1536×696 px di pagina, sessione demo): pannello centrato con ~60 px vuoti sopra e sotto e una sola riga «Perdi di più · C7». Quarta passata: il pannello si riempie di contenuto (sotto).
+
+**Diagnosi (prima):** su uno schermo alto ~650 px il blocco fisso in alto (marchio, utente, 7 voci) occupava due terzi della colonna, e il riquadro della sessione restava tagliato; l'elenco delle sessioni metteva in fila per data 13 sessioni di quattro tipi (demo, proprie, riferimenti di altri piloti, risultati di ACC senza telemetria), tutte uguali; il riquadro «Verdetto» era la copia della prima voce della Dashboard; in fondo Note, Tutorial, versione, Crediti.
+
+**Modifica:**
+- **Sidebar** (versione finale dopo la seconda passata): in cima solo marchio e **sessione aperta** (pista, vettura e tipo · giri su tre righe); navigazione in due gruppi con etichette leggibili, **«La sessione»** (Dashboard, Telemetria, Setup, Engineer Console) e **«Archivio e studio»** (Sessioni, Tracciati, Lezioni: righe più piccole e più tenui — la prima versione a tre riquadri era stretta, con scritte da 0,55 rem); tolto il riquadro Verdetto; in fondo **chip dell'utente** (menu verso l'alto), bottone **✎ Note** accanto, versione. La prima passata aveva utente e sessione in cima, due riquadri bordati quasi uguali uno sotto l'altro: si confondevano. Su 1536×639 la colonna entra intera (navigazione: 342 px di contenuto in 342 px); scorre solo col pannello delle note aperto. Il selettore sta fuori dallo scroll perché il suo elenco non venga tagliato.
+- **Pannello della pista, versione finale (quarta passata):** allineato in alto subito sotto la navigazione — intestazione «La pista · Monza · guida →», la mappa, e **«Dove perdi»**: le curve sopra i 30 ms in ordine di perdita, **numerate** (1 in rosso, le altre scure) con lo **stesso numero sulla mappa** (le prime tre, sulla prima curva della guida del tratto), il nome della guida quando la pista è ancorata, la perdita a giro; ogni riga porta a Telemetria. Le righe sono **quante ne entrano** (fino a 5): misurato sullo schermo di Edoardo (colonna 695 px), demo = 3 righe (C7 −0.18, C1 −0.17, C6 −0.16), Ferrari Monza = 3 righe con i nomi (C5 · T8-T10 Variante Ascari, C6 · T11 Curva Alboreto, C1 · T1-T3 …), **1 px** libero in fondo. Senza analisi per curva: il motivo («Curve non misurabili: …»).
+- **Versione con note e utente in testa, tarata sullo schermo di Edoardo (1536×639):** niente piede — **note** e **utente** sono due icone tonde accanto al marchio (il menu dell'utente contiene nome, «Rifai il tutorial», «Crediti immagini», «Esci» e la versione; le note si aprono in un riquadro sotto l'icona); «Archivio e studio» è **una riga** di collegamenti «Sessioni · Tracciati · Lezioni»; voci della navigazione e margini un po' più bassi; il pannello della pista è compatto (mappa, «Perdi di più −0.15 s», «C5 · T8-T10 Variante Ascari», tutto cliccabile verso la guida). Misure sullo schermo reale: testa 183 px, navigazione 235, pista 222 con la mappa a 191×107 px. Prima (secondo giro) la pista non compariva: testa 185 + navigazione 339 + piede 93 non lasciavano spazio.
+- **«La pista»** (NEW `PannelloPista.tsx`), nello spazio fra la navigazione e il fondo della colonna: la mappa verificata della pista della sessione aperta con un **pallino** (pulsante, `motion-safe`) sulle curve della guida del tratto dove perdi di più (dall'aggancio), sotto «Perdi di più −0.15 s» e «C5 · T8-T10 Variante Ascari»; mappa e testo portano a `/tracciati/<pista>` (guida o scheda). Non ripete la Dashboard: la mappa non c'è in nessuna pagina della sessione. Il pannello **misura l'altezza che gli resta** (ResizeObserver) e mostra mappa + testo, solo il testo, o niente: su uno schermo basso la navigazione ha la precedenza. Il contenitore vuoto vale zero pixel (senza margini, `flex-1 basis-0`); il contenuto è centrato nello spazio libero. Le mappe SVG dichiarano solo il viewBox: larghezza piena e altezza dal disegno, e se esce troppo alta si stringe la larghezza con le proporzioni misurate al caricamento (con larghezza e altezza automatiche collassava a zero). Senza mappa verificata: pista · km · curve. Sotto i 30 ms (soglia del verdetto) nessuna «perdi di più». Demo: la mappa senza pallino e senza nomi (niente aggancio).
+- **Impaginazione** (`app/(app)/layout.tsx`): contenuto centrato (`max-w-6xl mx-auto`) con margini 32-48 px; prima partiva a 24 px dalla colonna, allineato a sinistra, con una banda vuota a destra. Vale per tutte le pagine.
+- **Elenco delle sessioni**: tre gruppi, **Le tue**, **Riferimenti · altri piloti**, **Demo**, con il conteggio; al massimo 5 per gruppo più «altre N in Sessioni»; la sessione aperta resta visibile anche oltre le prime cinque; «senza telemetria» sulle sessioni che non hanno canali. L'elenco è largo 320 px (sborda sulla pagina) e ogni voce ha pista, vettura e dati su tre righe: nella larghezza della colonna le vetture uscivano troncate («McLar…»).
+- **UserChip**: diventa il menu dell'utente, in fondo alla colonna — «Rifai il tutorial», «Crediti immagini» (l'attribuzione resta raggiungibile, come chiedono le licenze CC), «Esci».
+- **`SidebarSection.tsx`** cancellato: lo usava solo il riquadro Verdetto.
+- **T11 di Monza**: nome «Curva Alboreto» (ufficiale dal 2021) al posto di «Curva Parabolica (Alboreto)», nella guida e nelle ancore (il validatore li confronta). Il resto della guida non cambia: la chicca «Dal 2021 la Parabolica si chiama ufficialmente Curva Alboreto…» c'era già. Nel verdetto: «…in curva 6 (T11 Curva Alboreto)», senza parentesi doppie.
+- **Archivio** (fuori repo): cancellate dall'app (rotta DELETE, che toglie anche i canali) 7 sessioni — Spa BMW ×2 e Zandvoort McLaren ×2 del 17/09, e le 3 del 14/09 coi soli risultati/setup di ACC. **Tenute** le due sessioni d'origine delle ancore: Monza BMW (`…-711b`, registrazione `…-bcf3`) e Zandvoort McLaren (`…-3e52`, registrazione `…-5f1e`; nella proposta era sfuggita, stesso criterio). I file MoTeC grezzi restano in `motec/riferimenti`. Restano 6 sessioni: demo, le due d'origine, le tre multi-giro della #046. La McLaren `…-3e52` (file di kyxap, importata il 17/09 senza la spunta) marcata come **riferimento** su richiesta di Edoardo: bundle riscritto con `store.salva` (stesso id, così le ancore di Zandvoort puntano ancora alla sua registrazione `…-5f1e`) e `riferimento` nel `sessione.json` della registrazione; copia di sicurezza dei due file prima. Il gruppo «Le tue» ora è vuoto e non compare.
+
+**Motivazione:** la colonna era cresciuta a ogni filone senza un disegno; le regole del #008/#010 erano state perse per strada.
+
+**Risultato osservato — «La pista»:** su una colonna alta 1030 px (simulata rimpicciolendo la pagina al 62%) Ferrari Monza: mappa con tre pallini sulla Variante Ascari, «C5 · T8-T10 Variante Ascari −0.15 s»; NSX Zandvoort: pallini su Kumho e Arie Luyendijk, «C9 · T13-T14 … −0.22 s». Su 639 px reali la navigazione entra esatta (339/339 px) e il pannello si toglie da solo. Il verdetto dopo il riavvio del backend dice «(T11 Curva Alboreto)».
+**Risultato osservato — colonna e pagine** (a schermo, 1536×639, Dashboard, Telemetria, Tracciati): la colonna intera sta nello schermo senza scorrere; elenco delle sessioni a gruppi e leggibile («Riferimenti · 5», «Demo · 1»); menu dell'utente verso l'alto con le tre voci; pannello Note sopra il chip; contenuto delle pagine centrato. Console del browser senza errori.
+
+**Verifica:** `tsc --noEmit` 0 errori · rotte `/ /telemetry /setup /console /sessioni /tracciati /tracciati/monza /lezioni /crediti /login` 200 · validatore delle guide senza errori (13 guide, 2 ancore) · `test_aggancio` 37/37 · `test_tracciati` 98/98 · nessuna chiamata LLM.
+
+**Da sapere:**
+- Prossimo, deciso da Edoardo: rivedere le pagine una alla volta dopo il riordino della colonna.
 
 **File protetti:** ☑ nessuno toccato.
 **Decisione:** ☐ in attesa di «ok push».

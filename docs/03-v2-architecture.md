@@ -44,7 +44,7 @@ Le schede vettura/circuito (`SessionBriefing`) leggono `GET /api/catalog/car/{id
 
 - **`components/ui/`**: `AuthGate`, `CountUp`, `GigiAvatar`, `GigiTour`, `MotionProvider`, `NavIcons`,
   `OnboardingFlow` (5 passi, il primo è la piattaforma), `PageHeader`, `Providers`, `QuickNotes`, `SessionBriefing`,
-  `Sidebar` (selettore di sessione + verdetto in una riga), `SidebarSection`, `Tabs`, `UserChip`, `Verdetto`.
+  `Sidebar` (dal 29/09, Entry #048: in cima la sessione aperta con l'elenco a gruppi «Le tue» / «Riferimenti» / «Demo»; navigazione in due gruppi «La sessione» e «Archivio e studio»; nello spazio libero `PannelloPista` — mappa della pista aperta con la curva dove perdi di più, adattata all'altezza dello schermo; note e utente come icone accanto al marchio, versione nel menu dell'utente), `Tabs`, `UserChip` (menu: tutorial, crediti, esci), `Verdetto`. Il layout `(app)` centra il contenuto (`max-w-6xl`).
 - **`components/charts/`**: `AnalisiCurve`, `GiriSessione`, `GommeFreni`, `PressureGauge`, `Sparkline`.
 - **`lib/`**: `api.ts` (fetch client tipizzato sul report + `ApiError`), **`sessione.tsx`** (sessione aperta e report
   condivisi da tutte le pagine), **`formato.ts`** (solo formattazione: nessun conto), `auth.tsx`, `profile.tsx`,
