@@ -2197,6 +2197,51 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 - Prossimo passo: l'aggancio in sessione (testo della guida accanto al verdetto nel tab Curve, zoom sulla curva).
 
 **File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» il 28/09 (commit `cfdb0b2` sensi delle guide · `8ff1fa2` ancoraggio delle curve · `44eb749` docs).
+
+---
+
+## Entry #046 — Analisi per curva solo sui giri di ritmo, e tre sessioni MoTeC multi-giro vere
+
+| Campo | Valore |
+|---|---|
+| Data | 29/09/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `backend/app/analisi/curve.py` · `backend/app/tests/test_curve.py` · README, README.it, `docs/03`, `docs/04` · archivio dati (fuori repo) |
+| Commit | non ancora committato |
+| Contesto | Prerequisito dell'aggancio in sessione (che diventa la #047). Le sessioni MoTeC in archivio avevano un giro solo, quindi l'analisi per curva (servono 2 giri) non si era mai vista su dati veri. Edoardo non può registrare: prima la ricerca online di una sessione multi-giro, poi la costruzione. |
+
+**Catalogo messaggi:**
+1. «leggi la memoria e dimmi cosa dobbiamo fare con pitwall» → riepilogo dello stato; domanda aperta: ricerca prima o costruzione prima.
+2. «prima la ricerca, poi costruiamo» → ricerca con tetto di 1 ora, chiusa in ~20 minuti; misurato il motore sui file trovati: l'analisi per curva conta anche i giri lenti.
+3. «1 sì, 2 sì, 3 sì» → import delle due sessioni PS_Racing, correzione come entry a sé, anche il file di Zandvoort.
+4. «1 sì, 2 sì, 3 sì, ok procedi» → setup Q dedotto da `telemetryLaps`; con un solo giro di ritmo niente analisi per curva; esclusi anche i giri invalidati.
+
+**Ricerca (29/09):**
+- Trovati: **PS_Racing** (YouTube, «Hotlap + FREE Setup», Drive pubblico), Monza, export grezzi di ACC con 10 giri nel `.ldx`: Ferrari 488 GT3 Evo 25/01/2026 (ACC 1.10.4) e Audi R8 Evo II 30/03/2025 (1.10.3), 8 giri completi e 6 di ritmo ciascuna, 23/27 °C, Optimal. **schubert** (YouTube, 14/06/2022), Zandvoort, Honda NSX GT3 Evo, ACC 1.8.14: 5 giri completi, 4 di ritmo.
+- Scartati: Fri3d0lf (hotlap ritagliati in MoTeC i2, un giro), Abesports (MEGA, un giro), il dataset Kaggle «Monza» (è Assetto Corsa 1, in CSV), Flickerdox (multi-giro ma Hungaroring e Barcelona, 1.8), fixture di t-babin (Laguna Seca, Kyalami, Imola), un workspace MoTeC senza dati. Ripiego a pagamento non usato: Coach Dave, €5,99, 3 giri.
+- Nessuna licenza esplicita sui file trovati: stanno in `%LOCALAPPDATA%\PitWall\motec\riferimenti\ps_racing_drive\` e `schubert_drive\`, ognuna col suo `PROVENIENZA.md`; mai nel repo.
+
+**Modifica:**
+- **`curve.py`**: nuova `giri_di_ritmo()`. L'analisi per curva usa solo i giri completi, **validi** e **entro il +10% sul migliore**: la regola del ritmo del motore, con la stessa costante `FATTORE_ANOMALO` importata da `motore.py` (una sola fonte). I giri esclusi restano nell'elenco dei giri del report e sono dichiarati nelle note («2 giri fuori dall'analisi per curva: oltre il +10% sul giro migliore» / «…invalidati dal gioco»). Con meno di 2 giri di ritmo l'analisi per curva **non si fa** e lo dice («servono almeno 2 giri di ritmo»): il ritmo, con un giro solo, tiene tutto, le curve no, perché una perdita misurata contro una sosta è un numero falso. Vale per il motore e per la rotta `/api/telemetria/.../curve`, che usano la stessa funzione.
+- **Test** (`test_curve` 62 → 74, C59-C70): giro con sosta (+24%) escluso dal dettaglio ma presente fra i giri, perdite uguali a quelle dei soli giri buoni, verdetto senza la curva della sosta, nota con la soglia, 3 giri considerati per curva; un giro buono più una sosta → rifiuto; giro invalidato escluso e dichiarato; nessuna nota con giri tutti buoni. Sul `curve.py` di prima 9 dei 12 test nuovi falliscono.
+- **Archivio** (fuori repo): le tre sessioni importate dalla rotta `POST /api/sessions/import/motec` come «riferimento, non tuo», col setup usato. PS_Racing allega un setup Q e uno R: solo il Q ha `telemetryLaps = 10`, come i 10 giri del file (l'R ha 0); schubert ha un setup solo, `telemetryLaps = 7` come i 7 tratti del `.ldx`. Il setup è caricato col nome «… (dedotto da telemetryLaps)», perché la rotta non ha un campo per le note. Id: `20260929-131527-monza_ferrari_488_gt3_evo-7801`, `20260929-131529-monza_audi_r8_lms_evo_ii_gt3-919f`, `20260929-131531-zandvoort_honda_nsx_gt3_evo-fedb`.
+
+**Motivazione:** sui file veri il motore scriveva «Perdi 13,62 s a giro in curva 6» (Ferrari, per due giri da 151 e 176 s) e «Perdi 91,58 s a giro in curva 9» (NSX, un giro da 551 s fermo), più frenate «ballerine» di 254 m. Con l'aggancio sarebbe diventato «…in curva 6 (T11 Parabolica)»: un errore scritto più in grande.
+
+**Risultato osservato** (prima → dopo, perdita totale per curva e prima voce di curva del verdetto):
+- Ferrari 488 Monza: curva 6 −13,62 s → la voce più grave è la curva 5, −0,15 s; perdita totale 0,36 s su 6 giri; «2 giri fuori».
+- Audi R8 Monza: curva 1 −5,14 s e frenata ballerina di 254,8 m → curva 5, −0,31 s; totale 0,92 s; «2 giri fuori».
+- NSX Zandvoort: curva 9 −91,58 s → curva 9, −0,22 s; totale 0,67 s su 4 giri; «1 giro fuori».
+- Il motore trova 6 tratti a Monza (11 curve nella guida) e 9 a Zandvoort (14): più curve della guida per tratto, come previsto dalla regola dell'aggancio. Lunghezza stimata 5751-5757 m contro 5793 (−0,7%) a Monza, 4185 contro 4259 (−1,7%) a Zandvoort.
+
+**Verifica:** **968/968** test in 18 file (`test_curve` 62 → 74) · demo e numeri di Gigi invariati (`test_demo` 38/38, `test_gigi` 32/32) · import e `GET /api/sessions/{id}/analisi` sui tre file veri col backend acceso · nessuna chiamata LLM · frontend non toccato.
+
+**Da sapere:**
+- Nelle assunzioni dell'import della Ferrari compare «canali più lunghi del giro ritagliato» anche se il file non è ritagliato (i canali `EN_*` e `TIME` durano fino a 5057 s): la frase viene dal caso i2 e qui è impropria. Non corretta in questa entry.
+- Il file di Zandvoort è di fisica 1.8: vale per le curve e per l'aggancio, non per giudicare gomme e freni.
+
+**File protetti:** ☑ nessuno toccato.
 **Decisione:** ☐ in attesa di «ok push».
 
 ---

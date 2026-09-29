@@ -347,7 +347,10 @@ Rotte: `GET /api/telemetria/stato`, `POST .../avvia`, `POST .../ferma`, `GET ...
 ### L'analisi per curva (F3)
 `app/analisi/curve.py`, deterministica e senza LLM, in quattro passaggi:
 1. **i giri si ritagliano dalla posizione** (`normalizedCarPosition` che riparte da 0); conta solo
-   chi ha la spazzata completa, e i giri passati dai box restano fuori;
+   chi ha la spazzata completa, e i giri passati dai box restano fuori. **Dal 29/09 (Entry #046)**
+   entrano solo i **giri di ritmo**: validi ed entro il +10% sul migliore, la stessa regola (e la
+   stessa costante) del motore; gli esclusi sono dichiarati, e con meno di 2 giri di ritmo l'analisi
+   per curva non si fa. Sui file MoTeC veri una sosta da 551 s diventava «perdi 91 s in curva 9»;
 2. **i canali si reindicizzano sulla distanza** su una griglia fissa (2000 punti ≈ 2,5 m su un
    tracciato da 5 km): confrontare due giri nel tempo non ha senso, sulla stessa posizione sì;
 3. **le curve si ricavano dal profilo di velocità mediano** fra i giri buoni (decisione 4: nessun

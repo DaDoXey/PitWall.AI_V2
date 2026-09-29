@@ -68,7 +68,7 @@ Le schede vettura/circuito (`SessionBriefing`) leggono `GET /api/catalog/car/{id
   ⚠️`prompts/` (`system_prompt_v5.txt`, `chat_system_prompt.txt`), ⚠️`demo_responses.py`, `riferimenti_fisica.py`
   (+ `data/acc_riferimenti_fisica_v19.json` Kunos e `acc_riferimenti_community.json`), `riferimenti_acc.py`,
   `catalog.py` + `data/cars.json` (31 GT3) e `data/tracks.json` (25 circuiti), `data/tracks_knowledge/` (guide: 13 su 25, al 25/09), `data/tracks_anchors/` (ancore delle curve: inizio, apice, uscita sul giro e punto sulla mappa per ogni curva della guida; Monza e Zandvoort al 28/09; formato e validatore in `core/ancore.py`, rilevamento in `analisi/eventi_curva.py`).
-- **`tests/`**: 18 file, 956 test offline (elenco nei README).
+- **`tests/`**: 18 file, 968 test offline (elenco nei README).
 - **`backend/scripts/`** (fuori da `app/`): pipeline delle immagini (foto, ritagli, mappe, crediti) e validatore delle guide.
 - **`backend/logs/`** (gitignorata): `pitwall.log`, `llm_spesa.json`, e i registri `llm_token_log.md` / `llm_incidents.md`
   scritti da `agent.py`.
@@ -105,7 +105,7 @@ Acceso il live, ogni chiamata passa da `budget.prenota()` / `budget.salda()` (ag
 
 ## 7 · Verifica
 - Frontend: `npx tsc --noEmit` **0 err** + rotte `/ /console /telemetry /setup /sessioni /lezioni /crediti /login` **200**.
-- Backend: 18 file di test in `app/tests/`, **956** test, tutti offline.
+- Backend: 18 file di test in `app/tests/`, **968** test, tutti offline.
 - **Mai** `npm run build` con `npm run dev` attivo (corrompe `.next`, HAZARD-V2-A).
 
 ## 8 · Deploy (da decidere)
