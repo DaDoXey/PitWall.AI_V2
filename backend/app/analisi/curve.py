@@ -14,7 +14,7 @@ Le quattro idee, in ordine:
    in poi «curva 4» è la stessa curva per tutti i giri.
 3. **Le curve si ricavano dai dati, non da una mappa.** Decisione 4 del rework: nessun
    dato a mano per 25 circuiti. Si prende il profilo di velocità **mediano** fra i
-   giri buoni, si cercano i minimi abbastanza profondi, e ogni curva diventa il tratto
+   giri buoni (completi, validi, entro il +10% sul migliore: la regola del ritmo), si cercano i minimi abbastanza profondi, e ogni curva diventa il tratto
    fra il massimo di velocità che la precede e quello che la segue — così i tratti si
    toccano e coprono tutto il giro: nessun decimo può sparire fra due curve.
 4. **La perdita si misura per tratto.** Per ogni curva e ogni giro si calcola il tempo
@@ -35,6 +35,9 @@ from dataclasses import dataclass, field, asdict
 from typing import Any
 
 import numpy as np
+
+# La soglia del ritmo è una sola: la stessa del motore, non una copia.
+from app.analisi.motore import FATTORE_ANOMALO
 
 # Canali indispensabili: senza questi non si analizza niente.
 POSIZIONE = "graphics.normalizedCarPosition"
@@ -197,6 +200,25 @@ def dividi_in_giri(canali: dict[str, np.ndarray]) -> list[GiroCanali]:
             ai_box=bool(ai_box[inizio:fine].max() > 0) if ai_box is not None else False,
         ))
     return giri
+
+
+def giri_di_ritmo(completi: list[GiroCanali]) -> tuple[list[GiroCanali], int, int]:
+    """(giri che entrano nell'analisi, quanti invalidati, quanti lenti).
+
+    La stessa regola del ritmo nel motore: fuori i giri invalidati dal gioco e quelli
+    oltre il +10% sul migliore (out lap, soste, bandiere). Un giro da 551 s con la
+    macchina ferma, tenuto dentro, diventava «perdi 91 s in curva 9».
+    """
+    validi = [g for g in completi if g.valido]
+    if not validi:
+        return [], len(completi), 0
+    soglia = min(g.tempo_ms for g in validi) * FATTORE_ANOMALO
+    buoni = [g for g in validi if g.tempo_ms <= soglia]
+    return buoni, len(completi) - len(validi), len(validi) - len(buoni)
+
+
+def _giri(n: int) -> str:
+    return "1 giro" if n == 1 else f"{n} giri"
 
 
 # ── 2 · la griglia sulla distanza ───────────────────────────────────────────
@@ -394,10 +416,29 @@ def analizza_curve(
             dati_mancanti.append(f"canale «{nota}» assente: le sue misure non ci sono")
 
     giri = dividi_in_giri(canali)
-    buoni = [g for g in giri if g.completo and not g.ai_box and g.tempo_ms]
-    if len(buoni) < 2:
+    completi = [g for g in giri if g.completo and not g.ai_box and g.tempo_ms]
+    if len(completi) < 2:
         raise CurveNonCalcolabili(
-            f"servono almeno 2 giri completi, ce ne sono {len(buoni)}"
+            f"servono almeno 2 giri completi, ce ne sono {len(completi)}"
+        )
+    buoni, invalidati, lenti = giri_di_ritmo(completi)
+    if invalidati:
+        dati_mancanti.append(
+            f"{_giri(invalidati)} fuori dall'analisi per curva: invalidat"
+            f"{'o' if invalidati == 1 else 'i'} dal gioco"
+        )
+    if lenti:
+        dati_mancanti.append(
+            f"{_giri(lenti)} fuori dall'analisi per curva: oltre il "
+            f"+{round((FATTORE_ANOMALO - 1) * 100)}% sul giro migliore"
+        )
+    if len(buoni) < 2:
+        # Il ritmo, con un giro solo, tiene tutto per non restare vuoto. Qui no: una
+        # perdita misurata contro un out lap o una sosta è un numero falso, e sulla
+        # curva finirebbe scritto in grande. Meglio dire perché non c'è.
+        raise CurveNonCalcolabili(
+            f"servono almeno 2 giri di ritmo, ce n'è {len(buoni)}"
+            if len(buoni) == 1 else "servono almeno 2 giri di ritmo, non ce n'è nessuno"
         )
 
     nomi = [n for n in (VELOCITA, FRENO, GAS, STERZO, MARCIA, TEMPO) if n in canali]

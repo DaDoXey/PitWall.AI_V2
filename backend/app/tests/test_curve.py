@@ -282,6 +282,63 @@ test("C51 …e senza inventare punti di frenata",
      all(d.punto_di_frenata is None for d in senza.dettaglio))
 
 # ---------------------------------------------------------------------------
+# 6b · Solo i giri di ritmo (Entry #046)
+# ---------------------------------------------------------------------------
+# Sui file MoTeC veri un giro con la sosta ai box (551 s a Zandvoort) finiva
+# nell'analisi e diventava «perdi 91 s in curva 9». La regola è quella del ritmo:
+# fuori i giri invalidati e quelli oltre il +10% sul migliore.
+print("\n─── Solo i giri di ritmo ───")
+
+sosta = [buone[0],
+         CurvaFinta(posizione_m=1500.0, velocita_minima_kmh=15.0, frenata_m=300.0),
+         buone[2]]
+con_lento = genera(pista, [GiroFinto(curve=buone), GiroFinto(curve=buone),
+                           GiroFinto(curve=sosta), GiroFinto(curve=buone)])
+tempi_lento = [g.tempo_ms for g in dividi_in_giri(con_lento)]
+test("C59 il giro con la sosta è oltre il +10% sul migliore (premessa del test)",
+     tempi_lento[2] > min(tempi_lento) * 1.10, f"{tempi_lento}")
+
+r_lento = analizza_curve(con_lento)
+test("C60 il giro lento resta nell'elenco dei giri…",
+     [g.numero for g in r_lento.giri] == [1, 2, 3, 4])
+test("C61 …ma non entra nel dettaglio per curva",
+     {d.giro for d in r_lento.dettaglio} == {1, 2, 4},
+     f"{sorted({d.giro for d in r_lento.dettaglio})}")
+test("C62 le perdite sono quelle dei soli giri buoni (nessuna)",
+     r_lento.perdita_totale_ms < 5.0 and
+     all(v.perdita_ms < 5.0 for v in r_lento.dettaglio),
+     f"{r_lento.perdita_totale_ms} ms")
+test("C63 il verdetto non inventa una perdita sulla curva della sosta",
+     not any("curva 2" in v.titolo for v in r_lento.verdetto),
+     f"{[v.titolo for v in r_lento.verdetto]}")
+test("C64 l'esclusione è dichiarata, con la soglia",
+     any("1 giro fuori" in d and "+10%" in d for d in r_lento.dati_mancanti),
+     f"{r_lento.dati_mancanti}")
+test("C65 i giri considerati per curva sono 3",
+     all(x.giri_considerati == 3 for x in r_lento.riepilogo))
+
+uno_buono = genera(pista, [GiroFinto(curve=buone), GiroFinto(curve=sosta)])
+msg = errore(lambda: analizza_curve(uno_buono))
+test("C66 con un solo giro di ritmo non si confronta contro la sosta: si rifiuta",
+     msg is not None and "2 giri di ritmo" in msg, msg or "nessun errore")
+
+con_invalido = genera(pista, [GiroFinto(curve=buone),
+                              GiroFinto(curve=storte, valido=False),
+                              GiroFinto(curve=buone)])
+r_invalido = analizza_curve(con_invalido)
+test("C67 un giro invalidato dal gioco non entra nell'analisi…",
+     {d.giro for d in r_invalido.dettaglio} == {1, 3},
+     f"{sorted({d.giro for d in r_invalido.dettaglio})}")
+test("C68 …e la perdita del giro storto sparisce con lui",
+     r_invalido.perdita_totale_ms < 5.0, f"{r_invalido.perdita_totale_ms} ms")
+test("C69 …dichiarandolo",
+     any("invalidato" in d for d in r_invalido.dati_mancanti),
+     f"{r_invalido.dati_mancanti}")
+test("C70 con giri tutti buoni nessuna nota di esclusione",
+     not any("fuori dall'analisi" in d
+             for d in analizza_curve(tre_giri_uguali).dati_mancanti))
+
+# ---------------------------------------------------------------------------
 # 7 · La rotta, sopra una registrazione scritta su disco
 # ---------------------------------------------------------------------------
 print("\n─── Rotta /curve ───")
