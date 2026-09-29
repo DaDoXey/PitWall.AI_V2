@@ -4,6 +4,7 @@
 // Via le viste della v1 costruite su numeri scritti a mano e su conti fatti nel browser
 // (corsie, scatter, radar «bilanciamento», confronto metà stint): nessuna poggiava su
 // una misura dimostrata.
+import { useState } from "react";
 import { motion } from "framer-motion";
 import PageHeader from "@/components/ui/PageHeader";
 import Tabs from "@/components/ui/Tabs";
@@ -17,6 +18,9 @@ import { ETICHETTA_TIPO, giri } from "@/lib/formato";
 
 export default function TelemetryPage() {
   const { report, idSessione, caricamento, errore, nomi } = useSessione();
+  // Il tab scelto vive qui, non dentro i Tabs: mentre una sessione nuova carica i Tabs
+  // spariscono, e al ritorno ripartirebbero da «Giri».
+  const [tab, setTab] = useState("giri");
 
   if (!report || !idSessione)
     return (
@@ -39,12 +43,15 @@ export default function TelemetryPage() {
         </motion.div>
       )}
       <motion.div variants={fadeInUp} initial="hidden" animate="visible">
+        {/* Il tab scelto resta quando cambi sessione (es. dall'invito della demo verso la
+            sessione con la guida); i contenuti invece ripartono da zero, con la chiave. */}
         <Tabs
-          key={idSessione}
+          value={tab}
+          onChange={setTab}
           tabs={[
-            { id: "giri", label: "Giri", content: <GiriSessione report={report} /> },
-            { id: "curve", label: "Curve", content: <AnalisiCurve report={report} idSessione={idSessione} /> },
-            { id: "gomme", label: "Gomme e freni", content: <GommeFreni report={report} /> },
+            { id: "giri", label: "Giri", content: <GiriSessione key={idSessione} report={report} /> },
+            { id: "curve", label: "Curve", content: <AnalisiCurve key={idSessione} report={report} idSessione={idSessione} /> },
+            { id: "gomme", label: "Gomme e freni", content: <GommeFreni key={idSessione} report={report} /> },
           ]}
         />
       </motion.div>

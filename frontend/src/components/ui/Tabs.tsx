@@ -8,11 +8,18 @@ import { useState } from "react";
 export default function Tabs({
   tabs,
   initial,
+  value,
+  onChange,
 }: {
   tabs: { id: string; label: string; content: React.ReactNode }[];
   initial?: string;
+  /** Tab attivo deciso da fuori (es. la pagina, che lo tiene anche mentre ricarica). */
+  value?: string;
+  onChange?: (id: string) => void;
 }) {
-  const [active, setActive] = useState(initial ?? tabs[0]?.id);
+  const [interno, setInterno] = useState(initial ?? tabs[0]?.id);
+  const active = value ?? interno;
+  const setActive = (id: string) => (onChange ? onChange(id) : setInterno(id));
   const current = tabs.find((t) => t.id === active) ?? tabs[0];
 
   return (

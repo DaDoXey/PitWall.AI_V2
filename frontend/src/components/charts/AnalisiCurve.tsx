@@ -48,7 +48,7 @@ export default function AnalisiCurve({ report, idSessione }: { report: Report; i
 
   return (
     <div className="flex flex-col gap-4">
-      {report.aggancio?.nota && <p className="text-[0.75rem] text-subtle">{report.aggancio.nota}</p>}
+      {report.aggancio?.nota && <InvitoGuida report={report} idSessione={idSessione} nota={report.aggancio.nota} />}
       {curve ? (
         <TabellaCurve report={report} guida={guida} />
       ) : (
@@ -58,6 +58,33 @@ export default function AnalisiCurve({ report, idSessione }: { report: Report; i
       )}
       {/* Il confronto non ha bisogno dell'analisi per curva: basta un giro con i canali. */}
       {report.ha_canali && <Confronto report={report} idSessione={idSessione} />}
+    </div>
+  );
+}
+
+/** Sulla demo la guida non si aggancia (circuito generato): si dice perché e si offre la
+ *  sessione vera della stessa pista con più giri, dove nomi, scheda e zoom ci sono.
+ *  Scelta di Edoardo del 29/09: chi entra in demo deve poterli vedere. */
+function InvitoGuida({ report, idSessione, nota }: { report: Report; idSessione: string; nota: string }) {
+  const { elenco, nomi, apri } = useSessione();
+  const vera = (elenco ?? [])
+    .filter((s) => s.id !== idSessione && !s.demo && s.ha_canali && s.track === report.track)
+    .sort((a, b) => b.giri - a.giri || (b.iniziata_il ?? b.importato_il ?? "").localeCompare(a.iniziata_il ?? a.importato_il ?? ""))[0];
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-line border-l-2 border-l-accent bg-inset px-4 py-3">
+      <p className="min-w-0 flex-1 text-[0.8rem] leading-snug text-subtle">
+        {nota}
+        {vera ? " Su una sessione vera della stessa pista trovi la guida curva per curva, con la mappa zoomata." : ""}
+      </p>
+      {vera && (
+        <button
+          type="button"
+          onClick={() => apri(vera.id)}
+          className="shrink-0 rounded-md border border-accent px-3 py-1.5 font-mono text-[0.62rem] uppercase tracking-widest text-white transition hover:bg-accent/15"
+        >
+          Apri {nomi.pista(vera.track)} · {nomi.vettura(vera.car)} con la guida →
+        </button>
+      )}
     </div>
   );
 }
