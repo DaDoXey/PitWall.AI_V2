@@ -32,7 +32,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field, asdict
-from typing import Any
+from typing import Any, Callable
 
 import numpy as np
 
@@ -403,9 +403,16 @@ def _tratto(inizio: int, fine: int, punti: int) -> np.ndarray:
 
 
 def analizza_curve(
-    canali: dict[str, np.ndarray], punti: int = PUNTI_GRIGLIA
+    canali: dict[str, np.ndarray],
+    punti: int = PUNTI_GRIGLIA,
+    nomi_tratti: Callable[[list[Curva]], dict[int, str]] | None = None,
 ) -> ReportCurve:
-    """Il report per curva di una sessione registrata."""
+    """Il report per curva di una sessione registrata.
+
+    `nomi_tratti`, se c'è, riceve le curve appena trovate e restituisce il nome di ogni
+    tratto secondo la guida del tracciato (aggancio, Entry #047): il verdetto dice allora
+    «in curva 5 (T8-T10 Variante Ascari)» invece del solo numero del motore.
+    """
     mancanti = [c for c in (POSIZIONE, VELOCITA, TEMPO) if c not in canali]
     if mancanti:
         raise CurveNonCalcolabili(f"canali mancanti: {mancanti}")
@@ -546,7 +553,8 @@ def analizza_curve(
             giri_considerati=len(voci),
         ))
 
-    verdetto = _verdetto(riepilogo, dettaglio, curve, lunghezza)
+    nomi = nomi_tratti(curve) if nomi_tratti else {}
+    verdetto = _verdetto(riepilogo, dettaglio, curve, lunghezza, nomi)
     return ReportCurve(
         giri=giri,
         curve=curve,
@@ -565,6 +573,7 @@ def _verdetto(
     dettaglio: list[CurvaGiro],
     curve: list[Curva],
     lunghezza: float | None,
+    nomi: dict[int, str] | None = None,
 ) -> list[VoceVerdetto]:
     """Le perdite ordinate per gravità, ognuna col numero che la prova.
 
@@ -573,17 +582,28 @@ def _verdetto(
     """
     voci: list[VoceVerdetto] = []
     per_numero = {c.numero: c for c in curve}
+    nomi = nomi or {}
+
+    def in_curva(numero: int) -> str:
+        return f"curva {numero} ({nomi[numero]})" if nomi.get(numero) else f"curva {numero}"
 
     for riga in sorted(riepilogo, key=lambda r: r.perdita_media_ms, reverse=True):
         if riga.perdita_media_ms < 30:      # sotto i tre centesimi non è un problema
             continue
         curva = per_numero[riga.curva]
-        dove = (f"curva {riga.curva} (apice al metro {curva.apice_m:.0f})"
-                if curva.apice_m else f"curva {riga.curva}")
+        # Col nome della guida il metro dell'apice scende nella prova: nel titolo il
+        # pilota cerca la curva, non la misura.
+        if nomi.get(riga.curva):
+            dove = in_curva(riga.curva)
+            apice = f"apice al metro {curva.apice_m:.0f}; " if curva.apice_m else ""
+        else:
+            dove = (f"curva {riga.curva} (apice al metro {curva.apice_m:.0f})"
+                    if curva.apice_m else f"curva {riga.curva}")
+            apice = ""
         voci.append(VoceVerdetto(
             gravita=len(voci) + 1,
             titolo=f"Perdi {riga.perdita_media_ms/1000:.2f} s a giro in {dove}",
-            prova=(f"tempo migliore sul tratto {riga.tempo_migliore_ms/1000:.3f} s, "
+            prova=(f"{apice}tempo migliore sul tratto {riga.tempo_migliore_ms/1000:.3f} s, "
                    f"medio {riga.tempo_medio_ms/1000:.3f} s "
                    f"su {riga.giri_considerati} giri"),
             azione=("Rifai il tuo giro migliore in questa curva: la differenza è tua, "
@@ -603,7 +623,7 @@ def _verdetto(
         unita = "m" if lunghezza else "di giro"
         voci.append(VoceVerdetto(
             gravita=len(voci) + 1,
-            titolo=f"Frenata ballerina in curva {riga.curva}",
+            titolo=f"Frenata ballerina in {in_curva(riga.curva)}",
             prova=(f"il punto di frenata varia di {riga.dispersione_frenata} {unita} "
                    f"(deviazione standard su {riga.giri_considerati} giri)"),
             azione=("Scegli un riferimento fisso a bordo pista e frena sempre lì: "
@@ -618,7 +638,7 @@ def _verdetto(
             continue
         voci.append(VoceVerdetto(
             gravita=len(voci) + 1,
-            titolo=f"Velocità minima incostante in curva {riga.curva}",
+            titolo=f"Velocità minima incostante in {in_curva(riga.curva)}",
             prova=(f"v-min fra {riga.velocita_minima_media:.1f} km/h di media e "
                    f"{riga.velocita_minima_migliore:.1f} km/h nel giro migliore, "
                    f"deviazione {riga.dispersione_vmin:.1f} km/h"),
@@ -635,7 +655,7 @@ def _verdetto(
     if peggiore is not None and peggiore.coasting > 0.25:
         voci.append(VoceVerdetto(
             gravita=len(voci) + 1,
-            titolo=f"Troppo tempo in folle in curva {peggiore.curva}",
+            titolo=f"Troppo tempo in folle in {in_curva(peggiore.curva)}",
             prova=(f"nel giro {peggiore.giro} il {peggiore.coasting*100:.0f}% del tratto "
                    f"è senza freno e senza gas"),
             azione=("Passa dal freno al gas senza pause: il coasting è tempo regalato, "

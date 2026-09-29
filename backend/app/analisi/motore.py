@@ -20,7 +20,7 @@ traiettorie e consumo affidabile — arrivano con il registratore della shared m
 from __future__ import annotations
 
 import statistics
-from typing import Sequence
+from typing import Any, Sequence
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -179,6 +179,9 @@ class ReportAnalisi(_Base):
     # `analisi/gomme.py`, e ricopiarle qui vorrebbe dire tenerle allineate a mano.
     curve: dict | None = None
     gomme_e_freni: dict | None = None
+    # La guida del tracciato agganciata ai tratti del motore (Entry #047): forma in
+    # `analisi/aggancio.py`. None se la pista non ha ancore o la sessione non ha canali.
+    aggancio: dict | None = None
     ha_canali: bool = False
 
 
@@ -441,14 +444,17 @@ def _carburante_motivo(bundle: SessionBundle) -> str:
     return "nessun giro con un consumo misurato"
 
 
-def _dai_canali(canali: dict, mescola: str | None
-                ) -> tuple[dict | None, dict | None, list[Perdita], list[PuntoFermo], list[str]]:
+def _dai_canali(canali: dict, mescola: str | None, track: str | None = None,
+                demo: bool = False,
+                ) -> tuple[dict | None, dict | None, list[Perdita], list[PuntoFermo], list[str],
+                           dict | None]:
     """Ciò che solo la telemetria può dire: curve, gomme, freni.
 
     Import tardivi e di proposito: chi analizza un file di risultati non deve
     caricare numpy per niente, e il motore di L2 resta utilizzabile anche senza
     canali — che è esattamente la situazione di chi importa un file dal gioco.
     """
+    from app.analisi import aggancio as agg
     from app.analisi.curve import CurveNonCalcolabili, analizza_curve, dividi_in_giri
     from app.analisi.gomme import analizza_gomme_e_freni
 
@@ -456,9 +462,18 @@ def _dai_canali(canali: dict, mescola: str | None
     voci: list[Perdita] = []
     fermi: list[PuntoFermo] = []
 
+    # L'aggancio della guida (Entry #047): i tratti del motore prendono il nome delle
+    # curve della guida che contengono. Si calcola quando il motore ha trovato i tratti;
+    # se l'analisi per curva non si fa, le curve della guida servono lo stesso al grafico.
+    esito: dict[str, Any] = {}
+
+    def nomi_tratti(tratti: list) -> dict[int, str]:
+        esito["aggancio"] = agg.aggancia(track, tratti, demo)
+        return esito["aggancio"].tratti if esito["aggancio"] else {}
+
     curve = None
     try:
-        report_curve = analizza_curve(canali)
+        report_curve = analizza_curve(canali, nomi_tratti=nomi_tratti)
     except CurveNonCalcolabili as errore:
         note.append(f"analisi per curva non possibile: {errore}")
     except (KeyError, ValueError) as errore:      # canali storti: si dice, non si crolla
@@ -495,7 +510,8 @@ def _dai_canali(canali: dict, mescola: str | None
                             parametri=dict(v.parametri))
                     for v in report_gomme.voci)
         fermi.extend(PuntoFermo(**p) for p in report_gomme.punti_fermi)
-    return curve, gomme, voci, fermi, note
+    aggancio = esito["aggancio"] if "aggancio" in esito else agg.aggancia(track, None, demo)
+    return curve, gomme, voci, fermi, note, aggancio.come_json() if aggancio else None
 
 
 def _miglioramento_dimostrato(degrado: Degrado) -> bool:
@@ -625,11 +641,12 @@ def analizza(bundle: SessionBundle, canali: dict | None = None) -> ReportAnalisi
         mancanti.append("setup: nessun setup collegato a questa sessione → le correzioni "
                         "restano generiche")
 
-    curve = gomme_e_freni = None
+    curve = gomme_e_freni = aggancio = None
     voci_canali: list[Perdita] = []
     fermi_canali: list[PuntoFermo] = []
     if canali:
-        curve, gomme_e_freni, voci_canali, fermi_canali, note = _dai_canali(canali, mescola)
+        curve, gomme_e_freni, voci_canali, fermi_canali, note, aggancio = _dai_canali(
+            canali, mescola, bundle.meta.track, demo=bundle.meta.fonte.value == "demo")
         mancanti.extend(note)
     else:
         mancanti.append(
@@ -647,6 +664,7 @@ def analizza(bundle: SessionBundle, canali: dict | None = None) -> ReportAnalisi
     return ReportAnalisi(
         curve=curve,
         gomme_e_freni=gomme_e_freni,
+        aggancio=aggancio,
         ha_canali=bool(canali),
         giri_di_ritmo=len(ritmici),
         giri_esclusi_dal_ritmo=len(validi) - len(ritmici),
