@@ -2208,7 +2208,7 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 | Data | 29/09/2026 |
 | Agente dev | Claude Code (claude-opus-5-5) |
 | Area | `backend/app/analisi/curve.py` · `backend/app/tests/test_curve.py` · README, README.it, `docs/03`, `docs/04` · archivio dati (fuori repo) |
-| Commit | non ancora committato |
+| Commit | vedi sotto |
 | Contesto | Prerequisito dell'aggancio in sessione (che diventa la #047). Le sessioni MoTeC in archivio avevano un giro solo, quindi l'analisi per curva (servono 2 giri) non si era mai vista su dati veri. Edoardo non può registrare: prima la ricerca online di una sessione multi-giro, poi la costruzione. |
 
 **Catalogo messaggi:**
@@ -2240,6 +2240,47 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 **Da sapere:**
 - Nelle assunzioni dell'import della Ferrari compare «canali più lunghi del giro ritagliato» anche se il file non è ritagliato (i canali `EN_*` e `TIME` durano fino a 5057 s): la frase viene dal caso i2 e qui è impropria. Non corretta in questa entry.
 - Il file di Zandvoort è di fisica 1.8: vale per le curve e per l'aggancio, non per giudicare gomme e freni.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» il 29/09 (commit `8f895e9` curve solo sui giri di ritmo · `9a6a4c3` docs).
+
+---
+
+## Entry #047 — Aggancio della guida in sessione: nomi dei tratti, scheda della curva, linee nel confronto
+
+| Campo | Valore |
+|---|---|
+| Data | 29/09/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | NEW `backend/app/analisi/aggancio.py` · `analisi/curve.py` · `analisi/motore.py` · NEW `app/tests/test_aggancio.py` · `frontend/src/components/charts/AnalisiCurve.tsx` · `frontend/src/lib/api.ts` · README, README.it, `docs/03` |
+| Commit | non ancora committato |
+| Contesto | Passo 4 del filone guide, dopo l'ancoraggio (#045) e i giri di ritmo nelle curve (#046). Scope chiuso il 28/09: (a) tabella del tab Curve + scheda della guida con mappa zoomata e frecce, (b) linee della guida nel confronto, (c) nomi della guida nel verdetto; niente sulla demo. Ora si vede su dati veri (le tre sessioni della #046). |
+
+**Catalogo messaggi:**
+1. «partiamo con l'aggancio» → studiato il codice e calcolato l'abbinamento sulle due sessioni vere; piano e cinque domande.
+2. «1 va benissimo era quello che volevo fare dall'inizio, 2 giusto, 3 va bene, 4 proviamo poi in caso sistemeremo, 5 appena lo vedo ti dirò se va bene [...] ora procedi e poi vediamo come organizzare di nuovo le schermate e la colonna di sinistra se serve» → costruito.
+
+**Modifica:**
+- **`analisi/aggancio.py`** (niente numpy): una curva della guida appartiene al **tratto del motore che ne contiene l'apice**, anche se il tratto scavalca il traguardo (la Parabolica a Monza). Le curve vengono da `data/tracks_anchors/` (inizio, apice, uscita, punto sulla mappa), il nome dalla guida (fonte; l'ancora ne ha una copia). Nome del tratto: intervallo più nomi distinti senza le fasi «(ingresso)», «(centro)», «(uscita)» — «T8-T10 Variante Ascari», «T1-T3 Variante del Rettifilo · Curva Grande»; una curva sola col nome intero; senza nome resta «T9»; curve non consecutive elencate («T1, T3»).
+- **Motore**: il report ha un blocco nuovo `aggancio` (curve della guida con il tratto, nomi dei tratti, nota). C'è anche quando l'analisi per curva non si fa (un giro solo): le curve senza tratto servono al grafico. **Demo**: blocco vuoto con la riga «Sulla demo la guida non si aggancia: il circuito è generato…». Piste senza ancore o sessioni senza canali: nessun blocco.
+- **Verdetto (c)**: `analizza_curve` accetta una funzione che dà il nome ai tratti appena trovati. Con il nome: «Perdi 0.15 s a giro in curva 5 (T8-T10 Variante Ascari)», e «apice al metro 3939» scende in testa alla prova; lo stesso nome sulle altre voci della curva (frenata ballerina, velocità minima incostante, folle). Senza nome il titolo resta quello di prima. L'ordinamento usa il campo `curva` della voce, non il titolo: nessun effetto sulle gravità.
+- **Tab Curve (a)**: colonna «Guida» dopo «Curva» («—» se il tratto non contiene curve della guida). Clic su una riga → scheda sotto la tabella con la prima curva della guida del tratto: titolo (`TitoloCurva`), «nel tratto C5», mappa verificata ingrandita ×2,5 con il punto dell'ancora al centro e un pallino, testo della guida (`CurvaGuida`, lo stesso componente della sezione Tracciati), frecce ← → nell'ordine della guida (T1…Tn; la riga del tratto si evidenzia), ✕ per chiudere. La mappa compare solo se il layout è verificato, come in Tracciati.
+- **Confronto (b)**: con la guida agganciata le linee verticali segnano l'**inizio** delle curve della guida («T1…T14» sulle linee, i nomi nella riga sotto il grafico); senza, restano gli apici dei tratti del motore.
+- **Test** (`test_aggancio`, 37): regola dell'apice e tratto a cavallo del traguardo; nomi (fasi, nomi diversi, ordine, curve non consecutive, senza nome); ancore vere di Monza (11) e Zandvoort (14), T10 di Zandvoort senza nome; abbinamento atteso sui tratti della Ferrari; giro singolo senza tratti; JSON; demo; verdetto con e senza nomi, stesse perdite; demo nel report senza nomi; niente aggancio senza canali.
+
+**Motivazione:** «perdi 0,15 s in curva 5» non dice niente a chi guida: la curva 5 del motore a Monza è la Variante Ascari intera. Con il nome della guida e la scheda accanto il verdetto si legge sulla pista, e la guida si ritrova dove serve, dopo l'errore.
+
+**Risultato osservato** (verificato a schermo, modalità demo, sessioni scelte dalla colonna di sinistra):
+- Ferrari 488 Monza: C1 «T1-T3 Variante del Rettifilo · Curva Grande», C2 «T4-T5 Variante della Roggia», C3 «T6 Curva di Lesmo 1», C4 «T7 Curva di Lesmo 2», C5 «T8-T10 Variante Ascari», C6 «T11 Curva Parabolica (Alboreto)». Clic su C5 → scheda T8 con la mappa centrata accanto al numero 08; frecce fino a T11 (→ disattivata in fondo). Dashboard: «Perdi 0.15 s a giro in curva 5 (T8-T10 Variante Ascari)», «Velocità minima incostante in curva 5 (T8-T10 Variante Ascari)».
+- NSX Zandvoort: 9 tratti, tutte le 14 curve abbinate (C3 = T3-T6, C8 = T11-T12 Hans Ernstbocht, C9 = T13-T14).
+- McLaren Zandvoort, un giro solo: niente tabella, confronto con le linee T1…T14 sull'inizio delle frenate.
+- Demo: nessun nome nel verdetto, la riga che spiega perché.
+
+**Verifica:** **1005/1005** test in 19 file (`test_aggancio` 37 nuovi) · demo e numeri di Gigi invariati · `tsc --noEmit` 0 errori · rotte `/`, `/sessioni`, `/telemetry` 200 · console del browser senza errori · nessuna chiamata LLM.
+
+**Da sapere:**
+- La T11 di Monza si chiama «Curva Parabolica (Alboreto)» nella guida: nel titolo del verdetto viene «in curva 6 (T11 Curva Parabolica (Alboreto))», con le parentesi doppie. Da decidere con Edoardo.
+- Edoardo vuole rivedere l'ordine delle schermate e della colonna di sinistra, che si sono riempite: la colonna «Guida» va giudicata dentro quel riordino.
 
 **File protetti:** ☑ nessuno toccato.
 **Decisione:** ☐ in attesa di «ok push».
