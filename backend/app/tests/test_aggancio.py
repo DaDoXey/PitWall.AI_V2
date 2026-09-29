@@ -129,7 +129,7 @@ test("A21 ogni curva della guida finisce in un tratto",
      a is not None and all(c.tratto is not None for c in a.curve))
 atteso = {1: "T1-T3 Variante del Rettifilo · Curva Grande", 2: "T4-T5 Variante della Roggia",
           3: "T6 Curva di Lesmo 1", 4: "T7 Curva di Lesmo 2", 5: "T8-T10 Variante Ascari",
-          6: "T11 Curva Parabolica (Alboreto)"}
+          6: "T11 Curva Alboreto"}
 test("A22 l'abbinamento di Monza è quello atteso, tratto per tratto",
      a is not None and a.tratti == atteso, f"{a and a.tratti}")
 test("A23 la Parabolica sta nel tratto che scavalca il traguardo",

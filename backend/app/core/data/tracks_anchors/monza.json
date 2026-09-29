@@ -161,7 +161,7 @@
     },
     {
       "n": 11,
-      "nome": "Curva Parabolica (Alboreto)",
+      "nome": "Curva Alboreto",
       "inizio": 0.866,
       "metodo_inizio": "click",
       "apice": 0.8975,
