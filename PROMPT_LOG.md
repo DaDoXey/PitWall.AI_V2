@@ -2459,7 +2459,39 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 **Nota a margine (non toccata):** sulla Ferrari a Monza il carburante è 3.10 l in tutti i giri completi: sembra una media spalmata, non una misura giro per giro. Da guardare a parte.
 
 **File protetti:** ☑ nessuno toccato.
-**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (msg 7), dopo aver tolto la carrozzeria: `4c4b41f` Telemetria · `3730c71` verdetto al millisecondo · docs nel commit successivo.
+**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (msg 7), dopo aver tolto la carrozzeria: `4c4b41f` Telemetria · `3730c71` verdetto al millisecondo · `0fec3fb` docs.
+
+---
+
+## Entry #052 — Engineer Console: stato vero, scenari onesti, risposta senza doppioni
+
+| Campo | Valore |
+|---|---|
+| Data | 30/09/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `frontend/src/app/(app)/console/page.tsx` · `components/ui/PageHeader.tsx` · `lib/console.ts` · `backend/app/analisi/gigi.py` · `analisi/curve.py` · `app/tests/test_gigi.py` · `test_curve.py` · `docs/03-v2-architecture.md` |
+| Commit | vedi sotto |
+| Contesto | Terza pagina della revisione (la Setup si rivede dopo la verifica dei range). Misurata sulla Ferrari a Monza (MoTeC, live spento): 1411 px. |
+
+**Catalogo messaggi:**
+1. «ok push e poi ok procedi con il resto» (dopo la #051) → diagnosi della Console e 4 proposte: testa unica con lo stato vero; scenari a modello spento disattivati (A; la risposta per argomento, B, con la chat di Gigi); risposta del motore senza doppioni; testi del motore al millesimo.
+2. «ok a tutte le proposte, procedi».
+
+**Diagnosi (prima):** sotto il titolo un riquadro ripeteva «Gigi» e la sessione (già nella colonna) con «ONLINE» — falso: la risposta era «dal motore di analisi · senza modello»; a modello spento **ogni scenario dava la stessa risposta** («Calcola carburante» → le pressioni); la risposta ripeteva la Dashboard (tutto il verdetto nella Diagnosi, «Regge» e note sui dati con i codici dei canali EN_ET, EN_TL… nelle Note) e se stessa (la Causa ripeteva la prima frase della Diagnosi, la Guida le voci della Diagnosi); «Perdi 0.15 s» contro «+0.154 s» della colonna.
+
+**Modifica:**
+- **Testa**: via il riquadro di Gigi; `PageHeader` accetta `azioni` a destra, e la Console ci mette lo **stato vero** dalla fonte della risposta: «dal vivo» (verde) / «demo-mode» / «cache» / «dal motore · senza modello» / «fallback offline». Tolta la stessa etichetta dalla barra «Analisi richiesta» (doppione).
+- **Senza modello** (fonte `motore` o `fallback`, sessione non demo): i 4 scenari, la casella e ANALIZZA si spengono, con la riga «Gigi dal vivo è spento: qui risponde il motore di analisi, sempre con l'analisi della sessione. Scenari e domande libere tornano attivi con Gigi dal vivo.» Sulla demo (risposte preparate per scenario) restano accesi.
+- **Risposta dal motore** (`gigi.py`): la Diagnosi dice solo il problema numero uno, poi «Qui sotto la causa e le correzioni; il verdetto completo (N voci) è nella Dashboard.»; la Causa, se il problema numero uno è di gomme, non lo ripete («è il problema numero uno qui sopra», più le altre voci di gomme); le Note non ripetono «Regge» né le note tecniche: «Cosa regge e le note sui dati sono nella Dashboard (N note).»; la riga «Alla domanda…» non compare per «Analizza la sessione». La riga «senza modello linguistico» resta (G11).
+- **Titolo delle curve** (`curve.py`): «Perdi 0.154 s a giro in curva 5» (millesimo, come verdetto e colonna).
+- Test nuovi: G11b-G11e (`test_gigi`), C42b (`test_curve`).
+
+**Risultato osservato** (1536×639): Ferrari a Monza **1111 px** (da 1411), stato «dal motore · senza modello», scenari e casella spenti con la riga di spiegazione, Diagnosi di due righe, Causa «è il problema numero uno qui sopra», Guida e colonna con «0.154 s»; demo: stato «demo-mode», scenari accesi, risposta della cache invariata. Console del browser senza errori.
+
+**Verifica:** backend **1013/1013** in 19 file (1008 + G11b-e + C42b) · `tsc --noEmit` 0 errori, nessuna variabile inutilizzata nei file toccati.
+
+**File protetti:** ☑ nessuno toccato (`demo_responses.py`, `core/agent.py`, `core/prompts/*` invariati).
+**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `bd34b89` Console · `17ae9f9` risposta di Gigi e curve · docs nel commit successivo).
 
 ---
 

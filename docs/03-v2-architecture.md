@@ -33,7 +33,7 @@ HAZARD-V2-B) + `cd frontend && npm run dev` (:3000). Health `GET :8000/` →
 |---|---|---|
 | `/` | `(app)/page.tsx` | **Dashboard** (L4; riordinata nelle Entry #050-#051): fascia della sessione, verdetto con le note sui dati | cosa regge e 7 indicatori a righe (clic = dettaglio), pista e vettura compatte · report da `lib/sessione.tsx` (`GET /api/sessions/{id}/analisi`) |
 | `/telemetry` | `(app)/telemetry/page.tsx` | **Telemetria** (L4; riordinata nella Entry #051): tab Giri (tabella con il distacco disegnato nella cella, settori a destra), Curve (tabella con la guida, confronto velocità / delta / pedali), Gomme e freni (la macchina vista dall'alto, ruota per ruota, e un grafico giro per giro con selettore) · report + `GET /api/sessions/{id}/tracce` |
-| `/console` | `(app)/console/page.tsx` | **Console** di Gigi sulla sessione aperta: analisi a 5 sezioni, con il profilo pilota · `POST /api/analysis` |
+| `/console` | `(app)/console/page.tsx` | **Console** di Gigi sulla sessione aperta: analisi a 5 sezioni, con il profilo pilota; in testa lo stato vero (dal vivo / demo / dal motore · senza modello), e senza modello scenari e domande libere spenti (Entry #052) · `POST /api/analysis` |
 | `/setup` | `(app)/setup/page.tsx` | **Setup**: 5 tab / 49 slider ACC, parametri indicati dal verdetto, setup grezzo della sessione, upload screenshot · `GET /api/catalog`, `/api/setup-params`, `/api/sessions/{id}`; `POST /api/setup/from-image` |
 | `/sessioni` | `(app)/sessioni/page.tsx` | **Sessioni** (L4): percorso PC (import file, registratore), percorso console (sessione manuale con racconto), archivio |
 | `/lezioni` · `/lezioni/[slug]` | `(app)/lezioni/…` | **A Lezione con Gigi**: indice e dettaglio, contenuti read-only da `lib/lessons.ts` |
