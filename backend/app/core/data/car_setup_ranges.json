@@ -1,39 +1,677 @@
 {
   "_meta": {
-    "description": "Override di range/default dei parametri di setup per vettura (e, dove sensato, per circuito). Fallback ai valori generici di SETUP_SECTIONS quando una vettura non e' presente.",
-    "status_legend": "DA_VERIFICARE = placeholder NON confermato, da NON usare come dato ACC reale. Va sostituito con valori reali forniti/confermati dall'utente.",
-    "schema": {
-      "cars": {
-        "<nome esatto da CAR_LIST>": {
-          "_status": "DA_VERIFICARE | OK",
-          "params": {
-            "<param_key>": { "min": 0, "max": 0, "step": 0, "default": 0, "_status": "DA_VERIFICARE" }
-          },
-          "tracks": {
-            "<nome esatto da TRACK_LIST>": {
-              "_status": "DA_VERIFICARE | OK",
-              "params": {
-                "<param_key>": { "default": 0, "_status": "DA_VERIFICARE" }
-              }
-            }
-          }
-        }
-      }
+    "descrizione": "Conversione dei click del setup di ACC nel valore che il gioco mostra, vettura per vettura (chiave = carName del file di ACC). Una vettura assente resta in click: niente valori generici. Si legge in app/core/setup_params.py (click_in_reale).",
+    "tipi": {
+      "lineare": "reale = base + passo × click",
+      "elenco": "reale = valori[click]; il click più alto è l'ultimo dell'elenco"
+    },
+    "click_max": "click più alto possibile; null = non lo sappiamo (nessuna fonte lo dà): si converte lo stesso, ma senza un limite in alto",
+    "stati": {
+      "gioco": "letta a schermo in ACC",
+      "fonti": "almeno due fonti indipendenti concordi, non ancora vista a schermo in ACC",
+      "DA_VERIFICARE": "non si usa: il parametro (o la vettura intera) resta in click"
+    },
+    "fonti": {
+      "RE": "Race Element · github.com/RiddleTime/Race-Element · commit 55121bb (20/09/2026) · Race_Element.Data.ACC/SetupParser/Cars/GT3/*.cs e SetupConverter.cs · GPL-3.0 (ripresi i numeri, non il codice)",
+      "ASD": "acc-setup-diff · github.com/lonemeow/acc-setup-diff · commit 7abe17d (24/07/2023) · src/CarData.js e src/App.js · MIT",
+      "SIMSOURCE": "conversioni del setup-diff di simsource.azurewebsites.net (sito non più raggiungibile) come le riporta github.com/AlpacaMyLunch/acc-setup-comparison · commit 059a204 (24/01/2022) · python/classes/setup.py",
+      "SRS": "simracingsetup.com, schede dei setup BMW M4 GT3 (Monza 1:46.782, Spa 2:16.125, Zolder 1:27.600): valori mostrati dal loro visualizzatore, letti il 30/09/2026. Senza i file dei click: servono come controllo di coerenza. Non sappiamo con quali tabelle convertono, quindi da sola SRS non chiude un disaccordo",
+      "PLC": "pitlanecoach.com/en/entschaerfer · pressioni GT3 = 20.3 + 0.1 × click"
     }
   },
   "cars": {
-    "Ferrari 296 GT3": {
-      "_status": "DA_VERIFICARE",
-      "_note": "SEED dimostrativo: gli override sotto COPIANO i valori generici (no-op) solo per mostrare il meccanismo. Nessun numero reale ACC. Sostituire con valori confermati.",
+    "bmw_m4_gt3": {
+      "nome": "BMW M4 GT3",
+      "stato": "fonti",
+      "nota": "Tabella del 30/09/2026 (Entry #057). La scheda da spuntare in gioco (Desktop/Scheda_setup_BMW_M4_GT3) non è stata compilata: nessun valore visto a schermo in ACC. Restano in click caster, splitter e bumpstop rate (stato DA_VERIFICARE sul parametro). Massimi noti solo per le molle.",
       "params": {
-        "caster": { "default": 10.0, "_status": "DA_VERIFICARE" }
-      },
-      "tracks": {
-        "Monza": {
-          "_status": "DA_VERIFICARE",
-          "params": {
-            "wing": { "default": 5, "_status": "DA_VERIFICARE" }
-          }
+        "tire_press_fl": {
+          "tipo": "lineare",
+          "base": 20.3,
+          "passo": 0.1,
+          "click_max": null,
+          "unita": "psi",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SIMSOURCE",
+            "PLC"
+          ]
+        },
+        "tire_press_fr": {
+          "tipo": "lineare",
+          "base": 20.3,
+          "passo": 0.1,
+          "click_max": null,
+          "unita": "psi",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SIMSOURCE",
+            "PLC"
+          ]
+        },
+        "tire_press_rl": {
+          "tipo": "lineare",
+          "base": 20.3,
+          "passo": 0.1,
+          "click_max": null,
+          "unita": "psi",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SIMSOURCE",
+            "PLC"
+          ]
+        },
+        "tire_press_rr": {
+          "tipo": "lineare",
+          "base": 20.3,
+          "passo": 0.1,
+          "click_max": null,
+          "unita": "psi",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SIMSOURCE",
+            "PLC"
+          ]
+        },
+        "camber_fl": {
+          "tipo": "lineare",
+          "base": -4.0,
+          "passo": 0.1,
+          "click_max": null,
+          "unita": "°",
+          "fonti": [
+            "RE",
+            "SRS"
+          ],
+          "nota": "il gioco mostra il camber del click; staticCamber del file è un'altra grandezza (-4.21 con il click 0 nel setup di Monza) e resta solo nel grezzo"
+        },
+        "camber_fr": {
+          "tipo": "lineare",
+          "base": -4.0,
+          "passo": 0.1,
+          "click_max": null,
+          "unita": "°",
+          "fonti": [
+            "RE",
+            "SRS"
+          ],
+          "nota": "il gioco mostra il camber del click; staticCamber del file è un'altra grandezza (-4.21 con il click 0 nel setup di Monza) e resta solo nel grezzo"
+        },
+        "camber_rl": {
+          "tipo": "lineare",
+          "base": -3.5,
+          "passo": 0.1,
+          "click_max": null,
+          "unita": "°",
+          "fonti": [
+            "RE",
+            "SRS"
+          ],
+          "nota": "il gioco mostra il camber del click; staticCamber del file è un'altra grandezza (-4.21 con il click 0 nel setup di Monza) e resta solo nel grezzo"
+        },
+        "camber_rr": {
+          "tipo": "lineare",
+          "base": -3.5,
+          "passo": 0.1,
+          "click_max": null,
+          "unita": "°",
+          "fonti": [
+            "RE",
+            "SRS"
+          ],
+          "nota": "il gioco mostra il camber del click; staticCamber del file è un'altra grandezza (-4.21 con il click 0 nel setup di Monza) e resta solo nel grezzo"
+        },
+        "toe_fl": {
+          "tipo": "lineare",
+          "base": -0.2,
+          "passo": 0.01,
+          "click_max": null,
+          "unita": "°",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SIMSOURCE"
+          ]
+        },
+        "toe_fr": {
+          "tipo": "lineare",
+          "base": -0.2,
+          "passo": 0.01,
+          "click_max": null,
+          "unita": "°",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SIMSOURCE"
+          ]
+        },
+        "toe_rl": {
+          "tipo": "lineare",
+          "base": 0.0,
+          "passo": 0.01,
+          "click_max": null,
+          "unita": "°",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SIMSOURCE"
+          ]
+        },
+        "toe_rr": {
+          "tipo": "lineare",
+          "base": 0.0,
+          "passo": 0.01,
+          "click_max": null,
+          "unita": "°",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SIMSOURCE"
+          ]
+        },
+        "caster": {
+          "tipo": "elenco",
+          "valori": [
+            6.1,
+            6.3,
+            6.5,
+            6.7,
+            6.9,
+            7.1,
+            7.3,
+            7.5,
+            7.7,
+            7.9,
+            8.1,
+            8.3,
+            8.5,
+            8.7,
+            8.9,
+            9.1,
+            9.3,
+            9.5,
+            9.7,
+            9.9,
+            10.1,
+            10.3,
+            10.4,
+            10.6,
+            10.8,
+            11.0,
+            11.2,
+            11.4,
+            11.6,
+            11.8,
+            12.0,
+            12.2,
+            12.4,
+            12.6,
+            12.8,
+            13.0,
+            13.2,
+            13.4,
+            13.6,
+            13.7,
+            13.9
+          ],
+          "unita": "°",
+          "fonti": [
+            "RE",
+            "SRS"
+          ],
+          "stato": "DA_VERIFICARE",
+          "nota": "RE dà l'elenco; ASD e simsource 6.1 + 0.195 × click: stessi estremi (6.1 e 13.9), ma su 19 click su 41 fino a 0.1° di differenza. SRS mostra 9.7°, che c'è solo nell'elenco di RE, però SRS potrebbe usare le tabelle di RE: da vedere in gioco"
+        },
+        "tc1": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "tc2": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "abs": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "ecu_map": {
+          "tipo": "lineare",
+          "base": 1,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ],
+          "nota": "il gioco conta le mappe da 1: click 0 = mappa 1"
+        },
+        "brake_bias": {
+          "tipo": "lineare",
+          "base": 48.5,
+          "passo": 0.3,
+          "click_max": null,
+          "unita": "%",
+          "fonti": [
+            "RE",
+            "SIMSOURCE",
+            "SRS"
+          ],
+          "nota": "ASD usa 0.2 per click per tutte le vetture ed è scartato: il 51.2 % di un setup BMW pubblicato su SRS con 0.2 cadrebbe fra due click"
+        },
+        "arb_front": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "arb_rear": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "wheel_rate_front": {
+          "tipo": "elenco",
+          "valori": [
+            105000,
+            120000,
+            135000,
+            150000,
+            165000,
+            180000
+          ],
+          "unita": "N/m",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "wheel_rate_rear": {
+          "tipo": "elenco",
+          "valori": [
+            90000,
+            105000,
+            120000,
+            135000,
+            150000,
+            165000
+          ],
+          "unita": "N/m",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "bumpstop_rate_front": {
+          "tipo": "lineare",
+          "base": 200,
+          "passo": 50,
+          "click_max": null,
+          "unita": "N",
+          "fonti": [
+            "RE",
+            "SRS"
+          ],
+          "stato": "DA_VERIFICARE",
+          "nota": "RE: 200 + 50 × click; ASD: 300 + 100 × click (la stessa per tutte le vetture). I 550 N di un setup BMW pubblicato su SRS danno ragione a RE, però SRS potrebbe usare le tabelle di RE: da vedere in gioco"
+        },
+        "bumpstop_rate_rear": {
+          "tipo": "lineare",
+          "base": 200,
+          "passo": 50,
+          "click_max": null,
+          "unita": "N",
+          "fonti": [
+            "RE",
+            "SRS"
+          ],
+          "stato": "DA_VERIFICARE",
+          "nota": "RE: 200 + 50 × click; ASD: 300 + 100 × click (la stessa per tutte le vetture). I 550 N di un setup BMW pubblicato su SRS danno ragione a RE, però SRS potrebbe usare le tabelle di RE: da vedere in gioco"
+        },
+        "bumpstop_range_front": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "bumpstop_range_rear": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "preload": {
+          "tipo": "lineare",
+          "base": 20,
+          "passo": 10,
+          "click_max": null,
+          "unita": "Nm",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "bump_fl": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "fast_bump_fl": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "rebound_fl": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "fast_rebound_fl": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "bump_fr": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "fast_bump_fr": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "rebound_fr": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "fast_rebound_fr": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "bump_rl": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "fast_bump_rl": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "rebound_rl": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "fast_rebound_rl": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "bump_rr": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "fast_bump_rr": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "rebound_rr": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "fast_rebound_rr": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "ride_height_front": {
+          "tipo": "lineare",
+          "base": 50,
+          "passo": 1,
+          "click_max": null,
+          "unita": "mm",
+          "fonti": [
+            "RE",
+            "ASD"
+          ],
+          "nota": "dal primo valore di rideHeight"
+        },
+        "ride_height_rear": {
+          "tipo": "lineare",
+          "base": 50,
+          "passo": 1,
+          "click_max": null,
+          "unita": "mm",
+          "fonti": [
+            "RE",
+            "ASD"
+          ],
+          "nota": "dal terzo valore di rideHeight (il secondo e il quarto sono altro)"
+        },
+        "splitter": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "SRS"
+          ],
+          "stato": "DA_VERIFICARE",
+          "nota": "RE mostra il click, ASD il click + 1. SRS mostra splitter 0 su tutti i setup BMW pubblicati (quindi come RE), però SRS potrebbe usare le tabelle di RE: da vedere in gioco"
+        },
+        "wing": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "brake_duct_front": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
+        },
+        "brake_duct_rear": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SRS"
+          ]
         }
       }
     }

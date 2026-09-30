@@ -127,8 +127,10 @@ def _blocco_setup(bundle: SessionBundle) -> list[str]:
         else:
             valori.append(f"{nome}={valore.raw}")
     reali, totale = bundle.setup.quanti_verificati()
-    return ["[SETUP]", f"{totale} parametri, {reali} in unità reali, gli altri in click",
-            ", ".join(valori)]
+    riepilogo = f"{totale} parametri, {reali} in unità reali, gli altri in click"
+    if any(v.fonte == "fonti" for v in bundle.setup.valori.values()):
+        riepilogo += " (conversioni da fonti community concordi, non ancora viste in gioco)"
+    return ["[SETUP]", riepilogo, ", ".join(valori)]
 
 
 def _blocco_racconto(bundle: SessionBundle) -> list[str]:

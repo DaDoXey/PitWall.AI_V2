@@ -6,19 +6,24 @@ lettura da screenshot come via principale: il file è il dato esatto, lo screens
 era una fotografia da interpretare.
 
 **Cosa converte e cosa no** (decisione 7 del 14/09, «niente numeri inventati»):
-- quasi tutti i valori di ACC sono **indici di click** → restano tali, `unita="click"`,
-  `verificato=False`. La conversione in psi/mm/N·mm richiede la tabella della vettura
-  (`car_setup_ranges.json`, oggi tutta `DA_VERIFICARE`: INC-V2-003) e quella tabella
-  si considera buona solo dopo un riscontro a schermo in gioco;
-- **il camber fa eccezione**: ACC lo scrive già in gradi come float (`staticCamber`),
-  quindi non c'è niente da indovinare → `unita="°"`, `verificato=True`;
+- i valori di ACC sono **indici di click**. Si portano nel valore che il gioco mostra
+  (psi, °, N/m…) solo con la tabella della vettura in `car_setup_ranges.json`
+  (`setup_params.regole_vettura`), e solo per i parametri la cui regola è stata letta
+  in gioco o viene da almeno due fonti concordi: il `ValoreSetup` dice quale (`fonte`).
+  Tutto il resto resta in click, `unita="click"`, `verificato=False` (INC-V2-003);
+- **camber**: si legge il click di `camber`, come tutti gli altri. Fino alla Entry #057
+  si prendeva `staticCamber` (un float in gradi) come valore già verificato, ma non è
+  quello che il gioco mostra: con il click 0 la BMW M4 mostra -4.0°, `staticCamber`
+  dice -4.21. Resta nel grezzo;
+- **altezze**: anteriore dal primo valore di `rideHeight`, posteriore dal **terzo**
+  (Race Element e acc-setup-diff concordano; fino alla #057 si prendeva il secondo);
 - tutto il resto del file resta comunque in `Setup.raw`, intatto.
 
-**Assunzioni dichiarate.** Tre mappature non sono deducibili con certezza dal file e
+**Assunzioni dichiarate.** Due mappature non sono deducibili con certezza dal file e
 vengono annotate in `Setup.assunzioni`, così chi legge sa cosa è stato interpretato:
-l'ordine dell'array `rideHeight`, l'uso di `bumpStopRateUp` per l'unico parametro
-bumpstop dei 49, e il caster preso dal lato sinistro. Si chiudono con un riscontro in
-gioco, non con una supposizione più sicura di sé.
+l'uso di `bumpStopRateUp` per l'unico parametro bumpstop dei 49, e il caster preso dal
+lato sinistro. Si chiudono con un riscontro in gioco, non con una supposizione più
+sicura di sé.
 
 Struttura verificata il 14/09/2026 su 8 file reali (GT3, GT4, GT2, Challenge): stesse
 chiavi, `drivetrain` minuscolo, array a 4 elementi in ordine **FL, FR, RL, RR**,
@@ -32,6 +37,7 @@ from typing import Any
 
 from app.bundle.adapters.lettura import FileAccIllegibile, carica_json
 from app.bundle.schema import Setup, ValoreSetup
+from app.core.setup_params import click_in_reale, regole_vettura
 
 # Ordine degli array a 4 elementi di ACC.
 FL, FR, RL, RR = 0, 1, 2, 3
@@ -43,6 +49,10 @@ MAPPA: dict[str, tuple[tuple[str, ...], int | None]] = {
     "tire_press_fr": (("basicSetup", "tyres", "tyrePressure"), FR),
     "tire_press_rl": (("basicSetup", "tyres", "tyrePressure"), RL),
     "tire_press_rr": (("basicSetup", "tyres", "tyrePressure"), RR),
+    "camber_fl": (("basicSetup", "alignment", "camber"), FL),
+    "camber_fr": (("basicSetup", "alignment", "camber"), FR),
+    "camber_rl": (("basicSetup", "alignment", "camber"), RL),
+    "camber_rr": (("basicSetup", "alignment", "camber"), RR),
     "toe_fl": (("basicSetup", "alignment", "toe"), FL),
     "toe_fr": (("basicSetup", "alignment", "toe"), FR),
     "toe_rl": (("basicSetup", "alignment", "toe"), RL),
@@ -83,24 +93,14 @@ MAPPA: dict[str, tuple[tuple[str, ...], int | None]] = {
     "fast_rebound_rr": (("advancedSetup", "dampers", "reboundFast"), RR),
     # ── aerodinamica ──
     "ride_height_front": (("advancedSetup", "aeroBalance", "rideHeight"), 0),
-    "ride_height_rear": (("advancedSetup", "aeroBalance", "rideHeight"), 1),
+    "ride_height_rear": (("advancedSetup", "aeroBalance", "rideHeight"), 2),
     "splitter": (("advancedSetup", "aeroBalance", "splitter"), None),
     "wing": (("advancedSetup", "aeroBalance", "rearWing"), None),
     "brake_duct_front": (("advancedSetup", "aeroBalance", "brakeDuct"), 0),
     "brake_duct_rear": (("advancedSetup", "aeroBalance", "brakeDuct"), 1),
 }
 
-# Camber: ACC lo scrive già in gradi, quindi non è una conversione ma una lettura.
-CAMBER = {
-    "camber_fl": FL,
-    "camber_fr": FR,
-    "camber_rl": RL,
-    "camber_rr": RR,
-}
-
 ASSUNZIONI = {
-    "ride_height": "altezze da rideHeight[0]=anteriore e [1]=posteriore: l'array ne "
-                   "ha 4 e ACC non dichiara l'ordine; da riscontrare in gioco",
     "bumpstop": "bumpstop_rate_* letto da bumpStopRateUp; bumpStopRateDn resta solo "
                 "nel grezzo (i 49 parametri hanno un valore solo per asse)",
     "caster": "caster preso da casterLF (sinistra); casterRF differiva in questo file",
@@ -140,6 +140,13 @@ def leggi_setup_acc(sorgente: str | Path | bytes, nome: str | None = None) -> Se
             "non sembra un setup di ACC: mancano sia basicSetup che advancedSetup"
         )
 
+    car = dati.get("carName")
+    if isinstance(car, str):
+        car = car.strip().lower() or None
+    else:
+        car = None
+    regole = regole_vettura(car)
+
     valori: dict[str, ValoreSetup] = {}
     assunzioni: list[str] = []
 
@@ -153,21 +160,17 @@ def leggi_setup_acc(sorgente: str | Path | bytes, nome: str | None = None) -> Se
             grezzo = grezzo[indice]
         if isinstance(grezzo, bool) or not isinstance(grezzo, (int, float)):
             continue
-        valori[chiave] = ValoreSetup(raw=grezzo)
-
-    # Camber: gradi scritti da ACC, non una conversione nostra.
-    camber = _pesca(dati, ("basicSetup", "alignment", "staticCamber"))
-    if isinstance(camber, list):
-        for chiave, indice in CAMBER.items():
-            if len(camber) > indice and isinstance(camber[indice], (int, float)):
-                gradi = round(float(camber[indice]), 2)
-                valori[chiave] = ValoreSetup(
-                    raw=camber[indice], reale=gradi, unita="°", verificato=True
-                )
+        regola = regole.get(chiave)
+        reale = click_in_reale(regola, grezzo) if regola else None
+        if reale is None:
+            valori[chiave] = ValoreSetup(raw=grezzo)
+        else:
+            valori[chiave] = ValoreSetup(
+                raw=grezzo, reale=reale, unita=regola["unita"], verificato=True,
+                fonte=regola["stato"],
+            )
 
     # Assunzioni da dichiarare, solo quelle che riguardano questo file.
-    if isinstance(_pesca(dati, ("advancedSetup", "aeroBalance", "rideHeight")), list):
-        assunzioni.append(ASSUNZIONI["ride_height"])
     if isinstance(_pesca(dati, ("advancedSetup", "mechanicalBalance", "bumpStopRateUp")), list):
         assunzioni.append(ASSUNZIONI["bumpstop"])
     sx = _pesca(dati, ("basicSetup", "alignment", "casterLF"))
@@ -177,12 +180,6 @@ def leggi_setup_acc(sorgente: str | Path | bytes, nome: str | None = None) -> Se
 
     if not valori:
         raise SetupAccError("setup riconosciuto ma senza alcun parametro leggibile")
-
-    car = dati.get("carName")
-    if isinstance(car, str):
-        car = car.strip().lower() or None
-    else:
-        car = None
 
     if nome is None and nome_file:
         nome = Path(nome_file).stem

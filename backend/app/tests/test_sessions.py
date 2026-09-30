@@ -138,10 +138,10 @@ test("S17 POST import/setup risponde 200", resp.status_code == 200, resp.text[:2
 dati = resp.json() if resp.status_code == 200 else {}
 test("S18 restituisce l'id della sessione creata", bool(dati.get("id")))
 test("S19 dice quanti parametri ha letto e quanti in unità reali",
-     (dati.get("parametri"), dati.get("parametri_in_unita_reali")) == (49, 4),
+     (dati.get("parametri"), dati.get("parametri_in_unita_reali")) == (49, 45),
      str((dati.get("parametri"), dati.get("parametri_in_unita_reali"))))
 test("S20 restituisce le assunzioni, invece di tacerle",
-     len(dati.get("assunzioni", [])) == 3, str(dati.get("assunzioni")))
+     len(dati.get("assunzioni", [])) == 2, str(dati.get("assunzioni")))
 test("S21 il riassunto arriva già pronto per la lista",
      dati.get("riassunto", {}).get("track") == "monza")
 

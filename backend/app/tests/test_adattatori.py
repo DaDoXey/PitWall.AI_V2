@@ -86,22 +86,26 @@ test("A07 legge tutti e 49 i parametri del setup", len(s.valori) == 49, f"{len(s
 test("A08 riconosce la vettura come slug del catalogo", s.car == "bmw_m4_gt3", str(s.car))
 test("A09 il nome del setup viene dal nome del file", s.nome == "acc_setup_gt3", str(s.nome))
 
-test("A10 le pressioni restano in click, senza inventare psi",
-     s.valori["tire_press_fl"].raw == 54
-     and s.valori["tire_press_fl"].reale is None
-     and s.valori["tire_press_fl"].unita == "click")
+# La fixture è una BMW M4 GT3: la sua tabella (Entry #057) converte i click in valori
+# da gioco, con la fonte dichiarata. Il dettaglio delle regole è in test_setup_ranges.
+p = s.valori["tire_press_fl"]
+test("A10 le pressioni della BMW diventano psi (20.3 + 0.1 × click), il click resta",
+     (p.raw, p.reale, p.unita, p.verificato, p.fonte) == (54, 25.7, "psi", True, "fonti"),
+     f"{p}")
 
 c = s.valori["camber_fl"]
-test("A11 il camber è in gradi perché li scrive ACC, ed è marcato verificato",
-     c.reale == -4.23 and c.unita == "°" and c.verificato is True,
-     f"{c.reale} {c.unita} {c.verificato}")
-test("A12 anche il camber conserva il float grezzo di ACC",
-     abs(float(c.raw) + 4.232851028442383) < 1e-9)
-test("A13 il posteriore prende il suo valore, non quello anteriore",
-     s.valori["camber_rl"].reale == -1.9, str(s.valori["camber_rl"].reale))
+test("A11 il camber si legge dal click, non da staticCamber",
+     (c.raw, c.reale, c.unita) == (0, -4.0, "°"), f"{c}")
+test("A12 staticCamber resta solo nel grezzo del file",
+     abs(s.raw["basicSetup"]["alignment"]["staticCamber"][0] + 4.232851028442383) < 1e-9)
+test("A13 il posteriore prende la sua regola, non quella anteriore",
+     s.valori["camber_rl"].reale == -3.5, str(s.valori["camber_rl"].reale))
 
-test("A14 quattro parametri su 49 sono in unità reali (i camber)",
-     s.quanti_verificati() == (4, 49), str(s.quanti_verificati()))
+test("A14 45 parametri su 49 in unità reali: caster, splitter e bumpstop rate restano in click",
+     s.quanti_verificati() == (45, 49)
+     and all(s.valori[k].unita == "click" for k in
+             ("caster", "splitter", "bumpstop_rate_front", "bumpstop_rate_rear")),
+     str(s.quanti_verificati()))
 
 test("A15 gli ammortizzatori vanno alla ruota giusta (FL/FR/RL/RR)",
      (s.valori["bump_fl"].raw, s.valori["bump_rl"].raw) == (15, 18))
@@ -119,8 +123,12 @@ test("A20 barre antirollio anteriore e posteriore distinte",
 test("A21 elettronica: TC1, TC2, ABS, mappa motore",
      (s.valori["tc1"].raw, s.valori["tc2"].raw, s.valori["abs"].raw,
       s.valori["ecu_map"].raw) == (4, 0, 3, 0))
-test("A22 il toe resta in click (toeOutLinear non è in gradi e non viene spacciato)",
-     s.valori["toe_rl"].raw == 8 and s.valori["toe_rl"].verificato is False)
+test("A22 il toe viene dal click (toeOutLinear non è in gradi e resta nel grezzo)",
+     (s.valori["toe_rl"].raw, s.valori["toe_rl"].reale) == (8, 0.08))
+test("A22b l'altezza posteriore viene dal terzo valore di rideHeight, non dal secondo",
+     (s.valori["ride_height_front"].raw, s.valori["ride_height_rear"].raw) == (5, 0)
+     and s.valori["ride_height_rear"].reale == 50.0,
+     f"{s.valori['ride_height_rear']}")
 
 test("A23 il JSON originale resta intero dentro il bundle",
      s.raw["basicSetup"]["strategy"]["fuelPerLap"] > 3.5
@@ -129,14 +137,14 @@ test("A23 il JSON originale resta intero dentro il bundle",
 # ---------------------------------------------------------------------------
 # 3. Le assunzioni si dichiarano, non si nascondono
 # ---------------------------------------------------------------------------
-test("A24 l'ordine dell'array rideHeight è dichiarato come assunzione",
-     any("rideHeight" in a for a in s.assunzioni), str(s.assunzioni))
+test("A24 l'ordine di rideHeight non è più un'assunzione (due fonti concordi)",
+     not any("rideHeight" in a for a in s.assunzioni), str(s.assunzioni))
 test("A25 l'uso di bumpStopRateUp è dichiarato",
      any("bumpStopRateUp" in a for a in s.assunzioni))
 test("A26 con casterLF ≠ casterRF lo dice (23 e 22 nella fixture)",
      any("caster" in a for a in s.assunzioni))
-test("A27 le assunzioni sono tre, non una lista che cresce a caso",
-     len(s.assunzioni) == 3, str(len(s.assunzioni)))
+test("A27 le assunzioni sono due, non una lista che cresce a caso",
+     len(s.assunzioni) == 2, str(len(s.assunzioni)))
 
 # ---------------------------------------------------------------------------
 # 4. File storti: errore chiaro, mai un bundle a metà
@@ -167,6 +175,9 @@ test("A33 un setup con la sola sezione base viene letto per quel che c'è",
      f"{len(parziale.valori)} parametri")
 test("A34 i parametri assenti non vengono inventati a zero",
      "preload" not in parziale.valori and "wing" not in parziale.valori)
+test("A34b una vettura senza tabella resta tutta in click, camber compreso",
+     parziale.quanti_verificati()[0] == 0
+     and parziale.valori["camber_fl"].unita == "click", str(parziale.quanti_verificati()))
 
 msg = errore(lambda: leggi_setup_acc(json.dumps({"basicSetup": {}}).encode("utf-8")))
 test("A35 un setup senza nemmeno un parametro leggibile viene rifiutato",
@@ -181,10 +192,11 @@ test("A36 si può leggere anche dai soli byte, senza passare dal disco",
 b = SessionBundle(meta=Meta(fonte=Fonte.ACC_SETUP, car=s.car, track="monza"), setup=s)
 riletto = SessionBundle.from_json(b.to_json())
 test("A37 il bundle con il setup sopravvive a salvataggio e rilettura",
-     riletto.setup.valori["camber_fl"].reale == -4.23
+     riletto.setup.valori["camber_fl"].reale == -4.0
+     and riletto.setup.valori["camber_fl"].fonte == "fonti"
      and riletto.setup.raw["carName"] == "bmw_m4_gt3")
 test("A38 anche le assunzioni sopravvivono al salvataggio",
-     len(riletto.setup.assunzioni) == 3)
+     len(riletto.setup.assunzioni) == 2)
 test("A39 un bundle di solo setup ha dati utili", riletto.ha_dati_utili() is True)
 
 # ---------------------------------------------------------------------------

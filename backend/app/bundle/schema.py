@@ -20,7 +20,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -164,15 +164,20 @@ class Giro(_Base):
 class ValoreSetup(_Base):
     """Un parametro di setup.
 
-    `raw` è ciò che c'è nel file di ACC e non si perde mai: di solito un indice di
-    *click*, in qualche caso un valore fisico già calcolato dal gioco (il camber è
-    in gradi). `reale`/`unita` compaiono solo quando la lettura è **verificata**.
+    `raw` è ciò che c'è nel file di ACC e non si perde mai: un indice di *click*.
+    `reale`/`unita` compaiono solo quando la conversione è **verificata**, cioè viene
+    dalla tabella della vettura (`car_setup_ranges.json`); `fonte` dice come è stata
+    controllata quella regola: «gioco» (letta a schermo in ACC) o «fonti» (almeno due
+    fonti indipendenti concordi, non ancora vista in gioco). `unita` vuota = il gioco
+    mostra il numero senza unità (TC, ABS, barre, ammortizzatori…).
     """
 
     raw: int | float | list[int] | list[float]
     reale: float | None = None
     unita: str = "click"
     verificato: bool = False
+    # None nei bundle salvati prima della Entry #057 e sui valori rimasti in click.
+    fonte: Literal["gioco", "fonti"] | None = None
 
     @model_validator(mode="after")
     def _reale_solo_se_verificato(self) -> "ValoreSetup":

@@ -425,9 +425,12 @@ def format_setup_for_prompt(setup: dict) -> str:
 
 
 # ─────────────────────────────────────────────
-# OVERRIDE PER VETTURA / CIRCUITO (DB JSON)
-# I generici sopra restano il fallback: get_params_for_car() applica
-# eventuali override da data/car_setup_ranges.json, senza mai inventare valori.
+# CONVERSIONE DEI CLICK PER VETTURA (DB JSON)
+# Il setup di ACC scrive quasi tutto in click; il valore che il gioco mostra
+# (psi, °, N/m…) dipende dalla vettura. data/car_setup_ranges.json dice come
+# convertire, vettura per vettura (chiave = carName del file di ACC), con le
+# fonti accanto a ogni regola. Una vettura o un parametro che non c'è, o che
+# è ancora DA_VERIFICARE, resta in click: niente valori generici (INC-V2-003).
 # ─────────────────────────────────────────────
 import copy
 import json
@@ -436,9 +439,12 @@ from pathlib import Path
 _CAR_DB_PATH = Path(__file__).resolve().parent / "data" / "car_setup_ranges.json"
 _CAR_DB_CACHE = None
 
+# Stati con cui una regola si usa: letta in gioco, o da almeno due fonti concordi.
+STATI_USABILI = ("gioco", "fonti")
+
 
 def _load_car_db() -> dict:
-    """Carica (una volta) il DB JSON degli override. {} se assente o malformato."""
+    """Carica (una volta) il DB JSON delle conversioni. {} se assente o malformato."""
     global _CAR_DB_CACHE
     if _CAR_DB_CACHE is None:
         try:
@@ -449,47 +455,59 @@ def _load_car_db() -> dict:
     return _CAR_DB_CACHE
 
 
-# Campi numerici sovrascrivibili (gli altri come label/unit/tip restano dal generico)
-_OVERRIDABLE_FIELDS = ("min", "max", "step", "default")
+def regole_vettura(car: str | None) -> dict[str, dict]:
+    """Le regole di conversione usabili per una vettura, {param_key: regola}.
 
-
-def _apply_param_overrides(sections: dict, overrides: dict) -> None:
+    `car` è il carName di ACC (es. «bmw_m4_gt3»). Ogni regola porta con sé il suo
+    `stato` (quello del parametro, se c'è, altrimenti quello della vettura); le
+    regole DA_VERIFICARE non compaiono. Vettura sconosciuta → {}.
     """
-    Applica override flat {param_key: {min/max/step/default}} alle sezioni (in-place).
-    Cerca il param_key nella sezione corretta; ignora chiavi sconosciute e _status.
-    """
-    for param_key, fields in (overrides or {}).items():
-        if not isinstance(fields, dict):
+    if not car:
+        return {}
+    voce = ((_load_car_db().get("cars") or {}).get(car.strip().lower())) or {}
+    stato_vettura = voce.get("stato")
+    regole = {}
+    for chiave, regola in (voce.get("params") or {}).items():
+        if not isinstance(regola, dict):
             continue
-        for section in sections.values():
-            if param_key in section["params"]:
-                target = section["params"][param_key]
-                for fld in _OVERRIDABLE_FIELDS:
-                    if fld in fields:
-                        target[fld] = fields[fld]
-                break
+        stato = regola.get("stato", stato_vettura)
+        if stato in STATI_USABILI:
+            regole[chiave] = {**regola, "stato": stato}
+    return regole
+
+
+def _decimali(numero: float) -> int:
+    testo = repr(float(numero))
+    return 0 if testo.endswith(".0") else len(testo.split(".")[1])
+
+
+def click_in_reale(regola: dict, click) -> float | None:
+    """Il valore che il gioco mostra per quel click, o None se non si può dire.
+
+    None quando il click non è un intero ≥ 0, sta oltre il massimo noto, o la regola
+    non è di un tipo conosciuto: meglio restare in click che inventare un numero.
+    """
+    if isinstance(click, bool) or not isinstance(click, int) or click < 0:
+        return None
+    tipo = regola.get("tipo")
+    if tipo == "elenco":
+        valori = regola.get("valori") or []
+        return float(valori[click]) if click < len(valori) else None
+    if tipo == "lineare":
+        massimo = regola.get("click_max")
+        if massimo is not None and click > massimo:
+            return None
+        base, passo = regola["base"], regola["passo"]
+        return round(base + passo * click, max(_decimali(base), _decimali(passo)))
+    return None
 
 
 def get_params_for_car(car: str | None = None, track: str | None = None) -> dict:
     """
-    Restituisce la struttura SETUP_SECTIONS (stessa forma) con applicati gli
-    override per vettura e, se presente, per circuito. Fallback ai generici se
-    la vettura non è nel DB. Non modifica mai SETUP_SECTIONS (deepcopy).
+    Restituisce la struttura SETUP_SECTIONS (deepcopy, mai modificata).
+
+    Fino alla Entry #057 applicava override per nome di vettura e circuito, che però
+    erano segnaposto senza effetto; la conversione vera vive ora in regole_vettura()
+    e click_in_reale(). `car` e `track` restano nella firma per l'API /api/setup-params.
     """
-    sections = copy.deepcopy(SETUP_SECTIONS)
-
-    db = _load_car_db()
-    car_entry = (db.get("cars", {}) or {}).get(car) if car else None
-    if not car_entry:
-        return sections  # nessun override: generici identici
-
-    # Override a livello vettura
-    _apply_param_overrides(sections, car_entry.get("params", {}))
-
-    # Override a livello circuito (hanno priorità sui generici e su quelli vettura)
-    if track:
-        track_entry = (car_entry.get("tracks", {}) or {}).get(track)
-        if track_entry:
-            _apply_param_overrides(sections, track_entry.get("params", {}))
-
-    return sections
+    return copy.deepcopy(SETUP_SECTIONS)
