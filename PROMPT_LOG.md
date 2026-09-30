@@ -2555,7 +2555,34 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 **Verifica:** `tsc --noEmit` 0 errori · backend non toccato.
 
 **File protetti:** ☑ nessuno toccato.
-**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `c6a0e13` Tracciati · docs nel commit successivo).
+**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `c6a0e13` Tracciati · `5f80122` docs).
+
+---
+
+## Entry #055 — Accenti veri nelle 13 guide dei tracciati
+
+| Campo | Valore |
+|---|---|
+| Data | 30/09/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `backend/app/core/data/tracks_knowledge/*.json` (13 guide) · NEW `backend/scripts/accenti_guide.py` · `backend/app/tests/test_tracciati.py` |
+| Commit | vedi sotto |
+| Contesto | Proposta 7 della #054, approvata come entry a parte: nelle schede dei tracciati la guida si leggeva «e'», «piu'», «velocita'», «perche'». |
+
+**Catalogo messaggi:**
+1. «ok push, poi procedi con gli accenti».
+
+**Censimento:** nelle 13 guide 1696 parole che finiscono con l'apostrofo. Casi ambigui guardati nel contesto uno per uno: «da'» è sempre il verbo (→ dà), «se'» in «in se'», «di per se'», «a se'» (→ sé), «ne'» (→ né), «si'» (→ sì), «mori'», «ospito'» (Zolder) e «negozio'» (Zandvoort) → morì, ospitò, negoziò. **Restano come sono**: «po'» (30), l'imperativo «sta'» (Monza), le elisioni davanti a un numero («all'80%», «dell'8%») e le parole fra virgolette singole ('abusare', 'sicura', '2002-present').
+
+**Modifica:**
+- NEW `scripts/accenti_guide.py`: converte parola per parola da una tabella (grave: è, più, già, può, però, così, lì…; acuto: perché, finché, purché, né, sé; -ità: velocità, stabilità, difficoltà…), solo se l'apostrofo non è seguito da una lettera. Lavora sul testo del file: indentazione e ordine delle chiavi restano, e ogni file deve restare JSON valido. **Una parola fuori tabella ferma lo script** (si guarda e si decide, non si indovina); `--prova` dice cosa cambierebbe. Serve anche per le guide che arriveranno scritte allo stesso modo.
+- Conversione: **1658 accenti** in 13 file (955 righe cambiate, nessuna spostata).
+- Test nuovo in `test_tracciati`: nessuna guida con accenti in apostrofo (usa la stessa espressione dello script); verificato che **fallisce sulle guide di prima** e passa su quelle nuove.
+
+**Verifica:** validatore `check_track_knowledge.py` «ERRORI: nessuno»; `verifica_ancore.py zandvoort` con output **identico prima e dopo** (le 3 «NON REGGE» c'erano già); Monza 11/11 ancore. Suite **1014/1014** (1013 + il test degli accenti). Scheda di Monza a schermo: «È il punto di sorpasso», «più violenta», «Velocità pura», «lì vanno tutti uguali»; nessuna parola con l'apostrofo finale nel testo della pagina.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `6acd69c` guide, script e test · docs nel commit successivo).
 
 ---
 
