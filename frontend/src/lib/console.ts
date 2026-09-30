@@ -50,8 +50,8 @@ export const CHIPS = ["Sottosterzo", "Calcola carburante", "Analizza gomme", "Bi
 export const SOURCE_LABELS: Record<string, string> = {
   demo: "demo-mode",
   cache: "cache",
-  api: "live",
-  motore: "dal motore di analisi · senza modello",
+  api: "dal vivo",
+  motore: "dal motore · senza modello",
   fallback: "fallback offline",
 };
 

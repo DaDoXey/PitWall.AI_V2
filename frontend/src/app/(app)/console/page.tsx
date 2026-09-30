@@ -4,12 +4,10 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import PageHeader from "@/components/ui/PageHeader";
-import GigiAvatar from "@/components/ui/GigiAvatar";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { postAnalysis } from "@/lib/api";
 import { profileContextLine, useProfile } from "@/lib/profile";
 import { useSessione } from "@/lib/sessione";
-import { etichettaFonte } from "@/lib/formato";
 import {
   CHIPS,
   DEMO_QUESTION,
@@ -32,7 +30,7 @@ export default function ConsolePage() {
   // come campo separato — usato dal ramo LLM reale, ignorato dalla demo-cache.
   const { profile, ready: profileReady } = useProfile();
   // L4: Gigi parla della sessione aperta, non più sempre della demo.
-  const { idSessione, sessione, nomi } = useSessione();
+  const { idSessione, sessione } = useSessione();
 
   // Numero dell'ultima richiesta: una risposta arrivata tardi (sessione cambiata nel
   // frattempo) non deve sovrascrivere quella della sessione aperta.
@@ -80,32 +78,29 @@ export default function ConsolePage() {
   }
 
   const sections = data ? parseSections(data.text) : [];
+  // Senza modello (live spento o ripiego) il motore risponde sempre con l'analisi della
+  // sessione, qualunque sia la domanda: scenari e testo libero si spengono e lo si dice.
+  // La demo ha le sue risposte preparate per scenario, e lì restano accesi.
+  const senzaModello = Boolean(data && !sessione?.demo && (data.source === "motore" || data.source === "fallback"));
 
   return (
     <div>
-      <PageHeader title="Engineer Console" subtitle="Gigi · Race Engineer" />
-
-      {/* Header Gigi */}
-      <motion.div
-        variants={fadeInUp}
-        initial="hidden"
-        animate="visible"
-        className="mb-5 flex items-center gap-3 rounded-xl border border-line border-l-[3px] border-l-accent bg-gradient-to-br from-surface to-raised px-4 py-3"
-      >
-        <GigiAvatar size={44} />
-        <div className="min-w-0 flex-1">
-          <div className="font-display text-sm font-bold tracking-wide">Gigi</div>
-          <div className="mt-0.5 truncate font-mono text-[0.62rem] uppercase tracking-widest text-muted">
-            {sessione
-              ? `Sulla sessione: ${nomi.pista(sessione.track)} · ${nomi.vettura(sessione.car)} · ${etichettaFonte(sessione.fonte, sessione.piattaforma)}`
-              : "Race Engineer"}
-          </div>
-        </div>
-        <div className="flex items-center gap-1.5 font-mono text-[0.6rem] uppercase tracking-widest text-ok">
-          <span className="h-1.5 w-1.5 rounded-full bg-ok shadow-[0_0_6px_#00C853]" />
-          online
-        </div>
-      </motion.div>
+      <PageHeader
+        title="Engineer Console"
+        subtitle="Gigi · Race Engineer"
+        azioni={
+          data && (
+            <span
+              className={`flex items-center gap-1.5 font-mono text-[0.6rem] uppercase tracking-widest ${
+                data.source === "api" ? "text-ok" : "text-subtle"
+              }`}
+            >
+              <span className={`h-1.5 w-1.5 rounded-full ${data.source === "api" ? "bg-ok" : "bg-muted"}`} />
+              {SOURCE_LABELS[data.source] ?? data.source}
+            </span>
+          )
+        }
+      />
 
       {/* Scenari rapidi */}
       <div className="mb-2 font-mono text-[0.62rem] uppercase tracking-widest text-muted">
@@ -116,7 +111,7 @@ export default function ConsolePage() {
           <motion.button
             key={chip}
             onClick={() => analyze(chip)}
-            disabled={loading}
+            disabled={loading || senzaModello}
             whileHover={{ y: -1 }}
             whileTap={{ scale: 0.97 }}
             className="rounded-md border border-line bg-surface px-3 py-2 text-sm text-subtle transition hover:border-line-strong hover:bg-raised disabled:cursor-not-allowed disabled:opacity-50"
@@ -131,17 +126,29 @@ export default function ConsolePage() {
         <input
           value={typed}
           onChange={(e) => setTyped(e.target.value)}
-          placeholder="Descrivi il problema in pista… (es. «L'auto scivola dietro in accelerazione»)"
-          className="flex-1 rounded-md border border-line bg-inset px-3 py-2 text-sm text-white placeholder:text-muted focus:border-accent focus:outline-none"
+          disabled={senzaModello}
+          placeholder={
+            senzaModello
+              ? "Le domande su misura arrivano con Gigi dal vivo"
+              : "Descrivi il problema in pista… (es. «L'auto scivola dietro in accelerazione»)"
+          }
+          className="flex-1 rounded-md border border-line bg-inset px-3 py-2 text-sm text-white placeholder:text-muted focus:border-accent focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         />
         <button
           type="submit"
-          disabled={loading || !typed.trim()}
+          disabled={loading || senzaModello || !typed.trim()}
           className="shrink-0 rounded-md bg-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
         >
           ⚙ ANALIZZA
         </button>
       </form>
+
+      {senzaModello && (
+        <p className="-mt-2 mb-4 text-[0.72rem] text-muted">
+          Gigi dal vivo è spento: qui risponde il motore di analisi, sempre con l&apos;analisi della sessione. Scenari e
+          domande libere tornano attivi con Gigi dal vivo.
+        </p>
+      )}
 
       {err && <p className="mb-4 text-sm text-warn">{err}</p>}
 
@@ -153,9 +160,6 @@ export default function ConsolePage() {
           </span>
           <span className="rounded-md border border-accent/25 bg-accent/10 px-2.5 py-1 text-[0.82rem] text-white">
             {data.question}
-          </span>
-          <span className="ml-auto font-mono text-[0.56rem] uppercase tracking-widest text-ok">
-            ● {SOURCE_LABELS[data.source] ?? data.source}
           </span>
         </div>
       )}
