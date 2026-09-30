@@ -82,6 +82,7 @@ Le schede vettura/circuito (`SessionBriefing`) leggono `GET /api/catalog/car/{id
   altre sessioni la risposta composta dal motore (`motore`). Live: `fallback` senza chiave, a tetto di spesa o con
   testo oltre 4000/1000 caratteri — cache sulla DEMO, motore sulle altre.
 - `GET /api/setup-params?car&track` (entrambi opzionali) → 5 sezioni / 49 `Param{label,min,max,step,unit,default,tip,regola}`; `regola` = come il click diventa il valore del gioco per quella vettura (`car` = carName di ACC), `null` senza tabella. I min/max/default generici non li usa più nessuna pagina (#058).
+- `GET /api/sessions/{id}/debrief` → `Debrief{fasi[{tipo,nome,giri,delta_medio_ms,messaggio,prova,punti,argomenti}],tagli,tagli_automatici,manuale,giri,fuori_ritmo,in_ballo_ms,prima_cosa,nota}` (`analisi/debrief.py`, #059): fasi avvio · il giro · calo/tenuta dal motore, senza modello. `PUT /api/sessions/{id}/debrief/tagli` `{tagli: [giri] | null}` salva in `SessionBundle.fasi_tagli` (422 tagli non validi, 503 con le scritture spente).
 - `POST /api/sessions/{id}/export/setup` `{click: {parametro: click}}` → il file di setup originale di ACC con quei click (409 senza file originale, 422 click non scrivibile). Non cambia la sessione archiviata.
 - `POST /api/setup/from-image` (multipart) → `{params,summary,…}` (503 in demo-mode, 503 se manca la key server,
   429 a tetto di spesa raggiunto, 500 se la lettura fallisce).

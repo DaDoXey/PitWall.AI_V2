@@ -2676,7 +2676,7 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 | Data | 30/09/2026 |
 | Agente dev | Claude Code (claude-opus-5-5) |
 | Area | `frontend/src/app/(app)/setup/page.tsx` (riscritta) · `frontend/src/lib/setup.ts` · `frontend/src/lib/api.ts` · `frontend/src/app/(app)/sessioni/page.tsx` · `backend/app/api/setup.py` · `backend/app/api/sessions.py` · `backend/app/bundle/adapters/acc_setup.py` · `backend/app/main.py` (CORS) · test · docs |
-| Commit | `fc38161` pagina, API e test · docs nel commit successivo |
+| Commit | `fc38161` pagina, API e test · `97ab22c` docs |
 | Contesto | Seguito della #057: la pagina Setup lavorava ancora su 49 slider con range generici in unità reali, che non erano della vettura (INC-V2-003). Ultima pagina della revisione. |
 
 **Catalogo messaggi:**
@@ -2695,7 +2695,36 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 **Verifica:** `tsc --noEmit` 0 errori · rotte `/ /setup /sessioni /telemetry /console` 200 · suite **1060/1060** (+11 `test_sessions`: regole in `/api/setup-params`, export, errori 409/422/404, CORS; +8 `test_adattatori`: `applica_click`).
 
 **File protetti:** ☑ nessuno toccato.
-**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `fc38161` · docs nel commit successivo).
+**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `fc38161` · `97ab22c` docs).
+
+---
+
+## Entry #059 — Il debrief di Gigi fase per fase (motore)
+
+| Campo | Valore |
+|---|---|
+| Data | 30/09/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | NEW `backend/app/analisi/debrief.py` · `backend/app/bundle/schema.py` (`fasi_tagli`) · `backend/app/api/sessions.py` (2 rotte) · NEW `backend/app/tests/test_debrief.py` · docs |
+| Commit | `5ba9b01` motore, rotte e test · docs nel commit successivo |
+| Contesto | Prima delle tre entry della nuova Engineer Console (#059 motore · #060 Console · #061 chat di Gigi). |
+
+**Catalogo messaggi:**
+1. «ora vorrei cambiare l'aspetto dell'engineer console che mi sembra un po' datata, sono aperto a proposte» + la chat di Gigi come fase successiva → domande (chat spenta senza modello con domande preparate; fuori tema con una regola nel prompt; 12 messaggi, ultimi 8 al modello) e tre concetti visivi in una pagina privata (A una cosa alla volta · B radio del muretto · C il tavolo del debrief).
+2. «mix tra b e c perché il team radio è geniale mentre tutta la sezione di debrief ti va a spiegare […] come un ingegnere tutti i passi che hai fatto nel corso dei giri e delle sessioni, dove hai sbagliato […] fai in modo che ci entri anche l'opzione a» → tavola D; poi lo spettro audio della B, la mappa vera, l'onda che si muove, la striscia dei giri, il passaggio fra le fasi, «Riascolta il debrief», «In ballo», i tasti sistemati.
+3. «ok va bene così, ora iniziamo a costruire su pitwall.» → ultime domande: fasi = quelle di Gigi **più** il ritaglio a mano (clic fra i giri), salvato nella sessione; le 5 sezioni dentro la radio + «Rapporto completo»; più sessioni dopo; tre entry.
+
+**Modifica:**
+- NEW `analisi/debrief.py`: `debrief(report, tagli)` → le fasi sui giri di ritmo. Tagli automatici al giro migliore e al successivo: **L'avvio** · **Il giro** · **Il calo** (degrado dimostrato dal motore) o **La tenuta**. A mano, ogni fase prende il tipo dalla sua posizione rispetto al migliore; due fasi dello stesso tipo si chiamano con i giri («Il calo · G5–6»). Per ogni fase: scarto medio dal migliore, le curve dove si perde (media ≥ 50 ms sui suoi giri, «il grosso» solo se la fase si prende più della sua parte), le gomme fuori dalla finestra Kunos nei suoi giri (non nell'avvio: le gomme stanno salendo), il messaggio di Gigi, la prova in piccolo e gli **argomenti** per gli agganci (ritmo, curva:N, settore:N, gomme). Nomi e punti sulla mappa dall'aggancio della guida, come il pannello «La pista». In più: striscia dei giri con lo scarto, giri fuori ritmo, **in ballo** (media − migliore), **prima cosa da fare** (la voce più grave che tocca il setup). Centesimi arrotondati per eccesso sulla metà (155 ms → 0.16 s).
+- `SessionBundle.fasi_tagli` (None = fasi di Gigi).
+- `GET /api/sessions/{id}/debrief` (tagli salvati che non valgono più → fasi di Gigi con una nota, mai un errore) e `PUT /api/sessions/{id}/debrief/tagli` (422 tagli non validi, 503 con le scritture spente come gli import).
+
+**Risultato osservato:** demo → «Nei primi 3 giri sei a +0.73 s dal tuo migliore. Il grosso lo lasci in curva 1» · «Questo è il giro: 1:47.820, il 4. A 10 millesimi dal teorico: l'hai messo insieme tutto.» · «Da qui cedi 352 millesimi a giro. Il grosso lo lasci in curva 7 […] la Post.DX arriva a 105 °C.»; in ballo 684 ms. Ferrari a Monza (giri 1-2 e 7 fuori ritmo, migliore all'ultimo) → «Nei 5 giri prima del migliore sei a +0.42 s in media. Dove perdi di più: T8-T10 Variante Ascari» + «Il giro». Honda a Zandvoort → avvio · il giro · «Giro 6: +0.74 s […] Tutte e quattro sopra la finestra (27.6–27.8 psi).»
+
+**Verifica:** suite **1097/1097** (+37 `test_debrief`); rotte provate sul backend vivo.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `5ba9b01` · docs nel commit successivo).
 
 ---
 

@@ -81,6 +81,8 @@ specified in [`docs/04-rework-dati.md`](docs/04-rework-dati.md).
 | POST | `/api/sessions/manuale` | Manual session (console players): lap times, setup, the driver's account |
 | POST | `/api/sessions/import/motec` | Imports an ACC MoTeC export (.ld + .ldx, optional setup and fuel litres) as a session with channels |
 | GET | `/api/sessions/{id}/export/motec` | The session as .ld + .ldx (zip) to open in MoTeC i2 |
+| GET | `/api/sessions/{id}/debrief` | Gigi's debrief, phase by phase (engine only, no model) |
+| PUT | `/api/sessions/{id}/debrief/tagli` | Phases cut by hand, saved in the session (`null` = Gigi's) |
 | POST | `/api/sessions/{id}/export/setup` | The session setup with the changed clicks, as a JSON file to load back into ACC |
 | GET | `/api/sessions` | Stored sessions, DEMO included |
 | GET | `/api/sessions/{id}` | One session (session bundle) |
