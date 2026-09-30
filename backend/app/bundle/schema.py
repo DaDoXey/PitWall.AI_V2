@@ -267,6 +267,9 @@ class SessionBundle(_Base):
     canali: Canali | None = None
     racconto: Racconto | None = None
     carburante_fonte: FonteCarburante | None = None
+    # Le fasi del debrief ritagliate a mano (Entry #059): i giri con cui comincia una
+    # fase nuova. None = le fasi di Gigi, calcolate dal motore a ogni lettura.
+    fasi_tagli: list[int] | None = None
     # Ciò che l'import ha dovuto interpretare, o che il file non permette di sapere.
     # Va mostrato al pilota: un dato mancante dichiarato vale più di uno inventato.
     assunzioni: list[str] = Field(default_factory=list)

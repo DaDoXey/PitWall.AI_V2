@@ -13,6 +13,8 @@ Rotte:
 - `GET  /api/sessions`                — elenco, dalla più recente (la DEMO in fondo)
 - `GET  /api/sessions/{id}`           — il bundle intero
 - `GET  /api/sessions/{id}/analisi`   — il report del motore (L2, + curve e gomme se ci sono i canali)
+- `GET  /api/sessions/{id}/debrief`   — il debrief di Gigi fase per fase (Entry #059)
+- `PUT  /api/sessions/{id}/debrief/tagli` — le fasi ritagliate a mano (null = quelle di Gigi)
 - `GET  /api/sessions/{id}/tracce`    — canali di alcuni giri, sulla distanza (per i grafici)
 - `GET  /api/riferimenti/fisica`      — le soglie di gomme e freni: Kunos e community, separate
 - `DELETE /api/sessions/{id}`         — rimuove una sessione (la DEMO no)
@@ -431,6 +433,48 @@ async def analisi_sessione(id_sessione: str):
              id_sessione, report.giri_totali, len(report.verdetto),
              " (con canali)" if canali else "")
     return report
+
+
+@router.get("/sessions/{id_sessione}/debrief")
+async def debrief_sessione(id_sessione: str):
+    """Il debrief fase per fase (Entry #059): dal motore, senza modello, zero spesa."""
+    from app.analisi.debrief import TagliNonValidi, debrief
+
+    bundle = _leggi_o_errore(id_sessione)
+    report = analizza(bundle, canali_del_bundle(bundle))
+    try:
+        return debrief(report, bundle.fasi_tagli)
+    except TagliNonValidi as e:
+        # Tagli salvati che non valgono più (sessione cambiata): si torna alle fasi di Gigi,
+        # dicendolo, invece di rompere la Console.
+        log.warning("debrief di %s: tagli salvati non validi (%s), fasi automatiche", id_sessione, e)
+        risultato = debrief(report)
+        risultato.nota = f"I tuoi tagli non valgono più ({e}): ecco le fasi di Gigi."
+        return risultato
+
+
+class TagliFasi(BaseModel):
+    """I giri con cui comincia una fase nuova; null = le fasi di Gigi."""
+
+    tagli: list[StrictInt] | None = None
+
+
+@router.put("/sessions/{id_sessione}/debrief/tagli")
+async def salva_tagli(id_sessione: str, corpo: TagliFasi):
+    """Salva nella sessione le fasi ritagliate a mano e restituisce il debrief nuovo."""
+    from app.analisi.debrief import TagliNonValidi, debrief
+
+    _presidio()
+    bundle = _leggi_o_errore(id_sessione)
+    report = analizza(bundle, canali_del_bundle(bundle))
+    try:
+        risultato = debrief(report, corpo.tagli)
+    except TagliNonValidi as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    bundle.fasi_tagli = risultato.tagli if corpo.tagli is not None else None
+    store.salva(bundle, id_sessione)
+    log.info("debrief di %s: tagli %s", id_sessione, bundle.fasi_tagli or "di Gigi")
+    return risultato
 
 
 # Canali che si possono chiedere per i grafici: quelli che una schermata disegna
