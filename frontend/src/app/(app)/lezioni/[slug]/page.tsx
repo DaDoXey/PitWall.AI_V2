@@ -2,7 +2,7 @@
 
 // A Lezione con Gigi — dettaglio (megaprompt #8, FASE 3). Template unico per le
 // 8 lezioni: Sintesi · Perché conta · Quando usarla · Come si fa · Errori comuni ·
-// Aggancio PitWall (condizionale) · Approfondisci (video card). Read-only da
+// Nell'app (condizionale) · Approfondisci (video card). Read-only da
 // lib/lessons.ts. Video: thumbnail statica YouTube che apre in nuova scheda,
 // NESSUN iframe; videoId "TODO" → stato "video in arrivo" pulito.
 import Link from "next/link";
@@ -132,7 +132,7 @@ export default function LezioneDettaglio() {
             variants={fadeInUp}
             className="rounded-xl border border-l-4 border-line border-l-accent bg-surface p-4"
           >
-            <SectionTitle>Aggancio PitWall</SectionTitle>
+            <SectionTitle>Nell&apos;app</SectionTitle>
             <p className="text-sm leading-relaxed text-subtle">{lesson.pitwallLink.label}</p>
             <Link
               href={lesson.pitwallLink.href}

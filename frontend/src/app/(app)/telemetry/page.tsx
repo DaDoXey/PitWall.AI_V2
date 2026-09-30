@@ -4,7 +4,7 @@
 // Via le viste della v1 costruite su numeri scritti a mano e su conti fatti nel browser
 // (corsie, scatter, radar «bilanciamento», confronto metà stint): nessuna poggiava su
 // una misura dimostrata.
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import PageHeader from "@/components/ui/PageHeader";
 import Tabs from "@/components/ui/Tabs";
@@ -21,6 +21,13 @@ export default function TelemetryPage() {
   // Il tab scelto vive qui, non dentro i Tabs: mentre una sessione nuova carica i Tabs
   // spariscono, e al ritorno ripartirebbero da «Giri».
   const [tab, setTab] = useState("giri");
+  // Un link può aprire la Telemetria su un tab preciso (?tab=gomme, dalla lezione sulle
+  // gomme). Si legge una volta all'arrivo, senza useSearchParams (che in build chiede un
+  // Suspense attorno alla pagina).
+  useEffect(() => {
+    const chiesto = new URLSearchParams(window.location.search).get("tab");
+    if (chiesto === "giri" || chiesto === "curve" || chiesto === "gomme") setTab(chiesto);
+  }, []);
 
   if (!report || !idSessione)
     return (

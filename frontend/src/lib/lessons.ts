@@ -4,6 +4,7 @@
 // stato, nessun quiz, nessuno storage.
 // videoId confermati (megaprompt #9, FASE 0). Il fallback UI "video in arrivo"
 // per `videoId === "TODO"` resta nel template come rete di sicurezza.
+import type { Perdita } from "@/lib/api";
 import type { WeakArea } from "@/lib/profile";
 
 export type Lesson = {
@@ -16,7 +17,7 @@ export type Lesson = {
   howTo: string[];
   commonMistakes: string[];
   pitwallLink?: {
-    // SOLO Gomme (→ Telemetria) e LiCo (→ strategia carburante)
+    // SOLO Gomme (→ Telemetria, tab Gomme e freni) e LiCo (→ il Consumo della Dashboard)
     label: string;
     href: string;
   };
@@ -143,8 +144,8 @@ export const LESSONS: Lesson[] = [
     howTo: [
       "Finestra pressioni operative (a CALDO): ~26.0–27.0 psi per tutte le classi GT (ACC v1.9, mescola dry DHF).",
       "Le pressioni che imposti in garage sono a FREDDO e più basse: salgono nei primi giri fino a entrare nella finestra a caldo. Regola le pressioni a freddo così che a caldo caschino in finestra.",
-      "Temperatura di lavoro 70–100°C, ottimale 80–90°C. Tieni <15°C di spread tra interno ed esterno del battistrada (si gestisce con camber/toe e brake ducts).",
-      "Regola pratica: ±0.1 psi ogni ±1°C di temperatura ambiente.",
+      "Temperatura di lavoro al core 70–100°C (finestra Kunos); «ottimale 80–90°C» è un valore della community, da confermare. Tieni <15°C di spread tra interno ed esterno del battistrada (si gestisce con camber/toe e brake ducts).",
+      "Regola pratica della community, da confermare: ±0.1 psi ogni ±1°C di temperatura ambiente.",
     ],
     commonMistakes: [
       "Leggere le pressioni a freddo come se fossero operative.",
@@ -152,8 +153,8 @@ export const LESSONS: Lesson[] = [
       "Ignorare lo spread di temperatura.",
     ],
     pitwallLink: {
-      label: "Questa lezione è il \"perché\" dietro il cross-check gomme dell'app: guardala in Telemetria",
-      href: "/telemetry",
+      label: "Questa lezione è il \"perché\" dietro il controllo gomme dell'app: pressioni e temperature ruota per ruota della sessione aperta stanno in Telemetria, tab Gomme e freni",
+      href: "/telemetry?tab=gomme",
     },
     video: { channel: "Coach Dave Academy", title: "ACC 1.9 — What psi? What tyre temps?", videoId: "1f5sNSRkKd4" },
   },
@@ -198,8 +199,8 @@ export const LESSONS: Lesson[] = [
       "Usarlo in una zona di sorpasso con un avversario dietro.",
     ],
     pitwallLink: {
-      label: "Si lega al calcolo strategia carburante dell'app: se il target dice \"−X L\", il LiCo è come lo ottieni in pista",
-      href: "/console",
+      label: "Il consumo misurato della sessione aperta è nella Dashboard, indicatore Consumo: il LiCo è come lo abbassi in pista",
+      href: "/",
     },
     video: { channel: "Driver61", title: "How Racing Drivers Save Fuel (Whilst Driving FAST)", videoId: "j1u_Tb3X08I" },
   },
@@ -227,6 +228,48 @@ export function recommendLessons(weakAreas: WeakArea[]): Lesson[] {
     .slice(0, 3)
     .map((s) => lessonBySlug(s))
     .filter((l): l is Lesson => l !== undefined);
+}
+
+// Lezioni consigliate per la sessione aperta (#056, tabella decisa da Edoardo il
+// 30/09): prima le voci del verdetto in ordine di gravità, poi i punti deboli del
+// profilo; senza doppioni, al massimo 3, ognuna col suo motivo. Né verdetto né
+// profilo → nessuna lezione (niente default). Le voci si riconoscono dal titolo che
+// scrive il motore (analisi/motore.py, curve.py): se un titolo cambia, va aggiornata qui.
+const LEZIONE_PER_VOCE: [RegExp, string][] = [
+  [/^Il ritmo cala/, "quali-vs-race"],
+  [/^Costanza /, "punti-di-riferimento"],
+  [/^Non hai mai messo insieme il giro/, "punti-di-riferimento"],
+  [/^Settore \d/, "punti-di-riferimento"],
+  [/^Frenata ballerina/, "punti-di-riferimento"],
+  [/^Perdi /, "linea-ideale"],
+  [/^Velocità minima incostante/, "trail-braking"],
+  [/^Troppo tempo in folle/, "trazione-in-uscita"],
+];
+
+const ETICHETTA_PUNTO_DEBOLE: Record<WeakArea, string> = {
+  frenata: "frenata",
+  "trail-braking": "trail braking",
+  trazione: "trazione",
+  costanza: "costanza",
+  gomme: "gomme",
+  carburante: "carburante",
+  linea: "linea",
+};
+
+export type Consigliata = { lesson: Lesson; motivo: string };
+
+export function lezioniConsigliate(verdetto: Perdita[], weakAreas: WeakArea[]): Consigliata[] {
+  const fuori: Consigliata[] = [];
+  const aggiungi = (slug: string, motivo: string) => {
+    const lesson = lessonBySlug(slug);
+    if (lesson && fuori.length < 3 && !fuori.some((c) => c.lesson.slug === slug)) fuori.push({ lesson, motivo });
+  };
+  for (const v of verdetto) {
+    const slug = v.categoria === "gomme" ? "gomme-finestra" : LEZIONE_PER_VOCE.find(([re]) => re.test(v.titolo))?.[1];
+    if (slug) aggiungi(slug, `dal verdetto: ${v.titolo}`);
+  }
+  for (const w of weakAreas) for (const slug of WEAK_AREA_LESSONS[w]) aggiungi(slug, `dal tuo profilo: ${ETICHETTA_PUNTO_DEBOLE[w]}`);
+  return fuori;
 }
 
 export function lessonBySlug(slug: string): Lesson | undefined {
