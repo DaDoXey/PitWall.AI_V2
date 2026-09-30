@@ -2341,7 +2341,7 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 | Data | 29/09/2026 |
 | Agente dev | Claude Code (claude-opus-5-5) |
 | Area | `frontend/src/components/charts/AnalisiCurve.tsx` · `frontend/src/components/ui/Tabs.tsx` · `frontend/src/app/(app)/telemetry/page.tsx` |
-| Commit | non ancora committato |
+| Commit | vedi sotto |
 | Contesto | Dopo la #048 Edoardo: «adesso mancano le curve nella telemetria, non ci sta lo zoom che volevo e su cui avevamo lavorato». Stava guardando la DEMO, la sessione di partenza della modalità demo, dove l'aggancio è escluso per scelta (scope del 28/09: circuito generato, la Parabolica a 0,934 invece di 0,8975). Verificato: sulla Ferrari di Monza colonna «Guida», scheda e zoom funzionano. |
 
 **Catalogo messaggi:**
@@ -2358,7 +2358,39 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 **Verifica:** `tsc --noEmit` 0 errori · percorso provato nel browser · backend non toccato.
 
 **File protetti:** ☑ nessuno toccato.
-**Decisione:** ☐ in attesa di «ok push».
+**Decisione:** ☑ Mantenuto — «ok push» il 29/09 (commit `70b954d` invito e tab · `b7403cd` docs).
+
+---
+
+## Entry #050 — Dashboard riordinata: il verdetto al centro, indicatori in colonna, niente doppioni
+
+| Campo | Valore |
+|---|---|
+| Data | 29/09/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `frontend/src/app/(app)/page.tsx` · `frontend/src/components/ui/SessionBriefing.tsx` · DEL `frontend/src/components/charts/Sparkline.tsx` |
+| Commit | vedi sotto |
+| Contesto | Prima pagina della revisione «una alla volta» chiesta da Edoardo dopo il riordino della colonna (#048). Regole del #008/#010: niente doppioni, niente vuoti, gerarchia. |
+
+**Catalogo messaggi:**
+1. «partiamo dalla dashboard» → fotografata sul suo schermo (1536×639): pagina alta 2350 px. Diagnosi e tre impaginazioni proposte (verdetto al centro, numeri in alto, stessa pagina più compatta) + destino delle schede di pista e vettura. Scelte: **verdetto al centro** e **pista e vettura compatte in fondo**.
+
+**Diagnosi (prima):** la scheda della sessione ripeteva miglior giro, teorico e consumo che stavano anche negli indicatori; accanto al verdetto la colonna di destra finiva presto e lasciava un vuoto; 7 indicatori in riquadri grandi, 3 per riga, l'ultimo da solo, alcuni senza grafico e mezzi vuoti, con trascina/allarga; foto di pista e vettura a tutta larghezza (quasi una schermata) con testi del catalogo; «Prossime azioni» = doppione della colonna di sinistra.
+
+**Modifica:**
+- **Fascia della sessione** in alto, una riga: pista e vettura, poi tipo · giri (e buttati) · gomme · con/senza telemetria · data, e il distintivo della fonte (demo / MoTeC · rif.). I numeri non ci sono più: stanno negli indicatori.
+- **Due colonne**: a sinistra il **verdetto** (invariato) con sotto le **note sui dati** (dicono su cosa poggia il verdetto, e pareggiano le colonne); a destra **«Cosa regge»** e i **7 indicatori come righe** (pallino di stato, nome, valore, nota sotto; clic = lo stesso dettaglio di prima, con grafico, riferimenti e «come si calcola»).
+- **Pista e vettura compatte** in fondo (`TrackCard`/`CarCard` con `compatta`): miniatura accanto al testo, una riga di dati (km, curve, deportanza / anno, CV, kg, aiuti mancanti), il «focus setup» o la didascalia in due righe. La pagina Setup usa ancora le schede grandi.
+- **Tolti**: numeri della vecchia scheda, riquadri grandi degli indicatori con trascina/allarga (e la loro persistenza), «Prossime azioni», `Sparkline.tsx` (lo usava solo la Dashboard).
+
+**Motivazione:** la Dashboard era cresciuta per aggiunte: tre schermate e mezza, con i numeri ripetuti due volte e i collegamenti ripetuti dalla colonna.
+
+**Risultato osservato** (a schermo, 1536×639, sessione demo): pagina **1028 px** (da 2350); colonne del verdetto e degli indicatori alte uguali (611 px e 611 px); il dettaglio di «Degrado» si apre col grafico e i riferimenti; console senza errori.
+
+**Verifica:** `tsc --noEmit` 0 errori e nessuna variabile inutilizzata nei file toccati (`--noUnusedLocals`) · rotte `/` e `/setup` 200 · backend non toccato.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `50465e7` Dashboard · docs nel commit successivo). Chiuso anche INC-V2-005: il trascina/allarga della Dashboard non esiste più.
 
 ---
 

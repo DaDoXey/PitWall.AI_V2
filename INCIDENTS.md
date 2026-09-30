@@ -42,7 +42,7 @@ Per ognuno: **ID · Data · Severità · Stato · Area · Sintomo · Causa radic
 ### INC-V2-005 — Dashboard: le card ingrandite non si riposizionano col drag&drop
 | | |
 |---|---|
-| **Data** | 10/07/2026 · risolto 13/07/2026 · **Stato:** 🟡 Medio · `RISOLTO` (in attesa di conferma a schermo) |
+| **Data** | 10/07/2026 · risolto 13/07/2026 · chiuso 30/09/2026 · **Stato:** 🟡 Medio · `RISOLTO` (superato: il drag&drop è stato tolto con la Entry #050) |
 | **Area** | Frontend / Dashboard (DnD) |
 
 - **Sintomo:** ingrandendo una card a `col-span-2` e trascinandola, **non si sposta dove atteso**;
@@ -61,6 +61,8 @@ Per ognuno: **ID · Data · Severità · Stato · Area · Sintomo · Causa radic
   (`from < insert → insert−1`).
 - **File:** `frontend/src/app/(app)/page.tsx` (`reorder`, handler drag, barra inserzione).
 - **Rif.:** REDESIGN_REWORK_REPORT §2 REWORK #8 · PROMPT_LOG Entry #017.
+- **Chiusura (30/09/2026):** la conferma a schermo non serve più: la Entry #050 ha tolto i riquadri
+  trascinabili/allargabili della Dashboard (indicatori ora in colonna). Commit `50465e7`.
 
 ### INC-V2-002 — Mojibake `track_nick` servito da `GET /api/session` → **FALSO POSITIVO**
 | | |
