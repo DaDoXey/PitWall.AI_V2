@@ -33,7 +33,7 @@ import {
   urlEsportaMotec,
 } from "@/lib/api";
 import { useProfile } from "@/lib/profile";
-import { useSessione } from "@/lib/sessione";
+import { GRUPPI_SESSIONI, useSessione } from "@/lib/sessione";
 import { data, ETICHETTA_PIATTAFORMA, ETICHETTA_TIPO, etichettaFonte, giri, tempoGiro } from "@/lib/formato";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { CHIAVE_BOZZA_SETUP } from "@/lib/setup";
@@ -49,20 +49,37 @@ function messaggio(e: unknown, fallback: string): string {
 }
 
 export default function SessioniPage() {
+  return (
+    <div>
+      <PageHeader title="Sessioni" subtitle="Archivio · da dove arrivano i dati" />
+      <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="flex flex-col gap-6">
+        {/* L'archivio sempre, e per primo: la piattaforma serve solo ad aggiungere. */}
+        <motion.div variants={fadeInUp}>
+          <Archivio />
+        </motion.div>
+        <motion.div variants={fadeInUp}>
+          <AggiungiSessione />
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+}
+
+// Un solo riquadro per aggiungere una sessione: la piattaforma decide il percorso (PC:
+// tab MoTeC / file di ACC / registrazione; console: sessione scritta a mano), e l'altro
+// percorso resta a portata dietro «Mostra anche…».
+function AggiungiSessione() {
   const { platform, setPlatform } = useProfile();
   const [altroPercorso, setAltroPercorso] = useState(false);
   const console_ = platform === "playstation" || platform === "xbox";
 
   return (
-    <div>
-      <PageHeader title="Sessioni" subtitle="Da dove arrivano i dati · archivio" />
-
-      {!platform && <SceltaPiattaforma onScelta={setPlatform} />}
-
-      {platform && (
-        <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="flex flex-col gap-6">
-          <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-2 text-sm text-subtle">
-            Giochi su <span className="text-white">{ETICHETTA_PIATTAFORMA[platform]}</span>.
+    <Blocco
+      titolo="Aggiungi una sessione"
+      azioni={
+        platform && (
+          <span className="flex items-center gap-2 text-[0.78rem] text-subtle">
+            Giochi su <span className="text-white">{ETICHETTA_PIATTAFORMA[platform]}</span>
             <button
               type="button"
               onClick={() => setPlatform(console_ ? "pc" : "playstation")}
@@ -70,11 +87,16 @@ export default function SessioniPage() {
             >
               cambia
             </button>
-          </motion.div>
-
-          <motion.div variants={fadeInUp}>{console_ ? <PercorsoConsole piattaforma={platform} /> : <PercorsoPC />}</motion.div>
-
-          <motion.div variants={fadeInUp}>
+          </span>
+        )
+      }
+    >
+      {!platform ? (
+        <SceltaPiattaforma onScelta={setPlatform} />
+      ) : (
+        <>
+          {console_ ? <PercorsoConsole piattaforma={platform} /> : <PercorsoPC />}
+          <div className="mt-4 border-t border-line pt-3">
             <button
               type="button"
               onClick={() => setAltroPercorso((a) => !a)}
@@ -85,30 +107,50 @@ export default function SessioniPage() {
             {altroPercorso && (
               <div className="mt-3">{console_ ? <PercorsoPC /> : <PercorsoConsole piattaforma="playstation" />}</div>
             )}
-          </motion.div>
-
-          <motion.div variants={fadeInUp}>
-            <Archivio />
-          </motion.div>
-        </motion.div>
+          </div>
+        </>
       )}
-    </div>
+    </Blocco>
   );
 }
 
-function Blocco({ titolo, sottotitolo, children }: { titolo: string; sottotitolo?: string; children: React.ReactNode }) {
+function Blocco({
+  titolo,
+  sottotitolo,
+  azioni,
+  children,
+}: {
+  titolo: string;
+  sottotitolo?: string;
+  azioni?: React.ReactNode;
+  children: React.ReactNode;
+}) {
   return (
     <section className="rounded-xl border border-line bg-surface p-4">
-      <div className="font-mono text-xs uppercase tracking-wider text-subtle">{titolo}</div>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="font-mono text-xs uppercase tracking-wider text-subtle">{titolo}</div>
+        {azioni}
+      </div>
       {sottotitolo && <p className="mt-1 text-[0.78rem] text-muted">{sottotitolo}</p>}
       <div className="mt-3">{children}</div>
     </section>
   );
 }
 
+// Dentro «Aggiungi una sessione» ogni percorso è una parte del riquadro, non un
+// riquadro a sé: una riga di istruzioni e il contenuto.
+function Parte({ istruzioni, children }: { istruzioni?: string; children: React.ReactNode }) {
+  return (
+    <div>
+      {istruzioni && <p className="mb-3 text-[0.75rem] text-muted">{istruzioni}</p>}
+      {children}
+    </div>
+  );
+}
+
 function SceltaPiattaforma({ onScelta }: { onScelta: (p: Piattaforma) => void }) {
   return (
-    <Blocco titolo="Dove giochi ad ACC?" sottotitolo="Decide da dove arrivano i dati. L'analisi funziona in tutti e due i casi.">
+    <Parte istruzioni="Dove giochi ad ACC? Decide da dove arrivano i dati; l'analisi funziona in tutti e due i casi.">
       <div className="grid gap-2 sm:grid-cols-3">
         {(["pc", "playstation", "xbox"] as Piattaforma[]).map((p) => (
           <button
@@ -124,21 +166,50 @@ function SceltaPiattaforma({ onScelta }: { onScelta: (p: Piattaforma) => void })
           </button>
         ))}
       </div>
-    </Blocco>
+    </Parte>
   );
 }
 
 // ─────────────────────────────────────────────
 // Percorso PC
 // ─────────────────────────────────────────────
+type TabPC = "motec" | "file" | "registrazione";
+
+// Tre tab: MoTeC per primo (è da lì che arrivano le sessioni vere), poi i file di ACC e
+// la registrazione dal vivo. Lo stato del registratore si legge qui, così il pallino sul
+// suo tab resta vero anche quando il tab è chiuso.
 function PercorsoPC() {
+  const [tab, setTab] = useState<TabPC>("motec");
+  const { stato, registrazioni } = useRegistratore();
+  const pallino = stato?.in_registrazione ? "bg-accent" : stato?.agganciato ? "bg-ok" : null;
+  const tabs: { id: TabPC; label: string }[] = [
+    { id: "motec", label: "Export MoTeC" },
+    { id: "file", label: "File di ACC" },
+    { id: "registrazione", label: "Registrazione dal vivo" },
+  ];
   return (
-    <div className="grid gap-4 lg:grid-cols-2">
-      <ImportaFile />
-      <Registratore />
-      <div className="lg:col-span-2">
-        <ImportaMotec />
+    <div>
+      <div role="tablist" className="mb-4 flex flex-wrap gap-1 border-b border-line">
+        {tabs.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            role="tab"
+            aria-selected={tab === t.id}
+            onClick={() => setTab(t.id)}
+            className={`-mb-px flex items-center gap-1.5 border-b-2 px-3 py-2 font-mono text-[0.65rem] uppercase tracking-widest transition ${
+              tab === t.id ? "border-accent text-white" : "border-transparent text-muted hover:text-subtle"
+            }`}
+          >
+            {t.label}
+            {t.id === "registrazione" && pallino && <span className={`h-1.5 w-1.5 rounded-full ${pallino}`} />}
+            {t.id === "registrazione" && registrazioni.length > 0 && <span className="text-subtle">· {registrazioni.length}</span>}
+          </button>
+        ))}
       </div>
+      {tab === "motec" && <ImportaMotec />}
+      {tab === "file" && <ImportaFile />}
+      {tab === "registrazione" && <Registratore stato={stato} registrazioni={registrazioni} />}
     </div>
   );
 }
@@ -198,10 +269,7 @@ function ImportaMotec() {
     "block w-full text-xs text-subtle file:mr-3 file:cursor-pointer file:rounded-md file:border file:border-line-strong file:bg-raised file:px-3 file:py-1.5 file:text-xs file:text-white hover:file:border-accent";
 
   return (
-    <Blocco
-      titolo="Importa un export MoTeC"
-      sottotitolo="Documenti\Assetto Corsa Competizione\MoTeC: il .ld porta i canali, il .ldx i passaggi sul traguardo. MoTeC non esporta posizione in pista né carburante: la posizione si ricava dalla velocità, il consumo lo dai tu o il setup."
-    >
+    <Parte istruzioni="Da Documenti\Assetto Corsa Competizione\MoTeC: il .ld porta i canali, il .ldx i passaggi sul traguardo.">
       <div className="grid gap-3 md:grid-cols-3">
         <label className="flex flex-col gap-1">
           <span className={etichetta}>File .ld · obbligatorio</span>
@@ -239,8 +307,9 @@ function ImportaMotec() {
         </label>
       </div>
       <p className="mt-2 text-[0.7rem] text-muted">
-        Consumo: i litri che scrivi valgono più del setup, e il report dice sempre da dove viene il numero. Senza .ldx i giri
-        non si conoscono, salvo un giro ritagliato in MoTeC i2 lungo quanto la pista.
+        MoTeC non esporta né la posizione in pista (si ricava dalla velocità) né il carburante: i litri che scrivi valgono
+        più del setup, e il report dice sempre da dove viene il numero. Senza .ldx i giri non si conoscono, salvo un giro
+        ritagliato in MoTeC i2 lungo quanto la pista.
       </p>
       {soloUno && <p className="mt-1 text-[0.72rem] text-warn">Per il consumo servono i litri a inizio e a fine.</p>}
       {alRovescio && <p className="mt-1 text-[0.72rem] text-warn">A fine sessione ci sono più litri che all&apos;inizio.</p>}
@@ -253,7 +322,7 @@ function ImportaMotec() {
         {lavoro ? "Import…" : "Importa"}
       </button>
       <Esito esito={esito} />
-    </Blocco>
+    </Parte>
   );
 }
 
@@ -290,10 +359,7 @@ function ImportaFile() {
   }
 
   return (
-    <Blocco
-      titolo="Importa un file di ACC"
-      sottotitolo="Risultati: Documenti\Assetto Corsa Competizione\results. Setup: Documenti\Assetto Corsa Competizione\Setups\<auto>\<pista>."
-    >
+    <Parte istruzioni="Risultati da Documenti\Assetto Corsa Competizione\results · setup da …\Setups\<auto>\<pista>.">
       <div className="mb-3 inline-flex rounded-md border border-line bg-inset p-0.5">
         {(["risultati", "setup"] as const).map((t) => (
           <button
@@ -364,16 +430,14 @@ function ImportaFile() {
         </div>
       )}
       <Esito esito={esito} />
-    </Blocco>
+    </Parte>
   );
 }
 
-function Registratore() {
-  const { ricarica, demoId } = useSessione();
-  const router = useRouter();
+function useRegistratore() {
+  const { demoId } = useSessione();
   const [stato, setStato] = useState<StatoRegistratore | null>(null);
   const [registrazioni, setRegistrazioni] = useState<Registrazione[]>([]);
-  const [esito, setEsito] = useState<Esito>(null);
 
   useEffect(() => {
     let vivo = true;
@@ -394,6 +458,14 @@ function Registratore() {
     };
   }, [demoId]);
 
+  return { stato, registrazioni };
+}
+
+function Registratore({ stato, registrazioni }: { stato: StatoRegistratore | null; registrazioni: Registrazione[] }) {
+  const { ricarica } = useSessione();
+  const router = useRouter();
+  const [esito, setEsito] = useState<Esito>(null);
+
   async function importa(id: string) {
     setEsito(null);
     try {
@@ -406,10 +478,7 @@ function Registratore() {
   }
 
   return (
-    <Blocco
-      titolo="Telemetria registrata"
-      sottotitolo="Il backend legge la shared memory di ACC mentre giri: nessun programma da installare, si avvia da solo."
-    >
+    <Parte istruzioni="Il backend legge la shared memory di ACC mentre giri: nessun programma da installare, si avvia da solo.">
       {!stato ? (
         <p className="text-sm text-subtle">Stato del registratore non disponibile.</p>
       ) : !stato.abilitato ? (
@@ -455,7 +524,7 @@ function Registratore() {
         )}
       </div>
       <Esito esito={esito} />
-    </Blocco>
+    </Parte>
   );
 }
 
@@ -546,9 +615,8 @@ function PercorsoConsole({ piattaforma }: { piattaforma: Piattaforma }) {
   const etichetta = "font-mono text-[0.6rem] uppercase tracking-widest text-muted";
 
   return (
-    <Blocco
-      titolo={`Nuova sessione da ${ETICHETTA_PIATTAFORMA[piattaforma]}`}
-      sottotitolo="Su console ACC non scrive file né telemetria: il motore analizza i tempi che inserisci, e Gigi ragiona sul tuo racconto. Più sei preciso, più la risposta è mirata."
+    <Parte
+      istruzioni={`Nuova sessione da ${ETICHETTA_PIATTAFORMA[piattaforma]}: su console ACC non scrive file né telemetria, il motore analizza i tempi che inserisci e Gigi ragiona sul tuo racconto. Più sei preciso, più la risposta è mirata.`}
     >
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <label className="flex flex-col gap-1">
@@ -656,7 +724,7 @@ function PercorsoConsole({ piattaforma }: { piattaforma: Piattaforma }) {
         {lavoro ? "Creazione…" : "Crea la sessione e chiedi a Gigi"}
       </button>
       <Esito esito={esito} />
-    </Blocco>
+    </Parte>
   );
 }
 
@@ -687,64 +755,78 @@ function Archivio() {
 
   return (
     <Blocco titolo={`Archivio · ${elenco?.length ?? 0} sessioni`}>
-      <div className="flex flex-col gap-1.5">
-        {(elenco ?? []).map((s) => {
-          const aperta = s.id === idSessione;
+      {/* A gruppi come nella colonna di sinistra: il gruppo dice già se è un riferimento. */}
+      <div className="flex flex-col gap-3">
+        {GRUPPI_SESSIONI.map((g) => {
+          const qui = (elenco ?? []).filter(g.filtro);
+          if (qui.length === 0) return null;
           return (
-            <div
-              key={s.id}
-              className={`flex flex-wrap items-center gap-3 rounded-lg border px-3 py-2 ${aperta ? "border-accent/60 bg-accent/[0.05]" : "border-line bg-inset"}`}
-            >
-              <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-sm text-white">
-                    {nomi.pista(s.track)} · {nomi.vettura(s.car)}
-                  </span>
-                  <Etichetta testo={etichettaFonte(s.fonte, s.piattaforma)} accesa={s.demo} />
-                  {s.riferimento && <Etichetta testo="riferimento" />}
-                  {s.ritaglio_i2 && <Etichetta testo="ritaglio i2" />}
-                  {s.ha_canali && <Etichetta testo="telemetria" />}
-                  {s.ha_setup && <Etichetta testo="setup" />}
-                  {s.ha_racconto && <Etichetta testo="racconto" />}
-                </div>
-                <div className="mt-0.5 font-mono text-[0.62rem] text-muted">
-                  {ETICHETTA_TIPO[s.tipo_sessione] ?? "Sessione"} · {giri(s.giri)} · best {tempoGiro(s.miglior_giro_ms)}
-                  {!s.demo ? ` · ${data(s.iniziata_il ?? s.importato_il)}` : ""}
-                </div>
+            <div key={g.titolo}>
+              <div className="mb-1.5 font-mono text-[0.58rem] uppercase tracking-widest text-muted">
+                {g.titolo} · {qui.length}
               </div>
-              <button
-                type="button"
-                onClick={() => {
-                  apri(s.id);
-                  router.push("/");
-                }}
-                className="rounded-md border border-line-strong px-2.5 py-1 font-mono text-[0.6rem] uppercase tracking-widest text-white transition hover:border-accent"
-              >
-                {aperta ? "Aperta" : "Apri"}
-              </button>
-              {s.ha_canali && (
-                <a
-                  href={urlEsportaMotec(s.id)}
-                  download
-                  className="rounded-md px-2 py-1 font-mono text-[0.6rem] uppercase tracking-widest text-subtle transition hover:text-white"
-                  title="Scarica .ld + .ldx da aprire in MoTeC i2 (con carburante, temperature al core e posizione, se registrati)"
-                >
-                  MoTeC ↓
-                </a>
-              )}
-              {!s.demo && (
-                <button
-                  type="button"
-                  onClick={() => cancella(s.id)}
-                  onBlur={() => setDaConfermare((d) => (d === s.id ? null : d))}
-                  className={`rounded-md px-2 py-1 font-mono text-[0.6rem] uppercase tracking-widest transition ${
-                    daConfermare === s.id ? "border border-accent text-accent" : "text-muted hover:text-accent"
-                  }`}
-                  title="Cancella la sessione dall'archivio"
-                >
-                  {daConfermare === s.id ? "Confermi?" : "Cancella"}
-                </button>
-              )}
+              <div className="flex flex-col gap-1.5">
+                {qui.map((s) => {
+                  const aperta = s.id === idSessione;
+                  return (
+                    <div
+                      key={s.id}
+                      className={`flex flex-wrap items-center gap-3 rounded-lg border px-3 py-2 ${aperta ? "border-accent/60 bg-accent/[0.05]" : "border-line bg-inset"}`}
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="text-sm text-white">
+                            {nomi.pista(s.track)} · {nomi.vettura(s.car)}
+                          </span>
+                          <Etichetta testo={etichettaFonte(s.fonte, s.piattaforma)} accesa={s.demo} />
+                          {s.ritaglio_i2 && <Etichetta testo="ritaglio i2" />}
+                          {/* un export MoTeC ha sempre i canali: l'etichetta lo ripeterebbe */}
+                          {s.ha_canali && s.fonte !== "motec" && <Etichetta testo="telemetria" />}
+                          {s.ha_setup && <Etichetta testo="setup" />}
+                          {s.ha_racconto && <Etichetta testo="racconto" />}
+                        </div>
+                        <div className="mt-0.5 font-mono text-[0.62rem] text-muted">
+                          {ETICHETTA_TIPO[s.tipo_sessione] ?? "Sessione"} · {giri(s.giri)} · best {tempoGiro(s.miglior_giro_ms)}
+                          {!s.demo ? ` · ${data(s.iniziata_il ?? s.importato_il)}` : ""}
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          apri(s.id);
+                          router.push("/");
+                        }}
+                        className="rounded-md border border-line-strong px-2.5 py-1 font-mono text-[0.6rem] uppercase tracking-widest text-white transition hover:border-accent"
+                      >
+                        {aperta ? "Aperta" : "Apri"}
+                      </button>
+                      {s.ha_canali && (
+                        <a
+                          href={urlEsportaMotec(s.id)}
+                          download
+                          className="rounded-md px-2 py-1 font-mono text-[0.6rem] uppercase tracking-widest text-subtle transition hover:text-white"
+                          title="Scarica .ld + .ldx da aprire in MoTeC i2 (con carburante, temperature al core e posizione, se registrati)"
+                        >
+                          MoTeC ↓
+                        </a>
+                      )}
+                      {!s.demo && (
+                        <button
+                          type="button"
+                          onClick={() => cancella(s.id)}
+                          onBlur={() => setDaConfermare((d) => (d === s.id ? null : d))}
+                          className={`rounded-md px-2 py-1 font-mono text-[0.6rem] uppercase tracking-widest transition ${
+                            daConfermare === s.id ? "border border-accent text-accent" : "text-muted hover:text-accent"
+                          }`}
+                          title="Cancella la sessione dall'archivio"
+                        >
+                          {daConfermare === s.id ? "Confermi?" : "Cancella"}
+                        </button>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           );
         })}

@@ -64,6 +64,14 @@ function salvaScelta(id: string, demo: boolean) {
   }
 }
 
+// I gruppi dell'archivio, nella colonna di sinistra e nella pagina Sessioni: le sessioni
+// del pilota, i giri di altri piloti importati come riferimento, la demo.
+export const GRUPPI_SESSIONI: { titolo: string; filtro: (s: Riassunto) => boolean }[] = [
+  { titolo: "Le tue", filtro: (s) => !s.demo && !s.riferimento },
+  { titolo: "Riferimenti · altri piloti", filtro: (s) => !s.demo && s.riferimento },
+  { titolo: "Demo", filtro: (s) => s.demo },
+];
+
 export function SessioneProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const demo = user?.kind === "demo";

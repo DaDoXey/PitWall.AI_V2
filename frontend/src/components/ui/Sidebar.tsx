@@ -27,7 +27,7 @@ import {
 import PannelloPista from "@/components/ui/PannelloPista";
 import QuickNotes from "@/components/ui/QuickNotes";
 import type { Riassunto } from "@/lib/api";
-import { useSessione } from "@/lib/sessione";
+import { GRUPPI_SESSIONI, useSessione } from "@/lib/sessione";
 import { data, ETICHETTA_TIPO, etichettaFonte, giri, tempoGiro } from "@/lib/formato";
 
 // Icone: set line-style coerente (NavIcons, FASE 4 #7) al posto delle emoji miste.
@@ -199,14 +199,8 @@ export default function Sidebar() {
 // Selettore della sessione aperta
 // ─────────────────────────────────────────────
 
-// I gruppi dell'elenco rapido: le sessioni del pilota, i giri di altri piloti importati
-// come riferimento, la demo. Prima erano tutte in fila per data, indistinguibili.
-const GRUPPI: { titolo: string; filtro: (s: Riassunto) => boolean }[] = [
-  { titolo: "Le tue", filtro: (s) => !s.demo && !s.riferimento },
-  { titolo: "Riferimenti · altri piloti", filtro: (s) => !s.demo && s.riferimento },
-  { titolo: "Demo", filtro: (s) => s.demo },
-];
-
+// I gruppi dell'elenco rapido (Le tue / Riferimenti / Demo) stanno in lib/sessione:
+// li usa anche la pagina Sessioni. Prima erano tutte in fila per data, indistinguibili.
 function SelettoreSessione() {
   const { elenco, sessione, apri, nomi, errore } = useSessione();
   const [aperto, setAperto] = useState(false);
@@ -264,7 +258,7 @@ function SelettoreSessione() {
             // devono leggersi interi, non «Zandvoort · McLar…».
             className="pw-scroll absolute left-0 z-30 mt-1 max-h-[26rem] w-80 overflow-y-auto rounded-lg border border-line bg-raised p-1 shadow-xl"
           >
-            {GRUPPI.map((g) => {
+            {GRUPPI_SESSIONI.map((g) => {
               const tutte = elenco.filter(g.filtro);
               if (tutte.length === 0) return null;
               // La sessione aperta resta visibile anche se è oltre le prime cinque.
