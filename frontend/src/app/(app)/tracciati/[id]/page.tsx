@@ -139,6 +139,8 @@ export default function TracciatoPage() {
     ? DOWNFORCE_LABEL[track.downforce_level] ?? track.downforce_level
     : null;
   const meteo = guida?.meteo_e_luce ?? null;
+  const conMappa = Boolean(track.mappa_verificata && assets.map);
+  const conCurve = Boolean(guida?.curve && guida.curve.length > 0);
   const righeMeteo = meteo
     ? ([
         ["Condizioni tipiche", meteo.condizioni_tipiche],
@@ -203,7 +205,9 @@ export default function TracciatoPage() {
           )}
           <div className="flex-1 p-5">
             <div className="font-display text-lg font-bold">{track.name}</div>
-            {track.nick && <div className="text-xs italic text-subtle">«{track.nick}»</div>}
+            {track.nick && track.nick.toLowerCase() !== (track.short_name || "").toLowerCase() && (
+              <div className="text-xs italic text-subtle">«{track.nick}»</div>
+            )}
 
             <div className="mt-4 flex flex-wrap gap-x-8 gap-y-3 border-t border-line pt-4">
               {track.length_km && <Fact label="Lunghezza" value={`${track.length_km} km`} />}
@@ -222,9 +226,36 @@ export default function TracciatoPage() {
               {track.lap_record_real && (
                 <Fact label="Record reale" value={track.lap_record_real} />
               )}
+              {/* I dati di pista della guida stanno qui con gli altri numeri (prima erano un
+                  riquadro a sé, «La pista»). Un valore senza fonte seria è null e non si
+                  disegna; uno con un solo riscontro si mostra, e lo dice sotto. */}
+              {guida?.senso_marcia && <Fact label="Senso di marcia" value={guida.senso_marcia} />}
+              {guida?.dislivello_m != null && <Fact label="Dislivello" value={`${guida.dislivello_m} m`} />}
+              {guida?.rettilineo_piu_lungo_m != null && (
+                <Fact label="Rettilineo più lungo" value={`${guida.rettilineo_piu_lungo_m} m`} />
+              )}
             </div>
-
             <p className="mt-4 text-sm leading-relaxed text-subtle">{track.description_it}</p>
+            {guida?.variante_acc && (
+              <p className="mt-3 text-[0.8rem] leading-relaxed text-subtle">
+                <span className="font-mono text-[0.55rem] uppercase tracking-widest text-muted">In ACC · </span>
+                {guida.variante_acc}
+              </p>
+            )}
+            {(() => {
+              const f = guida?.fonti_campi_pista ?? {};
+              const singole = ([
+                ["senso di marcia", f.senso_marcia],
+                ["dislivello", f.dislivello_m],
+                ["rettilineo più lungo", f.rettilineo_piu_lungo_m],
+              ] as const).filter(([, v]) => v?.fonte_singola);
+              return singole.length > 0 ? (
+                <p className="mt-2 font-mono text-[0.55rem] uppercase tracking-widest text-muted">
+                  fonte singola, da confermare: {singole.map(([nome]) => nome).join(" · ")}
+                </p>
+              ) : null;
+            })()}
+
 
             {track.setup_focus_it && (
               <div className="mt-4 rounded-lg border border-line bg-inset p-3">
@@ -237,38 +268,80 @@ export default function TracciatoPage() {
           </div>
         </motion.section>
 
-        {/* Il layout, solo se verificato. Placca chiara dentro la scheda scura:
-            una mappa stampata appoggiata sul cruscotto. */}
-        {track.mappa_verificata && assets.map && (
-          <Sezione titolo="Il layout">
-            {/* La placca si adatta al disegno, non il contrario: `w-fit` +
-                `w-auto` sull'immagine. Con una placca a larghezza piena il
-                layout galleggiava in mezzo a due bande avorio vuote.
-                I file hanno proporzioni molto diverse (Zandvoort è quasi
-                quadrata a 1920×1753, Spa panoramica, Zolder un SVG che
-                dichiara solo il viewBox e nessuna dimensione): l'altezza
-                massima e la larghezza automatica reggono tutti i casi, e
-                `overflow-hidden` è la cintura di sicurezza se un domani
-                arriva un file con proporzioni fuori scala. */}
-            <div className="mx-auto w-fit max-w-full overflow-hidden rounded-lg bg-[#f4f1ea] p-4">
-              {/* eslint-disable-next-line @next/next/no-img-element -- asset statico locale */}
-              {/* ALTEZZA fissa e larghezza automatica, non il contrario.
-                  `zolder_map.svg` dichiara solo il viewBox, senza width né
-                  height: con la larghezza in automatico il browser non sa
-                  quanto è grande e lo riduce a un quadratino. Dando l'altezza
-                  ricava la larghezza dal rapporto del viewBox, e i PNG si
-                  comportano allo stesso modo. */}
-              <img
-                src={assets.map}
-                alt={`Mappa del circuito di ${track.short_name || track.name}`}
-                className="block h-[min(420px,52vw)] w-auto max-w-full object-contain"
-              />
-            </div>
-            <p className="mt-2 font-mono text-[0.55rem] uppercase tracking-widest text-muted">
-              layout verificato · attribuzioni in /crediti
-            </p>
-          </Sezione>
-        )}
+        {/* La mappa numerata accanto al curva per curva: numero e curva si abbinano senza
+            scorrere avanti e indietro. La mappa resta ferma mentre scorre l'elenco. */}
+        <div
+          className={
+            conMappa && conCurve ? "grid items-start gap-4 lg:grid-cols-2" : conMappa || conCurve ? "flex flex-col gap-4" : "hidden"
+          }
+        >
+          <div className={!conMappa ? "hidden" : conCurve ? "lg:sticky lg:top-4" : ""}>
+            {/* Il layout, solo se verificato. Placca chiara dentro la scheda scura:
+                una mappa stampata appoggiata sul cruscotto. */}
+            {conMappa && (
+              <Sezione titolo="Il layout">
+                {/* La placca si adatta al disegno, non il contrario: `w-fit` +
+                    `w-auto` sull'immagine. Con una placca a larghezza piena il
+                    layout galleggiava in mezzo a due bande avorio vuote.
+                    I file hanno proporzioni molto diverse (Zandvoort è quasi
+                    quadrata a 1920×1753, Spa panoramica, Zolder un SVG che
+                    dichiara solo il viewBox e nessuna dimensione): l'altezza
+                    massima e la larghezza automatica reggono tutti i casi, e
+                    `overflow-hidden` è la cintura di sicurezza se un domani
+                    arriva un file con proporzioni fuori scala. */}
+                <div className="mx-auto w-fit max-w-full overflow-hidden rounded-lg bg-[#f4f1ea] p-4">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- asset statico locale */}
+                  {/* ALTEZZA fissa e larghezza automatica, non il contrario.
+                      `zolder_map.svg` dichiara solo il viewBox, senza width né
+                      height: con la larghezza in automatico il browser non sa
+                      quanto è grande e lo riduce a un quadratino. Dando l'altezza
+                      ricava la larghezza dal rapporto del viewBox, e i PNG si
+                      comportano allo stesso modo. */}
+                  <img
+                    src={assets.map}
+                    alt={`Mappa del circuito di ${track.short_name || track.name}`}
+                    className={`block w-auto max-w-full object-contain ${conCurve ? "h-[min(360px,26vw)]" : "h-[min(420px,52vw)]"}`}
+                  />
+                </div>
+                <p className="mt-2 font-mono text-[0.55rem] uppercase tracking-widest text-muted">
+                  layout verificato · attribuzioni in /crediti
+                </p>
+              </Sezione>
+            )}
+          </div>
+          {conCurve && guida && (
+            <Sezione titolo={`Curva per curva · ${guida.curve!.length}`}>
+              <div className="flex flex-col divide-y divide-line overflow-hidden rounded-lg border border-line">
+                {guida.curve!.map((c) => {
+                  const apertaQui = aperta === c.n;
+                  return (
+                    <div key={c.n} className="bg-inset">
+                      <button
+                        onClick={() => setAperta(apertaQui ? null : c.n)}
+                        aria-expanded={apertaQui}
+                        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition hover:bg-raised"
+                      >
+                        <TitoloCurva curva={c} />
+                        <span
+                          className={`font-mono text-xs text-muted transition-transform ${
+                            apertaQui ? "rotate-90" : ""
+                          }`}
+                        >
+                          ›
+                        </span>
+                      </button>
+                      {apertaQui && (
+                        <div className="border-t border-line px-4 pb-3 pt-1">
+                          <CurvaGuida curva={c} />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </Sezione>
+          )}
+        </div>
 
         {/* La guida. Quando non c'è, si dice e basta. */}
         {!track.ha_guida && (
@@ -289,45 +362,6 @@ export default function TracciatoPage() {
 
         {guida && (
           <>
-            {/* I dati di pista della guida. Un valore senza fonte seria è null
-                e non si disegna; uno che ha un solo riscontro si mostra, ma lo
-                dice sotto — stessa regola del validatore delle guide. */}
-            {(guida.senso_marcia || guida.dislivello_m != null ||
-              guida.rettilineo_piu_lungo_m != null || guida.variante_acc) && (
-              <Sezione titolo="La pista">
-                <div className="flex flex-wrap gap-x-8 gap-y-3">
-                  {guida.senso_marcia && <Fact label="Senso di marcia" value={guida.senso_marcia} />}
-                  {guida.dislivello_m != null && (
-                    <Fact label="Dislivello" value={`${guida.dislivello_m} m`} />
-                  )}
-                  {guida.rettilineo_piu_lungo_m != null && (
-                    <Fact label="Rettilineo più lungo" value={`${guida.rettilineo_piu_lungo_m} m`} />
-                  )}
-                </div>
-                {guida.variante_acc && (
-                  <div className="mt-3">
-                    <div className="font-mono text-[0.55rem] uppercase tracking-widest text-muted">
-                      In ACC
-                    </div>
-                    <p className="mt-0.5 text-sm leading-relaxed text-subtle">{guida.variante_acc}</p>
-                  </div>
-                )}
-                {(() => {
-                  const f = guida.fonti_campi_pista ?? {};
-                  const singole = ([
-                    ["senso di marcia", f.senso_marcia],
-                    ["dislivello", f.dislivello_m],
-                    ["rettilineo più lungo", f.rettilineo_piu_lungo_m],
-                  ] as const).filter(([, v]) => v?.fonte_singola);
-                  return singole.length > 0 ? (
-                    <p className="mt-3 font-mono text-[0.55rem] uppercase tracking-widest text-muted">
-                      fonte singola, da confermare: {singole.map(([nome]) => nome).join(" · ")}
-                    </p>
-                  ) : null;
-                })()}
-              </Sezione>
-            )}
-
             {guida.settori && guida.settori.length > 0 && (
               <Sezione titolo="I settori">
                 <div className="flex flex-col gap-3">
@@ -361,92 +395,63 @@ export default function TracciatoPage() {
               </Sezione>
             )}
 
-            {guida.curve && guida.curve.length > 0 && (
-              <Sezione titolo={`Curva per curva · ${guida.curve.length}`}>
-                <div className="flex flex-col divide-y divide-line overflow-hidden rounded-lg border border-line">
-                  {guida.curve.map((c) => {
-                    const apertaQui = aperta === c.n;
-                    return (
-                      <div key={c.n} className="bg-inset">
-                        <button
-                          onClick={() => setAperta(apertaQui ? null : c.n)}
-                          aria-expanded={apertaQui}
-                          className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition hover:bg-raised"
-                        >
-                          <TitoloCurva curva={c} />
-                          <span
-                            className={`font-mono text-xs text-muted transition-transform ${
-                              apertaQui ? "rotate-90" : ""
-                            }`}
-                          >
-                            ›
-                          </span>
-                        </button>
-                        {apertaQui && (
-                          <div className="border-t border-line px-4 pb-3 pt-1">
-                            <CurvaGuida curva={c} />
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </Sezione>
-            )}
-
             {guida.errore_del_principiante && (
               <Sezione titolo="L'errore che fanno tutti">
                 <Prosa>{guida.errore_del_principiante}</Prosa>
               </Sezione>
             )}
 
-            {guida.gomme_e_freni_pista && (
-              <Sezione titolo="Gomme e freni su questa pista">
-                <Prosa>{guida.gomme_e_freni_pista}</Prosa>
-              </Sezione>
-            )}
+            {/* Le sezioni brevi a coppie: spesso sono un paragrafo solo. */}
+            <div className="grid items-start gap-4 lg:grid-cols-2">
+              {guida.gomme_e_freni_pista && (
+                <Sezione titolo="Gomme e freni su questa pista">
+                  <Prosa>{guida.gomme_e_freni_pista}</Prosa>
+                </Sezione>
+              )}
 
-            {guida.track_limits_generale && (
-              <Sezione titolo="Track limits">
-                <Prosa>{guida.track_limits_generale}</Prosa>
-              </Sezione>
-            )}
+              {guida.track_limits_generale && (
+                <Sezione titolo="Track limits">
+                  <Prosa>{guida.track_limits_generale}</Prosa>
+                </Sezione>
+              )}
 
-            {guida.pit && (guida.pit.note || guida.pit.limite_kmh || guida.pit.tempo_perso_s) && (
-              <Sezione titolo="Ai box">
-                <div className="flex flex-wrap gap-x-8 gap-y-3">
-                  {guida.pit.limite_kmh && (
-                    <Fact label="Limite" value={`${guida.pit.limite_kmh} km/h`} />
-                  )}
-                  {guida.pit.tempo_perso_s && (
-                    <Fact label="Tempo perso" value={`${guida.pit.tempo_perso_s} s`} />
-                  )}
-                  {guida.pit.lato_box && <Fact label="Lato box" value={guida.pit.lato_box} />}
-                </div>
-                {guida.pit.note && <p className="mt-3 text-sm leading-relaxed text-subtle">{guida.pit.note}</p>}
-              </Sezione>
-            )}
+              {guida.pit && (guida.pit.note || guida.pit.limite_kmh || guida.pit.tempo_perso_s) && (
+                <Sezione titolo="Ai box">
+                  <div className="flex flex-wrap gap-x-8 gap-y-3">
+                    {guida.pit.limite_kmh && (
+                      <Fact label="Limite" value={`${guida.pit.limite_kmh} km/h`} />
+                    )}
+                    {guida.pit.tempo_perso_s && (
+                      <Fact label="Tempo perso" value={`${guida.pit.tempo_perso_s} s`} />
+                    )}
+                    {guida.pit.lato_box && <Fact label="Lato box" value={guida.pit.lato_box} />}
+                  </div>
+                  {guida.pit.note && <p className="mt-3 text-sm leading-relaxed text-subtle">{guida.pit.note}</p>}
+                </Sezione>
+              )}
 
-            {righeMeteo.length > 0 && (
-              <Sezione titolo="Meteo e luce">
-                <div className="flex flex-col gap-3">
-                  {righeMeteo.map(([label, testo]) => (
-                    <div key={label}>
-                      <div className="font-mono text-[0.55rem] uppercase tracking-widest text-muted">
-                        {label}
+              {righeMeteo.length > 0 && (
+                <Sezione titolo="Meteo e luce">
+                  <div className="flex flex-col gap-3">
+                    {righeMeteo.map(([label, testo]) => (
+                      <div key={label}>
+                        <div className="font-mono text-[0.55rem] uppercase tracking-widest text-muted">
+                          {label}
+                        </div>
+                        <p className="mt-0.5 text-sm leading-relaxed text-subtle">{testo}</p>
                       </div>
-                      <p className="mt-0.5 text-sm leading-relaxed text-subtle">{testo}</p>
-                    </div>
-                  ))}
-                </div>
-              </Sezione>
-            )}
+                    ))}
+                  </div>
+                </Sezione>
+              )}
 
-            {guida.traffico_multiclass && (
-              <Sezione titolo="Traffico">
-                <Prosa>{guida.traffico_multiclass}</Prosa>
-              </Sezione>
-            )}
+              {guida.traffico_multiclass && (
+                <Sezione titolo="Traffico">
+                  <Prosa>{guida.traffico_multiclass}</Prosa>
+                </Sezione>
+              )}
+
+            </div>
 
             {guida.chicche && guida.chicche.length > 0 && (
               <Sezione titolo="Chicche">
