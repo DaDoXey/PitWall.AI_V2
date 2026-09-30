@@ -25,7 +25,7 @@ import {
 } from "@/lib/api";
 import { useAssets } from "@/lib/assets";
 import CurvaGuida, { TitoloCurva } from "@/components/ui/CurvaGuida";
-import { etichettaFonte, numero, secondi, tempoGiro } from "@/lib/formato";
+import { etichettaFonte, numero, perdita, secondi, tempoGiro } from "@/lib/formato";
 import { INSTRUMENT, STATE } from "@/lib/instrument";
 import { useSessione } from "@/lib/sessione";
 import { COLORS } from "@/lib/theme";
@@ -166,7 +166,7 @@ function TabellaCurve({ report, guida }: { report: Report; guida: GuidaAgganciat
                   <td className="py-1.5 pr-3" style={{ color: STATE.best }}>{secondi(r.tempo_migliore_ms)}</td>
                   <td className="py-1.5 pr-3 text-white">{secondi(r.tempo_medio_ms)}</td>
                   <td className="py-1.5 pr-3" style={{ color: r.perdita_media_ms === peggiore && peggiore > 0 ? STATE.warn : COLORS.subtle }}>
-                    {numero(r.perdita_media_ms, 0)} ms
+                    {perdita(r.perdita_media_ms)}
                   </td>
                   <td className="py-1.5 pr-3 text-subtle">
                     {numero(r.velocita_minima_migliore, 0)} / {numero(r.velocita_minima_media, 0)} km/h
@@ -381,8 +381,9 @@ function Confronto({ report, idSessione }: { report: Report; idSessione: string 
     x,
     va: a?.canali["physics.speedKmh"]?.[i],
     vb: b?.canali["physics.speedKmh"]?.[i],
-    fa: a?.canali["physics.brake"]?.[i],
-    fb: b?.canali["physics.brake"]?.[i],
+    // Pedali in una traccia sola: gas sopra lo zero, freno sotto (in negativo).
+    fa: negativo(a?.canali["physics.brake"]?.[i]),
+    fb: negativo(b?.canali["physics.brake"]?.[i]),
     ga: a?.canali["physics.gas"]?.[i],
     gb: b?.canali["physics.gas"]?.[i],
     // Delta B − A in secondi allo stesso punto della pista: sopra zero, B è indietro.
@@ -395,9 +396,16 @@ function Confronto({ report, idSessione }: { report: Report; idSessione: string 
     report.aggancio && report.aggancio.curve.length > 0 ? [...report.aggancio.curve].sort((p, q) => p.n - q.n) : null;
   const lunghezza = tracceA?.lunghezza_stimata_m ?? null;
   const apici = curveGuida
-    ? curveGuida.map((c) => ({ chiave: `T${c.n}`, x: tracceA?.metri && lunghezza ? c.inizio * lunghezza : c.inizio * 100 }))
+    ? curveGuida.map((c) => ({
+        chiave: `T${c.n}`,
+        nome: c.nome,
+        x: tracceA?.metri && lunghezza ? c.inizio * lunghezza : c.inizio * 100,
+        fine: tracceA?.metri && lunghezza ? c.uscita * lunghezza : c.uscita * 100,
+      }))
     : (report.curve?.curve ?? []).map((c) => ({
         chiave: `C${c.numero}`,
+        nome: null,
+        fine: null,
         x: tracceA?.metri ? c.apice_m : c.apice * 100,
       }));
 
@@ -477,14 +485,23 @@ function Confronto({ report, idSessione }: { report: Report; idSessione: string 
               zero
             />
           )}
-          <Pista titolo="Freno · 0-1" righe={righe} linee={[["fa", STATE.best], ["fb", COLORE_B]]} altezza={90} dominio={[0, 1]} apici={apici} unita={unita} />
-          <Pista titolo="Gas · 0-1" righe={righe} linee={[["ga", STATE.best], ["gb", COLORE_B]]} altezza={90} dominio={[0, 1]} apici={apici} unita={unita} asseX />
+          <Pista
+            titolo="Pedali · gas sopra, freno sotto · 0-1"
+            righe={righe}
+            linee={[["ga", STATE.best], ["gb", COLORE_B], ["fa", STATE.best], ["fb", COLORE_B]]}
+            altezza={130}
+            dominio={[-1, 1]}
+            apici={apici}
+            unita={unita}
+            asseX
+            zero
+          />
           <p className="mt-1 text-[0.7rem] text-muted">
             {curveGuida
-              ? `Linee verticali: inizio delle curve della guida — ${curveGuida.map((c) => `T${c.n}${c.nome ? ` ${c.nome}` : ""}`).join(" · ")}.`
+              ? "Linee verticali: inizio delle curve della guida (T1…); passa sul grafico per il nome della curva."
               : "Linee verticali: apice delle curve (C1…)."}{" "}
-            I due giri sono ricampionati sugli stessi {PUNTI} punti di posizione;
-            {fonteB !== idSessione ? " B viene da un'altra sessione, e la sua posizione in pista può essere ricavata dalla velocità (MoTeC)." : ""}
+            I due giri sono ricampionati sugli stessi {PUNTI} punti di posizione
+            {fonteB !== idSessione ? "; B viene da un'altra sessione, e la sua posizione in pista può essere ricavata dalla velocità (MoTeC)." : "."}
           </p>
         </div>
       )}
@@ -508,12 +525,26 @@ function Pista({
   linee: [string, string][];
   altezza: number;
   dominio?: [number, number];
-  apici: { chiave: string; x: number | null | undefined }[];
+  apici: { chiave: string; nome: string | null; x: number | null | undefined; fine: number | null }[];
   unita: string;
   asseX?: boolean;
   zero?: boolean;
 }) {
-  const nomeLinea = (chiave: string) => (chiave === "delta" ? "Delta B − A" : chiave.endsWith("a") ? "Giro A" : "Giro B");
+  const giro = (chiave: string) => (chiave.endsWith("a") ? "A" : "B");
+  const nomeLinea = (chiave: string) =>
+    chiave === "delta"
+      ? "Delta B − A"
+      : chiave.startsWith("f")
+        ? `Freno ${giro(chiave)}`
+        : chiave.startsWith("g")
+          ? `Gas ${giro(chiave)}`
+          : `Giro ${giro(chiave)}`;
+  // Nel tooltip, accanto ai metri, la curva della guida in cui si è: fra il suo inizio e
+  // la sua uscita (sul rettilineo niente nome).
+  const curvaA = (x: number) => {
+    const c = apici.find((a) => a.x !== null && a.x !== undefined && a.fine !== null && a.x <= x && x <= a.fine);
+    return c ? ` · ${c.chiave}${c.nome ? ` ${c.nome}` : ""}` : "";
+  };
   return (
     <div>
       <div className="pl-1 font-mono text-[0.55rem] uppercase tracking-widest text-muted">{titolo}</div>
@@ -530,11 +561,20 @@ function Pista({
             tickFormatter={(v: number) => v.toFixed(0)}
             label={asseX ? { value: unita, position: "insideBottom", offset: -6, style: { fill: COLORS.muted, fontSize: 10 } } : undefined}
           />
-          <YAxis domain={dominio ?? ["auto", "auto"]} stroke={INSTRUMENT.tick} tick={{ fill: COLORS.muted, fontSize: 10 }} width={40} />
+          <YAxis
+            domain={dominio ?? ["auto", "auto"]}
+            stroke={INSTRUMENT.tick}
+            tick={{ fill: COLORS.muted, fontSize: 10 }}
+            width={40}
+            tickFormatter={(v: number) => (dominio?.[0] === -1 ? Math.abs(v).toString() : v.toString())}
+          />
           <Tooltip
             contentStyle={{ background: COLORS.surface, border: `1px solid ${COLORS.line}`, borderRadius: 8, fontSize: 12, boxShadow: "none" }}
-            labelFormatter={(l: number) => `${l.toFixed(0)} ${unita}`}
-            formatter={(v: number, nome: string) => [v?.toFixed(nome === "delta" ? 3 : 2), nomeLinea(nome)]}
+            labelFormatter={(l: number) => `${l.toFixed(0)} ${unita}${curvaA(l)}`}
+            formatter={(v: number, nome: string) => [
+              (nome.startsWith("f") ? Math.abs(v) : v)?.toFixed(nome === "delta" ? 3 : 2),
+              nomeLinea(nome),
+            ]}
           />
           {zero && <ReferenceLine y={0} stroke={INSTRUMENT.tick} />}
           {apici.map((a) =>
@@ -555,4 +595,9 @@ function Pista({
       </ResponsiveContainer>
     </div>
   );
+}
+
+// Il freno disegnato sotto lo zero nella traccia dei pedali.
+function negativo(v: number | undefined): number | undefined {
+  return v === undefined ? undefined : -v;
 }

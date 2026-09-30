@@ -26,6 +26,13 @@ export function delta(ms: number | null | undefined): string {
   return `${segno}${(Math.abs(ms) / 1000).toFixed(3)} s`;
 }
 
+/** 154 → "+0.154 s": tempo perso (settore, curva), sempre positivo, in secondi e al
+ *  millesimo come i giri e i delta. */
+export function perdita(ms: number | null | undefined): string {
+  if (ms === null || ms === undefined) return "—";
+  return `+${(Math.max(ms, 0) / 1000).toFixed(3)} s`;
+}
+
 export function numero(v: number | null | undefined, cifre = 1, unita = ""): string {
   if (v === null || v === undefined || Number.isNaN(v)) return "—";
   return `${v.toFixed(cifre)}${unita ? ` ${unita}` : ""}`;

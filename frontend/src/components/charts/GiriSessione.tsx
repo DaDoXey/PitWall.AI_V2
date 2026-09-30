@@ -1,11 +1,11 @@
 "use client";
 
-// Tab «Giri» della Telemetria (L4): la tabella dei giri, i settori e il delta dal
-// migliore. Tutto dal report: stato del giro (di ritmo, migliore, box, invalido),
-// delta e perdite per settore sono decisi dal motore.
-import { Bar, BarChart, CartesianGrid, Cell, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+// Tab «Giri» della Telemetria (L4, riordinato nella #051): a sinistra la tabella dei giri
+// con il distacco dal migliore disegnato nella cella, a destra i settori. Tutto dal report:
+// stato del giro (di ritmo, migliore, box, invalido), delta e perdite per settore sono
+// decisi dal motore.
 import type { Report } from "@/lib/api";
-import { delta, numero, secondi, tempoGiro } from "@/lib/formato";
+import { delta, numero, perdita, secondi, tempoGiro } from "@/lib/formato";
 import { INSTRUMENT, STATE } from "@/lib/instrument";
 import { COLORS } from "@/lib/theme";
 
@@ -19,10 +19,13 @@ export default function GiriSessione({ report }: { report: Report }) {
       </Riquadro>
     );
   }
-  const conDelta = report.giri.filter((g) => g.delta_migliore_ms !== null);
+  // scala delle barre = il distacco più grande fra i giri di ritmo (i fuori ritmo escono dalla scala)
+  const scala = Math.max(0, ...report.giri.filter((g) => g.di_ritmo).map((g) => g.delta_migliore_ms ?? 0));
+  // senza split in nessun giro (es. MoTeC senza settori) spariscono colonne e riquadro dei settori
+  const haSplit = report.giri.some((g) => g.splits_ms.some((v) => v));
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className={`grid items-start gap-4 ${haSplit ? "lg:grid-cols-[minmax(0,1fr)_320px]" : ""}`}>
       <Riquadro titolo="Tempi sul giro">
         <div className="pw-scroll overflow-x-auto">
           <table className="w-full min-w-[560px] border-collapse font-mono text-[0.78rem]">
@@ -30,9 +33,13 @@ export default function GiriSessione({ report }: { report: Report }) {
               <tr className="border-b border-line text-left text-[0.58rem] uppercase tracking-widest text-muted">
                 <th className="py-2 pr-3">Giro</th>
                 <th className="py-2 pr-3">Tempo</th>
-                <th className="py-2 pr-3">S1</th>
-                <th className="py-2 pr-3">S2</th>
-                <th className="py-2 pr-3">S3</th>
+                {haSplit && (
+                  <>
+                    <th className="py-2 pr-3">S1</th>
+                    <th className="py-2 pr-3">S2</th>
+                    <th className="py-2 pr-3">S3</th>
+                  </>
+                )}
                 <th className="py-2 pr-3">Δ migliore</th>
                 <th className="py-2 pr-3">Carburante</th>
                 <th className="py-2">Stato</th>
@@ -45,7 +52,7 @@ export default function GiriSessione({ report }: { report: Report }) {
                   <td className="py-1.5 pr-3" style={{ color: g.migliore ? STATE.best : g.valido ? COLORS.text : COLORS.muted }}>
                     {tempoGiro(g.tempo_ms)}
                   </td>
-                  {[0, 1, 2].map((i) => {
+                  {haSplit && [0, 1, 2].map((i) => {
                     const settore = report.settori[i];
                     const valore = g.splits_ms[i];
                     const migliore = settore && valore === settore.migliore_ms;
@@ -55,7 +62,9 @@ export default function GiriSessione({ report }: { report: Report }) {
                       </td>
                     );
                   })}
-                  <td className="py-1.5 pr-3 text-subtle">{g.migliore ? "—" : delta(g.delta_migliore_ms)}</td>
+                  <td className="py-1.5 pr-3 text-subtle">
+                    {g.migliore ? "—" : <Distacco ms={g.delta_migliore_ms} scala={scala} diRitmo={g.di_ritmo} />}
+                  </td>
                   <td className="py-1.5 pr-3 text-subtle">{g.carburante_usato_l !== null ? `${numero(g.carburante_usato_l, 2)} l` : "—"}</td>
                   <td className="py-1.5">
                     <span className="flex flex-wrap gap-1">
@@ -73,73 +82,73 @@ export default function GiriSessione({ report }: { report: Report }) {
           </table>
         </div>
         <p className="mt-2 text-[0.7rem] text-muted">
-          In viola il giro e i settori migliori. «Fuori ritmo» = oltre il +10% dal migliore: contato, ma escluso da
-          medie, costanza e degrado.
+          In viola {haSplit ? "il giro e i settori migliori" : "il giro migliore"}. «Fuori ritmo» = oltre il +10% dal migliore: contato, ma escluso da
+          medie, costanza e degrado.{!haSplit && " Questa sessione non ha i tempi dei settori."}
         </p>
       </Riquadro>
 
-      {conDelta.length >= 2 && (
-        <Riquadro titolo="Distacco dal giro migliore">
-          <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={conDelta.map((g) => ({ giro: g.numero, delta: (g.delta_migliore_ms ?? 0) / 1000, ritmo: g.di_ritmo }))} margin={{ top: 6, right: 12, bottom: 18, left: 4 }}>
-              <CartesianGrid stroke={INSTRUMENT.grid} vertical={false} />
-              <XAxis dataKey="giro" stroke={INSTRUMENT.tick} tick={{ fill: COLORS.muted, fontSize: 10 }} label={{ value: "Giro", position: "insideBottom", offset: -8, style: { fill: COLORS.muted, fontSize: 10 } }} />
-              <YAxis stroke={INSTRUMENT.tick} tick={{ fill: COLORS.muted, fontSize: 10 }} width={44} tickFormatter={(v: number) => `+${v.toFixed(1)}`} />
-              <Tooltip
-                contentStyle={{ background: COLORS.surface, border: `1px solid ${COLORS.line}`, borderRadius: 8, fontSize: 12, boxShadow: "none" }}
-                labelFormatter={(l) => `Giro ${l}`}
-                formatter={(v: number) => [`+${v.toFixed(3)} s`, "dal migliore"]}
-              />
-              <ReferenceLine y={0} stroke={COLORS.muted} />
-              <Bar dataKey="delta" isAnimationActive={false}>
-                {conDelta.map((g) => (
-                  <Cell key={g.numero} fill={g.migliore ? STATE.best : g.di_ritmo ? INSTRUMENT.ink : INSTRUMENT.track} />
+      {haSplit && (
+        <Riquadro titolo="Settori">
+          {report.settori.length === 0 ? (
+            <p className="text-sm text-subtle">{report.ritmo.motivo_teorico ?? "Settori non disponibili."}</p>
+          ) : (
+            <>
+              <ul className="flex flex-col">
+                {report.settori.map((s) => (
+                  <li key={s.numero} className="border-b border-line/60 py-2 font-mono first:pt-0">
+                    <div className="flex items-baseline justify-between gap-2">
+                      <span className="text-sm text-white">S{s.numero}</span>
+                      <span className="text-sm text-warn">
+                        {perdita(s.perdita_media_ms)} <span className="text-[0.65rem] text-muted">a giro</span>
+                      </span>
+                    </div>
+                    <div className="mt-1 text-[0.7rem] leading-relaxed text-subtle">
+                      migliore <span style={{ color: STATE.best }}>{secondi(s.migliore_ms)}</span> · media {secondi(s.media_ms)}
+                    </div>
+                    <div className="text-[0.7rem] leading-relaxed text-muted">
+                      dispersione {s.deviazione_ms} ms
+                      {s.perdita_sul_giro_migliore_ms !== null && (
+                        <> · nel migliore {s.perdita_sul_giro_migliore_ms === 0 ? "pari" : delta(s.perdita_sul_giro_migliore_ms)}</>
+                      )}
+                    </div>
+                  </li>
                 ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+              </ul>
+              <p className="mt-2 text-[0.7rem] text-muted">
+                «A giro» = quanto perdi in media sul tuo migliore di quel settore; «nel migliore» = quanto ci ha lasciato il
+              giro migliore.
+                {report.ritmo.giro_teorico_ms !== null && (
+                  <>
+                    {" "}Giro teorico {tempoGiro(report.ritmo.giro_teorico_ms)} su {report.ritmo.giri_per_teorico} giri con tutti i
+                    settori · {report.ritmo.lasciato_sul_tavolo_ms} ms dal migliore.
+                  </>
+                )}
+              </p>
+            </>
+          )}
         </Riquadro>
       )}
-
-      <Riquadro titolo="Settori">
-        {report.settori.length === 0 ? (
-          <p className="text-sm text-subtle">{report.ritmo.motivo_teorico ?? "Settori non disponibili."}</p>
-        ) : (
-          <div className="pw-scroll overflow-x-auto">
-            <table className="w-full min-w-[480px] border-collapse font-mono text-[0.78rem]">
-              <thead>
-                <tr className="border-b border-line text-left text-[0.58rem] uppercase tracking-widest text-muted">
-                  <th className="py-2 pr-3">Settore</th>
-                  <th className="py-2 pr-3">Migliore</th>
-                  <th className="py-2 pr-3">Media</th>
-                  <th className="py-2 pr-3">Dispersione</th>
-                  <th className="py-2 pr-3">Perdita media a giro</th>
-                  <th className="py-2">Nel giro migliore</th>
-                </tr>
-              </thead>
-              <tbody>
-                {report.settori.map((s) => (
-                  <tr key={s.numero} className="border-b border-line/60">
-                    <td className="py-1.5 pr-3 text-subtle">S{s.numero}</td>
-                    <td className="py-1.5 pr-3" style={{ color: STATE.best }}>{secondi(s.migliore_ms)}</td>
-                    <td className="py-1.5 pr-3 text-white">{secondi(s.media_ms)}</td>
-                    <td className="py-1.5 pr-3 text-subtle">{s.deviazione_ms} ms</td>
-                    <td className="py-1.5 pr-3 text-warn">{s.perdita_media_ms} ms</td>
-                    <td className="py-1.5 text-subtle">{s.perdita_sul_giro_migliore_ms !== null ? `${s.perdita_sul_giro_migliore_ms} ms` : "—"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {report.ritmo.giro_teorico_ms !== null && (
-              <p className="mt-2 text-[0.7rem] text-muted">
-                Giro teorico {tempoGiro(report.ritmo.giro_teorico_ms)} su {report.ritmo.giri_per_teorico} giri con tutti i settori ·{" "}
-                {report.ritmo.lasciato_sul_tavolo_ms} ms dal migliore.
-              </p>
-            )}
-          </div>
-        )}
-      </Riquadro>
     </div>
+  );
+}
+
+// Il distacco dal migliore: il numero e, accanto, una barra in scala sui giri di ritmo.
+// Prende il posto del grafico a barre che ripeteva la colonna. I giri fuori ritmo sono
+// fuori scala: solo il numero, spento.
+function Distacco({ ms, scala, diRitmo }: { ms: number | null; scala: number; diRitmo: boolean }) {
+  if (ms === null) return <>—</>;
+  if (!diRitmo) return <span className="text-muted">{delta(ms)}</span>;
+  const quota = scala > 0 ? Math.min(ms / scala, 1) : 0;
+  return (
+    <span className="flex items-center gap-2">
+      <span className="w-[4.5rem] shrink-0">{delta(ms)}</span>
+      <span className="relative h-1.5 w-14 shrink-0 rounded-full" style={{ background: INSTRUMENT.track }}>
+        <span
+          className="absolute inset-y-0 left-0 rounded-full"
+          style={{ width: `${Math.max(quota * 100, ms > 0 ? 4 : 0)}%`, background: INSTRUMENT.ink }}
+        />
+      </span>
+    </span>
   );
 }
 

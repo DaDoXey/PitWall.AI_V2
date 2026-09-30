@@ -18,6 +18,7 @@ import Link from "next/link";
 import { useAssets } from "@/lib/assets";
 import { useSessione } from "@/lib/sessione";
 import { STATE } from "@/lib/instrument";
+import { perdita } from "@/lib/formato";
 
 // Sotto questa perdita media il motore non ne fa una voce del verdetto: qui neanche.
 const PERDITA_MINIMA_MS = 30;
@@ -134,7 +135,7 @@ export default function PannelloPista() {
                     {nome && <span className="text-subtle"> · {nome}</span>}
                   </span>
                   <span className="shrink-0 font-mono text-[0.68rem]" style={{ color: STATE.warn }}>
-                    −{(r.perdita_media_ms / 1000).toFixed(2)} s
+                    {perdita(r.perdita_media_ms)}
                   </span>
                 </Link>
               );
