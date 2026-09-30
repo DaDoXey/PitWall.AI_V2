@@ -1,56 +1,31 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+// Dashboard (riordinata il 29/09/2026, Entry #050, con le regole del #008/#010: niente
+// doppioni, niente vuoti, il verdetto prima di tutto).
+//   * in alto una FASCIA con la sessione (pista, vettura, tipo, giri, fonte, gomme, data);
+//   * sotto due colonne: a sinistra il VERDETTO; a destra «Cosa regge», gli INDICATORI
+//     come righe compatte (clic = dettaglio col grafico); le note sui dati sotto il verdetto;
+//   * in fondo pista e vettura in versione compatta.
+// Via: i numeri della vecchia scheda (erano gli stessi degli indicatori), i riquadri
+// grandi con trascina/allarga, le foto a tutta larghezza, «Prossime azioni» (doppione
+// della colonna di sinistra). Da ~2350 px a circa una schermata e mezza.
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import PageHeader from "@/components/ui/PageHeader";
-import { IconConsole, IconSetup, IconTelemetry } from "@/components/ui/NavIcons";
 import CountUp from "@/components/ui/CountUp";
 import { CarCard, TrackCard } from "@/components/ui/SessionBriefing";
 import { CosaRegge, ElencoVerdetto, NoteDati, StatoSessione } from "@/components/ui/Verdetto";
-import Sparkline from "@/components/charts/Sparkline";
 import { fadeInUp, staggerContainer, useReducedMotion } from "@/lib/motion";
 import type { Finestra, Report, Riassunto } from "@/lib/api";
 import { useSessione } from "@/lib/sessione";
-import { data, ETICHETTA_FONTE_CARBURANTE, ETICHETTA_TIPO, etichettaFonte, giri, numero, RUOTE, tempoGiro } from "@/lib/formato";
+import { data, ETICHETTA_TIPO, etichettaFonte, giri, numero, RUOTE, tempoGiro } from "@/lib/formato";
 import { COLORS } from "@/lib/theme";
 import { INSTRUMENT, STATE } from "@/lib/instrument";
 
-// Ordine di default delle card KPI. Il drag&drop lo riordina; ordine e taglie
-// (normale/estesa) sono persistiti in localStorage (sopravvivono al refresh).
-// v2 (L4): KPI nuovi, letti dal report del motore — l'ordine della v1 non vale più.
-const KPI_ORDER = ["best", "teorico", "costanza", "degrado", "consumo", "pressione", "temperatura"] as const;
-const STORE_KEY = "pw_dashboard_kpi_v2";
-
 export default function Dashboard() {
   const { report, sessione, caricamento, errore, nomi } = useSessione();
-  const [order, setOrder] = useState<string[]>([...KPI_ORDER]);
-  const [sizes, setSizes] = useState<Set<string>>(new Set()); // KPI "estese" (col-span-2)
-  const [selected, setSelected] = useState<string | null>(null); // KPI aperto nel modal
-  const [draggingId, setDraggingId] = useState<string | null>(null);
-  const [overIndex, setOverIndex] = useState<number | null>(null);
-  // Lato del bersaglio puntato dal cursore (fix INC-V2-005): il drop inserisce
-  // PRIMA o DOPO la card sorvolata, non "al suo indice".
-  const [overSide, setOverSide] = useState<"before" | "after" | null>(null);
-  const dragFrom = useRef<number | null>(null);
-
-  // Ripristina ordine/taglie da localStorage (persistenza oltre la sessione).
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORE_KEY);
-      if (!raw) return;
-      const p = JSON.parse(raw) as { order?: string[]; extended?: string[] };
-      if (Array.isArray(p.order)) {
-        const valid = p.order.filter((id) => (KPI_ORDER as readonly string[]).includes(id));
-        const missing = (KPI_ORDER as readonly string[]).filter((id) => !valid.includes(id));
-        setOrder([...valid, ...missing]);
-      }
-      if (Array.isArray(p.extended)) setSizes(new Set(p.extended));
-    } catch {
-      /* localStorage non disponibile: si resta sui default */
-    }
-  }, []);
+  const [selected, setSelected] = useState<string | null>(null); // indicatore aperto nel dettaglio
 
   if (!report || !sessione)
     return (
@@ -61,168 +36,48 @@ export default function Dashboard() {
     );
 
   const kpis = buildKpis(report);
-  const byId = Object.fromEntries(kpis.map((k) => [k.id, k]));
-  const ordered = order.map((id) => byId[id]).filter(Boolean) as Kpi[];
-  const openKpi = selected ? byId[selected] : null;
-
-  function persist(o: string[], sz: Set<string>) {
-    try {
-      localStorage.setItem(STORE_KEY, JSON.stringify({ order: o, extended: [...sz] }));
-    } catch {
-      /* no-op */
-    }
-  }
-
-  // Riordino (persistito): `insert` è la posizione di INSERZIONE nell'array
-  // com'era prima della rimozione (bersaglio + eventuale +1 se lato "after").
-  function reorder(insert: number) {
-    const from = dragFrom.current;
-    dragFrom.current = null;
-    setDraggingId(null);
-    setOverIndex(null);
-    setOverSide(null);
-    if (from === null) return;
-    if (from < insert) insert -= 1;
-    if (from === insert) return;
-    const next = [...order];
-    const [moved] = next.splice(from, 1);
-    next.splice(insert, 0, moved);
-    setOrder(next);
-    persist(next, sizes);
-  }
-
-  function toggleSize(id: string) {
-    const next = new Set(sizes);
-    if (next.has(id)) next.delete(id);
-    else next.add(id);
-    setSizes(next);
-    persist(order, next);
-  }
+  const openKpi = selected ? kpis.find((k) => k.id === selected) ?? null : null;
 
   return (
     <div>
       <PageHeader title="Dashboard" subtitle="Il verdetto della sessione" />
 
-      <SchedaSessione report={report} sessione={sessione} pista={nomi.pista(report.track)} vettura={nomi.vettura(report.car)} />
+      <FasciaSessione report={report} sessione={sessione} pista={nomi.pista(report.track)} vettura={nomi.vettura(report.car)} />
 
       {/* Il verdetto viene prima dei numeri: è la ragione per cui si apre la pagina. */}
-      <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <section className="lg:col-span-2">
           <Titoletto>Verdetto · ordinato per gravità</Titoletto>
           <ElencoVerdetto voci={report.verdetto} />
+          {/* Su quali dati poggia il verdetto: sta sotto di lui, e pareggia le colonne. */}
+          <div className="mt-4">
+            <NoteDati note={report.dati_mancanti} />
+          </div>
         </section>
-        <section className="flex flex-col gap-4">
+        <aside className="flex flex-col gap-5">
           {report.cosa_regge.length > 0 && (
             <div>
               <Titoletto>Cosa regge</Titoletto>
               <CosaRegge punti={report.cosa_regge} />
             </div>
           )}
-          <NoteDati note={report.dati_mancanti} />
-        </section>
+          <div>
+            <Titoletto>Indicatori · clic per il dettaglio</Titoletto>
+            <Indicatori kpis={kpis} onApri={setSelected} />
+          </div>
+        </aside>
       </div>
 
-      {/* KPI: ingresso a cascata; ogni card apre il dettaglio in-page e si può trascinare */}
-      <div className="mb-1 flex items-baseline justify-between">
-        <Titoletto>Indicatori sessione</Titoletto>
-        <div className="font-mono text-[0.56rem] uppercase tracking-widest text-muted">trascina per riordinare · click per dettaglio</div>
-      </div>
-      <motion.div
-        variants={staggerContainer}
-        initial="hidden"
-        animate="visible"
-        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-        // Fallback per gap e "buchi" del grid: drop = inserisci in fondo (INC-V2-005).
-        onDragOver={(e) => {
-          e.preventDefault();
-          if (draggingId === null) return;
-          setOverIndex(ordered.length - 1);
-          setOverSide("after");
-        }}
-        onDrop={(e) => {
-          e.preventDefault();
-          reorder(ordered.length);
-        }}
-      >
-        {ordered.map((k, i) => {
-          const extended = sizes.has(k.id);
-          const isDragging = draggingId === k.id;
-          const isTarget = overIndex === i && draggingId !== null && !isDragging;
-          return (
-            <motion.div
-              key={k.id}
-              variants={fadeInUp}
-              draggable
-              onDragStart={() => {
-                dragFrom.current = i;
-                setDraggingId(k.id);
-              }}
-              onDragEnd={() => {
-                setDraggingId(null);
-                setOverIndex(null);
-                setOverSide(null);
-              }}
-              onDragOver={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const r = e.currentTarget.getBoundingClientRect();
-                setOverIndex(i);
-                setOverSide(e.clientX < r.left + r.width / 2 ? "before" : "after");
-              }}
-              onDrop={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                reorder(i + (overSide === "after" ? 1 : 0));
-              }}
-              className={`relative rounded-xl transition ${extended ? "sm:col-span-2" : ""} ${
-                isDragging ? "scale-[0.98] opacity-50" : ""
-              }`}
-            >
-              {isTarget && (
-                <span
-                  aria-hidden="true"
-                  className={`pointer-events-none absolute inset-y-1 w-0.5 rounded-full bg-accent ${
-                    overSide === "before" ? "-left-[9px]" : "-right-[9px]"
-                  }`}
-                />
-              )}
-              <KpiCard kpi={k} extended={extended} onOpen={() => setSelected(k.id)} />
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleSize(k.id);
-                }}
-                title={extended ? "Riduci" : "Estendi"}
-                aria-label={extended ? "Riduci card" : "Estendi card"}
-                className="absolute right-2 top-2 z-20 flex h-6 w-6 items-center justify-center rounded border border-line bg-surface/80 font-mono text-xs text-muted transition hover:border-accent hover:text-accent"
-              >
-                {extended ? "⤡" : "⤢"}
-              </button>
-            </motion.div>
-          );
-        })}
-      </motion.div>
-
-      {/* Schede di contesto dal catalogo ACC: chi è questa pista e questa vettura. */}
+      {/* Contesto dal catalogo ACC: chi è questa pista e questa vettura, in piccolo. */}
       {(report.track || report.car) && (
-        <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
-          {report.track && <TrackCard track={report.track} />}
-          {report.car && <CarCard car={report.car} />}
-        </motion.div>
+        <div className="mt-8">
+          <Titoletto>Pista e vettura</Titoletto>
+          <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            {report.track && <TrackCard track={report.track} compatta />}
+            {report.car && <CarCard car={report.car} compatta />}
+          </motion.div>
+        </div>
       )}
-
-      {/* Prossime azioni */}
-      <div className="mt-8">
-        <Titoletto>Prossime azioni</Titoletto>
-        <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          {ACTIONS.map((a) => (
-            <motion.div key={a.href} variants={fadeInUp}>
-              <ActionCard {...a} />
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
 
       <AnimatePresence>{openKpi && <KpiModal kpi={openKpi} onClose={() => setSelected(null)} />}</AnimatePresence>
     </div>
@@ -234,65 +89,74 @@ function Titoletto({ children }: { children: React.ReactNode }) {
 }
 
 // ─────────────────────────────────────────────
-// Scheda della sessione aperta
+// La fascia della sessione aperta: chi, dove, cosa. I numeri stanno negli indicatori.
 // ─────────────────────────────────────────────
-function SchedaSessione({ report, sessione, pista, vettura }: { report: Report; sessione: Riassunto; pista: string; vettura: string }) {
-  const r = report.ritmo;
+function FasciaSessione({ report, sessione, pista, vettura }: { report: Report; sessione: Riassunto; pista: string; vettura: string }) {
   const quando = sessione.demo ? null : data(sessione.iniziata_il ?? sessione.importato_il);
+  const voci = [
+    ETICHETTA_TIPO[report.tipo_sessione] ?? "Sessione",
+    `${giri(report.giri_totali)}${report.giri_buttati ? ` · ${report.giri_buttati} buttati` : ""}`,
+    report.mescola ? `gomme da ${report.mescola}` : null,
+    report.ha_canali ? "con telemetria" : "senza telemetria",
+    quando,
+  ].filter(Boolean) as string[];
   return (
     <motion.div
       variants={fadeInUp}
       initial="hidden"
       animate="visible"
-      className="mb-6 rounded-xl border border-l-4 border-line border-l-accent bg-surface p-5"
+      className="mb-6 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 rounded-xl border border-l-4 border-line border-l-accent bg-surface px-5 py-3"
     >
-      <div className="flex flex-wrap items-center gap-2 font-mono text-[0.6rem] uppercase tracking-widest text-accent">
-        <span>{ETICHETTA_TIPO[report.tipo_sessione] ?? "Sessione"}</span>
-        <span className="text-muted">·</span>
-        <span className={sessione.demo ? "text-ok" : "text-subtle"}>{etichettaFonte(sessione.fonte, sessione.piattaforma)}</span>
-        {report.mescola && (
-          <>
-            <span className="text-muted">·</span>
-            <span className="text-subtle">gomme da {report.mescola}</span>
-          </>
-        )}
-        {quando && (
-          <>
-            <span className="text-muted">·</span>
-            <span className="text-subtle">{quando}</span>
-          </>
-        )}
+      <div className="flex min-w-0 items-baseline gap-3">
+        <span className="font-display text-xl font-bold">{pista}</span>
+        <span className="truncate text-sm text-subtle">{vettura}</span>
       </div>
-      <div className="mt-1 font-display text-2xl font-bold">{pista}</div>
-      <div className="text-sm text-subtle">{vettura}</div>
-      <div className="mt-4 flex flex-wrap gap-x-8 gap-y-3 border-t border-line pt-3 text-sm">
-        <Stat
-          label="Giri"
-          value={`${report.giri_totali}${report.giri_buttati ? ` · ${report.giri_buttati} buttati` : ""}`}
-        />
-        <Stat label="Miglior giro" value={r.miglior_giro_ms ? `${tempoGiro(r.miglior_giro_ms)} · giro ${r.miglior_giro_numero}` : "—"} color={STATE.best} />
-        <Stat label="Giro teorico" value={tempoGiro(r.giro_teorico_ms)} />
-        <Stat
-          label="Consumo"
-          value={
-            report.carburante.calcolabile
-              ? `${numero(report.carburante.consumo_medio_l_giro, 2)} l/giro${report.carburante.fonte ? ` · ${ETICHETTA_FONTE_CARBURANTE[report.carburante.fonte]}` : ""}`
-              : "—"
-          }
-        />
-        <Stat label="Telemetria" value={report.ha_canali ? "sì" : "no"} />
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[0.62rem] uppercase tracking-widest text-subtle">
+        {voci.map((v, i) => (
+          <span key={i} className="flex items-center gap-2">
+            {i > 0 && <span className="text-muted">·</span>}
+            {v}
+          </span>
+        ))}
+        <span
+          className="ml-1 rounded border px-1.5 py-0.5 text-[0.55rem]"
+          style={{ borderColor: sessione.demo ? COLORS.ok : COLORS.line, color: sessione.demo ? COLORS.ok : COLORS.subtle }}
+        >
+          {etichettaFonte(sessione.fonte, sessione.piattaforma)}
+          {sessione.riferimento ? " · rif." : ""}
+        </span>
       </div>
     </motion.div>
   );
 }
 
-function Stat({ label, value, color }: { label: string; value: string; color?: string }) {
+// Gli indicatori come righe: nome, valore, stato. Il grafico e il «come si calcola»
+// restano nel dettaglio, come prima.
+function Indicatori({ kpis, onApri }: { kpis: Kpi[]; onApri: (id: string) => void }) {
   return (
-    <div>
-      <div className="font-mono text-[0.6rem] uppercase tracking-widest text-muted">{label}</div>
-      <div className="mt-0.5 font-mono" style={color ? { color } : undefined}>
-        {value}
-      </div>
+    <div className="flex flex-col divide-y divide-line overflow-hidden rounded-xl border border-line bg-surface">
+      {kpis.map((k) => {
+        const vuoto = k.valueNum === null;
+        const attenzione = k.color === STATE.warn || k.color === STATE.alarm;
+        return (
+          <button
+            key={k.id}
+            type="button"
+            onClick={() => onApri(k.id)}
+            title={k.note}
+            className="group flex flex-col gap-0.5 px-3.5 py-2 text-left transition hover:bg-raised"
+          >
+            <div className="flex items-center gap-2">
+              <StatusDot color={vuoto ? COLORS.muted : k.color} pulse={attenzione} />
+              <span className="min-w-0 flex-1 truncate text-[0.8rem] text-subtle group-hover:text-white">{k.label}</span>
+              <span className="shrink-0 font-mono text-sm" style={{ color: vuoto ? COLORS.muted : k.color }}>
+                {vuoto ? "—" : k.display ?? `${numero(k.valueNum, k.decimals)}${k.suffix}`}
+              </span>
+            </div>
+            <div className="truncate pl-3.5 text-[0.68rem] text-muted">{k.note}</div>
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -447,13 +311,6 @@ function buildKpis(report: Report): Kpi[] {
   ];
 }
 
-// Shortcut di navigazione — stesse icone line-style della Sidebar.
-const ACTIONS = [
-  { href: "/console", icon: IconConsole, label: "Engineer Console", hint: "Chiedi a Gigi della sessione" },
-  { href: "/telemetry", icon: IconTelemetry, label: "Telemetria", hint: "Giri, curve, gomme e freni" },
-  { href: "/setup", icon: IconSetup, label: "Setup", hint: "I parametri toccati dal verdetto" },
-];
-
 // Pallino di stato: pulse discreto quando lo stato richiede attenzione.
 function StatusDot({ color, pulse }: { color: string; pulse: boolean }) {
   const reduce = useReducedMotion();
@@ -476,43 +333,6 @@ function ValoreKpi({ kpi, size }: { kpi: Kpi; size: string }) {
   );
 }
 
-// Card KPI: in formato normale mostra la sparkline; in formato ESTESO lo stesso
-// grafico della modale (KpiChart condiviso) — statico, il click apre la modale.
-function KpiCard({ kpi, extended, onOpen }: { kpi: Kpi; extended: boolean; onOpen: () => void }) {
-  const { label, note, color, series, refLines } = kpi;
-  const attenzione = color === STATE.warn || color === STATE.alarm;
-  return (
-    <button
-      type="button"
-      onClick={onOpen}
-      className="group flex h-full w-full cursor-pointer flex-col justify-start rounded-xl border border-line bg-surface p-4 text-left transition duration-200 hover:-translate-y-1 hover:border-accent/50 hover:shadow-[0_12px_30px_-14px_rgba(232,0,45,0.4)]"
-    >
-      <div className="pr-7 font-mono text-[0.6rem] uppercase tracking-widest text-muted">{label}</div>
-      <div className="mt-2">
-        <ValoreKpi kpi={kpi} size="text-3xl" />
-      </div>
-      <div className="mt-2 flex items-center gap-1.5 text-xs" style={{ color: kpi.valueNum === null ? COLORS.subtle : color }}>
-        <StatusDot color={kpi.valueNum === null ? COLORS.muted : color} pulse={attenzione} />
-        {note}
-      </div>
-      {series && series.length >= 2 &&
-        (extended ? (
-          <div className="pointer-events-none mt-3 rounded-lg border border-line bg-inset p-2">
-            <KpiChart series={series} xs={kpi.xs} color={color} refLines={refLines} unit={kpi.unit} height={150} showTooltip={false} />
-          </div>
-        ) : (
-          <div className="mt-3">
-            <Sparkline data={series} color={color} />
-            <div className="mt-1 flex justify-between font-mono text-[0.55rem] text-muted">
-              <span>giro {kpi.xs?.[0]}</span>
-              <span>giro {kpi.xs?.[kpi.xs.length - 1]}</span>
-            </div>
-          </div>
-        ))}
-    </button>
-  );
-}
-
 // Passo "nice" per l'asse Y (stile MoTeC): arrotonda a 1/2/5×10ⁿ.
 function niceStep(range: number): number {
   const raw = (range > 1e-6 ? range : 1) / 4;
@@ -522,7 +342,7 @@ function niceStep(range: number): number {
   return step * mag;
 }
 
-// Grafico dettaglio KPI — COMPONENTE CONDIVISO tra modale e card estesa.
+// Grafico del dettaglio di un indicatore.
 function KpiChart({
   series,
   xs,
@@ -641,25 +461,5 @@ function KpiModal({ kpi, onClose }: { kpi: Kpi; onClose: () => void }) {
         <p className="mt-4 border-t border-line pt-3 text-[0.8rem] leading-relaxed text-subtle">{kpi.detail}</p>
       </motion.div>
     </motion.div>
-  );
-}
-
-function ActionCard({ href, icon: Icon, label, hint }: (typeof ACTIONS)[number]) {
-  return (
-    <Link
-      href={href}
-      className="group flex items-center gap-3 rounded-xl border border-line bg-surface p-4 transition duration-200 hover:-translate-y-0.5 hover:border-accent/50"
-    >
-      <span className="text-muted transition-colors duration-200 group-hover:text-accent">
-        <Icon size={20} />
-      </span>
-      <div className="flex-1">
-        <div className="text-sm text-white">{label}</div>
-        <div className="font-mono text-[0.62rem] text-muted">{hint}</div>
-      </div>
-      <span aria-hidden="true" className="font-mono text-sm text-muted transition-colors duration-200 group-hover:text-accent">
-        →
-      </span>
-    </Link>
   );
 }

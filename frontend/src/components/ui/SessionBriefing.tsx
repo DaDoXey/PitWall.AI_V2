@@ -97,7 +97,63 @@ function Hero({ src, alt, crop, band }: { src?: string; alt: string; crop?: Crop
   );
 }
 
-export function TrackCard({ track }: { track: string }) {
+/** Miniatura per le schede compatte (Dashboard, Entry #050): foto riempita, niente banda. */
+function Miniatura({ src, alt }: { src?: string; alt: string }) {
+  const [broken, setBroken] = useState(false);
+  if (!src || broken) return null;
+  return (
+    // eslint-disable-next-line @next/next/no-img-element -- asset statico locale
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      onError={() => setBroken(true)}
+      className="h-24 w-36 shrink-0 rounded-lg border border-line object-cover opacity-90"
+    />
+  );
+}
+
+/** Scheda compatta: miniatura accanto al testo, descrizione accorciata. Nella Dashboard
+ *  pista e vettura sono contesto, non il contenuto: prima prendevano quasi una schermata. */
+function Compatta({
+  foto,
+  alt,
+  etichetta,
+  nome,
+  sotto,
+  fatti,
+  testo,
+}: {
+  foto?: string;
+  alt: string;
+  etichetta: string;
+  nome: string;
+  sotto?: string | null;
+  fatti: [string, string][];
+  testo?: string | null;
+}) {
+  return (
+    <motion.div variants={fadeInUp} className="flex gap-4 rounded-xl border border-line bg-surface p-3">
+      <Miniatura src={foto} alt={alt} />
+      <div className="min-w-0 flex-1">
+        <Label>{etichetta}</Label>
+        <div className="mt-0.5 truncate font-display text-base font-bold">{nome}</div>
+        <div className="mt-1 flex flex-wrap gap-x-4 gap-y-0.5 font-mono text-[0.68rem] text-subtle">
+          {sotto && <span className="text-muted">{sotto}</span>}
+          {fatti.map(([k, v]) => (
+            <span key={k}>
+              <span className="text-muted">{k} </span>
+              {v}
+            </span>
+          ))}
+        </div>
+        {testo && <p className="mt-1.5 line-clamp-2 text-[0.78rem] leading-snug text-subtle">{testo}</p>}
+      </div>
+    </motion.div>
+  );
+}
+
+export function TrackCard({ track, compatta = false }: { track: string; compatta?: boolean }) {
   const [data, setData] = useState<TrackSheet | null>(null);
 
   useEffect(() => {
@@ -116,6 +172,23 @@ export function TrackCard({ track }: { track: string }) {
   if (!data) return null;
 
   const df = data.downforce_level ? DOWNFORCE_LABEL[data.downforce_level] ?? data.downforce_level : null;
+
+  if (compatta)
+    return (
+      <Compatta
+        foto={assets.photo}
+        alt={`Il circuito di ${data.short_name || data.name}`}
+        etichetta="Il tracciato"
+        nome={data.name}
+        sotto={data.nick ? `«${data.nick}»` : null}
+        fatti={[
+          ...(data.length_km ? ([["km", String(data.length_km)]] as [string, string][]) : []),
+          ...(data.corners ? ([["curve", String(data.corners)]] as [string, string][]) : []),
+          ...(df ? ([["deportanza", df]] as [string, string][]) : []),
+        ]}
+        testo={data.setup_focus_it ?? data.description_it}
+      />
+    );
 
   return (
     <Card>
@@ -159,7 +232,7 @@ export function TrackCard({ track }: { track: string }) {
 // perché protetti da trademark. Le foto danno già riconoscibilità; per i loghi
 // servirebbe una fonte curata (press kit ufficiali), non una ricerca automatica.
 
-export function CarCard({ car }: { car: string }) {
+export function CarCard({ car, compatta = false }: { car: string; compatta?: boolean }) {
   const [data, setData] = useState<CarSheet | null>(null);
 
   useEffect(() => {
@@ -184,6 +257,22 @@ export function CarCard({ car }: { car: string }) {
     data.has_tc === false ? "TC" : null,
     data.has_abs === false ? "ABS" : null,
   ].filter(Boolean);
+
+  if (compatta)
+    return (
+      <Compatta
+        foto={assets.photo}
+        alt={data.display_name}
+        etichetta="La vettura"
+        nome={data.display_name}
+        sotto={`${data.year ?? ""}${missing.length ? ` · senza ${missing.join(" né ")}` : ""}` || null}
+        fatti={[
+          ...(s.power_hp ? ([["CV", String(s.power_hp)]] as [string, string][]) : []),
+          ...(s.weight_kg ? ([["kg", String(s.weight_kg)]] as [string, string][]) : []),
+        ]}
+        testo={data.caption_it}
+      />
+    );
 
   return (
     <Card>
