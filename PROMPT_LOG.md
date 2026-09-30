@@ -2626,7 +2626,7 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 | Data | 30/09/2026 |
 | Agente dev | Claude Code (claude-opus-5-5) |
 | Area | ⚠️`backend/app/core/data/car_setup_ranges.json` · ⚠️`backend/app/core/setup_params.py` · `backend/app/bundle/adapters/acc_setup.py` · `backend/app/bundle/schema.py` · `backend/app/analisi/gigi.py` · NEW `backend/scripts/riconverti_setup.py` · NEW `backend/app/tests/test_setup_ranges.py` · `test_adattatori.py` · `test_sessions.py` · docs |
-| Commit | `0aeca53` codice e test · docs nel commit successivo |
+| Commit | `0aeca53` codice e test · `191b24f` docs |
 | Contesto | Passo successivo dopo la revisione delle pagine: i range `DA_VERIFICARE` e INC-V2-003. La pagina Setup è la #058. |
 
 **Catalogo messaggi:**
@@ -2665,7 +2665,37 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 **Verifica:** suite **1041/1041** in 20 file (1014 + 25 di `test_setup_ranges` + 2 nuovi in `test_adattatori`); riscritti i 10 test di `test_adattatori` e i 2 di `test_sessions` che fissavano il comportamento vecchio (pressioni in click, camber da `staticCamber`, tre assunzioni). `riconverti_setup.py --prova` dopo la riconversione: «nessuna sessione da riconvertire».
 
 **File protetti:** ⚠️ sbloccati con «ok procedi» del 30/09 → `setup_params.py` e `car_setup_ranges.json`. `demo.py`, `demo_responses.py`, `agent.py`, prompt: non toccati.
-**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `0aeca53` codice · docs nel commit successivo).
+**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `0aeca53` codice · `191b24f` docs).
+
+---
+
+## Entry #058 — Pagina Setup: il setup della sessione in click, frecce come in ACC, file da riportare in gioco
+
+| Campo | Valore |
+|---|---|
+| Data | 30/09/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `frontend/src/app/(app)/setup/page.tsx` (riscritta) · `frontend/src/lib/setup.ts` · `frontend/src/lib/api.ts` · `frontend/src/app/(app)/sessioni/page.tsx` · `backend/app/api/setup.py` · `backend/app/api/sessions.py` · `backend/app/bundle/adapters/acc_setup.py` · `backend/app/main.py` (CORS) · test · docs |
+| Commit | `fc38161` pagina, API e test · docs nel commit successivo |
+| Contesto | Seguito della #057: la pagina Setup lavorava ancora su 49 slider con range generici in unità reali, che non erano della vettura (INC-V2-003). Ultima pagina della revisione. |
+
+**Catalogo messaggi:**
+1. «ok push, poi procedi con la #058, accendi i server dev che vorrei vedere cosa stai facendo il prima possibile.» → push della #057, server accesi, due giri di domande sullo scope.
+2. Risposte (tutte le proposte): **frecce − / + come in ACC** per tutti i parametri; senza setup **invito a importarlo** (niente valori di partenza inventati); verdetto **convertito in click** dove c'è la tabella, altrove solo la direzione; **«Scarica il setup per ACC»** in questa entry; via selettori vettura/pista, schede auto/pista e **screenshot** (parcheggiato con Gigi); modifiche **nella scheda con «Ripristina»**, la sessione archiviata non cambia; via **«Crea una sessione con questo setup»**; brake power e steering ratio **non ora**.
+
+**Modifica:**
+- **Pagina Setup riscritta.** Vettura e pista sono quelle del setup della sessione aperta. Ogni parametro ha le frecce ◀ ▶ e mostra il click e, se la vettura ha la regola, il valore del gioco («54 · 25.7 psi»; una volta sola dove il gioco mostra il numero del click, «4»). Limite in alto solo dove è noto (molle), mai sotto zero. Bollino «da verificare» sui parametri che la tabella lascia in click (caster, splitter, bumpstop rate della BMW). Parametro cambiato: «era 48 · 25.1 psi · ripristina»; pallino bianco sulla tab con modifiche; contatore, «Ripristina» e «Scarica il setup per ACC ↓» accanto alle tab. Una riga dice da dove vengono i numeri (tabella da fonti concordi, non vista in gioco; o «per questa vettura non c'è ancora una tabella»). Rake solo con le due altezze in mm. Assunzioni dell'import in fondo. Senza setup: riquadro con il percorso dei file di ACC e il link a Sessioni.
+- **Verdetto**: «+0.6 psi» → «+6 click (+0.6 psi)», un clic lo applica e porta al parametro; senza regola «… senza tabella, solo la direzione».
+- `lib/setup.ts`: tipo `Regola` (lineare | elenco), `reale`, `clickMax`, `formatReale`, `clickDaVariazione` (stessa conversione del backend); via `formatValue`, `CHIAVE_BOZZA_SETUP` e i min/max/default dal tipo `Param`.
+- **Sessioni**: tolto il codice della bozza di setup (nessuno la scrive più); il riquadro della sessione manuale dice che il setup arriva dal file di ACC.
+- **Backend**: `/api/setup-params` aggiunge `regola` a ogni parametro (`regole_vettura`, nessun file protetto toccato); NEW `POST /api/sessions/{id}/export/setup` (file originale con i click nuovi, nome ASCII «<setup> PitWall.json»; 409 senza file originale, 422 su click non valido o parametro sconosciuto); `acc_setup.applica_click` scrive i click nel punto del file e sposta della stessa quantità il gemello per i parametri tenuti per asse (molle, bumpstop, caster destro); `main.py` espone `Content-Disposition` al browser.
+
+**Risultato osservato** (1536×639, demo BMW Monza): riga «45 parametri su 49»; verdetto «Pressione RL +6 click (+0.6 psi)» · «Pressione RR +8 click (+0.8 psi)»; il clic su RL porta 48 → 54 click (25.1 → 25.7 psi) con «era 48 · 25.1 psi · ripristina» e «1 modifica»; caster «23 click · da verificare»; aerodinamica 55/50 mm, rake −5 mm, splitter da verificare. Export provato dall'API: pressioni `[54, 61, 54, 54]`, resto del file identico. Nota: con la scheda di Chrome in secondo piano le animazioni del cambio tab restano ferme (il DOM cambia): è il browser di prova, non la pagina.
+
+**Verifica:** `tsc --noEmit` 0 errori · rotte `/ /setup /sessioni /telemetry /console` 200 · suite **1060/1060** (+11 `test_sessions`: regole in `/api/setup-params`, export, errori 409/422/404, CORS; +8 `test_adattatori`: `applica_click`).
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `fc38161` · docs nel commit successivo).
 
 ---
 

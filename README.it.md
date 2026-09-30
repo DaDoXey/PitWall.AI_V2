@@ -71,7 +71,7 @@ specificato in [`docs/04-rework-dati.md`](docs/04-rework-dati.md).
 | Metodo | Rotta | Cosa fa |
 |---|---|---|
 | POST | `/api/analysis` | Analisi del race engineer su una sessione (5 sezioni; `session_id`, di default la DEMO) |
-| GET | `/api/setup-params` | Parametri di setup e relativi range |
+| GET | `/api/setup-params` | Parametri di setup, con la regola click → valore del gioco della vettura (`?car=`) |
 | POST | `/api/setup/from-image` | Lettura del setup da uno screenshot |
 | GET | `/api/catalog` | Catalogo vetture e circuiti |
 | GET | `/api/catalog/car/{car_id}` | Scheda di una vettura |
@@ -81,6 +81,7 @@ specificato in [`docs/04-rework-dati.md`](docs/04-rework-dati.md).
 | POST | `/api/sessions/manuale` | Sessione manuale (chi gioca su console): tempi, setup, racconto del pilota |
 | POST | `/api/sessions/import/motec` | Importa un export MoTeC di ACC (.ld + .ldx, setup e litri facoltativi) come sessione con i canali |
 | GET | `/api/sessions/{id}/export/motec` | La sessione come .ld + .ldx (zip) da aprire in MoTeC i2 |
+| POST | `/api/sessions/{id}/export/setup` | Il setup della sessione con i click cambiati, come file JSON da ricaricare in ACC |
 | GET | `/api/sessions` | Elenco delle sessioni, DEMO compresa |
 | GET | `/api/sessions/{id}` | Una sessione (session bundle) |
 | GET | `/api/sessions/{id}/analisi` | Report di analisi della sessione (deterministico, senza LLM; con curve, gomme e freni se ci sono i canali) |
