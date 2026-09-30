@@ -2615,7 +2615,57 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 **Verifica:** `tsc --noEmit` 0 errori · backend non toccato.
 
 **File protetti:** ☑ nessuno toccato.
-**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `9082b5e` Lezioni · docs nel commit successivo).
+**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `9082b5e` Lezioni · `8e5b4d3` docs).
+
+---
+
+## Entry #057 — Range di setup, BMW M4 GT3: i click diventano i valori del gioco (INC-V2-003)
+
+| Campo | Valore |
+|---|---|
+| Data | 30/09/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | ⚠️`backend/app/core/data/car_setup_ranges.json` · ⚠️`backend/app/core/setup_params.py` · `backend/app/bundle/adapters/acc_setup.py` · `backend/app/bundle/schema.py` · `backend/app/analisi/gigi.py` · NEW `backend/scripts/riconverti_setup.py` · NEW `backend/app/tests/test_setup_ranges.py` · `test_adattatori.py` · `test_sessions.py` · docs |
+| Commit | `0aeca53` codice e test · docs nel commit successivo |
+| Contesto | Passo successivo dopo la revisione delle pagine: i range `DA_VERIFICARE` e INC-V2-003. La pagina Setup è la #058. |
+
+**Catalogo messaggi:**
+1. «leggi la memoria e riprendiamo il lavoro con pitwall» → status e due giri di domande. Scelte: si parte dalla sola **BMW M4 GT3**; fonte = tabella community + verifica in gioco con una **scheda da spuntare**; **nuovo schema** click → valore; vetture non verificate **solo in click** (niente slider né range generici); i suggerimenti di Gigi in click si fanno **dopo**, con la chat.
+2. «1 fai sia excel che pdf […], 2 va bene, 3 va bene. ok procedi.» → scheda sul Desktop (`Scheda_setup_BMW_M4_GT3.xlsx` e `.pdf`, 51 righe) + `PitWall_verifica_BMW.json` (il setup di Monza 711b da caricare in gioco). Entry divise: #057 backend, #058 pagina Setup; INC-V2-003 resta aperto.
+3. «non riesco a compilare la scheda pensaci te, poi compila il resto del codice.» → scheda chiusa con le fonti invece che in gioco, poi il codice.
+
+**Le fonti** (nessuna è Kunos, che non documenta il formato):
+- **Race Element** (RE, GPL-3.0, commit `55121bb`): conversione per vettura in C#, `SetupParser/Cars/GT3/BmwM4GT3.cs`. Ripresi i numeri, non il codice.
+- **acc-setup-diff** (ASD, MIT, `7abe17d`): tabella per vettura in JS, ma alcune formule uguali per tutte.
+- **simsource** (sito chiuso) come lo riporta **acc-setup-comparison** (`059a204`).
+- **simracingsetup** (SRS): valori mostrati per 3 setup BMW pubblicati (letti dal Chrome di Edoardo). Senza i click: solo controllo di coerenza, e potrebbe usare le tabelle di RE.
+- **PitLane Coach**: pressioni GT3 = 20.3 + 0.1 × click.
+
+**Disaccordi e come si sono chiusi:**
+- *Ripartizione di frenata*: RE e simsource 48.5 + **0.3** × click, ASD 0.2 (uguale per tutte le vetture). Il 51.2 % di un setup SRS con 0.2 cadrebbe fra due click → **0.3**, due fonti indipendenti.
+- *Bumpstop rate*: RE 200 + 50 × click, ASD 300 + 100 (uguale per tutte). I 550 N di un setup SRS danno ragione a RE, ma SRS da sola non basta → **resta in click** (`DA_VERIFICARE`).
+- *Splitter*: RE il click, ASD il click + 1; SRS mostra 0 → come RE, stesso limite → **resta in click**.
+- *Caster*: RE un elenco di 41 valori, ASD e simsource 6.1 + 0.195 × click. Stessi estremi, ma su 19 click fino a 0.1° di differenza; i 9.7° di SRS ci sono solo nell'elenco di RE → **resta in click**.
+- **Massimi**: nessuna fonte li dà, tranne le molle (6 valori per asse). `click_max: null` = nessun limite in alto noto.
+
+**Due errori del codice trovati per strada** (confermati da tutte e due le fonti che danno la formula):
+- l'altezza **posteriore** si prendeva dal secondo valore di `rideHeight`: è il **terzo** (sul setup 711b: 61 mm invece di 50 mm);
+- il **camber** si prendeva da `staticCamber` e si marcava «verificato»: non è il valore del gioco (-4.21 contro i -4.0° del click 0, dietro -1.89 contro -3.5°). Ora si legge dal click; `staticCamber` resta nel grezzo.
+
+**Modifica:**
+- `car_setup_ranges.json` riscritto: `_meta` con tipi di regola (`lineare`: base + passo × click; `elenco`: valori[click]), stati (`gioco`, `fonti`, `DA_VERIFICARE`) e le 5 fonti con commit e licenza; `cars.bmw_m4_gt3` con i 49 parametri, ognuno con fonti e, dove serve, nota e stato proprio. Via gli override per nome di vettura e per pista (erano segnaposto senza effetto).
+- `setup_params.py`: `regole_vettura(car)` (solo le regole `gioco`/`fonti`), `click_in_reale(regola, click)` (None per click negativi, non interi, oltre l'elenco o oltre `click_max`: niente numeri inventati), arrotondamento senza code di virgola mobile. `get_params_for_car` restituisce i 49 generici come prima (la pagina Setup cambia nella #058); `SETUP_SECTIONS`, `validate_setup`, `format_setup_for_prompt` non toccati.
+- `acc_setup.py`: camber dal click, altezza posteriore da `rideHeight[2]`, conversione con la tabella della vettura; le assunzioni scendono a **due** (bumpstop, caster).
+- `schema.py`: `ValoreSetup.fonte` («gioco» | «fonti» | None, compatibile con i bundle già salvati).
+- `gigi.py`: nel contesto del setup dice che le unità reali vengono da fonti concordi, non ancora viste in gioco.
+- NEW `scripts/riconverti_setup.py`: rilegge il JSON originale conservato nei bundle con la tabella di oggi (`--prova` per vedere prima; copia di backup accanto all'archivio). Lanciato: 4 sessioni riconvertite (BMW 711b: 45 valori reali; Ferrari, Audi, Honda: il camber torna in click). Demo rigenerata con `assicura_demo(forza=True)`, senza toccare `demo.py`.
+
+**Risultato osservato:** setup BMW di Monza → pressioni 25.7/26.4/25.1/25.7 psi, camber -4.0/-3.5°, ripartizione 51.8 %, molle 120000/105000 N/m, altezze 54/50 mm, precarico 120 Nm; caster, splitter e bumpstop rate in click. Le altre vetture tutte in click. A schermo la pagina Setup non cambia ancora (è la #058).
+
+**Verifica:** suite **1041/1041** in 20 file (1014 + 25 di `test_setup_ranges` + 2 nuovi in `test_adattatori`); riscritti i 10 test di `test_adattatori` e i 2 di `test_sessions` che fissavano il comportamento vecchio (pressioni in click, camber da `staticCamber`, tre assunzioni). `riconverti_setup.py --prova` dopo la riconversione: «nessuna sessione da riconvertire».
+
+**File protetti:** ⚠️ sbloccati con «ok procedi» del 30/09 → `setup_params.py` e `car_setup_ranges.json`. `demo.py`, `demo_responses.py`, `agent.py`, prompt: non toccati.
+**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `0aeca53` codice · docs nel commit successivo).
 
 ---
 

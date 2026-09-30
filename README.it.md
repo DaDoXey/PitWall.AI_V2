@@ -187,7 +187,8 @@ della spesa illeggibile blocca le chiamate.
 3. **Mappe dei circuiti**: 5 layout su 25 verificati. Restano da sostituire gli altri 20, e manca
    ancora la pagina che le mostri.
 4. **Lotto 2 del catalogo**: 23 vetture GT4, GT2, GTC e TCX.
-5. **Range di setup per vettura** (INC-V2-003): oggi cambiare vettura non cambia i 49 parametri.
+5. **Range di setup per vettura** (INC-V2-003, in corso): i click del setup diventano i valori del
+   gioco con una tabella per vettura; per ora c'è la BMW M4 GT3, le altre restano in click.
 6. **Deploy**.
 
 ## Deploy

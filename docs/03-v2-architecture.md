@@ -118,7 +118,9 @@ Nessun workflow nel repo. L'ipotesi dei doc di planning era frontend → **Verce
   `backend/logs/llm_spesa.json` si perde a ogni riavvio, e con lui la spesa del giorno e del mese.
 
 ## 9 · Note aperte (vedi `INCIDENTS.md`)
-- **Unico incidente aperto:** INC-V2-003, override di `car_setup_ranges.json` no-op (la vettura non cambia i 49 parametri).
+- **Unico incidente aperto:** INC-V2-003, in corso: `car_setup_ranges.json` converte i click nel valore del gioco
+  vettura per vettura (Entry #057); per ora c'è la sola BMW M4 GT3 (45 parametri su 49, da fonti concordi, non ancora
+  visti in gioco). Le altre vetture restano in click; la pagina Setup si rifà nella #058.
 - LLM reale **mai acceso**: manca lo stress test.
 - `chat_with_gigi()` non è collegata a nessuna rotta né a una UI.
 - `api/vision.py` è `async` ma chiama il parser sincrono: blocca l'event loop per tutta la chiamata al modello.

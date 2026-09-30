@@ -117,8 +117,9 @@ ne esisteranno.
 - `carName` è già lo **slug del catalogo** di PitWall (`bmw_m4_gt3`): nessun ponte da costruire;
 - la maggior parte dei valori sono **indici di click** (`tyrePressure: [54,61,48,54]`, `rearWing`,
   `brakeBias`, dampers, ARB, bumpstop, `preload`, `casterLF/RF`, `steerRatio`, elettronica);
-- ma **camber, toe, `rodLength` sono già valori fisici** scritti da ACC come float
-  (`staticCamber: -4.2328…`): per quei parametri la tabella di conversione **non serve**;
+- ACC scrive anche dei float (`staticCamber: -4.2328…`, `toeOutLinear`, `rodLength`), ma **non sono i
+  valori che il gioco mostra** nel setup: camber e toe si leggono dai loro click come tutto il resto
+  (corretto con la Entry #057; prima il camber si prendeva da `staticCamber`);
 - `strategy` porta anche `fuelPerLap` e la strategia dei pit stop.
 
 **Results JSON:** esistono **due schemi diversi**, e quello che ci serve è il primo.
@@ -161,6 +162,13 @@ sessione **in singolo** (quello esaminato era multiplayer, 16 vetture).
 | **F4** | Store su disco + rotte API di import ed elenco sessioni | **fatta — 44/44**, provata sul backend vivo con file veri |
 
 ### Cosa fa l'adattatore del setup (F2)
+> **Aggiornato con la Entry #057 (30/09/2026, INC-V2-003).** I click si convertono nel valore del
+> gioco con la tabella della vettura in `car_setup_ranges.json` (per ora la **BMW M4 GT3**: 45
+> parametri su 49, da almeno due fonti concordi, `ValoreSetup.fonte = "fonti"`; caster, splitter e
+> bumpstop rate restano in click finché non si vedono in gioco). Il camber si legge dal click, non da
+> `staticCamber`; l'altezza posteriore dal **terzo** valore di `rideHeight`; le assunzioni sono
+> **due**. Le regole sotto sono quelle della F2, lasciate come storia.
+
 `bundle/adapters/acc_setup.py` legge il file e riempie **tutti e 49** i parametri già noti a
 `setup_params.py`, con le chiavi di PitWall. Regole:
 - valori in **click**, `verificato=False`, per tutto ciò che ACC scrive come indice;

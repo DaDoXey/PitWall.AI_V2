@@ -187,7 +187,8 @@ rate, and an unreadable spending record blocks calls.
 3. **Track maps**: 5 of 25 layouts verified. The other 20 still need replacing, and no page shows
    the maps yet.
 4. **Catalogue batch 2**: 23 GT4, GT2, GTC and TCX cars.
-5. **Per-car setup ranges** (INC-V2-003): changing car does not change the 49 parameters yet.
+5. **Per-car setup ranges** (INC-V2-003, in progress): setup clicks become in-game values through a
+   per-car table; the BMW M4 GT3 is done, the other cars stay in clicks.
 6. **Deployment**.
 
 ## Deployment

@@ -23,7 +23,7 @@ Per ognuno: **ID · Data · Severità · Stato · Area · Sintomo · Causa radic
 ### INC-V2-003 — Override `car_setup_ranges.json` no-op (la vettura non cambia i 49 parametri)
 | | |
 |---|---|
-| **Data** | rilevato 09/07/2026 · **Stato:** 🟡 Medio · `APERTO` |
+| **Data** | rilevato 09/07/2026 · **Stato:** 🟡 Medio · `APERTO — in corso dal 30/09/2026 (1 vettura)` |
 | **Area** | Backend / dati ACC (protetto-adiacente) |
 
 - **Sintomo:** selezionare un'altra vettura nel Setup **non** cambia i range/default dei 49 parametri.
@@ -32,6 +32,12 @@ Per ognuno: **ID · Data · Severità · Stato · Area · Sintomo · Causa radic
 - **Impatto:** la selezione vettura è **cosmetica**; i range non riflettono la vettura scelta. Accettabile
   nella demo blindata (Monza · BMW M4 GT3), ma blocca l'uso multi-vettura reale.
 - **Risoluzione:** APERTA — servono i **valori ACC reali** confermati dall'utente (dato di dominio).
+- **In corso (Entry #057, 30/09/2026):** la tabella ha un formato nuovo, **click → valore del gioco per
+  vettura** (chiave = `carName` di ACC), con le fonti accanto a ogni regola; le vetture senza tabella
+  restano in click, niente più valori generici spacciati per veri. **1 vettura**: BMW M4 GT3, 45
+  parametri su 49 da almeno due fonti indipendenti concordi (Race Element, acc-setup-diff, simsource),
+  **non ancora visti in gioco**; caster, splitter e bumpstop rate restano `DA_VERIFICARE`. Si chiude
+  quando sono in tabella le vetture che Edoardo guida. La pagina Setup si rifà nella #058.
 - **File:** `backend/app/core/data/car_setup_ranges.json`.
 - **Rif.:** MEGAPROMPT_STATE_REPORT §6 B2.
 
