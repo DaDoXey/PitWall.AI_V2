@@ -275,6 +275,12 @@ function buildKpis(report: Report): Kpi[] {
       id: "degrado",
       label: "Degrado",
       valueNum: d.calcolabile ? d.pendenza_ms_giro : null,
+      // la pendenza: ogni giro più lento del precedente di tanto (il verdetto invece dice
+      // quanto costa in media a giro sui giri del calo, che è un altro numero)
+      display:
+        d.calcolabile && d.pendenza_ms_giro !== null
+          ? `${d.pendenza_ms_giro > 0 ? "+" : d.pendenza_ms_giro < 0 ? "−" : ""}${numero(Math.abs(d.pendenza_ms_giro), 0)} ms ogni giro`
+          : undefined,
       suffix: " ms/giro",
       decimals: 0,
       note: d.calcolabile ? `Dal giro ${d.dal_giro} · R² ${d.r_quadro}${d.significativo ? " · calo dimostrato" : ""}` : d.motivo ?? "Non calcolabile",

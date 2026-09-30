@@ -123,6 +123,9 @@ export type Ruota = keyof PerRuota;
 export type Perdita = {
   titolo: string;
   decimi: number | null;
+  /** lo stesso numero al millisecondo; `misura` dice cosa misura («a giro», «in media a giro»…) */
+  perdita_ms: number | null;
+  misura: string;
   prova: string;
   azione: string;
   gravita: number;

@@ -269,6 +269,8 @@ test("L37 la voce della curva 12 porta la perdita della curva 12",
      voce_12 is not None and voce_12.decimi == round(perdita_12 / 100, 1)
      and voce_12.gravita == perdita_12,
      f"{voce_12} contro {perdita_12}")
+test("L37b e la porta anche al millisecondo",
+     voce_12 is not None and voce_12.perdita_ms == perdita_12, f"{voce_12} contro {perdita_12}")
 
 # ---------------------------------------------------------------------------
 # 6 · Formato: compatibilità e racconto

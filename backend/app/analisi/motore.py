@@ -118,6 +118,12 @@ class Perdita(_Base):
 
     titolo: str
     decimi: float | None = None
+    # Lo stesso numero di `decimi` al millisecondo, per mostrarlo come il resto dell'app
+    # («+0.184 s»); `decimi` resta per i testi, che parlano in decimi.
+    perdita_ms: float | None = None
+    # Cosa misura il numero, detto sotto di lui nel verdetto: quasi sempre il costo a
+    # giro; il degrado è una media sui giri del calo, la costanza una deviazione.
+    misura: str = "a giro"
     prova: str
     azione: str
     gravita: float = Field(ge=0)
@@ -345,6 +351,7 @@ def _verdetto(ritmo: Ritmo, settori: list[Settore], costanza: Costanza,
         voci.append(Perdita(
             titolo="Non hai mai messo insieme il giro",
             decimi=d,
+            perdita_ms=float(ritmo.lasciato_sul_tavolo_ms),
             prova=f"miglior giro {_mmss(ritmo.miglior_giro_ms)}, giro teorico "
                   f"{_mmss(ritmo.giro_teorico_ms)}: {d} decimi di differenza",
             azione="I settori li sai già fare, singolarmente: servono giri completi, "
@@ -359,6 +366,7 @@ def _verdetto(ritmo: Ritmo, settori: list[Settore], costanza: Costanza,
             voci.append(Perdita(
                 titolo=f"Settore {peggiore.numero}: è lì che se ne va il tempo",
                 decimi=d,
+                perdita_ms=float(peggiore.perdita_media_ms),
                 prova=f"media {_sec(peggiore.media_ms)} contro il tuo migliore "
                       f"{_sec(peggiore.migliore_ms)}: {d} decimi di media ogni giro, "
                       f"con una dispersione di {_decimi(peggiore.deviazione_ms)} decimi",
@@ -375,6 +383,8 @@ def _verdetto(ritmo: Ritmo, settori: list[Settore], costanza: Costanza,
             voci.append(Perdita(
                 titolo=f"Costanza {costanza.giudizio}",
                 decimi=d,
+                perdita_ms=float(costanza.deviazione_ms),
+                misura="di deviazione",
                 prova=f"deviazione {d} decimi, dal migliore al peggiore "
                       f"{_decimi(costanza.scarto_max_ms)} decimi, solo "
                       f"{costanza.percentuale_entro_mezzo_secondo}% dei giri entro mezzo "
@@ -409,6 +419,8 @@ def _verdetto(ritmo: Ritmo, settori: list[Settore], costanza: Costanza,
             voci.append(Perdita(
                 titolo="Il ritmo cala con lo stint",
                 decimi=_decimi(media_a_giro),
+                perdita_ms=round(media_a_giro, 1),
+                misura="in media a giro",
                 prova=f"{degrado.pendenza_ms_giro:.0f} ms persi ogni giro su "
                       f"{degrado.giri_considerati} giri dal giro {degrado.dal_giro} "
                       f"(R² {degrado.r_quadro}): {_decimi(media_a_giro)} decimi a giro in "
@@ -491,6 +503,7 @@ def _dai_canali(canali: dict, mescola: str | None, track: str | None = None,
             voci.append(Perdita(
                 titolo=voce.titolo,
                 decimi=_decimi(perdita) if perdita and principale else None,
+                perdita_ms=float(perdita) if perdita and principale else None,
                 prova=voce.prova,
                 azione=voce.azione,
                 gravita=(float(perdita) * (1.0 if principale else 0.9)) if perdita else 80.0,

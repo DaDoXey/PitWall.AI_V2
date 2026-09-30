@@ -131,6 +131,9 @@ test("N26 il giro mai messo insieme compare con i suoi 5 decimi",
      any("insieme" in t for t in titoli)
      and next(v.decimi for v in r.verdetto if "insieme" in v.titolo) == 5.0,
      str(titoli))
+test("N26b e la stessa perdita al millisecondo, 500 ms, detta «a giro»",
+     next((v.perdita_ms, v.misura) for v in r.verdetto if "insieme" in v.titolo) == (500.0, "a giro"),
+     str([(v.titolo, v.perdita_ms, v.misura) for v in r.verdetto]))
 test("N27 il settore peggiore è il 3, non un altro",
      any("Settore 3" in t for t in titoli), str(titoli))
 
@@ -150,6 +153,12 @@ test("N30 la perdita su dieci giri è 2000 ms", d.degrado.perdita_su_10_giri_ms 
      str(d.degrado.perdita_su_10_giri_ms))
 test("N31 e il verdetto lo dice", any("cala con lo stint" in v.titolo for v in d.verdetto),
      str([v.titolo for v in d.verdetto]))
+# media a giro sui sei giri del calo: 200 × (6 − 1) / 2 = 500 ms, detta «in media a giro»
+# (non «a giro»: l'indicatore Degrado mostra la pendenza, 200 ms ogni giro)
+test("N31b il verdetto del degrado dice 500 ms in media a giro",
+     next(((v.perdita_ms, v.misura) for v in d.verdetto if "cala con lo stint" in v.titolo), None)
+     == (500.0, "in media a giro"),
+     str([(v.titolo, v.perdita_ms, v.misura) for v in d.verdetto]))
 
 migliorante = bundle([Giro(numero=i + 1, tempo_ms=101000 - 200 * i,
                            splits_ms=[30000, 35000, 35000]) for i in range(6)])

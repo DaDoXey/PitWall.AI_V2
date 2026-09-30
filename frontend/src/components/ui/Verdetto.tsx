@@ -9,6 +9,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { Perdita, PuntoFermo } from "@/lib/api";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
+import { perdita } from "@/lib/formato";
 
 const VISIBILI = 5;
 
@@ -64,8 +65,8 @@ function VocePerdita({ voce, posizione }: { voce: Perdita; posizione: number }) 
         </span>
         {voce.decimi !== null && (
           <span className="shrink-0 text-right">
-            <span className="block font-mono text-lg text-warn">−{(voce.decimi / 10).toFixed(2)} s</span>
-            <span className="block font-mono text-[0.5rem] uppercase tracking-widest text-muted">a giro</span>
+            <span className="block font-mono text-lg text-warn">{perdita(voce.perdita_ms ?? voce.decimi * 100)}</span>
+            <span className="block font-mono text-[0.5rem] uppercase tracking-widest text-muted">{voce.misura ?? "a giro"}</span>
           </span>
         )}
       </button>
