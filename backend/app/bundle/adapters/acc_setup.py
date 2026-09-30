@@ -185,3 +185,70 @@ def leggi_setup_acc(sorgente: str | Path | bytes, nome: str | None = None) -> Se
         nome = Path(nome_file).stem
 
     return Setup(car=car, nome=nome, valori=valori, raw=dati, assunzioni=assunzioni)
+
+
+# ─────────────────────────────────────────────
+# Ritorno al file di ACC (Entry #058): i click modificati nella pagina Setup
+# ─────────────────────────────────────────────
+# Parametri che PitWall tiene per asse ma che ACC scrive per ruota (o per lato):
+# la modifica va anche sull'altra posizione, spostata della stessa quantità, così un
+# asse resta simmetrico se lo era e mantiene la sua differenza se non lo era.
+GEMELLI: dict[str, tuple[tuple[str, ...], int | None]] = {
+    "caster": (("basicSetup", "alignment", "casterRF"), None),
+    "wheel_rate_front": (("advancedSetup", "mechanicalBalance", "wheelRate"), FR),
+    "wheel_rate_rear": (("advancedSetup", "mechanicalBalance", "wheelRate"), RR),
+    "bumpstop_rate_front": (("advancedSetup", "mechanicalBalance", "bumpStopRateUp"), FR),
+    "bumpstop_rate_rear": (("advancedSetup", "mechanicalBalance", "bumpStopRateUp"), RR),
+    "bumpstop_range_front": (("advancedSetup", "mechanicalBalance", "bumpStopWindow"), FR),
+    "bumpstop_range_rear": (("advancedSetup", "mechanicalBalance", "bumpStopWindow"), RR),
+}
+
+
+def _scrivi(dati: dict[str, Any], percorso: tuple[str, ...], indice: int | None,
+            valore: int) -> int | None:
+    """Scrive `valore` nel punto indicato e torna quello che c'era (None se il punto non c'è)."""
+    nodo = _pesca(dati, percorso[:-1])
+    if not isinstance(nodo, dict) or percorso[-1] not in nodo:
+        return None
+    if indice is None:
+        prima = nodo[percorso[-1]]
+        nodo[percorso[-1]] = valore
+        return prima if isinstance(prima, int) and not isinstance(prima, bool) else None
+    lista = nodo[percorso[-1]]
+    if not isinstance(lista, list) or len(lista) <= indice:
+        return None
+    prima = lista[indice]
+    lista[indice] = valore
+    return prima if isinstance(prima, int) and not isinstance(prima, bool) else None
+
+
+def applica_click(raw: dict[str, Any], click: dict[str, int]) -> dict[str, Any]:
+    """Il setup di ACC `raw` con i click nuovi, pronto da rimettere in Setups/.
+
+    Tocca solo i punti dei parametri in `click`; tutto il resto del file (strategia,
+    `bumpStopRateDn`, `staticCamber`…) resta com'è. Non modifica `raw`.
+
+    Raises:
+        SetupAccError: parametro sconosciuto, click non intero o negativo, o un punto
+            che nel file non c'è (meglio fermarsi che scrivere un file diverso da ACC).
+    """
+    import copy
+
+    dati = copy.deepcopy(raw)
+    for chiave, nuovo in click.items():
+        if chiave not in MAPPA:
+            raise SetupAccError(f"parametro sconosciuto: {chiave}")
+        if isinstance(nuovo, bool) or not isinstance(nuovo, int) or nuovo < 0:
+            raise SetupAccError(f"{chiave}: il click deve essere un intero ≥ 0, non {nuovo!r}")
+        percorso, indice = MAPPA[chiave]
+        prima = _scrivi(dati, percorso, indice, nuovo)
+        if prima is None:
+            raise SetupAccError(f"{chiave}: nel file di ACC non c'è un valore intero da cambiare")
+        gemello = GEMELLI.get(chiave)
+        if gemello and nuovo != prima:
+            altro = _pesca(dati, gemello[0])
+            if gemello[1] is not None:
+                altro = altro[gemello[1]] if isinstance(altro, list) and len(altro) > gemello[1] else None
+            if isinstance(altro, int) and not isinstance(altro, bool):
+                _scrivi(dati, gemello[0], gemello[1], max(0, altro + nuovo - prima))
+    return dati

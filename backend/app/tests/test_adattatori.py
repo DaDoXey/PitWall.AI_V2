@@ -187,6 +187,32 @@ test("A36 si può leggere anche dai soli byte, senza passare dal disco",
      leggi_setup_acc((FIX / "acc_setup_gt3.json").read_bytes(), nome="da byte").nome == "da byte")
 
 # ---------------------------------------------------------------------------
+# 4b. Ritorno al file di ACC (#058): applica_click
+# ---------------------------------------------------------------------------
+from app.bundle.adapters.acc_setup import applica_click  # noqa: E402
+
+nuovo = applica_click(s.raw, {"tire_press_rl": 54, "wheel_rate_front": 3, "caster": 25,
+                              "ride_height_rear": 2})
+mb = nuovo["advancedSetup"]["mechanicalBalance"]
+test("A39a applica_click scrive il click nel punto giusto dell'array",
+     nuovo["basicSetup"]["tyres"]["tyrePressure"] == [54, 61, 54, 54])
+test("A39b un parametro per asse sposta anche la ruota destra della stessa quantità",
+     mb["wheelRate"][:2] == [3, 3], str(mb["wheelRate"]))
+test("A39c il caster sposta anche il lato destro della stessa quantità (23/22 → 25/24)",
+     (nuovo["basicSetup"]["alignment"]["casterLF"], nuovo["basicSetup"]["alignment"]["casterRF"]) == (25, 24))
+test("A39d l'altezza posteriore va nel terzo valore di rideHeight",
+     nuovo["advancedSetup"]["aeroBalance"]["rideHeight"][2] == 2
+     and nuovo["advancedSetup"]["aeroBalance"]["rideHeight"][1] == s.raw["advancedSetup"]["aeroBalance"]["rideHeight"][1])
+test("A39e il file di partenza non cambia", s.raw["basicSetup"]["tyres"]["tyrePressure"] == [54, 61, 48, 54])
+test("A39f il file scritto si rilegge con i valori nuovi",
+     leggi_setup_acc(json.dumps(nuovo).encode("utf-8")).valori["tire_press_rl"].reale == 25.7)
+msg = errore(lambda: applica_click(s.raw, {"boh": 1}))
+test("A39g parametro sconosciuto → errore", msg is not None and "boh" in msg)
+msg = errore(lambda: applica_click({"basicSetup": {}}, {"wing": 1}))
+test("A39h un punto che nel file non c'è → errore, non un file diverso da ACC",
+     msg is not None and "wing" in msg)
+
+# ---------------------------------------------------------------------------
 # 5. Il setup entra in un bundle e ci resta
 # ---------------------------------------------------------------------------
 b = SessionBundle(meta=Meta(fonte=Fonte.ACC_SETUP, car=s.car, track="monza"), setup=s)

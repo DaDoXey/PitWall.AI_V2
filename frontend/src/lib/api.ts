@@ -352,7 +352,14 @@ export function getAnalisi(id: string) {
 
 // Il bundle intero: serve solo dove si mostra ciò che il report non porta (il setup
 // grezzo della sessione, le condizioni, il racconto).
-export type ValoreSetup = { raw: number | number[]; reale: number | null; unita: string; verificato: boolean };
+export type ValoreSetup = {
+  raw: number | number[];
+  reale: number | null;
+  unita: string;
+  verificato: boolean;
+  // «gioco» = regola letta a schermo in ACC; «fonti» = da fonti concordi, non vista in gioco.
+  fonte?: "gioco" | "fonti" | null;
+};
 export type Racconto = {
   andamento?: string | null;
   frenata?: string | null;
@@ -386,7 +393,13 @@ export type Bundle = {
       pista_bagnata: boolean | null;
     };
   };
-  setup: { nome: string | null; valori: Record<string, ValoreSetup>; assunzioni: string[] } | null;
+  setup: {
+    car: string | null;
+    nome: string | null;
+    valori: Record<string, ValoreSetup>;
+    raw: Record<string, unknown>; // il JSON originale di ACC, intatto
+    assunzioni: string[];
+  } | null;
   racconto: Racconto | null;
   giri: { numero: number; tempo_ms: number | null; valido: boolean; in_pit: boolean }[];
   assunzioni: string[];
@@ -734,6 +747,18 @@ export function getCatalogTrack(id: string) {
  *  che è un'informazione vera, non un guasto. */
 export function getGuidaTracciato(id: string) {
   return getJSON<GuidaTracciato>(`/api/catalog/track/${encodeURIComponent(id)}/guida`);
+}
+
+/** Il setup della sessione con i click cambiati, come file JSON da rimettere in ACC (Entry #058). */
+export async function esportaSetupAcc(id: string, click: Record<string, number>): Promise<{ file: Blob; nome: string }> {
+  const res = await fetch(`${API_BASE}/api/sessions/${encodeURIComponent(id)}/export/setup`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ click }),
+  });
+  if (!res.ok) throw await leggiErrore(res);
+  const nome = /filename="([^"]+)"/.exec(res.headers.get("Content-Disposition") ?? "")?.[1] ?? "setup PitWall.json";
+  return { file: await res.blob(), nome };
 }
 
 export function getSetupParams(car?: string, track?: string) {

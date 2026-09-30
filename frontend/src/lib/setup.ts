@@ -1,28 +1,73 @@
 // Logica pura della pagina Setup (Fase 5), portata dalla v1 (ui/setup_view.py):
-// tipi della risposta /api/setup-params, layout dichiarativo dei gruppi per tab,
-// formattazione valore. I range/default/unit arrivano dal backend (modulo dati ACC):
-// qui solo presentazione.
+// tipi della risposta /api/setup-params, layout dichiarativo dei gruppi per tab.
 //
 // L4 (16/09/2026): via la finestra delle pressioni «a freddo» (24.5–25.5, non
 // pubblicata da Kunos) e i valori obiettivo fissi dello scenario demo. I parametri da
 // toccare arrivano dal verdetto del motore (`Perdita.parametri`), con la variazione.
+//
+// #058 (30/09/2026): la pagina lavora in CLICK, come il file di ACC. Il valore che il
+// gioco mostra (psi, °, N/m…) si calcola solo con la `regola` della vettura, che arriva
+// dal backend (car_setup_ranges.json); senza regola resta il click. I min/max/default
+// generici della risposta non si usano più: non erano della vettura.
 import type { Perdita } from "@/lib/api";
+
+type RegolaBase = {
+  unita: string; // "" = il gioco mostra il numero senza unità
+  fonti: string[];
+  stato: "gioco" | "fonti";
+  nota?: string;
+};
+export type Regola =
+  | (RegolaBase & { tipo: "lineare"; base: number; passo: number; click_max: number | null })
+  | (RegolaBase & { tipo: "elenco"; valori: number[] });
 
 export type Param = {
   label: string;
-  min: number;
-  max: number;
-  step: number;
   unit: string;
-  default: number;
   tip?: string;
+  regola: Regola | null; // null = vettura senza tabella o parametro da verificare
 };
 export type Section = { label: string; params: Record<string, Param> };
 export type SetupParams = Record<string, Section>;
 
-// Bozza del setup portata dalla pagina Setup alla pagina Sessioni («crea una sessione
-// con questo setup»): vive in sessionStorage, sparisce con la tab.
-export const CHIAVE_BOZZA_SETUP = "pw_setup_bozza";
+const decimali = (n: number) => (Number.isInteger(n) ? 0 : String(n).split(".")[1]?.length ?? 0);
+
+/** Il click più alto che la regola conosce; null = nessun limite noto. */
+export function clickMax(r: Regola | null): number | null {
+  if (!r) return null;
+  return r.tipo === "elenco" ? r.valori.length - 1 : r.click_max;
+}
+
+/** Il valore che il gioco mostra per quel click (come click_in_reale del backend), o null. */
+export function reale(r: Regola | null, click: number): number | null {
+  if (!r || !Number.isInteger(click) || click < 0) return null;
+  if (r.tipo === "elenco") return click < r.valori.length ? r.valori[click] : null;
+  if (r.click_max !== null && click > r.click_max) return null;
+  const d = Math.max(decimali(r.base), decimali(r.passo));
+  return Number((r.base + r.passo * click).toFixed(d));
+}
+
+/** Il valore del gioco formattato con i decimali della regola, es. «25.7 psi», «120000 N/m», «4». */
+export function formatReale(r: Regola, v: number): string {
+  const d = r.tipo === "lineare" ? Math.max(decimali(r.base), decimali(r.passo)) : 0;
+  const num = v.toFixed(d);
+  if (!r.unita) return num;
+  return r.unita === "°" ? `${num}°` : `${num} ${r.unita}`;
+}
+
+/** Di quanti click spostarsi per una variazione nell'unità del gioco (es. +0.6 psi → +6). */
+export function clickDaVariazione(r: Regola | null, click: number, variazione: number): number | null {
+  if (!r) return null;
+  if (r.tipo === "lineare") return Math.round(variazione / r.passo);
+  const attuale = reale(r, click);
+  if (attuale === null) return null;
+  const obiettivo = attuale + variazione;
+  let migliore = click;
+  r.valori.forEach((v, i) => {
+    if (Math.abs(v - obiettivo) < Math.abs(r.valori[migliore] - obiettivo)) migliore = i;
+  });
+  return migliore - click;
+}
 
 /** Un parametro che il verdetto chiede di toccare. */
 export type Suggerimento = {
@@ -47,13 +92,6 @@ export function suggerimentiDalVerdetto(verdetto: Perdita[]): Suggerimento[] {
     }
   }
   return [...perChiave.values()];
-}
-
-/** Formatta il valore: interi senza decimali, altrimenti 1 decimale (step≥0.1) o 2. */
-export function formatValue(p: Param, v: number): string {
-  const decimals = Number.isInteger(p.step) ? 0 : p.step >= 0.1 ? 1 : 2;
-  const num = v.toFixed(decimals);
-  return p.unit ? `${num} ${p.unit}` : num;
 }
 
 // Layout dichiarativo dei gruppi per ogni sezione (titoli + colonne), come i

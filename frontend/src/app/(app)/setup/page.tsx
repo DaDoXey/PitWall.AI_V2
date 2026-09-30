@@ -1,17 +1,24 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+// Pagina Setup (#058, 30/09/2026): il setup della sessione aperta, in CLICK come nel
+// file di ACC. Frecce − / + come nel gioco; accanto al click il valore che il gioco
+// mostra, solo dove la tabella della vettura ha la regola (car_setup_ranges.json).
+// Niente range generici né valori di partenza inventati: senza file di setup la pagina
+// invita a importarlo. Le modifiche restano nella scheda del browser; «Scarica il
+// setup per ACC» restituisce il file originale con i click cambiati.
+
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import PageHeader from "@/components/ui/PageHeader";
-import { CarCard, TrackCard } from "@/components/ui/SessionBriefing";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
-import { ApiError, getBundle, getSetupParams, postSetupFromImage, type Bundle } from "@/lib/api";
-import { CAR_LIST_FALLBACK, DEFAULT_CAR, DEFAULT_TRACK, TRACK_LIST_FALLBACK } from "@/lib/catalog";
+import { ApiError, esportaSetupAcc, getBundle, getSetupParams, type Bundle } from "@/lib/api";
 import {
-  CHIAVE_BOZZA_SETUP,
-  formatValue,
+  clickDaVariazione,
+  clickMax,
+  formatReale,
   groupsFor,
+  reale,
   suggerimentiDalVerdetto,
   type Group,
   type Param,
@@ -27,19 +34,69 @@ const GRID_COLS: Record<Group["cols"], string> = {
   4: "grid-cols-2 lg:grid-cols-4",
 };
 
-const clamp = (v: number, lo: number, hi: number) => Math.min(Math.max(v, lo), hi);
+// Le modifiche di una sessione, {parametro: click}, finché la scheda è aperta.
+const chiaveModifiche = (id: string) => `pw_setup_modifiche_${id}`;
+
+const clickIntero = (raw: unknown): number | null => (typeof raw === "number" && Number.isInteger(raw) && raw >= 0 ? raw : null);
 
 export default function SetupPage() {
-  const router = useRouter();
-  const { report, sessione, nomi, catalogo, idSessione } = useSessione();
+  const { report, nomi, idSessione } = useSessione();
+  const [bundle, setBundle] = useState<Bundle | null | undefined>(undefined);
   const [params, setParams] = useState<SetupParams | null>(null);
-  const [values, setValues] = useState<Record<string, number>>({});
+  const [modifiche, setModifiche] = useState<Record<string, number>>({});
   const [active, setActive] = useState<string>("");
   const [err, setErr] = useState<string | null>(null);
-  // Parametro da portare a schermo dopo il cambio tab (click su un suggerimento):
-  // lo slider monta con un piccolo ritardo (AnimatePresence mode="wait") → si
-  // riprova finché l'elemento non esiste, con deadline di sicurezza.
   const [scrollTo, setScrollTo] = useState<string | null>(null);
+  const [download, setDownload] = useState<{ ok: boolean; testo: string } | null>(null);
+
+  // Il bundle della sessione aperta (il setup con il file originale di ACC).
+  useEffect(() => {
+    if (!idSessione) {
+      setBundle(null);
+      return;
+    }
+    let vivo = true;
+    setBundle(undefined);
+    getBundle(idSessione)
+      .then((b) => vivo && setBundle(b))
+      .catch(() => vivo && setErr("Backend non raggiungibile — avvia FastAPI su :8000 (vedi README)."));
+    try {
+      const salvate = sessionStorage.getItem(chiaveModifiche(idSessione));
+      setModifiche(salvate ? (JSON.parse(salvate) as Record<string, number>) : {});
+    } catch {
+      setModifiche({});
+    }
+    return () => {
+      vivo = false;
+    };
+  }, [idSessione]);
+
+  const setup = bundle?.setup ?? null;
+  const car = setup?.car ?? bundle?.meta.car ?? null;
+
+  // Etichette e regole della vettura del setup.
+  useEffect(() => {
+    if (!setup) return;
+    getSetupParams(car ?? undefined)
+      .then((d) => {
+        const data = d as SetupParams;
+        setParams(data);
+        setActive((a) => a || Object.keys(data)[0] || "");
+      })
+      .catch(() => setErr("Backend non raggiungibile — avvia FastAPI su :8000 (vedi README)."));
+  }, [setup, car]);
+
+  useEffect(() => {
+    if (!idSessione) return;
+    try {
+      if (Object.keys(modifiche).length) sessionStorage.setItem(chiaveModifiche(idSessione), JSON.stringify(modifiche));
+      else sessionStorage.removeItem(chiaveModifiche(idSessione));
+    } catch {
+      /* no-op: le modifiche restano solo in memoria */
+    }
+  }, [modifiche, idSessione]);
+
+  // Porta a schermo il parametro dopo il cambio tab (clic su un suggerimento).
   useEffect(() => {
     if (!scrollTo) return;
     const poll = setInterval(() => {
@@ -59,135 +116,151 @@ export default function SetupPage() {
     };
   }, [scrollTo]);
 
-  const [showInputs, setShowInputs] = useState(false);
-  const [car, setCar] = useState(DEFAULT_CAR);
-  const [track, setTrack] = useState(DEFAULT_TRACK);
-
-  // Vettura e pista partono da quelle della sessione aperta (nomi di catalogo: sono le
-  // chiavi dei range per vettura di /api/setup-params).
-  useEffect(() => {
-    if (!sessione) return;
-    if (sessione.car) setCar(nomi.vettura(sessione.car));
-    if (sessione.track) setTrack(nomi.pista(sessione.track));
-  }, [sessione, nomi]);
-
-  const carOptions = useMemo<SelectOption[]>(
-    () =>
-      catalogo
-        ? catalogo.cars.map((c) => ({ value: c.display_name, badge: c.dlc ? "DLC" : undefined }))
-        : CAR_LIST_FALLBACK.map((value) => ({ value })),
-    [catalogo],
-  );
-  const trackOptions = useMemo<SelectOption[]>(
-    () =>
-      catalogo
-        ? catalogo.tracks.map((t) => ({ value: t.short_name || t.name, badge: t.dlc ? "DLC" : undefined }))
-        : TRACK_LIST_FALLBACK.map((value) => ({ value })),
-    [catalogo],
-  );
-
-  // Refetch dei range a ogni cambio vettura/circuito: applica gli override e
-  // ri-clampa i valori correnti nei nuovi range (non li azzera), come la v1.
-  useEffect(() => {
-    getSetupParams(car, track)
-      .then((d) => {
-        const data = d as SetupParams;
-        setParams(data);
-        setValues((prev) => {
-          const next: Record<string, number> = {};
-          for (const sec of Object.values(data))
-            for (const [k, p] of Object.entries(sec.params))
-              next[k] = prev[k] === undefined ? p.default : clamp(prev[k], p.min, p.max);
-          return next;
-        });
-        setActive((a) => a || Object.keys(data)[0] || "");
-        setErr(null);
-      })
-      .catch(() => setErr("Backend non raggiungibile — avvia FastAPI su :8000 (vedi README)."));
-  }, [car, track]);
+  const originali = useMemo(() => {
+    const out: Record<string, number> = {};
+    for (const [k, v] of Object.entries(setup?.valori ?? {})) {
+      const c = clickIntero(v.raw);
+      if (c !== null) out[k] = c;
+    }
+    return out;
+  }, [setup]);
 
   const suggeriti = useMemo(() => (report ? suggerimentiDalVerdetto(report.verdetto) : []), [report]);
   const perChiave = useMemo(() => new Map(suggeriti.map((s) => [s.key, s])), [suggeriti]);
 
-  const setVal = (key: string, v: number) => setValues((prev) => ({ ...prev, [key]: v }));
-
-  const findParam = (key: string): { param: Param; section: string } | undefined => {
+  const trova = (key: string): { param: Param; section: string } | undefined => {
     if (!params) return undefined;
     for (const [sk, sec] of Object.entries(params)) if (sec.params[key]) return { param: sec.params[key], section: sk };
     return undefined;
   };
 
-  const applyVisionParams = (vp: Record<string, number>): number => {
-    let applied = 0;
-    setValues((prev) => {
+  const valore = (key: string) => modifiche[key] ?? originali[key];
+
+  function imposta(key: string, click: number) {
+    const trovato = trova(key);
+    const massimo = trovato ? clickMax(trovato.param.regola) : null;
+    const c = Math.max(0, massimo === null ? click : Math.min(click, massimo));
+    setDownload(null);
+    setModifiche((prev) => {
       const next = { ...prev };
-      for (const [k, raw] of Object.entries(vp || {})) {
-        const trovato = findParam(k);
-        const num = Number(raw);
-        if (!trovato || Number.isNaN(num)) continue;
-        next[k] = clamp(num, trovato.param.min, trovato.param.max);
-        applied++;
-      }
+      if (c === originali[key]) delete next[key];
+      else next[key] = c;
       return next;
     });
-    return applied;
-  };
+  }
 
   function applica(s: Suggerimento) {
-    const trovato = findParam(s.key);
+    const trovato = trova(s.key);
     if (!trovato) return;
     setActive(trovato.section);
-    if (s.variazione !== null) {
-      const { param } = trovato;
-      setVal(s.key, clamp((values[s.key] ?? param.default) + s.variazione, param.min, param.max));
-    }
+    const passi = s.variazione === null ? null : clickDaVariazione(trovato.param.regola, valore(s.key), s.variazione);
+    if (passi !== null && originali[s.key] !== undefined) imposta(s.key, valore(s.key) + passi);
     setScrollTo(s.key);
   }
 
-  function creaSessione() {
+  async function scarica() {
+    if (!idSessione) return;
+    setDownload(null);
     try {
-      sessionStorage.setItem(CHIAVE_BOZZA_SETUP, JSON.stringify(values));
-    } catch {
-      /* no-op: la pagina Sessioni proporrà di rifarlo */
+      const { file, nome } = await esportaSetupAcc(idSessione, modifiche);
+      const url = URL.createObjectURL(file);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = nome;
+      a.click();
+      URL.revokeObjectURL(url);
+      setDownload({ ok: true, testo: `Scaricato «${nome}»: mettilo in Documenti\\Assetto Corsa Competizione\\Setups\\${car ?? "<auto>"}\\<pista>\\ e caricalo in gioco.` });
+    } catch (e) {
+      setDownload({ ok: false, testo: e instanceof ApiError ? e.message : "Download non riuscito." });
     }
-    router.push("/sessioni");
   }
 
-  const tabKeys = useMemo(() => (params ? Object.keys(params) : []), [params]);
+  const titolo = (
+    <PageHeader
+      title="Setup"
+      subtitle={bundle ? `${nomi.vettura(car)} · ${nomi.pista(bundle.meta.track)}${setup?.nome ? ` · ${setup.nome}` : ""}` : "il setup della sessione"}
+    />
+  );
 
   if (err)
     return (
       <div>
-        <PageHeader title="Setup" subtitle="range ACC" />
+        {titolo}
         <p className="text-sm text-warn">{err}</p>
       </div>
     );
-  if (!params)
+  if (bundle === undefined || (setup && !params))
     return (
       <div>
-        <PageHeader title="Setup" subtitle="range ACC" />
-        <p className="text-sm text-subtle">Caricamento parametri…</p>
+        {titolo}
+        <p className="text-sm text-subtle">Caricamento del setup…</p>
       </div>
     );
+  if (!setup || !Object.keys(setup.valori).length)
+    return (
+      <div>
+        {titolo}
+        <div className="max-w-2xl rounded-xl border border-line bg-surface p-5">
+          <div className="mb-2 font-mono text-[0.62rem] uppercase tracking-widest text-accent">Nessun setup in questa sessione</div>
+          <p className="text-sm text-subtle">
+            Il setup arriva dal file JSON che ACC salva in <span className="font-mono text-[0.78rem]">Documenti\Assetto Corsa Competizione\Setups\&lt;auto&gt;\&lt;pista&gt;\</span>.
+            Aggiungilo dalla pagina{" "}
+            <Link href="/sessioni" className="text-white underline-offset-2 hover:underline">
+              Sessioni
+            </Link>{" "}
+            (Aggiungi una sessione → File di ACC, oppure insieme all&apos;export MoTeC): qui si vede e si modifica click per click.
+          </p>
+        </div>
+      </div>
+    );
+  if (!params) return null;
+
+  const tuttiParam = Object.values(params).flatMap((s) => Object.entries(s.params));
+  const conTabella = tuttiParam.some(([, p]) => p.regola !== null);
+  const convertiti = tuttiParam.filter(([k, p]) => p.regola !== null && originali[k] !== undefined).length;
+  const daFonti = tuttiParam.some(([, p]) => p.regola?.stato === "fonti");
+  const nModifiche = Object.keys(modifiche).length;
+  const puoScaricare = Object.keys(setup.raw ?? {}).length > 0;
 
   const section = params[active];
   const groups = section ? groupsFor(active, section) : [];
   const sectionHasSuggested = (sk: string) => Object.keys(params[sk].params).some((k) => perChiave.has(k));
+  const sectionHasChanged = (sk: string) => Object.keys(params[sk].params).some((k) => k in modifiche);
+
+  const rh = (k: string) => {
+    const p = trova(k)?.param;
+    return p && valore(k) !== undefined ? reale(p.regola, valore(k)) : null;
+  };
+  const rakeFront = rh("ride_height_front");
+  const rakeRear = rh("ride_height_rear");
 
   return (
     <div>
-      <PageHeader title="Setup" subtitle={`${car} · ${track} · range ACC`} />
+      {titolo}
 
-      {/* I parametri che il verdetto chiede di toccare (collega Dashboard/Console ↔ Setup) */}
+      {/* Da dove vengono i numeri, in una riga */}
+      <p className="mb-4 max-w-4xl text-[0.74rem] text-muted">
+        {conTabella ? (
+          <>
+            Valori come in ACC: il click del file e, accanto, il valore che il gioco mostra ({convertiti} parametri su {Object.keys(setup.valori).length}).
+            {daFonti && " Conversioni da fonti community concordi, non ancora viste in gioco."} Gli altri restano in click.
+          </>
+        ) : (
+          <>Per {nomi.vettura(car)} non c&apos;è ancora una tabella: i valori sono i click del file di ACC, come li conta il gioco.</>
+        )}
+      </p>
+
+      {/* I parametri che il verdetto chiede di toccare */}
       {suggeriti.length > 0 && (
         <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="mb-4 rounded-xl border border-accent/30 bg-accent/[0.06] p-4">
-          <div className="mb-2 flex items-center gap-2 font-mono text-[0.6rem] uppercase tracking-widest text-accent">
-            🔧 Da toccare secondo il verdetto
-          </div>
+          <div className="mb-2 flex items-center gap-2 font-mono text-[0.6rem] uppercase tracking-widest text-accent">🔧 Da toccare secondo il verdetto</div>
           <div className="flex flex-wrap gap-2">
             {suggeriti.map((s) => {
-              const trovato = findParam(s.key);
+              const trovato = trova(s.key);
               if (!trovato) return null;
+              const passi = s.variazione === null ? null : clickDaVariazione(trovato.param.regola, valore(s.key), s.variazione);
+              const unita = trovato.param.regola?.unita ?? trovato.param.unit;
+              const variazione = s.variazione === null ? "" : `${s.variazione > 0 ? "+" : ""}${s.variazione} ${unita}`.trim();
               return (
                 <button
                   key={s.key}
@@ -197,362 +270,203 @@ export default function SetupPage() {
                 >
                   {trovato.param.label}
                   <span className="ml-1.5 font-mono text-[0.68rem] text-accent">
-                    {s.variazione === null ? "direzione nel verdetto" : `${s.variazione > 0 ? "+" : ""}${s.variazione} ${trovato.param.unit}`}
+                    {passi !== null
+                      ? `${passi > 0 ? "+" : ""}${passi} click (${variazione})`
+                      : s.variazione === null
+                        ? "direzione nel verdetto"
+                        : `${variazione} · senza tabella, solo la direzione`}
                   </span>
                 </button>
               );
             })}
           </div>
           <div className="mt-2 text-[0.7rem] text-muted">
-            Un click applica la variazione al valore sullo slider e porta al parametro. Le pressioni del setup sono a freddo:
-            la variazione viene dallo scarto misurato in pista.
+            Un clic applica i click al parametro (dove c&apos;è la tabella) e lo porta a schermo. Le pressioni del setup sono a freddo: la variazione viene dallo scarto misurato in pista.
           </div>
         </motion.div>
       )}
 
-      {report?.ha_setup && idSessione && <SetupDellaSessione idSessione={idSessione} params={params} />}
-
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex w-fit items-center gap-2.5 text-sm text-subtle">
-          <Toggle checked={showInputs} onChange={setShowInputs} label="Mostra vettura, pista e screenshot" />
-          <span>Vettura, pista · screenshot del setup</span>
+      {/* Tab + azioni sul file */}
+      <div className="mb-5 flex flex-wrap items-end justify-between gap-3 border-b border-line">
+        <div className="flex flex-wrap gap-1">
+          {Object.keys(params).map((k) => {
+            const on = k === active;
+            return (
+              <button
+                key={k}
+                onClick={() => setActive(k)}
+                className={`-mb-px flex items-center gap-1.5 border-b-2 px-4 py-2 text-sm transition ${
+                  on ? "border-accent text-white" : "border-transparent text-subtle hover:text-white"
+                }`}
+              >
+                {params[k].label}
+                {sectionHasSuggested(k) && <span className="h-1.5 w-1.5 rounded-full bg-accent" title="Contiene parametri citati dal verdetto" />}
+                {sectionHasChanged(k) && <span className="h-1.5 w-1.5 rounded-full bg-white" title="Contiene parametri modificati" />}
+              </button>
+            );
+          })}
         </div>
-        <button
-          type="button"
-          onClick={creaSessione}
-          className="rounded-md border border-line-strong px-3 py-1.5 font-mono text-[0.62rem] uppercase tracking-widest text-subtle transition hover:border-accent hover:text-white"
-          title="Porta questi valori nella pagina Sessioni, per una sessione da console"
-        >
-          Crea una sessione con questo setup →
-        </button>
-      </div>
-
-      {showInputs && (
-        <div className="mb-6 rounded-xl border border-line bg-surface p-4">
-          <div className="mb-3 font-mono text-[0.62rem] uppercase tracking-widest text-accent">Vettura e pista</div>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <PwSelect label="Auto" value={car} options={carOptions} onChange={setCar} />
-            <PwSelect label="Tracciato" value={track} options={trackOptions} onChange={setTrack} />
-          </div>
-          <div className="mt-4 border-t border-line pt-4">
-            <ScreenshotUpload onApplyVision={applyVisionParams} />
-          </div>
+        <div className="mb-1.5 flex items-center gap-2">
+          <span className="font-mono text-[0.62rem] uppercase tracking-widest text-muted">
+            {nModifiche === 0 ? "nessuna modifica" : `${nModifiche} ${nModifiche === 1 ? "modifica" : "modifiche"}`}
+          </span>
+          <button
+            type="button"
+            onClick={() => {
+              setModifiche({});
+              setDownload(null);
+            }}
+            disabled={nModifiche === 0}
+            className="rounded-md border border-line-strong px-3 py-1.5 font-mono text-[0.62rem] uppercase tracking-widest text-subtle transition hover:border-accent hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Ripristina
+          </button>
+          <button
+            type="button"
+            onClick={scarica}
+            disabled={!puoScaricare}
+            title={puoScaricare ? "Il file di setup originale con i click cambiati, da caricare in ACC" : "Questa sessione non ha il file di setup di ACC"}
+            className="rounded-md border border-accent/60 bg-accent/10 px-3 py-1.5 font-mono text-[0.62rem] uppercase tracking-widest text-white transition hover:border-accent disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Scarica il setup per ACC ↓
+          </button>
         </div>
-      )}
-
-      {showInputs && (
-        <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <TrackCard track={track} />
-          <CarCard car={car} />
-        </motion.div>
-      )}
-
-      {/* Tab */}
-      <div className="mb-5 flex flex-wrap gap-1 border-b border-line">
-        {tabKeys.map((k) => {
-          const on = k === active;
-          return (
-            <button
-              key={k}
-              onClick={() => setActive(k)}
-              className={`-mb-px flex items-center gap-1.5 border-b-2 px-4 py-2 text-sm transition ${
-                on ? "border-accent text-white" : "border-transparent text-subtle hover:text-white"
-              }`}
-            >
-              {params[k].label}
-              {sectionHasSuggested(k) && <span className="h-1.5 w-1.5 rounded-full bg-accent" title="Contiene parametri citati dal verdetto" />}
-            </button>
-          );
-        })}
       </div>
+      {download && <p className={`-mt-3 mb-4 text-[0.72rem] ${download.ok ? "text-ok" : "text-warn"}`}>{download.testo}</p>}
 
-      {/* Gruppi di slider — transizione morbida al cambio tab (AnimatePresence) */}
       <AnimatePresence mode="wait">
         <motion.div key={active} variants={staggerContainer} initial="hidden" animate="visible" exit={{ opacity: 0, y: -8, transition: { duration: 0.15 } }}>
           {groups.map((g, gi) => (
-            <motion.div key={gi} variants={fadeInUp} className="mb-6">
-              {g.title && <div className="mb-3 font-mono text-[0.62rem] uppercase tracking-widest text-accent">{g.title}</div>}
+            <motion.div key={gi} variants={fadeInUp} className="mb-5">
+              {g.title && <div className="mb-2 font-mono text-[0.62rem] uppercase tracking-widest text-accent">{g.title}</div>}
               <div className={`grid gap-x-6 gap-y-1 ${GRID_COLS[g.cols]}`}>
                 {g.keys.map((key) => {
                   const p = section.params[key];
                   if (!p) return null;
                   return (
-                    <Slider
+                    <Frecce
                       key={key}
                       paramKey={key}
                       param={p}
-                      value={values[key] ?? p.default}
+                      click={valore(key)}
+                      originale={originali[key]}
+                      grezzo={setup.valori[key]?.raw}
+                      conTabella={conTabella}
+                      compatto={g.cols === 4}
                       suggerimento={perChiave.get(key)}
-                      onChange={(v) => setVal(key, v)}
+                      onChange={(c) => imposta(key, c)}
                     />
                   );
                 })}
               </div>
-
-              {active === "aero" && g.title.startsWith("Ride height") && (
-                <RakeInfo front={values["ride_height_front"] ?? 0} rear={values["ride_height_rear"] ?? 0} />
+              {active === "aero" && g.title.startsWith("Ride height") && rakeFront !== null && rakeRear !== null && (
+                <div className="mt-2 font-mono text-sm text-subtle">Rake attuale: {(rakeRear - rakeFront).toFixed(0)} mm</div>
               )}
             </motion.div>
           ))}
         </motion.div>
       </AnimatePresence>
-    </div>
-  );
-}
 
-// ─────────────────────────────────────────────
-// Il setup registrato nella sessione, com'è nel file di ACC
-// ─────────────────────────────────────────────
-function SetupDellaSessione({ idSessione, params }: { idSessione: string; params: SetupParams }) {
-  const [bundle, setBundle] = useState<Bundle | null>(null);
-  const [aperto, setAperto] = useState(false);
-
-  useEffect(() => {
-    let vivo = true;
-    getBundle(idSessione)
-      .then((b) => vivo && setBundle(b))
-      .catch(() => vivo && setBundle(null));
-    return () => {
-      vivo = false;
-    };
-  }, [idSessione]);
-
-  const setup = bundle?.setup;
-  if (!setup) return null;
-  const etichette = new Map(Object.values(params).flatMap((s) => Object.entries(s.params).map(([k, p]) => [k, p.label] as const)));
-  const verificati = Object.values(setup.valori).filter((v) => v.verificato).length;
-
-  return (
-    <div className="mb-4 rounded-xl border border-line bg-surface p-4">
-      <button type="button" onClick={() => setAperto((a) => !a)} aria-expanded={aperto} className="flex w-full items-center justify-between text-left">
-        <span className="font-mono text-[0.62rem] uppercase tracking-widest text-subtle">
-          Setup della sessione · {setup.nome ?? "senza nome"} · {Object.keys(setup.valori).length} parametri
-        </span>
-        <span className="font-mono text-[0.6rem] text-muted">{aperto ? "▴" : "▾"}</span>
-      </button>
-      {aperto && (
-        <>
-          <p className="mt-2 text-[0.72rem] text-muted">
-            Valori come li scrive ACC: {verificati === 0 ? "tutti in click" : `${verificati} in unità reali, gli altri in click`}. La
-            conversione in unità reali non è ancora verificata per questa vettura, quindi non si caricano negli slider (che
-            sono in unità reali): si leggono qui.
-          </p>
-          <div className="mt-3 grid grid-cols-2 gap-x-6 gap-y-1 font-mono text-[0.72rem] sm:grid-cols-3 lg:grid-cols-4">
-            {Object.entries(setup.valori).map(([k, v]) => (
-              <div key={k} className="flex justify-between gap-2 border-b border-line/50 py-0.5">
-                <span className="truncate text-muted">{etichette.get(k) ?? k}</span>
-                <span className="text-white">
-                  {v.verificato && v.reale !== null ? `${v.reale} ${v.unita}` : Array.isArray(v.raw) ? v.raw.join("/") : v.raw}
-                </span>
-              </div>
-            ))}
-          </div>
-          {setup.assunzioni.length > 0 && (
-            <ul className="mt-2 flex flex-col gap-0.5 text-[0.68rem] text-muted">
-              {setup.assunzioni.map((a) => (
-                <li key={a}>· {a}</li>
-              ))}
-            </ul>
-          )}
-        </>
+      {setup.assunzioni.length > 0 && (
+        <ul className="mt-2 flex flex-col gap-0.5 border-t border-line pt-3 text-[0.68rem] text-muted">
+          {setup.assunzioni.map((a) => (
+            <li key={a}>· {a}</li>
+          ))}
+        </ul>
       )}
     </div>
   );
 }
 
-function ScreenshotUpload({ onApplyVision }: { onApplyVision: (vp: Record<string, number>) => number }) {
-  const [file, setFile] = useState<File | null>(null);
-  const [busy, setBusy] = useState(false);
-  const [summary, setSummary] = useState<string | null>(null);
-  const [vparams, setVparams] = useState<Record<string, number> | null>(null);
-  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
-
-  async function read() {
-    if (!file) return;
-    setBusy(true);
-    setMsg(null);
-    setSummary(null);
-    setVparams(null);
-    try {
-      const r = await postSetupFromImage(file);
-      setSummary(r.summary);
-      setVparams(r.params);
-      setMsg({ ok: true, text: `Riconosciuti ${Object.keys(r.params).length} parametri.` });
-    } catch (err) {
-      const text =
-        err instanceof ApiError && err.status === 503
-          ? "🔒 Richiede la chiave server (in demo non è attiva)."
-          : err instanceof ApiError
-            ? err.message
-            : "Lettura screenshot fallita.";
-      setMsg({ ok: false, text });
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  return (
-    <div>
-      <div className="mb-1.5 font-mono text-[0.6rem] uppercase tracking-widest text-muted">Screenshot setup ACC</div>
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-        className="block w-full text-xs text-subtle file:mr-3 file:cursor-pointer file:rounded-md file:border file:border-line-strong file:bg-raised file:px-3 file:py-1.5 file:text-xs file:text-white hover:file:border-accent"
-      />
-      <button
-        onClick={read}
-        disabled={!file || busy}
-        className="mt-2 rounded-md border border-line-strong bg-raised px-3 py-1.5 text-xs text-white transition hover:border-accent disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        {busy ? "Analisi…" : "Leggi parametri dallo screenshot"}
-      </button>
-      {msg && <p className={`mt-2 text-xs ${msg.ok ? "text-ok" : "text-warn"}`}>{msg.text}</p>}
-      {summary && <pre className="mt-2 whitespace-pre-wrap font-mono text-[0.7rem] text-subtle">{summary}</pre>}
-      {vparams && Object.keys(vparams).length > 0 && (
-        <button
-          onClick={() => {
-            const n = onApplyVision(vparams);
-            setMsg({ ok: true, text: `${n} parametri applicati agli slider.` });
-          }}
-          className="mt-2 rounded-md bg-accent px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-accent-hover"
-        >
-          Usa questi parametri negli slider
-        </button>
-      )}
-    </div>
-  );
-}
-
-// Switch on/off custom (sostituisce il checkbox nativo). role="switch" accessibile.
-function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (v: boolean) => void; label: string }) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      aria-label={label}
-      onClick={() => onChange(!checked)}
-      className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${checked ? "bg-accent" : "bg-line-strong"}`}
-    >
-      <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-all ${checked ? "left-[1.125rem]" : "left-0.5"}`} />
-    </button>
-  );
-}
-
-// Opzione di un selettore: il valore è la stringa inviata all'API; `badge` è
-// un'etichetta accessoria (es. "DLC") mostrata a destra nella tendina.
-type SelectOption = { value: string; badge?: string };
-
-function PwSelect({ label, value, options, onChange }: { label: string; value: string; options: SelectOption[]; onChange: (v: string) => void }) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const onDoc = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
-  }, [open]);
-
-  return (
-    <label className="flex flex-col gap-1">
-      <span className="font-mono text-[0.6rem] uppercase tracking-widest text-muted">{label}</span>
-      <div ref={ref} className="relative">
-        <button
-          type="button"
-          onClick={() => setOpen((o) => !o)}
-          className="flex w-full items-center justify-between rounded-md border border-line bg-inset px-3 py-2 text-sm text-white transition hover:border-line-strong focus:border-accent focus:outline-none"
-        >
-          <span className="truncate">{value}</span>
-          <span className={`ml-2 text-muted transition-transform ${open ? "rotate-180" : ""}`}>▾</span>
-        </button>
-        <AnimatePresence>
-          {open && (
-            <motion.div
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.12 }}
-              className="pw-scroll absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md border border-line bg-raised p-1 shadow-xl"
-            >
-              {options.map((o) => (
-                <button
-                  key={o.value}
-                  type="button"
-                  onClick={() => {
-                    onChange(o.value);
-                    setOpen(false);
-                  }}
-                  className={`flex w-full items-center justify-between gap-2 rounded px-2.5 py-1.5 text-left text-sm transition ${
-                    o.value === value ? "bg-accent/15 text-accent" : "text-subtle hover:bg-surface hover:text-white"
-                  }`}
-                >
-                  <span className="truncate">{o.value}</span>
-                  {o.badge && (
-                    <span className="shrink-0 rounded border border-line px-1 font-mono text-[0.5rem] uppercase tracking-wider text-muted">
-                      {o.badge}
-                    </span>
-                  )}
-                </button>
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </label>
-  );
-}
-
 // ─────────────────────────────────────────────
-// Slider ACC + Rake
+// Un parametro: frecce − / + come in ACC, click e valore del gioco
 // ─────────────────────────────────────────────
-function Slider({
+function Frecce({
   paramKey,
   param,
-  value,
+  click,
+  originale,
+  grezzo,
+  conTabella,
+  compatto,
   suggerimento,
   onChange,
 }: {
   paramKey: string;
   param: Param;
-  value: number;
-  suggerimento?: Suggerimento; // parametro citato dal verdetto
-  onChange: (v: number) => void;
+  click: number | undefined;
+  originale: number | undefined;
+  grezzo: number | number[] | undefined;
+  conTabella: boolean;
+  compatto: boolean;
+  suggerimento?: Suggerimento;
+  onChange: (click: number) => void;
 }) {
+  const r = param.regola;
   const citato = !!suggerimento;
+  const massimo = clickMax(r);
+  const cambiato = click !== undefined && originale !== undefined && click !== originale;
+  const mostra = (c: number) => {
+    const v = reale(r, c);
+    // Se il gioco mostra lo stesso numero del click (TC, barre, ammortizzatori…) basta una volta.
+    if (v === null || !r || (v === c && !r.unita)) return `${c}`;
+    return `${c} · ${formatReale(r, v)}`;
+  };
+  const freccia =
+    "h-6 w-6 shrink-0 rounded border border-line-strong font-mono text-xs text-subtle transition hover:border-accent hover:text-white disabled:cursor-not-allowed disabled:opacity-30";
+
   return (
-    <div id={`param-${paramKey}`} className={`py-2 ${citato ? "border-l-2 border-accent pl-2.5" : ""}`} title={suggerimento ? suggerimento.motivi.join(" · ") : param.tip || undefined}>
-      <div className="flex items-baseline justify-between gap-2">
-        <span className="flex items-center gap-1.5 font-mono text-[0.66rem] uppercase tracking-wider text-subtle">
+    <div
+      id={`param-${paramKey}`}
+      className={`py-1.5 ${citato ? "border-l-2 border-accent pl-2.5" : ""}`}
+      title={suggerimento ? suggerimento.motivi.join(" · ") : r?.nota ?? param.tip ?? undefined}
+    >
+      <div className="flex items-center justify-between gap-2">
+        <span className="flex min-w-0 items-center gap-1.5 truncate font-mono text-[0.64rem] uppercase tracking-wider text-subtle">
           {param.label}
-          {citato && (
-            <span className="rounded border border-accent px-1 py-px text-[0.5rem] font-semibold not-italic text-accent">
-              VERDETTO{suggerimento?.variazione !== null && suggerimento?.variazione !== undefined ? ` ${suggerimento.variazione > 0 ? "+" : ""}${suggerimento.variazione}` : ""}
+          {citato && <span className="rounded border border-accent px-1 py-px text-[0.5rem] font-semibold text-accent">VERDETTO</span>}
+          {conTabella && !r && (
+            <span className="rounded border border-warn/60 px-1 py-px text-[0.5rem] font-semibold normal-case tracking-normal text-warn" title="Le fonti non concordano: resta in click finché non si vede in gioco">
+              da verificare
             </span>
           )}
         </span>
-        <span className="font-mono text-[0.82rem] font-semibold" style={{ color: citato ? COLORS.accent : COLORS.text }}>
-          {formatValue(param, value)}
-        </span>
+        {click === undefined ? (
+          <span className="font-mono text-[0.78rem] text-muted" title="Nel file non c'è un click intero per questo parametro">
+            {grezzo === undefined ? "—" : Array.isArray(grezzo) ? grezzo.join("/") : grezzo}
+          </span>
+        ) : (
+          <div className="flex shrink-0 items-center gap-1.5">
+            <button type="button" className={freccia} onClick={() => onChange(click - 1)} disabled={click <= 0} aria-label={`${param.label}: un click in meno`}>
+              ◀
+            </button>
+            <span
+              className={`${compatto ? "min-w-[2.5rem]" : "min-w-[8.5rem]"} text-center font-mono text-[0.8rem] font-semibold`}
+              style={{ color: citato ? COLORS.accent : COLORS.text }}
+            >
+              {compatto ? click : mostra(click)}
+              {!r || compatto ? <span className="ml-1 text-[0.6rem] font-normal text-muted">click</span> : null}
+            </span>
+            <button
+              type="button"
+              className={freccia}
+              onClick={() => onChange(click + 1)}
+              disabled={massimo !== null && click >= massimo}
+              aria-label={`${param.label}: un click in più`}
+            >
+              ▶
+            </button>
+          </div>
+        )}
       </div>
-      <input
-        type="range"
-        min={param.min}
-        max={param.max}
-        step={param.step}
-        value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-        className="pw-range mt-1.5 h-2 w-full cursor-pointer rounded-full border border-line-strong bg-[#2a2a2a]"
-        aria-label={param.label}
-      />
+      {cambiato && (
+        <div className="mt-0.5 text-right font-mono text-[0.6rem] text-muted">
+          era {compatto ? originale : mostra(originale!)}
+          <button type="button" onClick={() => onChange(originale!)} className="ml-1.5 text-subtle underline-offset-2 hover:text-white hover:underline">
+            ripristina
+          </button>
+        </div>
+      )}
     </div>
   );
-}
-
-// Il rake si mostra, non si giudica: una soglia «giusta» non è pubblicata.
-function RakeInfo({ front, rear }: { front: number; rear: number }) {
-  return <div className="mt-2 font-mono text-sm text-subtle">Rake attuale: {(rear - front).toFixed(0)} mm</div>;
 }

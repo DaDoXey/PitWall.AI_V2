@@ -9,7 +9,6 @@
 // * console — niente file né telemetria: il pilota scrive tempi (se li ha), setup e
 //   soprattutto racconta la sessione fase per fase. Gigi ragiona su quello.
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import PageHeader from "@/components/ui/PageHeader";
@@ -36,7 +35,6 @@ import { useProfile } from "@/lib/profile";
 import { GRUPPI_SESSIONI, useSessione } from "@/lib/sessione";
 import { data, ETICHETTA_PIATTAFORMA, ETICHETTA_TIPO, etichettaFonte, giri, tempoGiro } from "@/lib/formato";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
-import { CHIAVE_BOZZA_SETUP } from "@/lib/setup";
 
 type Esito = { ok: boolean; testo: string } | null;
 
@@ -565,19 +563,8 @@ function PercorsoConsole({ piattaforma }: { piattaforma: Piattaforma }) {
   const [tempi, setTempi] = useState("");
   const [racconto, setRacconto] = useState<Racconto>({});
   const [curveCritiche, setCurveCritiche] = useState("");
-  const [bozzaSetup, setBozzaSetup] = useState<Record<string, number> | null>(null);
-  const [usaSetup, setUsaSetup] = useState(true);
   const [lavoro, setLavoro] = useState(false);
   const [esito, setEsito] = useState<Esito>(null);
-
-  useEffect(() => {
-    try {
-      const raw = sessionStorage.getItem(CHIAVE_BOZZA_SETUP);
-      if (raw) setBozzaSetup(JSON.parse(raw) as Record<string, number>);
-    } catch {
-      /* nessuna bozza */
-    }
-  }, []);
 
   const righe = useMemo(() => tempi.split(/\n+/).map((r) => r.trim()).filter(Boolean), [tempi]);
   const illeggibili = righe.filter((r) => leggiTempo(r) === null);
@@ -594,14 +581,8 @@ function PercorsoConsole({ piattaforma }: { piattaforma: Piattaforma }) {
         tipo_sessione: tipo,
         mescola: mescola || null,
         giri: righe.map((riga, i) => ({ numero: i + 1, tempo_ms: leggiTempo(riga) })),
-        setup: usaSetup && bozzaSetup ? bozzaSetup : undefined,
         racconto: { ...racconto, curve_critiche: curve },
       });
-      try {
-        sessionStorage.removeItem(CHIAVE_BOZZA_SETUP);
-      } catch {
-        /* no-op */
-      }
       await ricarica(r.id);
       router.push("/console");
     } catch (e) {
@@ -699,20 +680,8 @@ function PercorsoConsole({ piattaforma }: { piattaforma: Piattaforma }) {
       </div>
 
       <div className="mt-4 rounded-lg border border-line bg-inset p-3 text-[0.78rem] text-subtle">
-        {bozzaSetup ? (
-          <label className="flex items-center gap-2">
-            <input type="checkbox" checked={usaSetup} onChange={(e) => setUsaSetup(e.target.checked)} />
-            Allega il setup preparato nella pagina Setup ({Object.keys(bozzaSetup).length} parametri)
-          </label>
-        ) : (
-          <>
-            Il setup si prepara nella pagina{" "}
-            <Link href="/setup" className="text-white underline-offset-2 hover:underline">
-              Setup
-            </Link>{" "}
-            (a mano o da screenshot) e da lì si porta qui con «Crea una sessione con questo setup».
-          </>
-        )}
+        Una sessione scritta a mano non ha il setup: il setup arriva dal file JSON di ACC (scheda «File di ACC» qui
+        sopra) e si modifica nella pagina Setup.
       </div>
 
       <button

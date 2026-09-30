@@ -8,6 +8,8 @@ Rotte:
 - `POST /api/sessions/import/motec`   — un export MoTeC di ACC (.ld + .ldx) diventa una
                                         sessione con i canali (L5)
 - `GET  /api/sessions/{id}/export/motec` — la sessione come .ld + .ldx (zip) per MoTeC i2 (L5)
+- `POST /api/sessions/{id}/export/setup` — il setup della sessione con i click cambiati nella
+  pagina Setup, come file JSON da rimettere in ACC (Entry #058)
 - `GET  /api/sessions`                — elenco, dalla più recente (la DEMO in fondo)
 - `GET  /api/sessions/{id}`           — il bundle intero
 - `GET  /api/sessions/{id}/analisi`   — il report del motore (L2, + curve e gomme se ci sono i canali)
@@ -36,7 +38,7 @@ import logging
 import os
 
 from fastapi import APIRouter, File, Form, HTTPException, Query, UploadFile
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, StrictInt
 
 from app.analisi import analizza
 from app.bundle import demo, store
@@ -356,6 +358,46 @@ async def esporta_motec(id_sessione: str):
         content=esportazione.zip(),
         media_type="application/zip",
         headers={"Content-Disposition": f'attachment; filename="{esportazione.nome_base}.zip"'},
+    )
+
+
+class ClickSetup(BaseModel):
+    """I click cambiati nella pagina Setup, {parametro: click}."""
+
+    click: dict[str, StrictInt] = Field(default_factory=dict)
+
+
+@router.post("/sessions/{id_sessione}/export/setup")
+async def esporta_setup(id_sessione: str, corpo: ClickSetup):
+    """Il file di setup originale di ACC con i click nuovi: si rimette in
+    `Documenti/Assetto Corsa Competizione/Setups/<auto>/<pista>/` e ACC lo carica.
+
+    Solo lettura: la sessione archiviata non cambia. 409 se la sessione non ha il file
+    originale (setup inserito a mano), 422 se un click non si può scrivere.
+    """
+    import json
+
+    from fastapi.responses import Response
+
+    from app.bundle.adapters.acc_setup import applica_click
+
+    bundle = _leggi_o_errore(id_sessione)
+    if not bundle.setup or not bundle.setup.raw:
+        raise HTTPException(status_code=409,
+                            detail="Questa sessione non ha il file di setup di ACC da cui ripartire")
+    try:
+        dati = applica_click(bundle.setup.raw, corpo.click)
+    except SetupAccError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    # Nome del file solo ASCII: l'intestazione HTTP non porta altro (e ACC non ne ha bisogno).
+    nome = "".join(c for c in (bundle.setup.nome or "setup")
+                   if c.isascii() and (c.isalnum() or c in " -_."))
+    nome = (" ".join(nome.split()) or "setup") + " PitWall"
+    log.info("export setup: %s → %s (%d click cambiati)", id_sessione, nome, len(corpo.click))
+    return Response(
+        content=json.dumps(dati, indent=2, ensure_ascii=False).encode("utf-8"),
+        media_type="application/json",
+        headers={"Content-Disposition": f'attachment; filename="{nome}.json"'},
     )
 
 

@@ -31,6 +31,8 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    # Il nome del file scaricato (export del setup, #058) deve arrivare al browser.
+    expose_headers=["Content-Disposition"],
 )
 
 for _router in (sessions.router, analysis.router, setup.router,

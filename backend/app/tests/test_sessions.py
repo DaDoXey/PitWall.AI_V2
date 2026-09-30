@@ -250,6 +250,54 @@ test("S42 GET /api/setup-params risponde ancora", client.get("/api/setup-params"
 test("S43 GET /api/catalog risponde ancora", client.get("/api/catalog").status_code == 200)
 test("S44 la rotta CSV eliminata resta 404", client.post("/api/csv/parse").status_code == 404)
 
+# ---------------------------------------------------------------------------
+# 6. Pagina Setup (#058): regole della vettura ed export del file per ACC
+# ---------------------------------------------------------------------------
+import json as _json  # noqa: E402
+
+from app.bundle.schema import Setup, ValoreSetup  # noqa: E402
+
+par = client.get("/api/setup-params", params={"car": "bmw_m4_gt3"}).json()
+test("S45 /api/setup-params con la vettura porta la regola di ogni parametro",
+     par["tyres"]["params"]["tire_press_fl"]["regola"]["base"] == 20.3
+     and par["tyres"]["params"]["caster"]["regola"] is None,
+     str(par["tyres"]["params"]["caster"].get("regola")))
+senza = client.get("/api/setup-params").json()
+test("S46 …e senza vettura nessuna regola (niente valori generici spacciati)",
+     all(p["regola"] is None for sec in senza.values() for p in sec["params"].values()))
+
+rotta = f"/api/sessions/{id_setup}/export/setup"
+resp = client.post(rotta, json={"click": {"tire_press_rl": 54, "caster": 25}},
+                   headers={"Origin": "http://localhost:3000"})
+test("S47 l'export del setup risponde 200 con un file JSON da scaricare",
+     resp.status_code == 200 and resp.headers["content-type"].startswith("application/json")
+     and 'filename="acc_setup_gt3 PitWall.json"' in resp.headers.get("content-disposition", ""),
+     f"{resp.status_code} {resp.headers.get('content-disposition')}")
+test("S48 il browser può leggere il nome del file (header esposto dal CORS)",
+     "content-disposition" in resp.headers.get("access-control-expose-headers", "").lower(),
+     resp.headers.get("access-control-expose-headers", ""))
+file_acc = resp.json() if resp.status_code == 200 else {}
+originale = store.leggi(id_setup).setup.raw
+test("S49 nel file ci sono i click nuovi, il resto è quello di ACC",
+     file_acc.get("basicSetup", {}).get("tyres", {}).get("tyrePressure") == [54, 61, 54, 54]
+     and file_acc["basicSetup"]["alignment"]["casterLF"] == 25
+     and file_acc["basicSetup"]["strategy"] == originale["basicSetup"]["strategy"])
+test("S50 la sessione archiviata non cambia",
+     originale["basicSetup"]["tyres"]["tyrePressure"] == [54, 61, 48, 54])
+test("S51 un parametro sconosciuto dà 422 con il motivo",
+     client.post(rotta, json={"click": {"boh": 1}}).status_code == 422)
+test("S52 un click non intero (o un booleano) dà 422",
+     client.post(rotta, json={"click": {"wing": 1.5}}).status_code == 422
+     and client.post(rotta, json={"click": {"wing": True}}).status_code == 422)
+test("S53 un click negativo dà 422", client.post(rotta, json={"click": {"wing": -1}}).status_code == 422)
+a_mano = store.salva(SessionBundle(
+    meta=Meta(fonte=Fonte.MANUALE, car="bmw_m4_gt3", track="monza"),
+    setup=Setup(valori={"wing": ValoreSetup(raw=3)})))
+test("S54 una sessione senza il file di ACC dà 409",
+     client.post(f"/api/sessions/{a_mano}/export/setup", json={"click": {}}).status_code == 409)
+test("S55 una sessione che non c'è dà 404",
+     client.post("/api/sessions/20990101-000000-nessuna-0000/export/setup", json={"click": {}}).status_code == 404)
+
 shutil.rmtree(ARCHIVIO, ignore_errors=True)
 
 # ---------------------------------------------------------------------------
