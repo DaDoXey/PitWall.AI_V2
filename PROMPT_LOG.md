@@ -2491,7 +2491,38 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 **Verifica:** backend **1013/1013** in 19 file (1008 + G11b-e + C42b) · `tsc --noEmit` 0 errori, nessuna variabile inutilizzata nei file toccati.
 
 **File protetti:** ☑ nessuno toccato (`demo_responses.py`, `core/agent.py`, `core/prompts/*` invariati).
-**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `bd34b89` Console · `17ae9f9` risposta di Gigi e curve · docs nel commit successivo).
+**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `bd34b89` Console · `17ae9f9` risposta di Gigi e curve · `2fa958c` docs).
+
+---
+
+## Entry #053 — Sessioni: archivio in cima e a gruppi, un solo riquadro per aggiungere
+
+| Campo | Valore |
+|---|---|
+| Data | 30/09/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `frontend/src/app/(app)/sessioni/page.tsx` · `frontend/src/lib/sessione.tsx` · `frontend/src/components/ui/Sidebar.tsx` · `docs/03-v2-architecture.md` |
+| Commit | vedi sotto |
+| Contesto | Quarta pagina della revisione. Misurata sul suo schermo (1536×639), percorso PC: 1201 px. |
+
+**Catalogo messaggi:**
+1. «ok push, poi procedi con Sessioni» (dopo la #052) → diagnosi e 4 proposte: archivio sempre visibile e in cima; archivio a gruppi come la colonna, meno etichette; un solo riquadro «Aggiungi una sessione» a tab con MoTeC predefinito; stima ~850 px.
+2. «ok a tutte le proposte, procedi».
+
+**Diagnosi (prima):** senza piattaforma scelta (succede entrando in demo, che azzera il profilo) la pagina mostrava solo «Dove giochi ad ACC?» e **l'archivio spariva**; con la piattaforma, l'archivio stava in fondo (da 767 px) sotto tre riquadri di import (file di ACC con i percorsi per intero, telemetria registrata mezzo vuota, MoTeC — l'unico usato davvero: 5 sessioni vere su 5); ogni riga dell'archivio ripeteva MOTEC · RIFERIMENTO · TELEMETRIA · SETUP.
+
+**Modifica:**
+- **Archivio sempre, e per primo**, a gruppi **Le tue / Riferimenti · altri piloti / Demo** con il conteggio: gli stessi gruppi della colonna di sinistra, spostati in `lib/sessione.tsx` (`GRUPPI_SESSIONI`) e usati da tutte e due. Tolte le etichette «riferimento» (lo dice il gruppo) e «telemetria» sulle MoTeC (un export MoTeC ha sempre i canali). Restano MoTeC, setup, ritaglio i2, racconto; invariati Apri, MoTeC ↓, Cancella con la conferma sul bottone.
+- **«Aggiungi una sessione»**: un riquadro solo, con «Giochi su PC · cambia» nel titolo; senza piattaforma la domanda sta qui dentro (e l'archivio resta visibile sopra). PC = tre tab **Export MoTeC** (predefinito) · **File di ACC** · **Registrazione dal vivo**, con il pallino di stato del registratore e il numero di registrazioni da importare sul nome del tab (lo stato si legge nel percorso, così resta vero anche a tab chiuso). Ogni tab ha una riga di istruzioni al posto dei percorsi per intero. Il percorso console è una parte dello stesso riquadro (non più un riquadro nel riquadro), dietro «Mostra anche il percorso console».
+
+**Risultato osservato** (1536×639, percorso PC): **1022 px** con il tab MoTeC (da 1201), 948 con File di ACC o Registrazione; l'archivio comincia subito sotto il titolo (prima da 767 px). Tab verificati uno per uno, percorso console aperto e richiuso. Console del browser senza errori. La stima di ~850 era ottimista: le 6 righe dell'archivio in cima pesano circa 460 px.
+
+**Nota di processo:** un passaggio di `prettier` (il progetto non lo usa) aveva riformattato tutto il file; ripristinato e rifatte le sole modifiche, così il diff contiene solo quelle.
+
+**Verifica:** `tsc --noEmit` 0 errori, nessuna variabile inutilizzata nei file toccati · backend non toccato.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `b146f32` Sessioni · docs nel commit successivo).
 
 ---
 
