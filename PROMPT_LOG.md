@@ -2390,7 +2390,76 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 **Verifica:** `tsc --noEmit` 0 errori e nessuna variabile inutilizzata nei file toccati (`--noUnusedLocals`) · rotte `/` e `/setup` 200 · backend non toccato.
 
 **File protetti:** ☑ nessuno toccato.
-**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `50465e7` Dashboard · docs nel commit successivo). Chiuso anche INC-V2-005: il trascina/allarga della Dashboard non esiste più.
+**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `50465e7` Dashboard · `65f3f60` docs). Chiuso anche INC-V2-005: il trascina/allarga della Dashboard non esiste più.
+
+---
+
+## Entry #051 — Telemetria riordinata: Giri, Curve, Gomme e freni; perdite in un solo formato
+
+| Campo | Valore |
+|---|---|
+| Data | 30/09/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `frontend/src/components/charts/GiriSessione.tsx` · `AnalisiCurve.tsx` · `frontend/src/components/ui/PannelloPista.tsx` · `Verdetto.tsx` · `frontend/src/lib/formato.ts` · `lib/api.ts` · `app/(app)/page.tsx` · `GommeFreni.tsx` · DEL `frontend/src/components/charts/PressureGauge.tsx` · `backend/app/analisi/motore.py` · `backend/app/tests/test_analisi.py` · `test_analisi_l4.py` · `docs/03-v2-architecture.md` |
+| Commit | vedi sotto |
+| Contesto | Seconda pagina della revisione «una alla volta», dopo la Dashboard (#050). Misurata sul suo schermo (1536×639): Giri 1063 px, Curve 1216, Gomme e freni 1605. |
+
+**Catalogo messaggi:**
+1. «ok push, poi partiamo dalla telemetria» → diagnosi dei tre tab e 5 proposte: Giri con barre nella colonna e settori a destra; Gomme e freni = «macchina vista dall'alto» + un grafico con selettore; Curve senza la riga dei nomi e con freno e gas in una traccia; perdite nello stesso formato ovunque («+0.15 s», col punto come il resto dell'app); un tab alla volta dentro una sola entry.
+2. «ok a tutte le proposte, partiamo dal tab Giri» → tab Giri.
+3. «va bene, passiamo al tab Curve però una cosa: aggiungi un disclaimer per i settori ed in caso controlla perché se ricordo bene nel gtwc non ci stanno 3 settori registrati nei tempi sul giro ma 4» → disclaimer, verifica dei settori, tab Curve.
+4. «1 i settori sono 3 te lo confermo, togliamo il disclaimer, 2 approvo la proposta. ok procedi.» → disclaimer tolto; verdetto della Dashboard con il segno «+».
+5. «1 va bene, 2 guardiamolo adesso. ok procedi.» → perdita al millisecondo dal motore; degrado: pendenza e media dette per quello che sono.
+6. «ok va bene così procedi con il resto.» → tab Gomme e freni.
+7. «siccome per la macchina con vista dall'alto abbiamo avuto sempre problemi mentre la progettavamo, toglila completamente e lascia solo le sagome degli pneumatici. però tutto il resto mi sta piacendo abbastanza. ok push e poi ok procedi con il resto.» → via la carrozzeria: al centro solo le quattro gomme; riquadro «Ruota per ruota».
+
+**Modifica — tab Giri:**
+- **Tolto il grafico «Distacco dal giro migliore»**: ripeteva la colonna Δ migliore. Ora la barra sta nella cella, accanto al numero, in scala sul distacco più grande fra i giri di ritmo. I giri fuori ritmo sono fuori scala: solo il numero, spento.
+- **Settori a destra** (320 px) come righe: S1 · perdita a giro (arancio), poi migliore · media, poi dispersione · «nel migliore» (quanto ci ha lasciato il giro migliore; «pari» se zero). Nota con il significato dei due termini e il giro teorico.
+- **Sessioni senza split** (es. MoTeC della Ferrari a Monza): spariscono le colonne S1-S3 e il riquadro dei settori, la tabella va a tutta larghezza e la nota dice «Questa sessione non ha i tempi dei settori.» Prima: tre colonne di trattini e un riquadro col messaggio tecnico del motore.
+- NEW `perdita(ms)` in `lib/formato.ts`: «+0.228 s», sempre positivo, al millesimo come i giri e i delta (a due decimali 46 e 50 ms diventavano entrambi «+0.05 s»).
+- ~~Disclaimer sui settori~~: messo (msg 3) e tolto (msg 4) dopo la conferma di Edoardo che in ACC i settori sono 3.
+
+**Verifica sui settori (messaggio 3):** nel codice sono fissi a **3** — il motore (`analisi/motore.py`) tiene solo i giri con esattamente 3 split, l'API ne accetta al massimo 3 (`api/sessions.py`), il frontend disegna S1-S3; le 13 guide hanno 3 settori. Però la shared memory di ACC ha `sectorCount` («Number of sectors»), che il registratore **non legge**: quindi ACC prevede un numero variabile. Nessuna sessione vera dell'archivio ha split (li ha solo la demo, generata da noi) e la cartella Results di ACC è vuota: **non c'è un dato per confermare né smentire i 4 settori**; ricerca web senza esito. **Chiuso (msg 4): Edoardo conferma 3 settori**, niente generalizzazione.
+
+**Modifica — Dashboard (`components/ui/Verdetto.tsx`):** la perdita a giro del verdetto passa da «−0.31 s» a «+0.31 s», come nel resto dell'app. Resta ai centesimi: il motore manda `decimi` già arrotondati (315 ms → 3.1), quindi sulla stessa schermata il verdetto dice «+0.18 s» e la colonna «+0.184 s» per la curva 7. Per il millesimo serve il valore in ms dal motore (backend): chiesto a Edoardo → fatto (msg 5, sotto).
+
+**Modifica — motore (msg 5, `backend/app/analisi/motore.py`, non protetto):** `Perdita` ha due campi nuovi: `perdita_ms` (lo stesso numero di `decimi` al millisecondo, valorizzato dove c'è `decimi`: teorico, settore, costanza, degrado, curva principale) e `misura` (cosa misura il numero: «a giro» di default, «in media a giro» per il degrado, «di deviazione» per la costanza). `decimi` resta per i testi. Il verdetto (`Verdetto.tsx`) scrive `perdita(perdita_ms)` e sotto la `misura`. Test nuovi: N26b, N31b (`test_analisi`), L37b (`test_analisi_l4`).
+
+**Degrado, «+0.70 s a giro» contro «352 ms/giro» (msg 5):** non era un errore, sono due misure diverse con la stessa etichetta. L'indicatore mostra la **pendenza** (ogni giro più lento del precedente di 352 ms) → ora «+352 ms ogni giro»; il verdetto mostra quanto costa **in media a giro** sui 5 giri del calo (352 × 4 / 2 = 704 ms) → ora «+0.704 s · in media a giro». Anche la costanza ora dice «di deviazione» invece di «a giro».
+
+**Risultato osservato — Dashboard** (demo, 1536×639, backend riavviato): verdetto «+0.704 s in media a giro», «+0.315 s a giro» (come il tab Giri), «+0.184 s a giro» (come la colonna di sinistra); Degrado «+352 ms ogni giro»; pagina sempre 1028 px. Restano ai centesimi i **testi** del motore (titolo «Perdi 0.18 s a giro in curva 7», prove in decimi): parlano in decimi per scelta, non toccati.
+
+**Modifica — tab Gomme e freni (msg 6):**
+- **«Ruota per ruota»**: le quattro ruote al loro posto (Ant.SX, Ant.DX sopra; Post.SX, Post.DX sotto); al centro, dopo il msg 7, **solo le sagome delle quattro gomme** (la carrozzeria disegnata è stata tolta) con «▲ davanti» e gli squilibri fra gli assi (psi e °C; si riportano, non si giudicano). Ogni ruota ha tre righe: **pressione** e **core** con il valore (verde dentro, arancio fuori, giudizio del motore), la barra sotto/dentro/sopra la finestra Kunos con la quota e il min–max; **freno** con la massima, la media e le pastiglie. Il pallino di ogni ruota ha il colore della sua linea nel grafico.
+- Sessioni MoTeC senza temperatura al core: la riga diventa «Gomma · 83 °C · MoTeC · non giudicata» (prima un riquadro a parte).
+- **Un grafico solo** «Giro per giro» con il selettore Pressione / Temperatura al core / Freni, massima (solo le grandezze che la sessione ha) e la **legenda delle ruote** nel titolo (prima mancava). Banda Kunos e linee community come prima; la nota community compare con i freni.
+- Tolti: i 4 manometri (`PressureGauge.tsx` cancellato, lo usava solo questo tab), il grafico dei freni sempre visibile (quattro righe piatte fra 450 e 650 °C), le schede separate dei freni, le barre delle temperature.
+- Piccoli: squilibri arrotondati prima del segno (niente «−0.0 psi»); punto finale sulle note del motore che non l'avevano.
+- `docs/03`: righe di Dashboard (era ancora «7 KPI con drag&drop»), Telemetria e `components/charts/`.
+
+**Risultato osservato — Gomme e freni** (1536×639): demo **854 px** (da 1605; 879 con i freni, per la nota community), Ferrari a Monza 875 px con «Gomma … MoTeC · non giudicata» e il selettore a due voci. Console senza errori; rotte `/ /telemetry /setup /console /login /sessioni` 200.
+
+**Altezze finali della Telemetria** (demo / Ferrari): Giri 639 / 639 (da 1063) · Curve 1224 / 1132 (da 1291 / 1216) · Gomme e freni 854 / 875 (da 1605).
+
+**Verifica backend:** suite **1008/1008** in 19 file (1005 + N26b, N31b, L37b), `test_tracciati` 98/98.
+
+**Modifica — tab Curve:**
+- **Perdita media** nella tabella e nel «Dove perdi» della colonna di sinistra con `perdita()`: prima «154 ms» e «−0.15 s» per lo stesso dato, ora «+0.154 s» in tutti e due.
+- **Pedali in una traccia**: gas sopra lo zero, freno sotto (tacche in valore assoluto, tooltip «Gas A/B», «Freno A/B» con valori positivi). Due grafici da 90 px → uno da 130.
+- **Via la riga coi nomi** delle curve sotto il confronto (ripeteva la colonna Guida): il nome è nel **tooltip**, accanto ai metri, solo fra l'inizio e l'uscita della curva della guida (sul rettilineo niente nome; la prima versione diceva «T7 Lesmo 2» anche a metà del rettilineo).
+- Nota del confronto: tolto il «;» finale quando B è della stessa sessione.
+
+**Risultato osservato — Curve** (1536×639): Ferrari a Monza **1132 px** (da 1216), demo 1224 (da 1291); tooltip «3904 m · T8 Variante Ascari (ingresso)»; colonna e tabella dicono entrambe «+0.154 s». Console senza errori.
+
+**Risultato osservato — Giri** (a schermo, 1536×639): tab Giri **639 px** (da 1063), cioè una schermata, sia sulla demo (8 giri, colonne 525/531 px) sia sulla Ferrari a Monza (10 giri, senza settori). Console senza errori.
+
+**Verifica:** `tsc --noEmit` 0 errori.
+
+**Nota a margine (non toccata):** sulla Ferrari a Monza il carburante è 3.10 l in tutti i giri completi: sembra una media spalmata, non una misura giro per giro. Da guardare a parte.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (msg 7), dopo aver tolto la carrozzeria: `4c4b41f` Telemetria · `3730c71` verdetto al millisecondo · docs nel commit successivo.
 
 ---
 

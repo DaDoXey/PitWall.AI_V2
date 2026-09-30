@@ -31,8 +31,8 @@ HAZARD-V2-B) + `cd frontend && npm run dev` (:3000). Health `GET :8000/` →
 **Pagine:**
 | Rotta | File | Cosa fa · API |
 |---|---|---|
-| `/` | `(app)/page.tsx` | **Dashboard** (L4): scheda sessione, verdetto, cosa regge, note sui dati, 7 KPI con drag&drop · report da `lib/sessione.tsx` (`GET /api/sessions/{id}/analisi`) |
-| `/telemetry` | `(app)/telemetry/page.tsx` | **Telemetria** (L4): tab Giri, Curve, Gomme e freni · report + `GET /api/sessions/{id}/tracce` |
+| `/` | `(app)/page.tsx` | **Dashboard** (L4; riordinata nelle Entry #050-#051): fascia della sessione, verdetto con le note sui dati | cosa regge e 7 indicatori a righe (clic = dettaglio), pista e vettura compatte · report da `lib/sessione.tsx` (`GET /api/sessions/{id}/analisi`) |
+| `/telemetry` | `(app)/telemetry/page.tsx` | **Telemetria** (L4; riordinata nella Entry #051): tab Giri (tabella con il distacco disegnato nella cella, settori a destra), Curve (tabella con la guida, confronto velocità / delta / pedali), Gomme e freni (la macchina vista dall'alto, ruota per ruota, e un grafico giro per giro con selettore) · report + `GET /api/sessions/{id}/tracce` |
 | `/console` | `(app)/console/page.tsx` | **Console** di Gigi sulla sessione aperta: analisi a 5 sezioni, con il profilo pilota · `POST /api/analysis` |
 | `/setup` | `(app)/setup/page.tsx` | **Setup**: 5 tab / 49 slider ACC, parametri indicati dal verdetto, setup grezzo della sessione, upload screenshot · `GET /api/catalog`, `/api/setup-params`, `/api/sessions/{id}`; `POST /api/setup/from-image` |
 | `/sessioni` | `(app)/sessioni/page.tsx` | **Sessioni** (L4): percorso PC (import file, registratore), percorso console (sessione manuale con racconto), archivio |
@@ -45,7 +45,7 @@ Le schede vettura/circuito (`SessionBriefing`) leggono `GET /api/catalog/car/{id
 - **`components/ui/`**: `AuthGate`, `CountUp`, `GigiAvatar`, `GigiTour`, `MotionProvider`, `NavIcons`,
   `OnboardingFlow` (5 passi, il primo è la piattaforma), `PageHeader`, `Providers`, `QuickNotes`, `SessionBriefing`,
   `Sidebar` (dal 29/09, Entry #048: in cima la sessione aperta con l'elenco a gruppi «Le tue» / «Riferimenti» / «Demo»; navigazione in due gruppi «La sessione» e «Archivio e studio»; nello spazio libero `PannelloPista` — mappa della pista aperta con la curva dove perdi di più, adattata all'altezza dello schermo; note e utente come icone accanto al marchio, versione nel menu dell'utente), `Tabs`, `UserChip` (menu: tutorial, crediti, esci), `Verdetto`. Il layout `(app)` centra il contenuto (`max-w-6xl`).
-- **`components/charts/`**: `AnalisiCurve`, `GiriSessione`, `GommeFreni`, `PressureGauge`, `Sparkline`.
+- **`components/charts/`**: `AnalisiCurve`, `GiriSessione`, `GommeFreni` (`Sparkline` tolto nella #050, `PressureGauge` nella #051).
 - **`lib/`**: `api.ts` (fetch client tipizzato sul report + `ApiError`), **`sessione.tsx`** (sessione aperta e report
   condivisi da tutte le pagine), **`formato.ts`** (solo formattazione: nessun conto), `auth.tsx`, `profile.tsx`,
   `theme.ts`, **`instrument.ts`** (token "analogici"), **`motion.ts`**, `catalog.ts` (liste di fallback),
