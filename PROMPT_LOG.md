@@ -2522,7 +2522,40 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 **Verifica:** `tsc --noEmit` 0 errori, nessuna variabile inutilizzata nei file toccati · backend non toccato.
 
 **File protetti:** ☑ nessuno toccato.
-**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `b146f32` Sessioni · docs nel commit successivo).
+**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `b146f32` Sessioni · `cc08913` docs).
+
+---
+
+## Entry #054 — Tracciati: indice più denso e legato alle sessioni, scheda con mappa e curve affiancate
+
+| Campo | Valore |
+|---|---|
+| Data | 30/09/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `frontend/src/app/(app)/tracciati/page.tsx` · `frontend/src/app/(app)/tracciati/[id]/page.tsx` · `docs/03-v2-architecture.md` |
+| Commit | vedi sotto |
+| Contesto | Quinta pagina della revisione. Misurata sul suo schermo (1536×639): indice 3282 px, scheda di Monza 3638. |
+
+**Catalogo messaggi:**
+1. «ok push, poi procedi con Tracciati» (dopo la #053) → diagnosi di indice e scheda, 7 proposte: indice a quattro colonne (A); soprannome solo se diverso; «aperta ora» e sessioni per pista; mappa e curva per curva affiancati; dati di pista nei numeri in alto; sezioni brevi a coppie; accenti veri nelle guide (entry a parte, dopo).
+2. «ok a tutte le proposte, procedi».
+
+**Modifica — indice:**
+- **Quattro card per riga** (da tre), corpo più compatto. La foto non si accorcia cambiando le proporzioni del riquadro: con i ritagli di `crops.json` tornerebbe stirata (#041); con la card più stretta si rimpicciolisce da sola nelle stesse proporzioni.
+- **Soprannome solo se dice qualcosa**: «COTA» sotto COTA non c'è più (anche nella scheda). Numeri e bandierine in fondo alla card (`mt-auto`): le card della stessa riga restano allineate.
+- **Legame con le sessioni**: «aperta ora» sulla pista della sessione aperta, «N sessioni» dove ce ne sono in archivio (tue o di riferimento, non la demo).
+
+**Modifica — scheda:**
+- **Mappa verificata e curva per curva affiancati**; la mappa resta ferma mentre scorre l'elenco (`sticky`). Senza mappa (Suzuka) l'elenco va a tutta larghezza; senza guida (Kyalami) la mappa va a tutta larghezza come prima; senza nessuno dei due (COTA) nessun riquadro vuoto.
+- **Dati di pista della guida nella riga dei numeri** (senso di marcia, dislivello, rettilineo più lungo), con «In ACC · …» e «fonte singola, da confermare» sotto la descrizione: via il riquadro «La pista».
+- **Sezioni brevi a coppie** su due colonne (gomme e freni | track limits, box | meteo, traffico); l'errore comune e le chicche restano larghi.
+
+**Risultato osservato** (1536×639): indice **2134 px** (da 3282); Monza **2801 px** (da 3638), con mappa e 11 curve affiancate; Spa 3654 con 19 curve e la mappa ferma accanto; Suzuka, Kyalami, COTA come sopra. Console senza errori. Le stime (1900 e 2400) erano ottimiste: le card hanno ancora la foto, e le sezioni lunghe (settori, chicche) restano larghe.
+
+**Verifica:** `tsc --noEmit` 0 errori · backend non toccato.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `c6a0e13` Tracciati · docs nel commit successivo).
 
 ---
 
