@@ -4,12 +4,12 @@
     "lunghezza_confermata": true,
     "curve_confermate": true,
     "fonte_lunghezza": "https://en.wikipedia.org/wiki/Circuit_Zandvoort",
-    "note": "Risolto il 07/09/2026 verificando in gioco: la curva finale (Arie Luyendijkbocht) e' sopraelevata, quindi ACC riproduce il layout 2020 (riprofilamento Zaffelli) — 4.259 km, 14 curve. Il catalogo portava 4.307 km, cioe' la lunghezza del pre-2020, ed e' stato corretto. La consegna aveva segnalato il dato ibrido del catalogo: la segnalazione era giusta, il dubbio e' chiuso. Numerazione riallineata il 18/09/2026 a quella ufficiale del circuito, che è anche quella stampata sulla mappa mostrata in pagina: lo Scheivlak conta come due curve (6 e 7) e l'ultima è l'Arie Luyendijkbocht (14)."
+    "note": "Risolto il 07/09/2026 verificando in gioco: la curva finale (Arie Luyendijkbocht) è sopraelevata, quindi ACC riproduce il layout 2020 (riprofilamento Zaffelli) — 4.259 km, 14 curve. Il catalogo portava 4.307 km, cioè la lunghezza del pre-2020, ed è stato corretto. La consegna aveva segnalato il dato ibrido del catalogo: la segnalazione era giusta, il dubbio è chiuso. Numerazione riallineata il 18/09/2026 a quella ufficiale del circuito, che è anche quella stampata sulla mappa mostrata in pagina: lo Scheivlak conta come due curve (6 e 7) e l'ultima è l'Arie Luyendijkbocht (14)."
   },
   "senso_marcia": "orario",
   "dislivello_m": 8.9,
   "rettilineo_piu_lungo_m": null,
-  "variante_acc": "ACC riproduce il layout 2020 (riprofilamento per il ritorno della F1): Hugenholtzbocht e Arie Luyendijkbocht sopraelevate, 4,259 km e 14 curve. Verificato in gioco il 07/09/2026: la curva finale e' sopraelevata.",
+  "variante_acc": "ACC riproduce il layout 2020 (riprofilamento per il ritorno della F1): Hugenholtzbocht e Arie Luyendijkbocht sopraelevate, 4,259 km e 14 curve. Verificato in gioco il 07/09/2026: la curva finale è sopraelevata.",
   "fonti_campi_pista": {
     "senso_marcia": {
       "fonte": "https://trackdaytickets.com/tracks/zandvoort",
@@ -17,11 +17,11 @@
     },
     "dislivello_m": {
       "fonte": "https://en.wikipedia.org/wiki/Circuit_Zandvoort",
-      "nota": "Le fonti non concordano: trackdaytickets da' 18 m. Tenuto il dato di Wikipedia, che per i dati di pista e' la fonte di riferimento."
+      "nota": "Le fonti non concordano: trackdaytickets dà 18 m. Tenuto il dato di Wikipedia, che per i dati di pista è la fonte di riferimento."
     },
     "rettilineo_piu_lungo_m": {
       "fonte": null,
-      "nota": "Le fonti non concordano: 690 m per oversteer48 (dall'uscita della T14 all'ingresso della T1), 850 m per trackdaytickets. Nessuna delle due e' autorevole: null finche' non c'e' un dato ufficiale."
+      "nota": "Le fonti non concordano: 690 m per oversteer48 (dall'uscita della T14 all'ingresso della T1), 850 m per trackdaytickets. Nessuna delle due è autorevole: null finché non c'è un dato ufficiale."
     },
     "variante_acc": {
       "fonte": "https://en.wikipedia.org/wiki/Circuit_Zandvoort",
@@ -32,19 +32,19 @@
     {
       "n": 1,
       "carattere": "Rettilineo, tornante largo del Tarzan, poi subito la salita cieca nelle dune.",
-      "cosa_decide": "L'uscita dal Tarzan. E' il tornante piu' largo del giro e il piu' facile da sbagliare per ingordigia.",
+      "cosa_decide": "L'uscita dal Tarzan. È il tornante più largo del giro e il più facile da sbagliare per ingordigia.",
       "errore_costoso": "Entrare troppo forte al Tarzan cercando il sorpasso: esci storto e ti passano di nuovo alla curva dopo."
     },
     {
       "n": 2,
-      "carattere": "Il settore delle dune: cieco, ondulato, veloce. Scheivlak e' il pezzo forte.",
+      "carattere": "Il settore delle dune: cieco, ondulato, veloce. Scheivlak è il pezzo forte.",
       "cosa_decide": "La fiducia. Qui non ci sono riferimenti comodi e la pista sale e scende continuamente.",
       "errore_costoso": "Aprire il gas troppo presto in uscita da Scheivlak con la macchina ancora angolata."
     },
     {
       "n": 3,
       "carattere": "Sequenza di curve medio-lente collegate, fino all'ultima destra che lancia sul rettilineo.",
-      "cosa_decide": "La trazione. Il rettilineo del traguardo e' lungo: l'ultima curva vale doppio.",
+      "cosa_decide": "La trazione. Il rettilineo del traguardo è lungo: l'ultima curva vale doppio.",
       "errore_costoso": "Sbagliare l'ultima curva. Perdi il rettilineo e ti attaccano al Tarzan."
     }
   ],
@@ -55,11 +55,11 @@
       "tipo": "lenta",
       "marcia_indicativa": "2a",
       "riferimento_frenata": "Cartelli sulla destra in fondo al rettilineo del traguardo.",
-      "insidia": "Tornante a 180 gradi molto largo, con la carreggiata che si apre in ingresso. Ci stanno due macchine affiancate, ed e' proprio questo il problema: la traiettoria interna e' lenta, quella esterna e' lunga.",
+      "insidia": "Tornante a 180 gradi molto largo, con la carreggiata che si apre in ingresso. Ci stanno due macchine affiancate, ed è proprio questo il problema: la traiettoria interna è lenta, quella esterna è lunga.",
       "costo_errore": "Medio in qualifica, alto in gara per i contatti.",
       "sorpasso": {
         "possibile": true,
-        "come": "E' IL punto di sorpasso di Zandvoort, praticamente l'unico realistico. Scia sul rettilineo e staccata all'interno.",
+        "come": "È IL punto di sorpasso di Zandvoort, praticamente l'unico realistico. Scia sul rettilineo e staccata all'interno.",
         "come_ci_si_difende": "Interno e frenata dritta. Chi si allarga per prendere la traiettoria classica si fa infilare."
       },
       "gomme": {
@@ -68,7 +68,7 @@
       },
       "freni": {
         "stress": "alto",
-        "note": "La staccata piu' pesante del giro."
+        "note": "La staccata più pesante del giro."
       },
       "track_limits": {
         "rischio": "medio",
@@ -79,9 +79,9 @@
       "confidence": "alta",
       "direzione": "destra",
       "progressione": {
-        "prendi_il_giro": "Traiettoria esterna-interna-esterna e frenata dritta: e' larga, non serve inventare.",
-        "guadagni": "Prova la linea interna in ingresso solo se sei in lotta; da solo, la larga e' piu' veloce.",
-        "al_limite": "Ingresso largo al limite dell'asfalto, apice tardo e uscita piena verso la Gerlach: la traiettoria interna e' una trappola in qualifica."
+        "prendi_il_giro": "Traiettoria esterna-interna-esterna e frenata dritta: è larga, non serve inventare.",
+        "guadagni": "Prova la linea interna in ingresso solo se sei in lotta; da solo, la larga è più veloce.",
+        "al_limite": "Ingresso largo al limite dell'asfalto, apice tardo e uscita piena verso la Gerlach: la traiettoria interna è una trappola in qualifica."
       }
     },
     {
@@ -90,12 +90,12 @@
       "tipo": "media",
       "marcia_indicativa": "3a",
       "riferimento_frenata": "Alleggerimento breve dopo l'uscita dal Tarzan.",
-      "insidia": "Destra veloce subito dopo il tornante: la macchina e' ancora in trazione e tu devi gia' angolarla.",
+      "insidia": "Destra veloce subito dopo il tornante: la macchina è ancora in trazione e tu devi già angolarla.",
       "costo_errore": "Medio.",
       "sorpasso": {
         "possibile": false,
         "come": null,
-        "come_ci_si_difende": "E' qui che ti riprendono se hai forzato al Tarzan."
+        "come_ci_si_difende": "È qui che ti riprendono se hai forzato al Tarzan."
       },
       "gomme": {
         "stress": "anteriore sinistro",
@@ -116,7 +116,7 @@
       "progressione": {
         "prendi_il_giro": "Aspetta che la macchina sia in trazione prima di angolarla: viene subito dopo il tornante.",
         "guadagni": "Anticipa l'inserimento e apri il gas prima, accettando un po' di slittamento.",
-        "al_limite": "Quasi senza rilascio, con la macchina ancora in trazione che viene angolata: e' un pezzo unico con l'uscita del Tarzan."
+        "al_limite": "Quasi senza rilascio, con la macchina ancora in trazione che viene angolata: è un pezzo unico con l'uscita del Tarzan."
       }
     },
     {
@@ -125,7 +125,7 @@
       "tipo": "lenta",
       "marcia_indicativa": "2a",
       "riferimento_frenata": "Staccata breve. Curva a sinistra molto chiusa.",
-      "insidia": "Nel layout pre-2020 e' una sinistra stretta e piatta, non sopraelevata. Si entra lenti e si esce in salita: e' un punto di trazione pura.",
+      "insidia": "Nel layout pre-2020 è una sinistra stretta e piatta, non sopraelevata. Si entra lenti e si esce in salita: è un punto di trazione pura.",
       "costo_errore": "Medio-alto: pattini qui e perdi tutta la salita successiva.",
       "sorpasso": {
         "possibile": false,
@@ -149,7 +149,7 @@
       "confidence": "media",
       "direzione": "sinistra",
       "progressione": {
-        "prendi_il_giro": "Entra lento: qui conta solo la trazione in salita, non la velocita' d'ingresso.",
+        "prendi_il_giro": "Entra lento: qui conta solo la trazione in salita, non la velocità d'ingresso.",
         "guadagni": "Raddrizza prima e apri il gas progressivamente per non pattinare sulla salita.",
         "al_limite": "Ingresso al minimo indispensabile e trazione perfetta in uscita: chi pattina qui perde tutta la salita successiva."
       }
@@ -160,7 +160,7 @@
       "tipo": "media",
       "marcia_indicativa": "3a-4a",
       "riferimento_frenata": "Nessuna frenata vera: si sale in accelerazione.",
-      "insidia": "Salita cieca. Non vedi dove va la pista finche' non sei sopra.",
+      "insidia": "Salita cieca. Non vedi dove va la pista finché non sei sopra.",
       "costo_errore": "Medio.",
       "sorpasso": {
         "possibile": false,
@@ -184,9 +184,9 @@
       "confidence": "media",
       "direzione": "destra",
       "progressione": {
-        "prendi_il_giro": "Sali in accelerazione tenendo la macchina al centro: la salita e' cieca.",
+        "prendi_il_giro": "Sali in accelerazione tenendo la macchina al centro: la salita è cieca.",
         "guadagni": "Fissa un riferimento a bordo pista e allarga l'ingresso per preparare la Slotemaker.",
-        "al_limite": "Piena in salita senza correzioni, con la traiettoria gia' impostata su quello che non vedi."
+        "al_limite": "Piena in salita senza correzioni, con la traiettoria già impostata su quello che non vedi."
       }
     },
     {
@@ -220,7 +220,7 @@
       "direzione": "sinistra",
       "progressione": {
         "prendi_il_giro": "Prendila larga: se esci stretto, a Scheivlak sei fuori traiettoria.",
-        "guadagni": "Allarga ancora e tieni piu' velocita' in cresta.",
+        "guadagni": "Allarga ancora e tieni più velocità in cresta.",
         "al_limite": "Piatta e larghissima, impostata solo per arrivare giusto allo Scheivlak."
       }
     },
@@ -229,8 +229,8 @@
       "nome": "Scheivlak",
       "tipo": "veloce",
       "marcia_indicativa": "4a-5a",
-      "riferimento_frenata": "Alleggerimento sulla cresta, non frenata. Il riferimento e' il punto in cui la pista comincia a scendere.",
-      "insidia": "La curva piu' bella e piu' cattiva di Zandvoort. Destra veloce che entra CIECA sulla cresta: quando la macchina si scarica sopra il dosso tu sei gia' angolato, e la pista sparisce sotto il cofano.",
+      "riferimento_frenata": "Alleggerimento sulla cresta, non frenata. Il riferimento è il punto in cui la pista comincia a scendere.",
+      "insidia": "La curva più bella e più cattiva di Zandvoort. Destra veloce che entra CIECA sulla cresta: quando la macchina si scarica sopra il dosso tu sei già angolato, e la pista sparisce sotto il cofano.",
       "costo_errore": "Molto alto: fuori ci sono barriere e sabbia, non asfalto.",
       "sorpasso": {
         "possibile": false,
@@ -254,9 +254,9 @@
       "confidence": "alta",
       "direzione": "destra",
       "progressione": {
-        "prendi_il_giro": "Alleggerisci sulla cresta e tieni il volante fermo mentre la macchina scende: non e' una curva dove si corregge.",
+        "prendi_il_giro": "Alleggerisci sulla cresta e tieni il volante fermo mentre la macchina scende: non è una curva dove si corregge.",
         "guadagni": "Riduci il rilascio e allarga l'ingresso, lasciando che la discesa ti tenga in traiettoria.",
-        "al_limite": "Un accenno di rilascio appena prima della cresta, poi piena in discesa con la macchina scarica: la curva piu' impegnativa di Zandvoort, e fuori ci sono barriere e sabbia."
+        "al_limite": "Un accenno di rilascio appena prima della cresta, poi piena in discesa con la macchina scarica: la curva più impegnativa di Zandvoort, e fuori ci sono barriere e sabbia."
       }
     },
     {
@@ -265,13 +265,13 @@
       "direzione": "destra",
       "tipo": "veloce",
       "marcia_indicativa": "4a-5a",
-      "riferimento_frenata": "Nessuna frenata: e' la seconda meta' dello Scheivlak, quella in discesa verso la staccata del Masters.",
-      "insidia": "La pista scende mentre la curva e' ancora aperta: la macchina prende velocita' da sola e si alleggerisce. Chi ha stretto l'ingresso qui si ritrova largo, e fuori ci sono sabbia e barriere, non asfalto.",
-      "costo_errore": "Molto alto: e' la stessa curva della precedente, e si paga allo stesso modo.",
+      "riferimento_frenata": "Nessuna frenata: è la seconda metà dello Scheivlak, quella in discesa verso la staccata del Masters.",
+      "insidia": "La pista scende mentre la curva è ancora aperta: la macchina prende velocità da sola e si alleggerisce. Chi ha stretto l'ingresso qui si ritrova largo, e fuori ci sono sabbia e barriere, non asfalto.",
+      "costo_errore": "Molto alto: è la stessa curva della precedente, e si paga allo stesso modo.",
       "sorpasso": {
         "possibile": false,
         "come": null,
-        "come_ci_si_difende": "Non e' un punto di attacco: chi segue guadagna solo se chi precede sbaglia la cresta."
+        "come_ci_si_difende": "Non è un punto di attacco: chi segue guadagna solo se chi precede sbaglia la cresta."
       },
       "gomme": {
         "stress": "anteriore sinistro",
@@ -283,13 +283,13 @@
       },
       "track_limits": {
         "rischio": "medio",
-        "note": "Allargare qui non e' una penalita', e' sabbia."
+        "note": "Allargare qui non è una penalità, è sabbia."
       },
-      "differenza_gara_qualifica": "In gara, con il pieno, la discesa carica ancora di piu' l'anteriore sinistro: si entra un filo piu' prudenti sulla cresta e si recupera in uscita.",
+      "differenza_gara_qualifica": "In gara, con il pieno, la discesa carica ancora di più l'anteriore sinistro: si entra un filo più prudenti sulla cresta e si recupera in uscita.",
       "progressione": {
         "prendi_il_giro": "Lascia scorrere la macchina in discesa senza correggere: la traiettoria l'hai decisa sulla cresta.",
-        "guadagni": "Allarga l'uscita e tieni piu' velocita' fino alla staccata del Masters.",
-        "al_limite": "Piena in discesa con la macchina scarica, sfruttando tutta la pista in uscita: e' il tratto piu' veloce del giro."
+        "guadagni": "Allarga l'uscita e tieni più velocità fino alla staccata del Masters.",
+        "al_limite": "Piena in discesa con la macchina scarica, sfruttando tutta la pista in uscita: è il tratto più veloce del giro."
       },
       "origine": "mestiere",
       "confidence": "media"
@@ -300,7 +300,7 @@
       "tipo": "media",
       "marcia_indicativa": "3a",
       "riferimento_frenata": "Staccata in fondo alla discesa da Scheivlak.",
-      "insidia": "Si frena in discesa con la macchina leggera dietro. Facile girare piu' del previsto.",
+      "insidia": "Si frena in discesa con la macchina leggera dietro. Facile girare più del previsto.",
       "costo_errore": "Alto.",
       "sorpasso": {
         "possibile": false,
@@ -326,7 +326,7 @@
       "progressione": {
         "prendi_il_giro": "Frena presto e dritto: si arriva in discesa con la macchina leggera dietro.",
         "guadagni": "Ritarda la frenata rilasciando in modo progressivo per non far girare il posteriore.",
-        "al_limite": "Staccata tarda in discesa con rilascio lungo fino all'apice: e' facile girare piu' del previsto, e qui si finisce nella sabbia."
+        "al_limite": "Staccata tarda in discesa con rilascio lungo fino all'apice: è facile girare più del previsto, e qui si finisce nella sabbia."
       }
     },
     {
@@ -360,7 +360,7 @@
       "direzione": "destra",
       "progressione": {
         "prendi_il_giro": "Pulizia e basta: serve a rilanciare verso la parte finale del giro.",
-        "guadagni": "Allarga per uscire piu' veloce.",
+        "guadagni": "Allarga per uscire più veloce.",
         "al_limite": "Presa in scorrimento pieno, senza mai chiudere del tutto il gas."
       }
     },
@@ -370,7 +370,7 @@
       "tipo": "media",
       "marcia_indicativa": "3a",
       "riferimento_frenata": null,
-      "insidia": "Curva di collegamento nel tratto piu' anonimo del giro. Non e' difficile, e' facile da fare male per distrazione.",
+      "insidia": "Curva di collegamento nel tratto più anonimo del giro. Non è difficile, è facile da fare male per distrazione.",
       "costo_errore": "Medio.",
       "sorpasso": {
         "possibile": false,
@@ -394,7 +394,7 @@
       "confidence": "bassa",
       "direzione": "sinistra",
       "progressione": {
-        "prendi_il_giro": "Non e' difficile: e' facile farla male per distrazione. Dalle lo stesso riferimento ogni giro.",
+        "prendi_il_giro": "Non è difficile: è facile farla male per distrazione. Dalle lo stesso riferimento ogni giro.",
         "guadagni": "Anticipa il gas e allarga l'uscita.",
         "al_limite": "Scorrimento continuo che lega la 9 alla staccata della Hans Ernst."
       }
@@ -409,7 +409,7 @@
       "costo_errore": "Medio-alto: rovini l'uscita e ti trascini l'errore fino al Kumho.",
       "sorpasso": {
         "possibile": true,
-        "come": "Attacco secondario possibile all'interno, ma serve gia' essere accostati.",
+        "come": "Attacco secondario possibile all'interno, ma serve già essere accostati.",
         "come_ci_si_difende": "Interno e uscita larga."
       },
       "gomme": {
@@ -464,7 +464,7 @@
       "confidence": "media",
       "direzione": "sinistra",
       "progressione": {
-        "prendi_il_giro": "Raddrizza appena puoi e apri il gas senza fretta: e' trazione pura.",
+        "prendi_il_giro": "Raddrizza appena puoi e apri il gas senza fretta: è trazione pura.",
         "guadagni": "Apri il gas prima, accettando un filo di pattinamento.",
         "al_limite": "Gas in appoggio con la macchina ancora piegata, usando tutto il cordolo interno."
       }
@@ -501,7 +501,7 @@
       "progressione": {
         "prendi_il_giro": "Passa pulito: da qui in poi ogni errore si paga sul rettilineo.",
         "guadagni": "Allarga l'uscita e anticipa il gas per lanciarti sull'ultima curva.",
-        "al_limite": "In appoggio pieno, con la traiettoria impostata sull'Arie Luyendijk e non sulla curva in se'."
+        "al_limite": "In appoggio pieno, con la traiettoria impostata sull'Arie Luyendijk e non sulla curva in sé."
       }
     },
     {
@@ -510,8 +510,8 @@
       "tipo": "veloce",
       "marcia_indicativa": "4a",
       "riferimento_frenata": "Alleggerimento in ingresso, non frenata piena.",
-      "insidia": "Nel layout PRE-2020 e' una destra veloce PIATTA, non sopraelevata. E' l'ultima curva vera e lancia sul rettilineo del traguardo: se esci storto, perdi due decimi sul rettilineo e ti attaccano al Tarzan.",
-      "costo_errore": "Il piu' alto del giro in termini di tempo.",
+      "insidia": "Nel layout PRE-2020 è una destra veloce PIATTA, non sopraelevata. È l'ultima curva vera e lancia sul rettilineo del traguardo: se esci storto, perdi due decimi sul rettilineo e ti attaccano al Tarzan.",
+      "costo_errore": "Il più alto del giro in termini di tempo.",
       "sorpasso": {
         "possibile": false,
         "come": null,
@@ -527,37 +527,37 @@
       },
       "track_limits": {
         "rischio": "alto",
-        "note": "Uscita larga verso il rettilineo: e' facile mettere le ruote oltre la linea."
+        "note": "Uscita larga verso il rettilineo: è facile mettere le ruote oltre la linea."
       },
       "differenza_gara_qualifica": "In gara: sacrifica l'ingresso per l'uscita, sempre. Nessuna curva del giro ripaga come questa.",
       "origine": "mestiere",
       "confidence": "alta",
       "direzione": "destra",
       "progressione": {
-        "prendi_il_giro": "Alleggerisci in ingresso e tieni la macchina dritta in uscita: e' l'ultima curva vera del giro.",
+        "prendi_il_giro": "Alleggerisci in ingresso e tieni la macchina dritta in uscita: è l'ultima curva vera del giro.",
         "guadagni": "Riduci il rilascio e apri il gas prima dell'apice.",
         "al_limite": "Quasi piena, con l'uscita che sfrutta tutta la pista e poi una linea sola fino al traguardo, senza correzioni sul raccordo: se esci storto perdi due decimi sul rettilineo e ti attaccano al Tarzan."
       }
     }
   ],
-  "track_limits_generale": "Zandvoort e' costruita fra le dune: la maggior parte delle vie di fuga e' sabbia, non asfalto. Questo cambia la logica: qui il track limit ti punisce meno del terreno. I punti dove il gioco ti invalida sono soprattutto le uscite dell'ultima curva e del Tarzan. Nelle dune (Scheivlak e dintorni) il problema non e' l'invalidazione: e' che ti fermi.",
+  "track_limits_generale": "Zandvoort è costruita fra le dune: la maggior parte delle vie di fuga è sabbia, non asfalto. Questo cambia la logica: qui il track limit ti punisce meno del terreno. I punti dove il gioco ti invalida sono soprattutto le uscite dell'ultima curva e del Tarzan. Nelle dune (Scheivlak e dintorni) il problema non è l'invalidazione: è che ti fermi.",
   "pit": {
     "tempo_perso_s": null,
     "limite_kmh": 50,
     "lato_box": null,
-    "note": "Limite standard ACC. Segnalazione utile dalla community: a Zandvoort l'ingresso pit e' considerato insidioso, con molte penalita' per eccesso di velocita' anche alle IA. Rallenta prima del solito. Tempo perso non verificato.",
+    "note": "Limite standard ACC. Segnalazione utile dalla community: a Zandvoort l'ingresso pit è considerato insidioso, con molte penalità per eccesso di velocità anche alle IA. Rallenta prima del solito. Tempo perso non verificato.",
     "fonte": "https://trinacriasimracing.wordpress.com/assetto-corsa-competition-how-to-make-a-perfect-pit-stop/"
   },
-  "traffico_multiclass": "Pista stretta e senza vie di fuga asfaltate: il traffico qui e' il problema numero uno. Fai passare sul rettilineo del traguardo o nella zona lenta delle curve 10-11. Non far passare a Scheivlak per nessun motivo. In qualifica, trovare una macchina lenta fra la curva 4 e Scheivlak significa buttare il giro: non c'e' spazio per due traiettorie.",
+  "traffico_multiclass": "Pista stretta e senza vie di fuga asfaltate: il traffico qui è il problema numero uno. Fai passare sul rettilineo del traguardo o nella zona lenta delle curve 10-11. Non far passare a Scheivlak per nessun motivo. In qualifica, trovare una macchina lenta fra la curva 4 e Scheivlak significa buttare il giro: non c'è spazio per due traiettorie.",
   "meteo_e_luce": {
-    "condizioni_tipiche": "Circuito sul mare del Nord: vento costante e sabbia trasportata sull'asfalto sono la normalita'.",
-    "sul_bagnato": "Le dune diventano il posto peggiore: cieco, ondulato e con poca aderenza. Scheivlak sul bagnato non e' una curva veloce.",
+    "condizioni_tipiche": "Circuito sul mare del Nord: vento costante e sabbia trasportata sull'asfalto sono la normalità.",
+    "sul_bagnato": "Le dune diventano il posto peggiore: cieco, ondulato e con poca aderenza. Scheivlak sul bagnato non è una curva veloce.",
     "punti_acqua": null,
     "di_notte": null,
     "al_tramonto": null
   },
-  "gomme_e_freni_pista": "Giro corto e continuo, con poche staccate vere (Tarzan, Mastersbocht, Hans Ernst) e molte curve a carico medio. Il degrado si concentra sul lato sinistro per via delle destre veloci (Scheivlak, ultima curva). I freni non sono un problema. Il problema e' la sabbia: se allarghi anche solo un po', ti porti in pista sporcizia che ti resta sulle gomme per mezzo giro.",
-  "errore_del_principiante": "Chi arriva qui la prima volta guida Scheivlak con gli occhi e non con la memoria. E' cieca: finche' non conosci a memoria dove va la pista dopo la cresta, entrerai sempre o troppo piano o troppo forte. Fai dieci giri lenti a memorizzarla prima di provare a fare tempo. Secondo errore: attaccare al Tarzan al primo giro. E' largo, sembra un invito, ed e' il posto dove finiscono piu' gare di Zandvoort.",
+  "gomme_e_freni_pista": "Giro corto e continuo, con poche staccate vere (Tarzan, Mastersbocht, Hans Ernst) e molte curve a carico medio. Il degrado si concentra sul lato sinistro per via delle destre veloci (Scheivlak, ultima curva). I freni non sono un problema. Il problema è la sabbia: se allarghi anche solo un po', ti porti in pista sporcizia che ti resta sulle gomme per mezzo giro.",
+  "errore_del_principiante": "Chi arriva qui la prima volta guida Scheivlak con gli occhi e non con la memoria. È cieca: finché non conosci a memoria dove va la pista dopo la cresta, entrerai sempre o troppo piano o troppo forte. Fai dieci giri lenti a memorizzarla prima di provare a fare tempo. Secondo errore: attaccare al Tarzan al primo giro. È largo, sembra un invito, ed è il posto dove finiscono più gare di Zandvoort.",
   "gt3_ref_lap_time": {
     "valore": null,
     "contesto": null,
@@ -570,17 +570,17 @@
   },
   "chicche": [
     {
-      "testo": "Nella ristrutturazione del 2020 l'uscita della pit lane e' stata spostata all'uscita del Tarzan.",
-      "perche_interessa_al_pilota": "Se stai guidando il layout pre-2020 in ACC, l'uscita box NON e' li'. E' la differenza piu' concreta che incontri fra i video moderni di Zandvoort e quello che hai sotto le ruote in gioco.",
+      "testo": "Nella ristrutturazione del 2020 l'uscita della pit lane è stata spostata all'uscita del Tarzan.",
+      "perche_interessa_al_pilota": "Se stai guidando il layout pre-2020 in ACC, l'uscita box NON è lì. È la differenza più concreta che incontri fra i video moderni di Zandvoort e quello che hai sotto le ruote in gioco.",
       "fonte": "https://f1chronicle.substack.com/p/zandvoort-dutch-grand-prix-f1-track"
     },
     {
-      "testo": "Il Tarzanbocht esiste dal 1948 ed e' sempre stato uno dei pochissimi punti di sorpasso realistici del giro. Il nome viene da un abitante soprannominato Tarzan che, secondo la tradizione del circuito, negozio' i diritti sul nome in cambio dell'uso del suo orto durante i lavori.",
-      "perche_interessa_al_pilota": "La prima meta' e' il dato che conta: settant'anni di modifiche al tracciato e il Tarzan resta l'unico posto dove si passa. Pianifica la gara intorno a questo.",
+      "testo": "Il Tarzanbocht esiste dal 1948 ed è sempre stato uno dei pochissimi punti di sorpasso realistici del giro. Il nome viene da un abitante soprannominato Tarzan che, secondo la tradizione del circuito, negoziò i diritti sul nome in cambio dell'uso del suo orto durante i lavori.",
+      "perche_interessa_al_pilota": "La prima metà è il dato che conta: settant'anni di modifiche al tracciato e il Tarzan resta l'unico posto dove si passa. Pianifica la gara intorno a questo.",
       "fonte": "https://f1chronicle.substack.com/p/zandvoort-dutch-grand-prix-f1-track"
     },
     {
-      "testo": "Le sopraelevate di Hugenholtz e Arie Luyendijk arrivano fino a 18 gradi di inclinazione, piu' ripide di quelle di Indianapolis. Ma sono state costruite nel 2019-2020, su progetto di Jarno Zaffelli.",
+      "testo": "Le sopraelevate di Hugenholtz e Arie Luyendijk arrivano fino a 18 gradi di inclinazione, più ripide di quelle di Indianapolis. Ma sono state costruite nel 2019-2020, su progetto di Jarno Zaffelli.",
       "perche_interessa_al_pilota": "Se in ACC hai il layout vecchio, quelle due curve sono PIATTE. Guardare guide o onboard moderni ti fa memorizzare traiettorie che in gioco non funzionano.",
       "fonte": "https://en.wikipedia.org/wiki/Circuit_Zandvoort"
     }

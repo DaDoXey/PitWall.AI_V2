@@ -4,12 +4,12 @@
     "lunghezza_confermata": true,
     "curve_confermate": true,
     "fonte_lunghezza": "https://en.wikipedia.org/wiki/Circuit_Paul_Ricard",
-    "note": "ACC usa il layout con la chicane sul Mistral (1C-V2): 5,842 km e 15 curve. La chicane l'ha confermata Edoardo in gioco il 24/09/2026; concordano la lista dei tracciati ACC di Coach Dave (15 curve), 24hseries e Track Titan. Da sapere: Wikipedia elenca il record GT3 reale (Blancpain 2019) sotto il layout senza chicane (1A-V2, 5,770 km, 13 curve), che in ACC non c'e'. Coach Dave non ha una guida di questo circuito: il contenuto curva per curva viene da due guide community di Le Mans Ultimate, sullo stesso layout, e per questo la confidence non supera mai «media». Numerazione, nomi e sensi delle curve vengono dalla mappa numerata di Commons (Le Castellet circuit map Formula One 2019 and 2021 with corner names), che ha lo stesso tracciato della versione 2018; la differenza fra le due e' solo l'ingresso box, e in ACC c'e' quello del 2018, sul rettilineo del traguardo. Le due guide non concordano fra loro su tutto: la wiki di Le Mans Ultimate da' la T1 a destra, mentre la mappa e RaceControl la danno a sinistra; RaceControl, dalla Beausset in poi, sposta i nomi di una curva. Dove una guida contraddice la mappa vale la mappa, e quella parte della guida non e' usata. I tre settori qui sotto sono una divisione descrittiva, non i settori di cronometraggio di ACC."
+    "note": "ACC usa il layout con la chicane sul Mistral (1C-V2): 5,842 km e 15 curve. La chicane l'ha confermata Edoardo in gioco il 24/09/2026; concordano la lista dei tracciati ACC di Coach Dave (15 curve), 24hseries e Track Titan. Da sapere: Wikipedia elenca il record GT3 reale (Blancpain 2019) sotto il layout senza chicane (1A-V2, 5,770 km, 13 curve), che in ACC non c'è. Coach Dave non ha una guida di questo circuito: il contenuto curva per curva viene da due guide community di Le Mans Ultimate, sullo stesso layout, e per questo la confidence non supera mai «media». Numerazione, nomi e sensi delle curve vengono dalla mappa numerata di Commons (Le Castellet circuit map Formula One 2019 and 2021 with corner names), che ha lo stesso tracciato della versione 2018; la differenza fra le due è solo l'ingresso box, e in ACC c'è quello del 2018, sul rettilineo del traguardo. Le due guide non concordano fra loro su tutto: la wiki di Le Mans Ultimate dà la T1 a destra, mentre la mappa e RaceControl la danno a sinistra; RaceControl, dalla Beausset in poi, sposta i nomi di una curva. Dove una guida contraddice la mappa vale la mappa, e quella parte della guida non è usata. I tre settori qui sotto sono una divisione descrittiva, non i settori di cronometraggio di ACC."
   },
   "senso_marcia": "orario",
   "dislivello_m": null,
   "rettilineo_piu_lungo_m": null,
-  "variante_acc": "ACC riproduce il layout 1C-V2, quello della Formula 1 dal 2018 al 2022: 5,842 km e 15 curve, con la chicane a meta' del Mistral. Non il layout senza chicane da 5,770 km.",
+  "variante_acc": "ACC riproduce il layout 1C-V2, quello della Formula 1 dal 2018 al 2022: 5,842 km e 15 curve, con la chicane a metà del Mistral. Non il layout senza chicane da 5,770 km.",
   "fonti_campi_pista": {
     "senso_marcia": {
       "fonte": "https://www.24hseries.com/circuits/circuit-paul-ricard",
@@ -17,11 +17,11 @@
     },
     "dislivello_m": {
       "fonte": "https://en.wikipedia.org/wiki/Circuit_Paul_Ricard",
-      "nota": "Le fonti non concordano: Wikipedia da' quote fra 408 e 441 m sul livello del mare (33 m), trackdaytickets 8 m. La stessa Wikipedia descrive la pista come molto piatta, costruita su un altopiano, ed Edoardo in gioco la conferma piatta (24/09/2026): il valore resta null finche' non c'e' una misura."
+      "nota": "Le fonti non concordano: Wikipedia dà quote fra 408 e 441 m sul livello del mare (33 m), trackdaytickets 8 m. La stessa Wikipedia descrive la pista come molto piatta, costruita su un altopiano, ed Edoardo in gioco la conferma piatta (24/09/2026): il valore resta null finché non c'è una misura."
     },
     "rettilineo_piu_lungo_m": {
       "fonte": null,
-      "nota": "Il Mistral misura circa 1,8 km (Wikipedia, trackdaytickets), ma in ACC e' tagliato a meta' dalla chicane, e nessuna fonte da' la lunghezza dei due tratti: da misurare in gioco."
+      "nota": "Il Mistral misura circa 1,8 km (Wikipedia, trackdaytickets), ma in ACC è tagliato a metà dalla chicane, e nessuna fonte dà la lunghezza dei due tratti: da misurare in gioco."
     },
     "variante_acc": {
       "fonte": "https://en.wikipedia.org/wiki/Circuit_Paul_Ricard",
@@ -31,13 +31,13 @@
   "settori": [
     {
       "n": 1,
-      "carattere": "Le due chicane della Verrerie e dell'Hôtel, poi la destra del Camp: il tratto piu' tortuoso, prima della Sainte-Baume.",
+      "carattere": "Le due chicane della Verrerie e dell'Hôtel, poi la destra del Camp: il tratto più tortuoso, prima della Sainte-Baume.",
       "cosa_decide": "L'uscita del Camp, che prepara la Sainte-Baume e quindi il Mistral.",
       "errore_costoso": "Troppo cordolo interno alla T2: la macchina tocca il fondo e si gira."
     },
     {
       "n": 2,
-      "carattere": "La lunga destra della Sainte-Baume, la piega a sinistra che immette sul Mistral e la chicane Montréal a meta' rettilineo.",
+      "carattere": "La lunga destra della Sainte-Baume, la piega a sinistra che immette sul Mistral e la chicane Montréal a metà rettilineo.",
       "cosa_decide": "L'uscita della Sainte-Baume e quella della chicane: ognuna vale per mezzo Mistral.",
       "errore_costoso": "Un taglio del controllo di trazione in uscita dalla Sainte-Baume: si perde tempo su tutto il primo tratto del Mistral."
     },
@@ -57,7 +57,7 @@
       "marcia_indicativa": "3a",
       "riferimento_frenata": "Tenendosi a destra sul rettilineo, si frena appena prima del cartello dei 100 m, dove finisce il cordolo bianco e rosso sulla destra. Quasi tutta la frenata in linea retta, scalando in terza.",
       "insidia": "Prima parte di una chicane sinistra-destra, veloce-media, che chiede precisione e conoscenza dei limiti. Un po' di trail braking fino al primo apice, all'altezza della salsiccia centrale interna. Si sale sul cordolo interno, e in uscita si resta fra il centro e il lato sinistro della pista per aprire la T2.",
-      "costo_errore": "Medio. Dopo la T2 c'e' un tratto dritto abbastanza lungo, dove si guadagna o si perde molto.",
+      "costo_errore": "Medio. Dopo la T2 c'è un tratto dritto abbastanza lungo, dove si guadagna o si perde molto.",
       "sorpasso": {
         "possibile": false,
         "come": null,
@@ -75,11 +75,11 @@
         "rischio": "medio",
         "note": "La chicane chiede di conoscere bene i limiti: il cordolo interno si usa, oltre no."
       },
-      "differenza_gara_qualifica": "In gara, al primo giro, la chicane e' stretta per due: meglio uscirne puliti che vincere la frenata.",
+      "differenza_gara_qualifica": "In gara, al primo giro, la chicane è stretta per due: meglio uscirne puliti che vincere la frenata.",
       "progressione": {
         "prendi_il_giro": "Frena prima dei 100 m, terza, e resta al centro in uscita.",
         "guadagni": "Aggiungi il trail braking fino alla salsiccia centrale interna.",
-        "al_limite": "Frenata al limite dove finisce il cordolo di destra, apice sul cordolo interno e uscita gia' a sinistra per la T2."
+        "al_limite": "Frenata al limite dove finisce il cordolo di destra, apice sul cordolo interno e uscita già a sinistra per la T2."
       },
       "origine": "fonte",
       "confidence": "media"
@@ -90,8 +90,8 @@
       "direzione": "destra",
       "tipo": "media",
       "marcia_indicativa": "3a",
-      "riferimento_frenata": "Nessuna nuova frenata: il cambio di direzione dalla T1 e' improvviso.",
-      "insidia": "Sterzo e gas vanno dosati con dolcezza per tenere la macchina prevedibile. Si puo' provare a usare il cordolo interno per portare piu' velocita' all'apice, ma senza avidita': troppo e la macchina tocca il fondo e si gira. In uscita si usa quanto piu' si puo', con due ruote dentro la linea bianca.",
+      "riferimento_frenata": "Nessuna nuova frenata: il cambio di direzione dalla T1 è improvviso.",
+      "insidia": "Sterzo e gas vanno dosati con dolcezza per tenere la macchina prevedibile. Si può provare a usare il cordolo interno per portare più velocità all'apice, ma senza avidità: troppo e la macchina tocca il fondo e si gira. In uscita si usa quanto più si può, con due ruote dentro la linea bianca.",
       "costo_errore": "Medio. Si paga sul tratto dritto verso l'Hôtel.",
       "sorpasso": {
         "possibile": false,
@@ -113,7 +113,7 @@
       "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
       "progressione": {
         "prendi_il_giro": "Cambia direzione con calma e stai lontano dal cordolo interno.",
-        "guadagni": "Usa un po' di cordolo interno per portare velocita' all'apice.",
+        "guadagni": "Usa un po' di cordolo interno per portare velocità all'apice.",
         "al_limite": "Cordolo interno fino al punto in cui la macchina non tocca il fondo, e uscita piena con due ruote dentro la linea."
       },
       "origine": "fonte",
@@ -126,7 +126,7 @@
       "tipo": "media",
       "marcia_indicativa": "3a",
       "riferimento_frenata": "Si resta a sinistra, usando l'asfalto blu oltre il cordolo bianco e rosso per aprire l'ingresso. Si frena appena dopo il cartello dei 100 m a sinistra, si scala in terza e si gira al cartello dei 50 m.",
-      "insidia": "Prima parte di un'altra chicane, destra-sinistra, molto piu' stretta della prima e in discesa. Si taglia il cordolo interno. Conta portare velocita' senza allargare in uscita: tutta la sequenza sta nel mettere la macchina nel punto giusto per la curva dopo.",
+      "insidia": "Prima parte di un'altra chicane, destra-sinistra, molto più stretta della prima e in discesa. Si taglia il cordolo interno. Conta portare velocità senza allargare in uscita: tutta la sequenza sta nel mettere la macchina nel punto giusto per la curva dopo.",
       "costo_errore": "Medio. Si paga alla T4 e al Camp.",
       "sorpasso": {
         "possibile": false,
@@ -145,11 +145,11 @@
         "rischio": "basso",
         "note": null
       },
-      "differenza_gara_qualifica": "Uguale in gara e in qualifica: e' una curva da impostare.",
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica: è una curva da impostare.",
       "progressione": {
         "prendi_il_giro": "Frena dopo i 100 m, terza, e gira ai 50 m.",
         "guadagni": "Apri l'ingresso dall'asfalto blu e taglia il cordolo interno.",
-        "al_limite": "Velocita' portata all'apice senza allargare di un metro in uscita."
+        "al_limite": "Velocità portata all'apice senza allargare di un metro in uscita."
       },
       "origine": "fonte",
       "confidence": "media"
@@ -161,7 +161,7 @@
       "tipo": "lenta",
       "marcia_indicativa": "2a",
       "riferimento_frenata": "Un altro colpo di freno, scalando in seconda.",
-      "insidia": "Sinistra lenta: l'equilibrio conta piu' della velocita' d'ingresso. Le ruote interne vanno sul cordolo dell'apice, che scompone la macchina: o ci si sale con decisione o lo si lascia stare, mai a meta'. Usato bene, fa ruotare la macchina e la mette nella direzione giusta in uscita. Gas dolce, e non bisogna finire troppo a destra.",
+      "insidia": "Sinistra lenta: l'equilibrio conta più della velocità d'ingresso. Le ruote interne vanno sul cordolo dell'apice, che scompone la macchina: o ci si sale con decisione o lo si lascia stare, mai a metà. Usato bene, fa ruotare la macchina e la mette nella direzione giusta in uscita. Gas dolce, e non bisogna finire troppo a destra.",
       "costo_errore": "Medio: troppo a destra in uscita si rovina il Camp.",
       "sorpasso": {
         "possibile": false,
@@ -184,7 +184,7 @@
       "progressione": {
         "prendi_il_giro": "Freno, seconda, e stai lontano dal cordolo dell'apice.",
         "guadagni": "Sali sul cordolo con decisione per far ruotare la macchina.",
-        "al_limite": "Cordolo preso pieno, gas dolce e uscita che ti lascia a meta' pista per il Camp."
+        "al_limite": "Cordolo preso pieno, gas dolce e uscita che ti lascia a metà pista per il Camp."
       },
       "origine": "fonte",
       "confidence": "media"
@@ -196,8 +196,8 @@
       "tipo": "media",
       "marcia_indicativa": "3a",
       "riferimento_frenata": "Dopo la T4 si tiene la macchina fra il centro e la sinistra. Si frena appena dopo la fine del cordolo di sinistra e si scala in terza.",
-      "insidia": "Destra di media velocita', da prendere con un apice tardivo. Le ruote interne vanno appena sul cordolo dipinto, senza salirci sopra: e' rialzato e scompone il posteriore. Sterzo minimo e niente colpi di gas, poi si usa tutta la pista in uscita.",
-      "costo_errore": "Medio: l'uscita prepara la Sainte-Baume, che decide la velocita' sul Mistral.",
+      "insidia": "Destra di media velocità, da prendere con un apice tardivo. Le ruote interne vanno appena sul cordolo dipinto, senza salirci sopra: è rialzato e scompone il posteriore. Sterzo minimo e niente colpi di gas, poi si usa tutta la pista in uscita.",
+      "costo_errore": "Medio: l'uscita prepara la Sainte-Baume, che decide la velocità sul Mistral.",
       "sorpasso": {
         "possibile": false,
         "come": null,
@@ -230,8 +230,8 @@
       "direzione": "destra",
       "tipo": "media",
       "marcia_indicativa": "3a",
-      "riferimento_frenata": "Tenendosi a sinistra, il cartello dei 100 m e' il segnale per prepararsi: si frena appena dopo, scalando in terza, e si entra in trail braking.",
-      "insidia": "Lunga destra con due apici, che premia la pazienza. Il primo apice non va aggredito: si lascia ruotare la macchina lungo il bordo interno con un gas costante e progressivo. Fra i due apici non bisogna allargare: restando a meta' pista si rigira la macchina per il secondo, dove si porta piu' velocita' e un po' piu' di cordolo. Il gas si allarga man mano che la macchina si raddrizza.",
+      "riferimento_frenata": "Tenendosi a sinistra, il cartello dei 100 m è il segnale per prepararsi: si frena appena dopo, scalando in terza, e si entra in trail braking.",
+      "insidia": "Lunga destra con due apici, che premia la pazienza. Il primo apice non va aggredito: si lascia ruotare la macchina lungo il bordo interno con un gas costante e progressivo. Fra i due apici non bisogna allargare: restando a metà pista si rigira la macchina per il secondo, dove si porta più velocità e un po' più di cordolo. Il gas si allarga man mano che la macchina si raddrizza.",
       "costo_errore": "Alto: un sovrasterzo o un taglio del controllo di trazione in uscita costano tantissimo sul Mistral.",
       "sorpasso": {
         "possibile": false,
@@ -250,10 +250,10 @@
         "rischio": "basso",
         "note": null
       },
-      "differenza_gara_qualifica": "In gara conviene piu' pazienza sul gas: il controllo di trazione in uscita si paga su mezzo Mistral.",
+      "differenza_gara_qualifica": "In gara conviene più pazienza sul gas: il controllo di trazione in uscita si paga su mezzo Mistral.",
       "progressione": {
-        "prendi_il_giro": "Frena dopo i 100 m, terza, e resta a meta' pista fra i due apici.",
-        "guadagni": "Gas costante sul primo apice e piu' velocita' sul secondo.",
+        "prendi_il_giro": "Frena dopo i 100 m, terza, e resta a metà pista fra i due apici.",
+        "guadagni": "Gas costante sul primo apice e più velocità sul secondo.",
         "al_limite": "Secondo apice con un po' di cordolo, gas pieno anticipato senza un filo di controllo di trazione."
       },
       "origine": "fonte",
@@ -265,9 +265,9 @@
       "direzione": "sinistra",
       "tipo": "veloce",
       "marcia_indicativa": null,
-      "riferimento_frenata": "Nessuna frenata: e' la piega a sinistra che immette sul Mistral, in pieno.",
-      "insidia": "Si usa tutta la pista, con correzioni di sterzo minime: ogni correzione toglie velocita' su un rettilineo lunghissimo. Sul Mistral si resta a sinistra per la strada piu' corta.",
-      "costo_errore": "Basso in se', ma ogni correzione si paga sul Mistral.",
+      "riferimento_frenata": "Nessuna frenata: è la piega a sinistra che immette sul Mistral, in pieno.",
+      "insidia": "Si usa tutta la pista, con correzioni di sterzo minime: ogni correzione toglie velocità su un rettilineo lunghissimo. Sul Mistral si resta a sinistra per la strada più corta.",
+      "costo_errore": "Basso in sé, ma ogni correzione si paga sul Mistral.",
       "sorpasso": {
         "possibile": false,
         "come": null,
@@ -289,7 +289,7 @@
       "progressione": {
         "prendi_il_giro": "Resta in pieno.",
         "guadagni": "Usa tutta la pista.",
-        "al_limite": "Zero correzioni di sterzo e macchina gia' a sinistra sul Mistral."
+        "al_limite": "Zero correzioni di sterzo e macchina già a sinistra sul Mistral."
       },
       "origine": "fonte",
       "confidence": "media"
@@ -301,11 +301,11 @@
       "tipo": "lenta",
       "marcia_indicativa": "2a",
       "riferimento_frenata": "Staccata forte al cartello dei 100 m, tutta in linea retta, scalando in seconda o in terza secondo l'assetto e il modo di far ruotare la macchina.",
-      "insidia": "La chicane a meta' del Mistral: servono precisione e stabilita'. L'inserimento nella sinistra e' piu' tardivo di quanto sembri. Le ruote sinistre tagliano il cordolo interno, che si puo' attaccare, ma senza far decollare la macchina.",
-      "costo_errore": "Alto: arrivare lunghi qui fa perdere tutta la seconda meta' del Mistral.",
+      "insidia": "La chicane a metà del Mistral: servono precisione e stabilità. L'inserimento nella sinistra è più tardivo di quanto sembri. Le ruote sinistre tagliano il cordolo interno, che si può attaccare, ma senza far decollare la macchina.",
+      "costo_errore": "Alto: arrivare lunghi qui fa perdere tutta la seconda metà del Mistral.",
       "sorpasso": {
         "possibile": true,
-        "come": "E' la staccata pesante dopo la prima meta' del Mistral: si attacca in scia, all'interno sinistro. Le fonti non indicano i punti di sorpasso: e' la frenata piu' lunga del giro, e la chicane stessa e' stata criticata dai piloti proprio perche' spezza il rettilineo.",
+        "come": "È la staccata pesante dopo la prima metà del Mistral: si attacca in scia, all'interno sinistro. Le fonti non indicano i punti di sorpasso: è la frenata più lunga del giro, e la chicane stessa è stata criticata dai piloti proprio perché spezza il rettilineo.",
         "come_ci_si_difende": "Chiudere l'interno sinistro prima della frenata."
       },
       "gomme": {
@@ -314,15 +314,15 @@
       },
       "freni": {
         "stress": "alto",
-        "note": "Staccata dalla velocita' del Mistral."
+        "note": "Staccata dalla velocità del Mistral."
       },
       "track_limits": {
         "rischio": "medio",
         "note": "Il cordolo interno si taglia, la chicane no."
       },
-      "differenza_gara_qualifica": "In gara e' il punto dove si attacca e ci si difende: chi arriva lungo per difendersi perde l'uscita verso la Signes.",
+      "differenza_gara_qualifica": "In gara è il punto dove si attacca e ci si difende: chi arriva lungo per difendersi perde l'uscita verso la Signes.",
       "progressione": {
-        "prendi_il_giro": "Frena dritto ai 100 m, seconda, e gira piu' tardi di quanto ti sembri.",
+        "prendi_il_giro": "Frena dritto ai 100 m, seconda, e gira più tardi di quanto ti sembri.",
         "guadagni": "Taglia il cordolo interno con le ruote sinistre.",
         "al_limite": "Frenata al limite in linea retta e cordolo attaccato senza far saltare la macchina."
       },
@@ -336,8 +336,8 @@
       "tipo": "lenta",
       "marcia_indicativa": "2a",
       "riferimento_frenata": "Nessuna nuova frenata: si passa subito a destra mollando il freno per stabilizzare la macchina.",
-      "insidia": "Si usa appena un po' di cordolo interno sull'apice di destra: troppo e la macchina rimbalza di traverso. Tutto conta per l'uscita, perche' il tratto di accelerazione verso la Signes e' lunghissimo. Si esce a sinistra e si da' il gas pieno il prima possibile.",
-      "costo_errore": "Alto: l'uscita vale per tutta la seconda meta' del Mistral.",
+      "insidia": "Si usa appena un po' di cordolo interno sull'apice di destra: troppo e la macchina rimbalza di traverso. Tutto conta per l'uscita, perché il tratto di accelerazione verso la Signes è lunghissimo. Si esce a sinistra e si dà il gas pieno il prima possibile.",
+      "costo_errore": "Alto: l'uscita vale per tutta la seconda metà del Mistral.",
       "sorpasso": {
         "possibile": false,
         "come": null,
@@ -370,9 +370,9 @@
       "direzione": "destra",
       "tipo": "veloce",
       "marcia_indicativa": null,
-      "riferimento_frenata": "Nessuna staccata: si arriva a tutta velocita'. Il riferimento per girare e' il cordolo di sinistra, o l'ultima luce dei commissari. In gara, o con le gomme consumate, serve di solito un piccolo rilascio; in qualifica si puo' fare in pieno con un inserimento deciso.",
-      "insidia": "Una delle curve piu' veloci d'Europa, una destra in pieno o quasi. Inserimento e apice tardivi, sfiorando il cordolo interno senza salirci. Si disegna un arco morbido da sinistra a destra e si lascia correre la macchina fino al cordolo dipinto in uscita. La stabilita' e' tutto: ogni correzione costa tantissimo.",
-      "costo_errore": "Molto alto: alla velocita' massima del giro un errore costa il giro e porta lontano sulla via di fuga.",
+      "riferimento_frenata": "Nessuna staccata: si arriva a tutta velocità. Il riferimento per girare è il cordolo di sinistra, o l'ultima luce dei commissari. In gara, o con le gomme consumate, serve di solito un piccolo rilascio; in qualifica si può fare in pieno con un inserimento deciso.",
+      "insidia": "Una delle curve più veloci d'Europa, una destra in pieno o quasi. Inserimento e apice tardivi, sfiorando il cordolo interno senza salirci. Si disegna un arco morbido da sinistra a destra e si lascia correre la macchina fino al cordolo dipinto in uscita. La stabilità è tutto: ogni correzione costa tantissimo.",
+      "costo_errore": "Molto alto: alla velocità massima del giro un errore costa il giro e porta lontano sulla via di fuga.",
       "sorpasso": {
         "possibile": false,
         "come": null,
@@ -390,11 +390,11 @@
         "rischio": "alto",
         "note": "L'uscita va fino al cordolo dipinto, non oltre."
       },
-      "differenza_gara_qualifica": "In qualifica si prova in pieno. In gara serve un piccolo rilascio, di piu' con le gomme fredde o consumate.",
+      "differenza_gara_qualifica": "In qualifica si prova in pieno. In gara serve un piccolo rilascio, di più con le gomme fredde o consumate.",
       "progressione": {
         "prendi_il_giro": "Un piccolo rilascio, gira al cordolo di sinistra e sfiora l'interno.",
-        "guadagni": "Riduci il rilascio a un accenno e porta l'apice piu' tardi.",
-        "al_limite": "In pieno, inserimento deciso e arco perfetto fino al cordolo dipinto, gia' pronto per la staccata del Beausset."
+        "guadagni": "Riduci il rilascio a un accenno e porta l'apice più tardi.",
+        "al_limite": "In pieno, inserimento deciso e arco perfetto fino al cordolo dipinto, già pronto per la staccata del Beausset."
       },
       "origine": "fonte",
       "confidence": "media"
@@ -406,11 +406,11 @@
       "tipo": "media",
       "marcia_indicativa": "3a",
       "riferimento_frenata": "Si frena forte appena dopo l'avvallamento della strada, scalando in terza, e si entra in trail braking verso il primo apice.",
-      "insidia": "Lunga destra a doppio apice, che distrugge i giri a chi la esagera. Il primo apice si prende appena: serve alla rotazione, non alla velocita'. Poi si lascia scivolare la macchina a meta' pista e si aspetta, veleggiando un attimo: e' qui che quasi tutti danno gas troppo presto. Nella seconda parte si ridà gas e si punta il secondo apice, piu' stretto e piu' importante, con le ruote interne sul cordolo dipinto, poi si spinge la macchina verso il cordolo di uscita.",
+      "insidia": "Lunga destra a doppio apice, che distrugge i giri a chi la esagera. Il primo apice si prende appena: serve alla rotazione, non alla velocità. Poi si lascia scivolare la macchina a metà pista e si aspetta, veleggiando un attimo: è qui che quasi tutti danno gas troppo presto. Nella seconda parte si ridà gas e si punta il secondo apice, più stretto e più importante, con le ruote interne sul cordolo dipinto, poi si spinge la macchina verso il cordolo di uscita.",
       "costo_errore": "Alto: troppo gas o troppo sterzo fanno allargare la macchina e consumano le gomme.",
       "sorpasso": {
         "possibile": true,
-        "come": "E' la seconda staccata pesante del giro, in fondo alla seconda meta' del Mistral e dopo la Signes: si attacca all'interno destro. Le fonti non indicano i punti di sorpasso: e' una deduzione dalla frenata.",
+        "come": "È la seconda staccata pesante del giro, in fondo alla seconda metà del Mistral e dopo la Signes: si attacca all'interno destro. Le fonti non indicano i punti di sorpasso: è una deduzione dalla frenata.",
         "come_ci_si_difende": "Chiudere l'interno in frenata, senza compromettere il secondo apice."
       },
       "gomme": {
@@ -419,15 +419,15 @@
       },
       "freni": {
         "stress": "alto",
-        "note": "Staccata dopo la Signes, alla fine della parte piu' veloce del giro."
+        "note": "Staccata dopo la Signes, alla fine della parte più veloce del giro."
       },
       "track_limits": {
         "rischio": "medio",
         "note": null
       },
-      "differenza_gara_qualifica": "In gara e' la curva dove si decidono le gomme: calma sulle mani, niente gas prima del secondo apice.",
+      "differenza_gara_qualifica": "In gara è la curva dove si decidono le gomme: calma sulle mani, niente gas prima del secondo apice.",
       "progressione": {
-        "prendi_il_giro": "Frena dopo l'avvallamento, terza, e aspetta a meta' pista prima del gas.",
+        "prendi_il_giro": "Frena dopo l'avvallamento, terza, e aspetta a metà pista prima del gas.",
         "guadagni": "Primo apice solo per ruotare, veleggia e punta il secondo apice sul cordolo dipinto.",
         "al_limite": "Rotazione precisa sul primo apice, gas progressivo verso il secondo e uscita sul cordolo senza un filo di sottosterzo."
       },
@@ -440,8 +440,8 @@
       "direzione": "sinistra",
       "tipo": "media",
       "marcia_indicativa": null,
-      "riferimento_frenata": "Frenata in trail braking profondo in uscita dal Beausset. Nessuna delle due fonti da' un riferimento preciso.",
-      "insidia": "Sinistra di media velocita'. Si puo' prendere con un apice anticipato, ma quello tardivo e' preferibile; in uscita si usa tutta la larghezza della pista.",
+      "riferimento_frenata": "Frenata in trail braking profondo in uscita dal Beausset. Nessuna delle due fonti dà un riferimento preciso.",
+      "insidia": "Sinistra di media velocità. Si può prendere con un apice anticipato, ma quello tardivo è preferibile; in uscita si usa tutta la larghezza della pista.",
       "costo_errore": "Medio.",
       "sorpasso": {
         "possibile": false,
@@ -463,7 +463,7 @@
       "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
       "progressione": {
         "prendi_il_giro": "Frena presto e punta un apice tardivo.",
-        "guadagni": "Porta il trail braking piu' in profondita'.",
+        "guadagni": "Porta il trail braking più in profondità.",
         "al_limite": "Apice tardivo con trail braking fino in fondo e uscita su tutta la larghezza della pista."
       },
       "origine": "fonte",
@@ -475,9 +475,9 @@
       "direzione": "destra",
       "tipo": "veloce",
       "marcia_indicativa": null,
-      "riferimento_frenata": "Nessuna frenata: e' una destra in pieno.",
-      "insidia": "Sterzo minimo, per perdere meno velocita' possibile. Serve soprattutto a mettere la macchina a sinistra per la staccata del Lac.",
-      "costo_errore": "Basso in se', ma decide la staccata del Lac.",
+      "riferimento_frenata": "Nessuna frenata: è una destra in pieno.",
+      "insidia": "Sterzo minimo, per perdere meno velocità possibile. Serve soprattutto a mettere la macchina a sinistra per la staccata del Lac.",
+      "costo_errore": "Basso in sé, ma decide la staccata del Lac.",
       "sorpasso": {
         "possibile": false,
         "come": null,
@@ -499,7 +499,7 @@
       "progressione": {
         "prendi_il_giro": "Resta in pieno.",
         "guadagni": "Sterzo minimo.",
-        "al_limite": "Linea che ti lascia gia' dove serve per frenare al Lac."
+        "al_limite": "Linea che ti lascia già dove serve per frenare al Lac."
       },
       "origine": "fonte",
       "confidence": "bassa"
@@ -511,7 +511,7 @@
       "tipo": "lenta",
       "marcia_indicativa": "2a",
       "riferimento_frenata": "Staccata in linea retta con trail braking pesante, scalando in seconda. RaceControl indica il riferimento appena dopo il cartello dei 50 m, ma chiama questa curva «Garlaban»: da confermare in gioco.",
-      "insidia": "Sinistra lenta, con un inserimento piu' tardivo di quanto sembri e un apice tardivo, attaccati al cordolo interno. In uscita non bisogna allargare: la macchina deve restare a sinistra per l'ultima curva. Se la trazione non basta, conviene anticipare il cambio marcia.",
+      "insidia": "Sinistra lenta, con un inserimento più tardivo di quanto sembri e un apice tardivo, attaccati al cordolo interno. In uscita non bisogna allargare: la macchina deve restare a sinistra per l'ultima curva. Se la trazione non basta, conviene anticipare il cambio marcia.",
       "costo_errore": "Medio: un'uscita larga rovina il Pont.",
       "sorpasso": {
         "possibile": false,
@@ -530,7 +530,7 @@
         "rischio": "basso",
         "note": null
       },
-      "differenza_gara_qualifica": "In gara conta la trazione in uscita: il gas troppo presto qui e' un errore classico.",
+      "differenza_gara_qualifica": "In gara conta la trazione in uscita: il gas troppo presto qui è un errore classico.",
       "progressione": {
         "prendi_il_giro": "Frena dritto, seconda, e gira tardi.",
         "guadagni": "Trail braking fino all'apice tardivo, attaccato al cordolo.",
@@ -565,7 +565,7 @@
         "rischio": "alto",
         "note": "In uscita si va larghi, ma i limiti sono severi."
       },
-      "differenza_gara_qualifica": "In gara e' la curva da non sbagliare: chi esce meglio arriva in scia alla Verrerie. Quando si rientra ai box, l'ingresso e' subito dopo, sulla destra, segnato solo dalla striscia bianca a terra.",
+      "differenza_gara_qualifica": "In gara è la curva da non sbagliare: chi esce meglio arriva in scia alla Verrerie. Quando si rientra ai box, l'ingresso è subito dopo, sulla destra, segnato solo dalla striscia bianca a terra.",
       "progressione": {
         "prendi_il_giro": "Frena prima della fine del cordolo di sinistra, seconda, e sali sul cordolo interno.",
         "guadagni": "Inserimento deciso e sterzo che si apre presto.",
@@ -575,15 +575,15 @@
       "confidence": "media"
     }
   ],
-  "track_limits_generale": "A Paul Ricard le vie di fuga sono enormi, e proprio per questo i limiti sono severi: uscire costa il giro, non la macchina. I punti delicati sono l'uscita della T2, la Signes e l'uscita del Pont. E andare larghi ha un prezzo anche sulle gomme: oltre la Blue Zone c'e' la Red Zone, abrasiva, fatta apposta per consumarle.",
+  "track_limits_generale": "A Paul Ricard le vie di fuga sono enormi, e proprio per questo i limiti sono severi: uscire costa il giro, non la macchina. I punti delicati sono l'uscita della T2, la Signes e l'uscita del Pont. E andare larghi ha un prezzo anche sulle gomme: oltre la Blue Zone c'è la Red Zone, abrasiva, fatta apposta per consumarle.",
   "pit": {
     "tempo_perso_s": null,
     "limite_kmh": 50,
     "lato_box": "destra",
-    "note": "Limite standard ACC di 50 km/h. In ACC l'ingresso box e' quello di prima del 2019: sul rettilineo del traguardo, appena usciti dal Pont, sulla destra. Si nota poco: il riferimento e' la striscia bianca a terra che segna l'entrata (visto in gioco da Edoardo il 24/09/2026). Nel circuito reale, dal 2019, l'ingresso e' invece fra il Lac e il Pont. Il tempo perso non e' dato da nessuna fonte: da misurare in gioco.",
+    "note": "Limite standard ACC di 50 km/h. In ACC l'ingresso box è quello di prima del 2019: sul rettilineo del traguardo, appena usciti dal Pont, sulla destra. Si nota poco: il riferimento è la striscia bianca a terra che segna l'entrata (visto in gioco da Edoardo il 24/09/2026). Nel circuito reale, dal 2019, l'ingresso è invece fra il Lac e il Pont. Il tempo perso non è dato da nessuna fonte: da misurare in gioco.",
     "fonte": "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
   },
-  "traffico_multiclass": "Il Mistral e' il posto giusto per passare o farsi passare, in tutte e due le meta', e le staccate in fondo (la chicane e il Beausset) sono dove si chiude. I posti sbagliati sono la Signes, dove nessuno deve trovarsi affiancato, e il tratto lento dalla Verrerie al Camp, fatto di due chicane.",
+  "traffico_multiclass": "Il Mistral è il posto giusto per passare o farsi passare, in tutte e due le metà, e le staccate in fondo (la chicane e il Beausset) sono dove si chiude. I posti sbagliati sono la Signes, dove nessuno deve trovarsi affiancato, e il tratto lento dalla Verrerie al Camp, fatto di due chicane.",
   "meteo_e_luce": {
     "condizioni_tipiche": null,
     "sul_bagnato": null,
@@ -591,11 +591,11 @@
     "di_notte": null,
     "al_tramonto": null
   },
-  "gomme_e_freni_pista": "Paul Ricard e' una pista da anteriore sinistro: nove curve su quindici girano a destra, e fra queste le tre lunghe del giro, la Sainte-Baume, la Signes e il Beausset. La guida di Le Mans Ultimate avverte che le lunghe destre consumano anche le posteriori se si fa ruotare troppo la macchina. I freni lavorano soprattutto alla chicane e al Beausset, le due staccate dalla velocita' del Mistral.",
-  "errore_del_principiante": "Aggredire le curve lunghe. Al Beausset si da' gas troppo presto e si allarga, alla Sainte-Baume un taglio del controllo di trazione in uscita si paga su mezzo Mistral, e troppo sterzo nelle lunghe destre consuma le gomme. Il circuito sembra facile, con le sue vie di fuga larghe, ma va guidato con precisione, non con coraggio.",
+  "gomme_e_freni_pista": "Paul Ricard è una pista da anteriore sinistro: nove curve su quindici girano a destra, e fra queste le tre lunghe del giro, la Sainte-Baume, la Signes e il Beausset. La guida di Le Mans Ultimate avverte che le lunghe destre consumano anche le posteriori se si fa ruotare troppo la macchina. I freni lavorano soprattutto alla chicane e al Beausset, le due staccate dalla velocità del Mistral.",
+  "errore_del_principiante": "Aggredire le curve lunghe. Al Beausset si dà gas troppo presto e si allarga, alla Sainte-Baume un taglio del controllo di trazione in uscita si paga su mezzo Mistral, e troppo sterzo nelle lunghe destre consuma le gomme. Il circuito sembra facile, con le sue vie di fuga larghe, ma va guidato con precisione, non con coraggio.",
   "gt3_ref_lap_time": {
     "valore": "1:54.3",
-    "contesto": "Riferimento GT3 in ACC da Track Titan, sulla Porsche 911 (992) GT3 R: il miglior tempo dei suoi utenti e' 1:51.500, i piloti veloci (il 5% migliore) girano intorno a 1:54.257, la media intorno a 1:57.962. E' una sola vettura e una sola fonte: il tempo e' un ordine di grandezza, da confermare con una misura presa dalle sessioni vere.",
+    "contesto": "Riferimento GT3 in ACC da Track Titan, sulla Porsche 911 (992) GT3 R: il miglior tempo dei suoi utenti è 1:51.500, i piloti veloci (il 5% migliore) girano intorno a 1:54.257, la media intorno a 1:57.962. È una sola vettura e una sola fonte: il tempo è un ordine di grandezza, da confermare con una misura presa dalle sessioni vere.",
     "fonte": "https://app.tracktitan.io/track-guides/en/porsche_992_gt3_r-paul_ricard-assettoCorsaCompetizione-Track-Guide/8"
   },
   "gt3_fuel_per_lap_l": {
@@ -605,13 +605,13 @@
   },
   "chicche": [
     {
-      "testo": "Le vie di fuga di Paul Ricard hanno due fasce. La prima, la Blue Zone, e' di asfalto misto a tungsteno al posto della ghiaia. La seconda, piu' profonda, e' la Red Zone: una superficie ancora piu' abrasiva, fatta per dare aderenza e accorciare la frenata, al prezzo di un'usura estrema delle gomme.",
+      "testo": "Le vie di fuga di Paul Ricard hanno due fasce. La prima, la Blue Zone, è di asfalto misto a tungsteno al posto della ghiaia. La seconda, più profonda, è la Red Zone: una superficie ancora più abrasiva, fatta per dare aderenza e accorciare la frenata, al prezzo di un'usura estrema delle gomme.",
       "perche_interessa_al_pilota": "Andare larghi qui non ti insabbia, ma se finisci sulla Red Zone le gomme lo pagano per il resto dello stint.",
       "fonte": "https://en.wikipedia.org/wiki/Circuit_Paul_Ricard"
     },
     {
-      "testo": "Il Mistral nasce come un rettilineo di circa 1,8 km. Oggi esistono due layout: quello con la chicane a meta' rettilineo, che ha ACC, e quello senza, da 5,770 km, su cui si sono corse anche gare GT.",
-      "perche_interessa_al_pilota": "Un onboard girato sul layout senza chicane non vale come riferimento per la seconda meta' del Mistral e per la velocita' d'ingresso alla Signes.",
+      "testo": "Il Mistral nasce come un rettilineo di circa 1,8 km. Oggi esistono due layout: quello con la chicane a metà rettilineo, che ha ACC, e quello senza, da 5,770 km, su cui si sono corse anche gare GT.",
+      "perche_interessa_al_pilota": "Un onboard girato sul layout senza chicane non vale come riferimento per la seconda metà del Mistral e per la velocità d'ingresso alla Signes.",
       "fonte": "https://en.wikipedia.org/wiki/Circuit_Paul_Ricard"
     }
   ],

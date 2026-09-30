@@ -17,12 +17,12 @@
     },
     "dislivello_m": {
       "fonte": "https://coachdaveacademy.com/tutorials/circuit-de-spa-francorchamps-track-guide/",
-      "nota": "Coach Dave: 102,2 m fra il punto piu' alto e il piu' basso del tracciato."
+      "nota": "Coach Dave: 102,2 m fra il punto più alto e il più basso del tracciato."
     },
     "rettilineo_piu_lungo_m": {
       "fonte": "https://oversteer48.com/kemmel-straight-spa-francorchamps/",
       "fonte_singola": true,
-      "nota": "Il Kemmel, misurato dall'uscita del Raidillon all'ingresso di Les Combes, kink compreso. Unica fonte che dia il numero e dica come e' misurato."
+      "nota": "Il Kemmel, misurato dall'uscita del Raidillon all'ingresso di Les Combes, kink compreso. Unica fonte che dia il numero e dica come è misurato."
     },
     "variante_acc": {
       "fonte": "https://en.wikipedia.org/wiki/Circuit_de_Spa-Francorchamps",
@@ -32,20 +32,20 @@
   "settori": [
     {
       "n": 1,
-      "carattere": "Il tratto piu' veloce e piu' famoso: tornante lento, poi Eau Rouge-Raidillon in salita a fondo, poi il Kemmel e la staccata di Les Combes.",
-      "cosa_decide": "L'uscita da La Source e la trazione ai piedi dell'Eau Rouge decidono la velocita' su tutto il Kemmel. Qui il giro si fa o si perde in un punto solo.",
+      "carattere": "Il tratto più veloce e più famoso: tornante lento, poi Eau Rouge-Raidillon in salita a fondo, poi il Kemmel e la staccata di Les Combes.",
+      "cosa_decide": "L'uscita da La Source e la trazione ai piedi dell'Eau Rouge decidono la velocità su tutto il Kemmel. Qui il giro si fa o si perde in un punto solo.",
       "errore_costoso": "Perdere trazione in uscita da La Source. Sono due decimi che si moltiplicano per 800 metri di rettilineo."
     },
     {
       "n": 2,
-      "carattere": "Il settore del carico aerodinamico e della sensibilita': Malmedy, Rivage, Pouhon, Fagnes. Poca frenata, tanta velocita' di percorrenza.",
-      "cosa_decide": "Se l'auto e' stabile in appoggio lungo. Pouhon e' il vero esame del setup: se li' il posteriore scappa, il problema e' aerodinamico o di bilanciamento, non di gomme.",
+      "carattere": "Il settore del carico aerodinamico e della sensibilità: Malmedy, Rivage, Pouhon, Fagnes. Poca frenata, tanta velocità di percorrenza.",
+      "cosa_decide": "Se l'auto è stabile in appoggio lungo. Pouhon è il vero esame del setup: se lì il posteriore scappa, il problema è aerodinamico o di bilanciamento, non di gomme.",
       "errore_costoso": "Entrare lungo a Rivage e rovinare l'uscita in discesa verso il tratto seguente."
     },
     {
       "n": 3,
       "carattere": "Stavelot, il lunghissimo allungo di Blanchimont, poi la staccata violenta della Bus Stop.",
-      "cosa_decide": "La trazione in uscita dalla Bus Stop, perche' porta dritta sul traguardo e poi su La Source.",
+      "cosa_decide": "La trazione in uscita dalla Bus Stop, perché porta dritta sul traguardo e poi su La Source.",
       "errore_costoso": "Prendere troppo cordolo alla Bus Stop: scarica l'auto e ti fa arrivare storto sul traguardo."
     }
   ],
@@ -55,32 +55,32 @@
       "nome": "La Source",
       "tipo": "lenta",
       "marcia_indicativa": "1a-2a",
-      "riferimento_frenata": "In discesa, dopo il traguardo. Cerca il punto in cui la pista smette di scendere: si stacca leggermente prima di quanto sembri, perche' l'auto e' scarica.",
-      "insidia": "E' un tornante stretto in discesa: l'auto arriva leggera e il posteriore si mette di traverso in ingresso se molli il freno tutto insieme.",
+      "riferimento_frenata": "In discesa, dopo il traguardo. Cerca il punto in cui la pista smette di scendere: si stacca leggermente prima di quanto sembri, perché l'auto è scarica.",
+      "insidia": "È un tornante stretto in discesa: l'auto arriva leggera e il posteriore si mette di traverso in ingresso se molli il freno tutto insieme.",
       "costo_errore": "Alto. Non perdi solo il tempo della curva, lo perdi su tutto il Kemmel.",
       "sorpasso": {
         "possibile": true,
-        "come": "All'interno in staccata, sfruttando la scia dal traguardo. E' il punto piu' classico del circuito.",
+        "come": "All'interno in staccata, sfruttando la scia dal traguardo. È il punto più classico del circuito.",
         "come_ci_si_difende": "Stai stretto all'interno e accetta di uscire largo: chi ti passa all'esterno qui esce male sull'Eau Rouge."
       },
       "gomme": {
         "stress": "anteriore sinistro in ingresso, posteriore sinistro in uscita",
-        "note": "E' la curva che scalda di piu' le gomme del giro, ma dura pochissimo: non e' qui che si surriscaldano."
+        "note": "È la curva che scalda di più le gomme del giro, ma dura pochissimo: non è qui che si surriscaldano."
       },
       "freni": {
         "stress": "alto",
-        "note": "Frenata piu' violenta del giro insieme alla Bus Stop, in discesa e con poco carico."
+        "note": "Frenata più violenta del giro insieme alla Bus Stop, in discesa e con poco carico."
       },
       "track_limits": {
         "rischio": "basso",
-        "note": "Uscita larga su asfalto, ma non e' un punto dove ACC cancella facilmente."
+        "note": "Uscita larga su asfalto, ma non è un punto dove ACC cancella facilmente."
       },
-      "differenza_gara_qualifica": "In gara al primo giro e' la curva piu' pericolosa del calendario: dietro non vedi niente e arrivano tutti insieme. Lascia margine, non c'e' gara che si vinca a La Source.",
+      "differenza_gara_qualifica": "In gara al primo giro è la curva più pericolosa del calendario: dietro non vedi niente e arrivano tutti insieme. Lascia margine, non c'è gara che si vinca a La Source.",
       "origine": "mestiere",
       "confidence": "alta",
       "direzione": "destra",
       "progressione": {
-        "prendi_il_giro": "Stacca un filo prima di quanto sembri: si arriva in discesa e la macchina e' scarica.",
+        "prendi_il_giro": "Stacca un filo prima di quanto sembri: si arriva in discesa e la macchina è scarica.",
         "guadagni": "Rilascia il freno progressivamente per non mettere il posteriore di traverso, e cerca l'apice tardi.",
         "al_limite": "Frenata tarda in discesa con rilascio lunghissimo e trazione piena in uscita: qui non perdi il tempo della curva, lo perdi su tutto il Kemmel."
       }
@@ -90,9 +90,9 @@
       "nome": "Eau Rouge",
       "tipo": "veloce",
       "marcia_indicativa": "5a-6a",
-      "riferimento_frenata": "Nessuna frenata con la GT3 se l'auto e' a posto. Al massimo un accenno di rilascio.",
+      "riferimento_frenata": "Nessuna frenata con la GT3 se l'auto è a posto. Al massimo un accenno di rilascio.",
       "insidia": "La compressione ai piedi della salita schiaccia l'auto sull'asfalto: se hai l'altezza troppo bassa o le molle troppo morbide tocchi il fondo e l'auto si scompone proprio dove non puoi correggere.",
-      "costo_errore": "Molto alto. Un errore qui finisce nelle barriere a velocita' piena.",
+      "costo_errore": "Molto alto. Un errore qui finisce nelle barriere a velocità piena.",
       "sorpasso": {
         "possibile": false,
         "come": null,
@@ -100,7 +100,7 @@
       },
       "gomme": {
         "stress": "carico verticale su tutte e quattro",
-        "note": "Non e' stress laterale, e' carico verticale puro: non e' qui che consumi il battistrada."
+        "note": "Non è stress laterale, è carico verticale puro: non è qui che consumi il battistrada."
       },
       "freni": {
         "stress": "nullo",
@@ -115,7 +115,7 @@
       "confidence": "alta",
       "direzione": "sinistra",
       "progressione": {
-        "prendi_il_giro": "Nessuna frenata se la macchina e' a posto: un accenno di rilascio e tieni il volante fermo.",
+        "prendi_il_giro": "Nessuna frenata se la macchina è a posto: un accenno di rilascio e tieni il volante fermo.",
         "guadagni": "Riduci il rilascio e stringi l'ingresso ai piedi della salita.",
         "al_limite": "Piena, con la compressione che schiaccia la macchina sull'asfalto: regge solo se altezze e molle sono giuste."
       }
@@ -126,7 +126,7 @@
       "tipo": "veloce",
       "marcia_indicativa": "6a",
       "riferimento_frenata": null,
-      "insidia": "In cima l'auto si alleggerisce e la pista gira ancora a sinistra mentre tu stai gia' accelerando. E' li' che si perde il posteriore, non ai piedi della salita.",
+      "insidia": "In cima l'auto si alleggerisce e la pista gira ancora a sinistra mentre tu stai già accelerando. È lì che si perde il posteriore, non ai piedi della salita.",
       "costo_errore": "Molto alto.",
       "sorpasso": {
         "possibile": false,
@@ -135,7 +135,7 @@
       },
       "gomme": {
         "stress": "anteriore sinistro nel Raidillon, anteriore destro nella sinistra in cima",
-        "note": "Il Raidillon e' la destra della sequenza sinistra-destra-sinistra: carica il sinistro. Il «destro in cima» del testo originale si riferiva alla sinistra successiva, e ora il campo lo dice."
+        "note": "Il Raidillon è la destra della sequenza sinistra-destra-sinistra: carica il sinistro. Il «destro in cima» del testo originale si riferiva alla sinistra successiva, e ora il campo lo dice."
       },
       "freni": {
         "stress": "nullo",
@@ -143,16 +143,16 @@
       },
       "track_limits": {
         "rischio": "medio",
-        "note": "Il cordolo esterno in uscita e' molto usato: controlla dove ACC mette il limite in quel punto."
+        "note": "Il cordolo esterno in uscita è molto usato: controlla dove ACC mette il limite in quel punto."
       },
-      "differenza_gara_qualifica": "Con il pieno di benzina l'auto e' piu' pesante proprio nella compressione: nei primi giri di gara e' sensibilmente meno facile che in qualifica a serbatoio scarico.",
+      "differenza_gara_qualifica": "Con il pieno di benzina l'auto è più pesante proprio nella compressione: nei primi giri di gara è sensibilmente meno facile che in qualifica a serbatoio scarico.",
       "origine": "mestiere",
       "confidence": "alta",
       "direzione": "destra",
       "progressione": {
-        "prendi_il_giro": "In cima non accelerare mentre stai ancora girando: e' li' che si perde il posteriore.",
+        "prendi_il_giro": "In cima non accelerare mentre stai ancora girando: è lì che si perde il posteriore.",
         "guadagni": "Apri il gas un attimo prima, ma progressivo, mentre la macchina si alleggerisce.",
-        "al_limite": "Gas pieno gia' in cima con la macchina scarica che gira ancora: e' la parte che separa i piloti veloci dagli altri, e si paga cara."
+        "al_limite": "Gas pieno già in cima con la macchina scarica che gira ancora: è la parte che separa i piloti veloci dagli altri, e si paga cara."
       }
     },
     {
@@ -162,7 +162,7 @@
       "marcia_indicativa": "6a",
       "riferimento_frenata": null,
       "insidia": "Curva di raccordo in cima al Raidillon, praticamente un allineamento sul Kemmel. Conta solo per quanto ti fa uscire dritto.",
-      "costo_errore": "Basso di per se', alto per effetto: sbagliare qui significa arrivare piu' piano a Les Combes.",
+      "costo_errore": "Basso di per sé, alto per effetto: sbagliare qui significa arrivare più piano a Les Combes.",
       "sorpasso": {
         "possibile": false,
         "come": null,
@@ -187,7 +187,7 @@
       "progressione": {
         "prendi_il_giro": "Esci dritto sul Kemmel: conta solo quello.",
         "guadagni": "Allarga il raccordo per allineare prima la macchina.",
-        "al_limite": "Nessuna correzione fino al Kemmel: ogni movimento costa velocita' fino a Les Combes."
+        "al_limite": "Nessuna correzione fino al Kemmel: ogni movimento costa velocità fino a Les Combes."
       }
     },
     {
@@ -195,13 +195,13 @@
       "nome": "Les Combes",
       "tipo": "media",
       "marcia_indicativa": "3a",
-      "riferimento_frenata": "In fondo al Kemmel, in salita leggera. La salita ti aiuta a fermare l'auto: si stacca piu' tardi di quanto suggerisca la velocita'.",
-      "insidia": "Arrivi a oltre 250 km/h con i freni raffreddati da un chilometro di pieno gas. La prima staccata dopo un out-lap e' il momento in cui la gente lunga qui.",
+      "riferimento_frenata": "In fondo al Kemmel, in salita leggera. La salita ti aiuta a fermare l'auto: si stacca più tardi di quanto suggerisca la velocità.",
+      "insidia": "Arrivi a oltre 250 km/h con i freni raffreddati da un chilometro di pieno gas. La prima staccata dopo un out-lap è il momento in cui la gente lunga qui.",
       "costo_errore": "Alto. Sbagli l'ingresso e paghi su tutta la sequenza fino a Malmedy.",
       "sorpasso": {
         "possibile": true,
-        "come": "E' il sorpasso principale del circuito. Scia sul Kemmel e affianchi all'interno in staccata.",
-        "come_ci_si_difende": "Muoviti presto sul Kemmel per prendere l'interno, non aspettare la staccata: a quella velocita' la difesa tardiva e' solo pericolosa."
+        "come": "È il sorpasso principale del circuito. Scia sul Kemmel e affianchi all'interno in staccata.",
+        "come_ci_si_difende": "Muoviti presto sul Kemmel per prendere l'interno, non aspettare la staccata: a quella velocità la difesa tardiva è solo pericolosa."
       },
       "gomme": {
         "stress": "anteriore sinistro",
@@ -209,13 +209,13 @@
       },
       "freni": {
         "stress": "molto alto",
-        "note": "Freni raffreddati sul rettilineo e poi caricati al massimo: e' la frenata che mette piu' in crisi l'impianto."
+        "note": "Freni raffreddati sul rettilineo e poi caricati al massimo: è la frenata che mette più in crisi l'impianto."
       },
       "track_limits": {
         "rischio": "medio",
         "note": "Cordolo interno aggredibile, uscita da controllare."
       },
-      "differenza_gara_qualifica": "In gara e' il punto in cui devi decidere se attaccare o restare attaccato: se sbagli sei fuori pista con la ghiaia vicina.",
+      "differenza_gara_qualifica": "In gara è il punto in cui devi decidere se attaccare o restare attaccato: se sbagli sei fuori pista con la ghiaia vicina.",
       "origine": "mestiere",
       "confidence": "alta",
       "direzione": "destra",
@@ -231,12 +231,12 @@
       "tipo": "media",
       "marcia_indicativa": "3a-4a",
       "riferimento_frenata": null,
-      "insidia": "E' la seconda parte della esse: se hai preso troppo cordolo alla 5 arrivi qui scomposto e non riesci a raddrizzare per Malmedy.",
+      "insidia": "È la seconda parte della esse: se hai preso troppo cordolo alla 5 arrivi qui scomposto e non riesci a raddrizzare per Malmedy.",
       "costo_errore": "Medio.",
       "sorpasso": {
         "possibile": false,
         "come": null,
-        "come_ci_si_difende": "Se ti hanno affiancato alla 5, qui la traiettoria si inverte: chi era all'interno ora e' all'esterno. Non forzare."
+        "come_ci_si_difende": "Se ti hanno affiancato alla 5, qui la traiettoria si inverte: chi era all'interno ora è all'esterno. Non forzare."
       },
       "gomme": {
         "stress": "anteriore destro",
@@ -255,7 +255,7 @@
       "confidence": "alta",
       "direzione": "sinistra",
       "progressione": {
-        "prendi_il_giro": "Poco cordolo alla 5 per arrivare qui composto: e' la seconda parte della esse.",
+        "prendi_il_giro": "Poco cordolo alla 5 per arrivare qui composto: è la seconda parte della esse.",
         "guadagni": "Raddrizza prima e apri il gas verso Malmedy.",
         "al_limite": "Traiettoria unica fra le due parti, con la macchina mai davvero dritta."
       }
@@ -265,9 +265,9 @@
       "nome": "Malmedy",
       "tipo": "media",
       "marcia_indicativa": "4a",
-      "riferimento_frenata": "Piu' un rilascio deciso che una staccata vera.",
+      "riferimento_frenata": "Più un rilascio deciso che una staccata vera.",
       "insidia": "Curva a destra in leggera discesa: l'auto scarica sul davanti e il posteriore diventa nervoso in inserimento.",
-      "costo_errore": "Medio. In uscita c'e' poco spazio prima della discesa verso Rivage.",
+      "costo_errore": "Medio. In uscita c'è poco spazio prima della discesa verso Rivage.",
       "sorpasso": {
         "possibile": false,
         "come": null,
@@ -290,9 +290,9 @@
       "confidence": "media",
       "direzione": "destra",
       "progressione": {
-        "prendi_il_giro": "Piu' un rilascio deciso che una staccata: la macchina scarica sul davanti.",
-        "guadagni": "Riduci il rilascio e tieni piu' velocita' in appoggio.",
-        "al_limite": "Presa quasi in scorrimento, accettando un posteriore nervoso in inserimento: in uscita c'e' poco spazio prima della discesa."
+        "prendi_il_giro": "Più un rilascio deciso che una staccata: la macchina scarica sul davanti.",
+        "guadagni": "Riduci il rilascio e tieni più velocità in appoggio.",
+        "al_limite": "Presa quasi in scorrimento, accettando un posteriore nervoso in inserimento: in uscita c'è poco spazio prima della discesa."
       }
     },
     {
@@ -301,16 +301,16 @@
       "tipo": "lenta",
       "marcia_indicativa": "2a",
       "riferimento_frenata": "Frenata in discesa, curva cieca: non vedi l'apice quando stacchi. Usa un riferimento a bordo pista, non l'occhio sulla curva.",
-      "insidia": "E' la curva piu' lenta del circuito e arriva in discesa, quindi l'auto e' leggerissima sul posteriore. Se stacchi e giri insieme, ti giri.",
+      "insidia": "È la curva più lenta del circuito e arriva in discesa, quindi l'auto è leggerissima sul posteriore. Se stacchi e giri insieme, ti giri.",
       "costo_errore": "Alto. L'uscita comanda tutta la discesa che segue.",
       "sorpasso": {
         "possibile": true,
-        "come": "Possibile ma difficile: serve essere gia' affiancato prima della staccata, perche' l'ingresso e' cieco.",
+        "come": "Possibile ma difficile: serve essere già affiancato prima della staccata, perché l'ingresso è cieco.",
         "come_ci_si_difende": "Stai stretto e frena presto: chi prova a infilarsi tardi qui va lungo quasi sempre."
       },
       "gomme": {
         "stress": "anteriore sinistro",
-        "note": "Tornante lento a destra: e' una delle curve che scaldano di piu' l'anteriore sinistro."
+        "note": "Tornante lento a destra: è una delle curve che scaldano di più l'anteriore sinistro."
       },
       "freni": {
         "stress": "alto",
@@ -320,12 +320,12 @@
         "rischio": "medio",
         "note": null
       },
-      "differenza_gara_qualifica": "In gara e' un buon punto per difendersi, perche' chi ti segue non vede l'apice.",
+      "differenza_gara_qualifica": "In gara è un buon punto per difendersi, perché chi ti segue non vede l'apice.",
       "origine": "mestiere",
       "confidence": "alta",
       "direzione": "destra",
       "progressione": {
-        "prendi_il_giro": "Usa un riferimento a bordo pista: la curva e' cieca e si frena in discesa.",
+        "prendi_il_giro": "Usa un riferimento a bordo pista: la curva è cieca e si frena in discesa.",
         "guadagni": "Ritarda la frenata rilasciando progressivamente, senza girare mentre stacchi.",
         "al_limite": "Frenata tardissima in discesa con la macchina leggerissima dietro: staccare e girare insieme qui vuol dire testacoda."
       }
@@ -336,7 +336,7 @@
       "tipo": "media",
       "marcia_indicativa": "3a-4a",
       "riferimento_frenata": null,
-      "insidia": "Sinistra in discesa dopo Rivage: si prende in scorrimento, ma la discesa ti fa arrivare piu' veloce di quanto ti aspetti.",
+      "insidia": "Sinistra in discesa dopo Rivage: si prende in scorrimento, ma la discesa ti fa arrivare più veloce di quanto ti aspetti.",
       "costo_errore": "Medio.",
       "sorpasso": {
         "possibile": false,
@@ -360,7 +360,7 @@
       "confidence": "media",
       "direzione": "sinistra",
       "progressione": {
-        "prendi_il_giro": "La discesa ti fa arrivare piu' veloce di quanto ti aspetti: tienila larga.",
+        "prendi_il_giro": "La discesa ti fa arrivare più veloce di quanto ti aspetti: tienila larga.",
         "guadagni": "Prendila in scorrimento pieno senza toccare il freno.",
         "al_limite": "Piena in discesa, impostata solo in funzione dell'ingresso di Pouhon."
       }
@@ -371,8 +371,8 @@
       "tipo": "veloce",
       "marcia_indicativa": "5a",
       "riferimento_frenata": "Non si frena, si alleggerisce. Se stai frenando a Pouhon hai un problema di setup o sei arrivato male dalla 9.",
-      "insidia": "Doppia sinistra cieca in discesa. Entri senza vedere il secondo apice e il carico cresce mentre la pista scende: e' il punto dove un posteriore instabile ti tradisce senza preavviso.",
-      "costo_errore": "Molto alto. Uscita di pista ad alta velocita'.",
+      "insidia": "Doppia sinistra cieca in discesa. Entri senza vedere il secondo apice e il carico cresce mentre la pista scende: è il punto dove un posteriore instabile ti tradisce senza preavviso.",
+      "costo_errore": "Molto alto. Uscita di pista ad alta velocità.",
       "sorpasso": {
         "possibile": false,
         "come": null,
@@ -380,7 +380,7 @@
       },
       "gomme": {
         "stress": "anteriore destro e posteriore destro",
-        "note": "E' la curva che carica di piu' il lato destro dell'auto per il tempo piu' lungo. Se hai temperature anomale a destra, guarda qui prima che alle pressioni."
+        "note": "È la curva che carica di più il lato destro dell'auto per il tempo più lungo. Se hai temperature anomale a destra, guarda qui prima che alle pressioni."
       },
       "freni": {
         "stress": "nullo",
@@ -388,16 +388,16 @@
       },
       "track_limits": {
         "rischio": "alto",
-        "note": "Uscita larghissima con cordolo: e' uno dei punti dove ACC toglie il giro piu' spesso."
+        "note": "Uscita larghissima con cordolo: è uno dei punti dove ACC toglie il giro più spesso."
       },
-      "differenza_gara_qualifica": "Con il pieno l'auto sottosterza in ingresso e sovrasterza in uscita: non e' il setup che e' cambiato, e' il carburante. Non inseguire questa sensazione con modifiche.",
+      "differenza_gara_qualifica": "Con il pieno l'auto sottosterza in ingresso e sovrasterza in uscita: non è il setup che è cambiato, è il carburante. Non inseguire questa sensazione con modifiche.",
       "origine": "mestiere",
       "confidence": "alta",
       "direzione": "sinistra",
       "progressione": {
         "prendi_il_giro": "Non frenare: alleggerisci. Se stai frenando a Pouhon, arrivi male dalla 9.",
         "guadagni": "Riduci il rilascio e fidati del carico che cresce mentre la pista scende.",
-        "al_limite": "Doppia sinistra cieca presa in pieno appoggio: e' il punto dove un posteriore instabile ti tradisce a velocita' altissima."
+        "al_limite": "Doppia sinistra cieca presa in pieno appoggio: è il punto dove un posteriore instabile ti tradisce a velocità altissima."
       }
     },
     {
@@ -406,7 +406,7 @@
       "tipo": "veloce",
       "marcia_indicativa": "5a",
       "riferimento_frenata": null,
-      "insidia": "Secondo apice: qui devi gia' essere in accelerazione progressiva. Chi aspetta troppo perde l'uscita verso Fagnes.",
+      "insidia": "Secondo apice: qui devi già essere in accelerazione progressiva. Chi aspetta troppo perde l'uscita verso Fagnes.",
       "costo_errore": "Alto.",
       "sorpasso": {
         "possibile": false,
@@ -430,7 +430,7 @@
       "confidence": "alta",
       "direzione": "sinistra",
       "progressione": {
-        "prendi_il_giro": "Sii gia' in accelerazione progressiva sul secondo apice.",
+        "prendi_il_giro": "Sii già in accelerazione progressiva sul secondo apice.",
         "guadagni": "Anticipa il gas e allarga l'uscita verso le Fagnes.",
         "al_limite": "Trazione piena dal secondo apice con la macchina larga fino all'asfalto esterno."
       }
@@ -466,8 +466,8 @@
       "direzione": "destra",
       "progressione": {
         "prendi_il_giro": "Rilascio corto e ingresso misurato: la curva sale e si stringe.",
-        "guadagni": "Entra un filo piu' forte, ma lascia pista per la sinistra successiva.",
-        "al_limite": "Ingresso al limite con l'uscita gia' impostata sulla 13: le due Fagnes sono legate, sbagli la prima e le perdi entrambe."
+        "guadagni": "Entra un filo più forte, ma lascia pista per la sinistra successiva.",
+        "al_limite": "Ingresso al limite con l'uscita già impostata sulla 13: le due Fagnes sono legate, sbagli la prima e le perdi entrambe."
       }
     },
     {
@@ -511,11 +511,11 @@
       "tipo": "lenta",
       "marcia_indicativa": "3a",
       "riferimento_frenata": "Staccata corta e decisa dopo il tratto delle Fagnes.",
-      "insidia": "E' una destra stretta in mezzo a un settore veloce: il ritmo ti porta a entrare troppo forte. Rallenta piu' di quanto ti sembri giusto.",
+      "insidia": "È una destra stretta in mezzo a un settore veloce: il ritmo ti porta a entrare troppo forte. Rallenta più di quanto ti sembri giusto.",
       "costo_errore": "Medio-alto: l'uscita porta verso Stavelot e poi su Blanchimont, quindi si paga a lungo.",
       "sorpasso": {
         "possibile": true,
-        "come": "Interno in staccata, ma serve essere gia' molto vicino.",
+        "come": "Interno in staccata, ma serve essere già molto vicino.",
         "come_ci_si_difende": "Chiudi l'interno prima della staccata."
       },
       "gomme": {
@@ -535,7 +535,7 @@
       "confidence": "media",
       "direzione": "destra",
       "progressione": {
-        "prendi_il_giro": "Rallenta piu' di quanto ti sembri giusto: il ritmo del settore veloce ti porta a entrare troppo forte.",
+        "prendi_il_giro": "Rallenta più di quanto ti sembri giusto: il ritmo del settore veloce ti porta a entrare troppo forte.",
         "guadagni": "Ritarda la staccata e cerca l'apice tardi.",
         "al_limite": "Ingresso lento e uscita in trazione piena verso Stavelot: si paga a lungo, fino a Blanchimont."
       }
@@ -546,8 +546,8 @@
       "tipo": "veloce",
       "marcia_indicativa": "5a",
       "riferimento_frenata": "Rilascio.",
-      "insidia": "Destra lunga in appoggio che immette sul tratto piu' veloce del giro. Ogni km/h perso qui te lo porti fino alla Bus Stop.",
-      "costo_errore": "Alto per effetto: e' la curva che decide la velocita' massima del giro.",
+      "insidia": "Destra lunga in appoggio che immette sul tratto più veloce del giro. Ogni km/h perso qui te lo porti fino alla Bus Stop.",
+      "costo_errore": "Alto per effetto: è la curva che decide la velocità massima del giro.",
       "sorpasso": {
         "possibile": false,
         "come": null,
@@ -555,7 +555,7 @@
       },
       "gomme": {
         "stress": "anteriore sinistro e posteriore sinistro",
-        "note": "Appoggio lungo sul lato sinistro: e' l'altra faccia di Pouhon. Se hai il lato sinistro caldo, Stavelot e' la causa principale."
+        "note": "Appoggio lungo sul lato sinistro: è l'altra faccia di Pouhon. Se hai il lato sinistro caldo, Stavelot è la causa principale."
       },
       "freni": {
         "stress": "basso",
@@ -565,14 +565,14 @@
         "rischio": "alto",
         "note": "Uscita molto larga: punto classico di track limit."
       },
-      "differenza_gara_qualifica": "In gara, uscire bene da qui vale un tentativo di sorpasso alla Bus Stop. E' la curva su cui costruire l'attacco.",
+      "differenza_gara_qualifica": "In gara, uscire bene da qui vale un tentativo di sorpasso alla Bus Stop. È la curva su cui costruire l'attacco.",
       "origine": "mestiere",
       "confidence": "alta",
       "direzione": "destra",
       "progressione": {
         "prendi_il_giro": "Rilascia e tieni la macchina in appoggio: ogni km/h perso qui te lo porti fino alla Bus Stop.",
         "guadagni": "Riduci il rilascio e allarga la traiettoria.",
-        "al_limite": "Piena in appoggio: e' la curva che decide la velocita' massima del giro."
+        "al_limite": "Piena in appoggio: è la curva che decide la velocità massima del giro."
       }
     },
     {
@@ -581,7 +581,7 @@
       "tipo": "veloce",
       "marcia_indicativa": "6a",
       "riferimento_frenata": "Nessuna. Con la GT3 asciutta si passa a fondo o quasi.",
-      "insidia": "Sinistra velocissima con le barriere vicine. Non e' difficile finche' l'auto e' stabile: diventa terribile se il posteriore e' nervoso o se sei in scia a qualcuno.",
+      "insidia": "Sinistra velocissima con le barriere vicine. Non è difficile finché l'auto è stabile: diventa terribile se il posteriore è nervoso o se sei in scia a qualcuno.",
       "costo_errore": "Molto alto. Incidente pesante.",
       "sorpasso": {
         "possibile": false,
@@ -600,12 +600,12 @@
         "rischio": "medio",
         "note": null
       },
-      "differenza_gara_qualifica": "Sul bagnato o con gomme finite non e' piu' a fondo: e' la curva dove si scopre di aver esagerato con lo stint.",
+      "differenza_gara_qualifica": "Sul bagnato o con gomme finite non è più a fondo: è la curva dove si scopre di aver esagerato con lo stint.",
       "origine": "mestiere",
       "confidence": "alta",
       "direzione": "sinistra",
       "progressione": {
-        "prendi_il_giro": "Con la GT3 asciutta si passa a fondo o quasi, se la macchina e' stabile.",
+        "prendi_il_giro": "Con la GT3 asciutta si passa a fondo o quasi, se la macchina è stabile.",
         "guadagni": "Togli anche l'accenno di rilascio, ma solo con il posteriore a posto.",
         "al_limite": "Piena con le barriere a un metro: diventa terribile in scia o con la macchina nervosa."
       }
@@ -615,13 +615,13 @@
       "nome": "Bus Stop",
       "tipo": "lenta",
       "marcia_indicativa": "2a",
-      "riferimento_frenata": "Staccata da oltre 280 km/h a poco piu' di 60. E' la frenata piu' lunga del circuito: prendi un cartello e usalo sempre lo stesso.",
+      "riferimento_frenata": "Staccata da oltre 280 km/h a poco più di 60. È la frenata più lunga del circuito: prendi un cartello e usalo sempre lo stesso.",
       "insidia": "Arrivi lanciatissimo da Blanchimont e devi fermare l'auto in pochissimo spazio. Chi sbaglia qui, sbaglia di tanto.",
       "costo_errore": "Alto: perdi il giro e spesso anche la posizione.",
       "sorpasso": {
         "possibile": true,
         "come": "Secondo punto di sorpasso del circuito. Scia da Blanchimont e interno in staccata.",
-        "come_ci_si_difende": "Prendi l'interno e frena prestissimo: qui la difesa funziona, perche' chi attacca da fuori non riesce a chiudere la chicane."
+        "come_ci_si_difende": "Prendi l'interno e frena prestissimo: qui la difesa funziona, perché chi attacca da fuori non riesce a chiudere la chicane."
       },
       "gomme": {
         "stress": "tutte in decelerazione",
@@ -629,18 +629,18 @@
       },
       "freni": {
         "stress": "molto alto",
-        "note": "Insieme a Les Combes e' la frenata che dimensiona l'impianto per tutto il giro."
+        "note": "Insieme a Les Combes è la frenata che dimensiona l'impianto per tutto il giro."
       },
       "track_limits": {
         "rischio": "alto",
-        "note": "Tagliare la chicane sul cordolo interno e' il modo piu' comune di perdere il giro a Spa."
+        "note": "Tagliare la chicane sul cordolo interno è il modo più comune di perdere il giro a Spa."
       },
-      "differenza_gara_qualifica": "In gara la Bus Stop e' anche l'ingresso ai box: attenzione a chi rallenta davanti a te nella finestra dei pit stop.",
+      "differenza_gara_qualifica": "In gara la Bus Stop è anche l'ingresso ai box: attenzione a chi rallenta davanti a te nella finestra dei pit stop.",
       "origine": "mestiere",
       "confidence": "alta",
       "direzione": "destra",
       "progressione": {
-        "prendi_il_giro": "Prendi un cartello e usa sempre quello: e' la frenata piu' lunga del circuito, da oltre 280 a poco piu' di 60 km/h.",
+        "prendi_il_giro": "Prendi un cartello e usa sempre quello: è la frenata più lunga del circuito, da oltre 280 a poco più di 60 km/h.",
         "guadagni": "Sposta il riferimento avanti a piccoli passi, sempre lo stesso cartello.",
         "al_limite": "Staccata al limite del bloccaggio con la macchina dritta: chi sbaglia qui sbaglia di tanto."
       }
@@ -651,7 +651,7 @@
       "tipo": "lenta",
       "marcia_indicativa": "2a",
       "riferimento_frenata": null,
-      "insidia": "Seconda parte della chicane: e' qui che si guadagna, non nella prima. Sacrifica l'ingresso per uscire dritto.",
+      "insidia": "Seconda parte della chicane: è qui che si guadagna, non nella prima. Sacrifica l'ingresso per uscire dritto.",
       "costo_errore": "Alto: l'uscita porta sul rettilineo del traguardo e poi su La Source.",
       "sorpasso": {
         "possibile": false,
@@ -675,9 +675,9 @@
       "confidence": "alta",
       "direzione": "sinistra",
       "progressione": {
-        "prendi_il_giro": "Sacrifica l'ingresso per uscire dritto: e' qui che si guadagna, non nella prima parte.",
+        "prendi_il_giro": "Sacrifica l'ingresso per uscire dritto: è qui che si guadagna, non nella prima parte.",
         "guadagni": "Anticipa il gas e raddrizza prima, usando il cordolo interno.",
-        "al_limite": "Cordolo pieno e trazione gia' aperta in appoggio: l'uscita porta sul rettilineo del traguardo e poi su La Source."
+        "al_limite": "Cordolo pieno e trazione già aperta in appoggio: l'uscita porta sul rettilineo del traguardo e poi su La Source."
       }
     },
     {
@@ -686,12 +686,12 @@
       "tipo": "veloce",
       "marcia_indicativa": "3a-4a",
       "riferimento_frenata": null,
-      "insidia": "Ultima piega a destra prima del traguardo, si prende in accelerazione. Non e' una curva, e' un'uscita.",
-      "costo_errore": "Medio per effetto: comanda la velocita' sul traguardo e quindi la scia per chi ti segue.",
+      "insidia": "Ultima piega a destra prima del traguardo, si prende in accelerazione. Non è una curva, è un'uscita.",
+      "costo_errore": "Medio per effetto: comanda la velocità sul traguardo e quindi la scia per chi ti segue.",
       "sorpasso": {
         "possibile": false,
         "come": null,
-        "come_ci_si_difende": "Se esci male da qui, chi ti segue ti passa a La Source. E' li' che si perde la posizione, non in staccata."
+        "come_ci_si_difende": "Se esci male da qui, chi ti segue ti passa a La Source. È lì che si perde la posizione, non in staccata."
       },
       "gomme": {
         "stress": "posteriore sinistro in trazione",
@@ -709,34 +709,34 @@
       "origine": "mestiere",
       "confidence": "media",
       "progressione": {
-        "prendi_il_giro": "Prendila in accelerazione senza correzioni: non e' una curva, e' un'uscita.",
-        "guadagni": "Allarga per non perdere velocita' sul traguardo.",
+        "prendi_il_giro": "Prendila in accelerazione senza correzioni: non è una curva, è un'uscita.",
+        "guadagni": "Allarga per non perdere velocità sul traguardo.",
         "al_limite": "Una linea sola dalla Bus Stop al traguardo: comanda la scia di chi ti segue."
       },
       "direzione": "destra"
     }
   ],
-  "track_limits_generale": "I punti caldi sono tre: uscita di Pouhon, uscita di Stavelot, cordolo interno della Bus Stop. Sulla Bus Stop non barare: e' il taglio piu' controllato del circuito. Su Raidillon e Les Combes i cordoli si possono aggredire senza problemi. Verifica sempre in sessione libera dove ACC mette il limite nella tua versione, perche' cambia fra un aggiornamento e l'altro.",
+  "track_limits_generale": "I punti caldi sono tre: uscita di Pouhon, uscita di Stavelot, cordolo interno della Bus Stop. Sulla Bus Stop non barare: è il taglio più controllato del circuito. Su Raidillon e Les Combes i cordoli si possono aggredire senza problemi. Verifica sempre in sessione libera dove ACC mette il limite nella tua versione, perché cambia fra un aggiornamento e l'altro.",
   "pit": {
     "tempo_perso_s": null,
     "limite_kmh": null,
     "lato_box": null,
-    "note": "L'ingresso ai box e' alla Bus Stop, quindi la corsia si stacca proprio nel punto di sorpasso: nella finestra dei pit stop stai attento a chi alza il piede davanti a te. Il lato dei box non e' dato da nessuna fonte: da vedere in gioco.",
+    "note": "L'ingresso ai box è alla Bus Stop, quindi la corsia si stacca proprio nel punto di sorpasso: nella finestra dei pit stop stai attento a chi alza il piede davanti a te. Il lato dei box non è dato da nessuna fonte: da vedere in gioco.",
     "fonte": null
   },
-  "traffico_multiclass": "Il tratto Kemmel e il rettilineo Stavelot-Blanchimont sono i punti dove far passare: c'e' spazio e non ci sono traiettorie da rovinare. Non lasciare passare a Pouhon ne' a Eau Rouge, e' pericoloso per entrambi. In qualifica il traffico peggiore e' quello lento nel secondo settore: se ti trovi un'auto a Pouhon il giro e' finito, meglio abortire subito e rilanciare.",
+  "traffico_multiclass": "Il tratto Kemmel e il rettilineo Stavelot-Blanchimont sono i punti dove far passare: c'è spazio e non ci sono traiettorie da rovinare. Non lasciare passare a Pouhon né a Eau Rouge, è pericoloso per entrambi. In qualifica il traffico peggiore è quello lento nel secondo settore: se ti trovi un'auto a Pouhon il giro è finito, meglio abortire subito e rilanciare.",
   "meteo_e_luce": {
-    "condizioni_tipiche": "Circuito lungo 7 km nelle Ardenne: e' normale avere meta' pista bagnata e meta' asciutta. Non e' un bug del gioco, e' Spa.",
-    "sul_bagnato": "Eau Rouge-Raidillon e Blanchimont smettono di essere a fondo. Pouhon diventa la curva piu' insidiosa del giro. Rivedi il riferimento di frenata a Les Combes: sul bagnato serve molto piu' anticipo.",
-    "punti_acqua": "La zona bassa fra Eau Rouge e il Kemmel e la discesa verso Pouhon sono i punti dove l'acqua si raccoglie e resta piu' a lungo.",
-    "di_notte": "Il tratto centrale, Rivage-Pouhon-Fagnes, e' il meno illuminato: i riferimenti visivi spariscono e devi guidare sulla memoria del tracciato.",
-    "al_tramonto": "Il sole basso da' fastidio in uscita da alcune curve del secondo settore: alza la visiera e non fidarti dei riferimenti lontani."
+    "condizioni_tipiche": "Circuito lungo 7 km nelle Ardenne: è normale avere metà pista bagnata e metà asciutta. Non è un bug del gioco, è Spa.",
+    "sul_bagnato": "Eau Rouge-Raidillon e Blanchimont smettono di essere a fondo. Pouhon diventa la curva più insidiosa del giro. Rivedi il riferimento di frenata a Les Combes: sul bagnato serve molto più anticipo.",
+    "punti_acqua": "La zona bassa fra Eau Rouge e il Kemmel e la discesa verso Pouhon sono i punti dove l'acqua si raccoglie e resta più a lungo.",
+    "di_notte": "Il tratto centrale, Rivage-Pouhon-Fagnes, è il meno illuminato: i riferimenti visivi spariscono e devi guidare sulla memoria del tracciato.",
+    "al_tramonto": "Il sole basso dà fastidio in uscita da alcune curve del secondo settore: alza la visiera e non fidarti dei riferimenti lontani."
   },
-  "gomme_e_freni_pista": "Spa e' un circuito da carico aerodinamico lungo e da poche frenate. Le gomme non si consumano per la trazione ma per l'appoggio prolungato: il lato destro (Pouhon) e il lato sinistro (Stavelot, Blanchimont) si caricano in momenti diversi del giro, quindi le temperature tendono a restare piu' equilibrate che altrove. I freni hanno tanto tempo per raffreddarsi ma vengono chiamati due volte a giro in modo violento (Les Combes e Bus Stop): il rischio non e' il surriscaldamento continuo, e' la frenata fredda dopo il rettilineo. Consumo carburante fra i piu' alti del calendario per via della lunghezza del giro e della percentuale di pieno gas.",
-  "errore_del_principiante": "Guardare Eau Rouge come la difficolta' del circuito. Non lo e': con una GT3 in ordine si passa a fondo. Il tempo a Spa si perde in uscita da La Source e nel secondo settore, che sono lenti e noiosi da imparare. Chi arriva qui la prima volta passa un'ora a rifinire il Raidillon e continua a perdere sei decimi a Pouhon.",
+  "gomme_e_freni_pista": "Spa è un circuito da carico aerodinamico lungo e da poche frenate. Le gomme non si consumano per la trazione ma per l'appoggio prolungato: il lato destro (Pouhon) e il lato sinistro (Stavelot, Blanchimont) si caricano in momenti diversi del giro, quindi le temperature tendono a restare più equilibrate che altrove. I freni hanno tanto tempo per raffreddarsi ma vengono chiamati due volte a giro in modo violento (Les Combes e Bus Stop): il rischio non è il surriscaldamento continuo, è la frenata fredda dopo il rettilineo. Consumo carburante fra i più alti del calendario per via della lunghezza del giro e della percentuale di pieno gas.",
+  "errore_del_principiante": "Guardare Eau Rouge come la difficoltà del circuito. Non lo è: con una GT3 in ordine si passa a fondo. Il tempo a Spa si perde in uscita da La Source e nel secondo settore, che sono lenti e noiosi da imparare. Chi arriva qui la prima volta passa un'ora a rifinire il Raidillon e continua a perdere sei decimi a Pouhon.",
   "gt3_ref_lap_time": {
     "valore": "2:17",
-    "contesto": "GT3 in ACC, qualifica, asciutto, aria pulita. Ordine di grandezza per il pilota amatoriale evoluto: i tempi da alieno stanno intorno a 2:15, un buon riferimento amatoriale e' 2:19-2:20.",
+    "contesto": "GT3 in ACC, qualifica, asciutto, aria pulita. Ordine di grandezza per il pilota amatoriale evoluto: i tempi da alieno stanno intorno a 2:15, un buon riferimento amatoriale è 2:19-2:20.",
     "fonte": null,
     "origine": "mestiere",
     "confidence": "media",
@@ -752,17 +752,17 @@
   },
   "chicche": [
     {
-      "testo": "Il circuito attuale da 7 km e' meno di meta' di quello originale: fino al 1978 si correva su un anello stradale di circa 14 km che scendeva fino ai paesi di Malmedy e Stavelot. I nomi di due curve moderne vengono da li'.",
-      "perche_interessa_al_pilota": "Spiega perche' i nomi delle curve sembrano nomi di paesi: sono paesi. Aiuta a memorizzare il tracciato per nome invece che per numero.",
+      "testo": "Il circuito attuale da 7 km è meno di metà di quello originale: fino al 1978 si correva su un anello stradale di circa 14 km che scendeva fino ai paesi di Malmedy e Stavelot. I nomi di due curve moderne vengono da lì.",
+      "perche_interessa_al_pilota": "Spiega perché i nomi delle curve sembrano nomi di paesi: sono paesi. Aiuta a memorizzare il tracciato per nome invece che per numero.",
       "fonte": "https://en.wikipedia.org/wiki/Circuit_de_Spa-Francorchamps"
     },
     {
-      "testo": "La chicane Bus Stop e' stata ridisegnata nel 2007. Nelle configurazioni 1995-2006 era piu' lunga e articolata, e la lunghezza del giro era 6.968-6.976 km contro i 7.004 attuali.",
-      "perche_interessa_al_pilota": "E' il motivo per cui i video di riferimento e le mappe che trovi in giro possono non corrispondere a quello che guidi. Se un onboard finisce il giro con una chicane diversa dalla tua, e' pre-2007: non copiarne i riferimenti di frenata.",
+      "testo": "La chicane Bus Stop è stata ridisegnata nel 2007. Nelle configurazioni 1995-2006 era più lunga e articolata, e la lunghezza del giro era 6.968-6.976 km contro i 7.004 attuali.",
+      "perche_interessa_al_pilota": "È il motivo per cui i video di riferimento e le mappe che trovi in giro possono non corrispondere a quello che guidi. Se un onboard finisce il giro con una chicane diversa dalla tua, è pre-2007: non copiarne i riferimenti di frenata.",
       "fonte": "https://en.wikipedia.org/wiki/Circuit_de_Spa-Francorchamps"
     },
     {
-      "testo": "Nel 1994 fu inserita una chicane provvisoria proprio all'Eau Rouge, per una sola stagione: la lunghezza del giro fu 7.001 km, praticamente identica a quella attuale ottenuta pero' in modo opposto.",
+      "testo": "Nel 1994 fu inserita una chicane provvisoria proprio all'Eau Rouge, per una sola stagione: la lunghezza del giro fu 7.001 km, praticamente identica a quella attuale ottenuta però in modo opposto.",
       "perche_interessa_al_pilota": "Utile come avvertenza: la lunghezza del giro da sola non basta a identificare un layout. Due configurazioni molto diverse possono misurare uguale.",
       "fonte": "https://en.wikipedia.org/wiki/Circuit_de_Spa-Francorchamps"
     }

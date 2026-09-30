@@ -4,12 +4,12 @@
     "lunghezza_confermata": true,
     "curve_confermate": true,
     "fonte_lunghezza": "https://en.wikipedia.org/wiki/Circuit_de_Barcelona-Catalunya",
-    "note": "Il dubbio del catalogo e' chiuso: ACC usa il layout con la chicane finale, 4,655 km e 16 curve. Lo dice Coach Dave, che descrive la chicane T14-T15 come quella che la Formula 1 non usa piu', e corrisponde al Grand Prix Circuit 2007-2020 di Wikipedia (4,655 km, 16 curve). Il layout con chicane dal 2021 misura 4,675 km per il rifacimento della La Caixa; quello senza chicane usato dalla Formula 1 dal 2023 misura 4,657 km con 14 curve. I nomi delle curve vengono da Wikipedia; quelli della T12 (Banc de Sabadell), della T13 (Europcar) e della T16 (New Holland) dalla mappa verificata (Circuit Catalunya 2007.svg), che numera anch'essa 16 curve. Dove nessuna delle due ne da', il nome resta null. I tre settori qui sotto sono una divisione descrittiva, non i settori di cronometraggio di ACC."
+    "note": "Il dubbio del catalogo è chiuso: ACC usa il layout con la chicane finale, 4,655 km e 16 curve. Lo dice Coach Dave, che descrive la chicane T14-T15 come quella che la Formula 1 non usa più, e corrisponde al Grand Prix Circuit 2007-2020 di Wikipedia (4,655 km, 16 curve). Il layout con chicane dal 2021 misura 4,675 km per il rifacimento della La Caixa; quello senza chicane usato dalla Formula 1 dal 2023 misura 4,657 km con 14 curve. I nomi delle curve vengono da Wikipedia; quelli della T12 (Banc de Sabadell), della T13 (Europcar) e della T16 (New Holland) dalla mappa verificata (Circuit Catalunya 2007.svg), che numera anch'essa 16 curve. Dove nessuna delle due ne dà, il nome resta null. I tre settori qui sotto sono una divisione descrittiva, non i settori di cronometraggio di ACC."
   },
   "senso_marcia": "orario",
   "dislivello_m": 30,
   "rettilineo_piu_lungo_m": 1047,
-  "variante_acc": "ACC riproduce il Grand Prix Circuit 2007-2020, con la chicane finale: 4,655 km e 16 curve. La lunghezza dice anche che la La Caixa e' quella precedente al rifacimento del 2021; da confermare a schermo.",
+  "variante_acc": "ACC riproduce il Grand Prix Circuit 2007-2020, con la chicane finale: 4,655 km e 16 curve. La lunghezza dice anche che la La Caixa è quella precedente al rifacimento del 2021; da confermare a schermo.",
   "fonti_campi_pista": {
     "senso_marcia": {
       "fonte": "https://www.24hseries.com/circuits/circuit-de-barcelona-catalunya",
@@ -33,7 +33,7 @@
     {
       "n": 1,
       "carattere": "La staccata della Elf in fondo al rettilineo dei box, la T2 quasi in pieno, la lunghissima Renault e la Repsol in salita.",
-      "cosa_decide": "La staccata della T1 e la velocita' d'ingresso della Renault.",
+      "cosa_decide": "La staccata della T1 e la velocità d'ingresso della Renault.",
       "errore_costoso": "Entrare troppo piano nella Renault e cercare il gas in sottosterzo: si perde tempo e si consuma l'anteriore sinistro."
     },
     {
@@ -56,12 +56,12 @@
       "direzione": "destra",
       "tipo": "media",
       "marcia_indicativa": "2a",
-      "riferimento_frenata": "Il riferimento e' sulla recinzione, appena prima del cartello dei 100 m. Mentre ci si arriva si porta la macchina sul cordolo d'ingresso, con solo le ruote interne oltre la linea bianca. Si frena appena prima dei 100 m e si scala in seconda per far mordere l'anteriore.",
-      "insidia": "Verso l'apice si molla il freno e si porta velocita' in curva. Le ruote destre vanno all'interno del cordolo a blocchi rialzato, dove c'e' piu' aderenza. In uscita non bisogna scivolare troppo a sinistra: la T2 arriva subito, e restando piu' a destra ci si entra piu' veloci.",
+      "riferimento_frenata": "Il riferimento è sulla recinzione, appena prima del cartello dei 100 m. Mentre ci si arriva si porta la macchina sul cordolo d'ingresso, con solo le ruote interne oltre la linea bianca. Si frena appena prima dei 100 m e si scala in seconda per far mordere l'anteriore.",
+      "insidia": "Verso l'apice si molla il freno e si porta velocità in curva. Le ruote destre vanno all'interno del cordolo a blocchi rialzato, dove c'è più aderenza. In uscita non bisogna scivolare troppo a sinistra: la T2 arriva subito, e restando più a destra ci si entra più veloci.",
       "costo_errore": "Medio. Un'uscita larga si paga alla T2 e alla Renault.",
       "sorpasso": {
         "possibile": true,
-        "come": "E' il punto di sorpasso principale: staccata in fondo al rettilineo dei box, lungo piu' di un chilometro. Si puo' passare all'interno, oppure tenere l'esterno alla T1 per trovarsi all'interno alla T2.",
+        "come": "È il punto di sorpasso principale: staccata in fondo al rettilineo dei box, lungo più di un chilometro. Si può passare all'interno, oppure tenere l'esterno alla T1 per trovarsi all'interno alla T2.",
         "come_ci_si_difende": "Chiudere l'interno della T1, sapendo che chi resta all'esterno si ritrova all'interno della T2."
       },
       "gomme": {
@@ -76,11 +76,11 @@
         "rischio": "medio",
         "note": "In ingresso solo le ruote interne oltre la linea bianca."
       },
-      "differenza_gara_qualifica": "In qualifica si frena al limite. In gara, soprattutto al primo giro, e' il punto dei contatti e dei sorpassi: bisogna prepararla gia' dall'uscita dell'ultima curva.",
+      "differenza_gara_qualifica": "In qualifica si frena al limite. In gara, soprattutto al primo giro, è il punto dei contatti e dei sorpassi: bisogna prepararla già dall'uscita dell'ultima curva.",
       "progressione": {
         "prendi_il_giro": "Frena prima del cartello dei 100 m, metti la seconda e resta a destra in uscita.",
-        "guadagni": "Porta piu' velocita' all'apice mollando il freno progressivamente, con le ruote destre dentro il cordolo rialzato.",
-        "al_limite": "Frenata al limite dal cordolo d'ingresso, apice pieno di velocita' e uscita tenuta a destra per fare la T2 quasi in pieno."
+        "guadagni": "Porta più velocità all'apice mollando il freno progressivamente, con le ruote destre dentro il cordolo rialzato.",
+        "al_limite": "Frenata al limite dal cordolo d'ingresso, apice pieno di velocità e uscita tenuta a destra per fare la T2 quasi in pieno."
       },
       "origine": "fonte",
       "confidence": "alta"
@@ -91,9 +91,9 @@
       "direzione": "sinistra",
       "tipo": "media",
       "marcia_indicativa": "3a",
-      "riferimento_frenata": "Nessuna vera frenata: con la linea migliore e' quasi in pieno.",
-      "insidia": "Il cordolo interno si puo' usare, ma non il cordolo a blocchi rialzato: scompone la macchina. Anticipare il passaggio in terza in ingresso aiuta a tenerla calma. Non serve tornare tutti a sinistra: alla Renault si entra su una linea molto piu' stretta di quanto sembri.",
-      "costo_errore": "Basso in se', ma prepara la Renault.",
+      "riferimento_frenata": "Nessuna vera frenata: con la linea migliore è quasi in pieno.",
+      "insidia": "Il cordolo interno si può usare, ma non il cordolo a blocchi rialzato: scompone la macchina. Anticipare il passaggio in terza in ingresso aiuta a tenerla calma. Non serve tornare tutti a sinistra: alla Renault si entra su una linea molto più stretta di quanto sembri.",
+      "costo_errore": "Basso in sé, ma prepara la Renault.",
       "sorpasso": {
         "possibile": false,
         "come": null,
@@ -126,8 +126,8 @@
       "direzione": "destra",
       "tipo": "veloce",
       "marcia_indicativa": null,
-      "riferimento_frenata": "Nessuna frenata: si porta velocita' in ingresso e si molla il gas solo fra i due cartelli gialli Pirelli all'interno della pista.",
-      "insidia": "Curva lunga a destra. Si lascia veleggiare la macchina finche' l'anteriore non morde, poi si da' gas deciso restando attaccati al cordolo interno. Lo sterzo si apre solo quando si e' sicuri di non superare i limiti in uscita. Se col gas la macchina allarga in sottosterzo, si stanno strisciando le gomme: vuol dire che si e' entrati troppo piano e si e' dato gas troppo presto.",
+      "riferimento_frenata": "Nessuna frenata: si porta velocità in ingresso e si molla il gas solo fra i due cartelli gialli Pirelli all'interno della pista.",
+      "insidia": "Curva lunga a destra. Si lascia veleggiare la macchina finché l'anteriore non morde, poi si dà gas deciso restando attaccati al cordolo interno. Lo sterzo si apre solo quando si è sicuri di non superare i limiti in uscita. Se col gas la macchina allarga in sottosterzo, si stanno strisciando le gomme: vuol dire che si è entrati troppo piano e si è dato gas troppo presto.",
       "costo_errore": "Medio in tempo, alto sulle gomme: qui si consuma l'anteriore sinistro.",
       "sorpasso": {
         "possibile": false,
@@ -136,7 +136,7 @@
       },
       "gomme": {
         "stress": "anteriore sinistro",
-        "note": "La curva piu' lunga del giro a destra, con carico laterale altissimo: e' qui che si consuma l'anteriore sinistro."
+        "note": "La curva più lunga del giro a destra, con carico laterale altissimo: è qui che si consuma l'anteriore sinistro."
       },
       "freni": {
         "stress": "nullo",
@@ -144,13 +144,13 @@
       },
       "track_limits": {
         "rischio": "medio",
-        "note": "La via di fuga in uscita e' molto generosa e si usa fino alla T4: basta tenere due ruote sul cordolo dipinto."
+        "note": "La via di fuga in uscita è molto generosa e si usa fino alla T4: basta tenere due ruote sul cordolo dipinto."
       },
-      "differenza_gara_qualifica": "In qualifica si porta piu' velocita' in ingresso. In gara conviene uno sterzo piu' morbido: il sottosterzo qui consuma l'anteriore sinistro giro dopo giro.",
+      "differenza_gara_qualifica": "In qualifica si porta più velocità in ingresso. In gara conviene uno sterzo più morbido: il sottosterzo qui consuma l'anteriore sinistro giro dopo giro.",
       "progressione": {
         "prendi_il_giro": "Molla il gas fra i due cartelli gialli, aspetta che l'anteriore morda e poi dai gas sul cordolo interno.",
-        "guadagni": "Porta piu' velocita' in ingresso, cosi' non devi cercare il gas troppo presto.",
-        "al_limite": "Velocita' d'ingresso al limite, gas pieno appena l'anteriore morde, e uscita sulla via di fuga con due ruote sul cordolo dipinto."
+        "guadagni": "Porta più velocità in ingresso, così non devi cercare il gas troppo presto.",
+        "al_limite": "Velocità d'ingresso al limite, gas pieno appena l'anteriore morde, e uscita sulla via di fuga con due ruote sul cordolo dipinto."
       },
       "origine": "fonte",
       "confidence": "alta"
@@ -162,7 +162,7 @@
       "tipo": "media",
       "marcia_indicativa": "2a",
       "riferimento_frenata": "Si arriva sulla via di fuga esterna, con solo la ruota interna sul cordolo dipinto. Si frena appena prima della linea bianca continua che attraversa la via di fuga sotto il ponte.",
-      "insidia": "Curva lunga a destra in salita. Frenata forte, poi trail braking girando verso la curva. L'apice e' a meta' o un po' tardivo, e quando si arriva al cordolo interno si molla del tutto il freno per dare aderenza all'anteriore. Poi si resta attaccati al cordolo e si cerca il gas presto, in modo progressivo, aprendo lo sterzo lentamente per evitare sovrasterzi bruschi.",
+      "insidia": "Curva lunga a destra in salita. Frenata forte, poi trail braking girando verso la curva. L'apice è a metà o un po' tardivo, e quando si arriva al cordolo interno si molla del tutto il freno per dare aderenza all'anteriore. Poi si resta attaccati al cordolo e si cerca il gas presto, in modo progressivo, aprendo lo sterzo lentamente per evitare sovrasterzi bruschi.",
       "costo_errore": "Medio. L'uscita porta verso la discesa della Seat.",
       "sorpasso": {
         "possibile": false,
@@ -181,7 +181,7 @@
         "rischio": "basso",
         "note": null
       },
-      "differenza_gara_qualifica": "In gara la trazione in uscita conta piu' della velocita' d'ingresso.",
+      "differenza_gara_qualifica": "In gara la trazione in uscita conta più della velocità d'ingresso.",
       "progressione": {
         "prendi_il_giro": "Frena alla linea bianca sotto il ponte, seconda, e apri il gas solo con la macchina dritta.",
         "guadagni": "Aggiungi il trail braking fino al cordolo interno e anticipa il gas in modo progressivo.",
@@ -196,7 +196,7 @@
       "direzione": "sinistra",
       "tipo": "lenta",
       "marcia_indicativa": "2a",
-      "riferimento_frenata": "Non ci sono cartelli ne' riferimenti facili. Il migliore e' il muro di gomme bianco all'interno: quando l'ultima parte del muro sparisce dal parabrezza e dalla visione laterale, si frena. Prima si porta la macchina tutta a destra per aprire l'ingresso.",
+      "riferimento_frenata": "Non ci sono cartelli né riferimenti facili. Il migliore è il muro di gomme bianco all'interno: quando l'ultima parte del muro sparisce dal parabrezza e dalla visione laterale, si frena. Prima si porta la macchina tutta a destra per aprire l'ingresso.",
       "insidia": "Curva a sinistra in discesa, che inganna in frenata. Trail braking fino in fondo, girando ancora sul freno. Bisogna stare stretti al cordolo interno per avere aderenza, con un apice tardivo per l'uscita migliore. Si entra piano e si esce forte.",
       "costo_errore": "Medio. Si sbaglia facilmente la frenata, e l'uscita porta verso la chicane delle T7-T8.",
       "sorpasso": {
@@ -231,8 +231,8 @@
       "direzione": "sinistra",
       "tipo": "veloce",
       "marcia_indicativa": null,
-      "riferimento_frenata": "Nessuna frenata: e' una piega.",
-      "insidia": "Nessuna difficolta' particolare: si resta sul gas e ci si prepara per la chicane.",
+      "riferimento_frenata": "Nessuna frenata: è una piega.",
+      "insidia": "Nessuna difficoltà particolare: si resta sul gas e ci si prepara per la chicane.",
       "costo_errore": "Basso.",
       "sorpasso": {
         "possibile": false,
@@ -254,8 +254,8 @@
       "differenza_gara_qualifica": "Uguale in gara e in qualifica.",
       "progressione": {
         "prendi_il_giro": "Resta sul gas.",
-        "guadagni": "Prendi la piega sulla linea piu' corta.",
-        "al_limite": "Linea che ti porta gia' a destra, parallelo al bordo pista, per la staccata della T7."
+        "guadagni": "Prendi la piega sulla linea più corta.",
+        "al_limite": "Linea che ti porta già a destra, parallelo al bordo pista, per la staccata della T7."
       },
       "origine": "fonte",
       "confidence": "alta"
@@ -266,9 +266,9 @@
       "direzione": "sinistra",
       "tipo": "media",
       "marcia_indicativa": "2a",
-      "riferimento_frenata": "Tenendosi a destra, con la macchina parallela al bordo pista. Il riferimento e' l'inizio del cordolo bianco e rosso all'esterno. Frenata forte e scalata in seconda.",
-      "insidia": "E' la prima parte di una chicane sinistra-destra in salita, di media velocita'. Avvicinandosi all'apice si molla il freno e si porta velocita' in curva: la pendenza rallenta la macchina da sola. Le ruote interne vanno sull'erba verde appena dentro il cordolo.",
-      "costo_errore": "Alto. La chicane puo' fare o disfare il giro.",
+      "riferimento_frenata": "Tenendosi a destra, con la macchina parallela al bordo pista. Il riferimento è l'inizio del cordolo bianco e rosso all'esterno. Frenata forte e scalata in seconda.",
+      "insidia": "È la prima parte di una chicane sinistra-destra in salita, di media velocità. Avvicinandosi all'apice si molla il freno e si porta velocità in curva: la pendenza rallenta la macchina da sola. Le ruote interne vanno sull'erba verde appena dentro il cordolo.",
+      "costo_errore": "Alto. La chicane può fare o disfare il giro.",
       "sorpasso": {
         "possibile": false,
         "come": null,
@@ -286,11 +286,11 @@
         "rischio": "basso",
         "note": null
       },
-      "differenza_gara_qualifica": "Uguale nell'impostazione: in gara conviene un filo di freno in piu' per non compromettere la destra.",
+      "differenza_gara_qualifica": "Uguale nell'impostazione: in gara conviene un filo di freno in più per non compromettere la destra.",
       "progressione": {
-        "prendi_il_giro": "Frena all'inizio del cordolo esterno, seconda, e non esagerare con la velocita'.",
+        "prendi_il_giro": "Frena all'inizio del cordolo esterno, seconda, e non esagerare con la velocità.",
         "guadagni": "Molla il freno prima dell'apice e lascia che la salita rallenti la macchina.",
-        "al_limite": "Velocita' portata all'apice al limite, con le ruote interne sul verde e la macchina gia' pronta per la T8."
+        "al_limite": "Velocità portata all'apice al limite, con le ruote interne sul verde e la macchina già pronta per la T8."
       },
       "origine": "fonte",
       "confidence": "alta"
@@ -302,7 +302,7 @@
       "tipo": "media",
       "marcia_indicativa": "2a",
       "riferimento_frenata": "Nessuna frenata: si arriva dalla T7.",
-      "insidia": "Si da' gas all'apice della T7 e si usa l'erba verde sul cordolo di uscita, che e' l'interno della T8. Con alcune macchine, proprio quando si comincia a dare gas, il posteriore puo' scappare di colpo: tutti i comandi vanno fatti con dolcezza. Sull'apice della T8 c'e' un cordolo grosso: allargare troppo porta a prenderlo male.",
+      "insidia": "Si dà gas all'apice della T7 e si usa l'erba verde sul cordolo di uscita, che è l'interno della T8. Con alcune macchine, proprio quando si comincia a dare gas, il posteriore può scappare di colpo: tutti i comandi vanno fatti con dolcezza. Sull'apice della T8 c'è un cordolo grosso: allargare troppo porta a prenderlo male.",
       "costo_errore": "Medio. L'uscita porta verso la salita della Campsa.",
       "sorpasso": {
         "possibile": false,
@@ -321,11 +321,11 @@
         "rischio": "basso",
         "note": null
       },
-      "differenza_gara_qualifica": "In gara la dolcezza sul gas conta di piu': il posteriore stanco scappa prima.",
+      "differenza_gara_qualifica": "In gara la dolcezza sul gas conta di più: il posteriore stanco scappa prima.",
       "progressione": {
         "prendi_il_giro": "Dai gas con calma all'apice della T7 e segui la linea verso destra.",
         "guadagni": "Usa l'erba verde all'interno della T8 per accorciare la linea.",
-        "al_limite": "Gas deciso ma senza il colpo di sovrasterzo, e uscita gia' spostata a sinistra per la Campsa."
+        "al_limite": "Gas deciso ma senza il colpo di sovrasterzo, e uscita già spostata a sinistra per la Campsa."
       },
       "origine": "fonte",
       "confidence": "alta"
@@ -336,8 +336,8 @@
       "direzione": "destra",
       "tipo": "veloce",
       "marcia_indicativa": "4a",
-      "riferimento_frenata": "Nessuna staccata. Si resta a sinistra e si guarda avanti per trovare il punto di inserimento: la fine del cordolo bianco e rosso a sinistra. Li' si molla il gas e si gira. Alcune macchine preferiscono scalare in terza, ma se si puo' conviene tenere la quarta per lo slancio.",
-      "insidia": "Curva veloce a destra, completamente cieca: in salita all'ingresso, in discesa all'uscita, ed e' facile allargare sull'erba sintetica. Si gira vicini al cordolo interno e si cerca subito il gas; il pieno si da' quando si e' sicuri di restare nei limiti in uscita.",
+      "riferimento_frenata": "Nessuna staccata. Si resta a sinistra e si guarda avanti per trovare il punto di inserimento: la fine del cordolo bianco e rosso a sinistra. Lì si molla il gas e si gira. Alcune macchine preferiscono scalare in terza, ma se si può conviene tenere la quarta per lo slancio.",
+      "insidia": "Curva veloce a destra, completamente cieca: in salita all'ingresso, in discesa all'uscita, ed è facile allargare sull'erba sintetica. Si gira vicini al cordolo interno e si cerca subito il gas; il pieno si dà quando si è sicuri di restare nei limiti in uscita.",
       "costo_errore": "Alto. Lancia la macchina sul rettilineo posteriore verso la La Caixa.",
       "sorpasso": {
         "possibile": false,
@@ -354,13 +354,13 @@
       },
       "track_limits": {
         "rischio": "medio",
-        "note": "La via di fuga e' permissiva e si puo' andare sul cemento verde, purche' le ruote interne non superino la linea bianca continua."
+        "note": "La via di fuga è permissiva e si può andare sul cemento verde, purché le ruote interne non superino la linea bianca continua."
       },
-      "differenza_gara_qualifica": "In qualifica si tiene la quarta e si porta velocita'. In gara, con il pieno, e' meglio non avere fretta sul gas in uscita.",
+      "differenza_gara_qualifica": "In qualifica si tiene la quarta e si porta velocità. In gara, con il pieno, è meglio non avere fretta sul gas in uscita.",
       "progressione": {
         "prendi_il_giro": "Molla il gas alla fine del cordolo di sinistra, gira e dai gas solo quando vedi l'uscita.",
         "guadagni": "Tieni la quarta invece della terza e anticipa il gas.",
-        "al_limite": "Rilascio minimo, apice cieco preso a memoria e gas pieno appena l'uscita e' sicura, sfruttando il cemento verde."
+        "al_limite": "Rilascio minimo, apice cieco preso a memoria e gas pieno appena l'uscita è sicura, sfruttando il cemento verde."
       },
       "origine": "fonte",
       "confidence": "alta"
@@ -371,13 +371,13 @@
       "direzione": "sinistra",
       "tipo": "lenta",
       "marcia_indicativa": "1a",
-      "riferimento_frenata": "Si torna a destra e il riferimento e' il cartello dei 100 m. Frenata forte, tenendo la pressione mentre si comincia a girare. Si scala fino in prima, sfruttando anche il freno motore, e il trail braking comincia solo avvicinandosi all'apice.",
-      "insidia": "Tornante stretto a sinistra in fondo al rettilineo posteriore. Si gira prima di quanto sembri, puntando un apice stretto, senza squadrare la curva: vicino all'apice la curva si apre, e con una linea stretta la macchina ci arriva gia' girata e si torna sul gas con piu' fiducia. In uscita c'e' una salsiccia gialla: prenderla fa intervenire il controllo di trazione.",
+      "riferimento_frenata": "Si torna a destra e il riferimento è il cartello dei 100 m. Frenata forte, tenendo la pressione mentre si comincia a girare. Si scala fino in prima, sfruttando anche il freno motore, e il trail braking comincia solo avvicinandosi all'apice.",
+      "insidia": "Tornante stretto a sinistra in fondo al rettilineo posteriore. Si gira prima di quanto sembri, puntando un apice stretto, senza squadrare la curva: vicino all'apice la curva si apre, e con una linea stretta la macchina ci arriva già girata e si torna sul gas con più fiducia. In uscita c'è una salsiccia gialla: prenderla fa intervenire il controllo di trazione.",
       "costo_errore": "Alto. L'uscita vale per il tratto verso la T11 e la T12.",
       "sorpasso": {
         "possibile": true,
         "come": "Staccata all'interno sinistro in fondo al rettilineo posteriore.",
-        "come_ci_si_difende": "Chiudere l'interno. Il tornante lascia pero' l'incrocio a chi entra largo ed esce prima sul gas."
+        "come_ci_si_difende": "Chiudere l'interno. Il tornante lascia però l'incrocio a chi entra largo ed esce prima sul gas."
       },
       "gomme": {
         "stress": "anteriore destro",
@@ -391,10 +391,10 @@
         "rischio": "basso",
         "note": "Evitare la salsiccia gialla in uscita, che fa intervenire il controllo di trazione."
       },
-      "differenza_gara_qualifica": "In gara e' il secondo punto di sorpasso: la difesa dell'interno costa l'uscita, e chi incrocia la riprende.",
+      "differenza_gara_qualifica": "In gara è il secondo punto di sorpasso: la difesa dell'interno costa l'uscita, e chi incrocia la riprende.",
       "progressione": {
         "prendi_il_giro": "Frena al cartello dei 100 m, prima marcia, e gira presto senza toccare la salsiccia in uscita.",
-        "guadagni": "Tieni la pressione del freno mentre giri e punta un apice stretto per arrivare gia' girato.",
+        "guadagni": "Tieni la pressione del freno mentre giri e punta un apice stretto per arrivare già girato.",
         "al_limite": "Frenata al limite con il freno motore, rotazione completa all'apice e gas anticipato, lontano dalla salsiccia gialla."
       },
       "origine": "fonte",
@@ -442,7 +442,7 @@
       "tipo": "lenta",
       "marcia_indicativa": "2a",
       "riferimento_frenata": "Appena la macchina si raddrizza in uscita dalla T11 si frena e si scala in seconda.",
-      "insidia": "Curva lunga a U a destra. Conta tutto come si inserisce la macchina: si porta piu' slancio possibile restando sulla traiettoria. L'apice e' tardivo; poi si resta vicini al cordolo interno e si cerca il gas presto. Poco prima che il cordolo interno finisca si apre lo sterzo e si porta la macchina sul cordolo di uscita.",
+      "insidia": "Curva lunga a U a destra. Conta tutto come si inserisce la macchina: si porta più slancio possibile restando sulla traiettoria. L'apice è tardivo; poi si resta vicini al cordolo interno e si cerca il gas presto. Poco prima che il cordolo interno finisca si apre lo sterzo e si porta la macchina sul cordolo di uscita.",
       "costo_errore": "Medio.",
       "sorpasso": {
         "possibile": false,
@@ -459,11 +459,11 @@
       },
       "track_limits": {
         "rischio": "basso",
-        "note": "Con le ruote esterne si puo' usare anche l'erba verde oltre il cordolo di uscita."
+        "note": "Con le ruote esterne si può usare anche l'erba verde oltre il cordolo di uscita."
       },
-      "differenza_gara_qualifica": "In gara conviene risparmiare l'anteriore sinistro: meno velocita' d'ingresso e piu' trazione.",
+      "differenza_gara_qualifica": "In gara conviene risparmiare l'anteriore sinistro: meno velocità d'ingresso e più trazione.",
       "progressione": {
-        "prendi_il_giro": "Frena appena la macchina e' dritta, seconda, e apice tardivo.",
+        "prendi_il_giro": "Frena appena la macchina è dritta, seconda, e apice tardivo.",
         "guadagni": "Resta attaccato al cordolo interno e anticipa il gas.",
         "al_limite": "Slancio massimo in ingresso senza uscire di traiettoria, gas presto e uscita che usa cordolo ed erba verde."
       },
@@ -496,11 +496,11 @@
         "rischio": "basso",
         "note": "Non toccare la salsiccia all'apice."
       },
-      "differenza_gara_qualifica": "Uguale in gara e in qualifica: e' una curva da impostare, non da attaccare.",
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica: è una curva da impostare, non da attaccare.",
       "progressione": {
         "prendi_il_giro": "Frena presto, seconda, e pensa solo a finire appena a sinistra del centro pista.",
         "guadagni": "Gira mentre freni e usa il cordolo bianco e rosso all'apice.",
-        "al_limite": "Velocita' calibrata al metro per uscire esattamente dove serve per la chicane."
+        "al_limite": "Velocità calibrata al metro per uscire esattamente dove serve per la chicane."
       },
       "origine": "fonte",
       "confidence": "alta"
@@ -511,8 +511,8 @@
       "direzione": "sinistra",
       "tipo": "lenta",
       "marcia_indicativa": "1a",
-      "riferimento_frenata": "Si porta la macchina il piu' a destra possibile. Il riferimento e' appena prima dell'inizio del cordolo bianco e rosso a destra. Si arriva lunghi con grande facilita': meglio rallentare prima che dopo.",
-      "insidia": "Prima parte della chicane, una sinistra in prima marcia molto stretta. Si gira prima di quanto sembri, per arrivare quasi dritti al primo apice. Allargare per squadrare la curva costa tempo, e troppa velocita' al primo apice rovina la destra, che e' quella che fa il tempo. Le salsicce interne sono micidiali: prenderle e' come colpire un muro.",
+      "riferimento_frenata": "Si porta la macchina il più a destra possibile. Il riferimento è appena prima dell'inizio del cordolo bianco e rosso a destra. Si arriva lunghi con grande facilità: meglio rallentare prima che dopo.",
+      "insidia": "Prima parte della chicane, una sinistra in prima marcia molto stretta. Si gira prima di quanto sembri, per arrivare quasi dritti al primo apice. Allargare per squadrare la curva costa tempo, e troppa velocità al primo apice rovina la destra, che è quella che fa il tempo. Le salsicce interne sono micidiali: prenderle è come colpire un muro.",
       "costo_errore": "Alto. Un errore qui si porta dietro la T15 e il rettilineo dei box.",
       "sorpasso": {
         "possibile": false,
@@ -535,7 +535,7 @@
       "progressione": {
         "prendi_il_giro": "Frena prima del cordolo di destra, prima marcia, e gira presto.",
         "guadagni": "Arriva quasi dritto al primo apice, senza squadrare.",
-        "al_limite": "Frenata al limite senza arrivare lunghi, e primo apice preso con la velocita' giusta per la destra."
+        "al_limite": "Frenata al limite senza arrivare lunghi, e primo apice preso con la velocità giusta per la destra."
       },
       "origine": "fonte",
       "confidence": "alta"
@@ -547,8 +547,8 @@
       "tipo": "lenta",
       "marcia_indicativa": "2a",
       "riferimento_frenata": "Nessuna frenata: si arriva dalla T14.",
-      "insidia": "Passato il primo apice si comincia a dare gas e si posiziona la macchina per il secondo. Si anticipa il passaggio in seconda appena prima di girare, e si attraversa l'apice veleggiando o a meta' gas. Quando la macchina e' assestata si torna gradualmente sul gas, usando il cordolo di uscita e un po' della salsiccia gialla: ci si appoggia con le gomme esterne, senza salirci del tutto, o la macchina tocca il fondo.",
-      "costo_errore": "Alto: e' la curva della chicane che fa il tempo sul rettilineo dei box.",
+      "insidia": "Passato il primo apice si comincia a dare gas e si posiziona la macchina per il secondo. Si anticipa il passaggio in seconda appena prima di girare, e si attraversa l'apice veleggiando o a metà gas. Quando la macchina è assestata si torna gradualmente sul gas, usando il cordolo di uscita e un po' della salsiccia gialla: ci si appoggia con le gomme esterne, senza salirci del tutto, o la macchina tocca il fondo.",
+      "costo_errore": "Alto: è la curva della chicane che fa il tempo sul rettilineo dei box.",
       "sorpasso": {
         "possibile": false,
         "come": null,
@@ -566,9 +566,9 @@
         "rischio": "medio",
         "note": "Ci si appoggia alla salsiccia gialla di uscita con le gomme esterne, senza salirci."
       },
-      "differenza_gara_qualifica": "In gara la trazione in uscita conta di piu': meglio un'uscita pulita che un apice aggressivo.",
+      "differenza_gara_qualifica": "In gara la trazione in uscita conta di più: meglio un'uscita pulita che un apice aggressivo.",
       "progressione": {
-        "prendi_il_giro": "Seconda anticipata, apice a meta' gas, e gas pieno solo con la macchina ferma.",
+        "prendi_il_giro": "Seconda anticipata, apice a metà gas, e gas pieno solo con la macchina ferma.",
         "guadagni": "Riprendi il gas prima e usa il cordolo di uscita.",
         "al_limite": "Gas progressivo anticipato con la macchina assestata, e uscita appoggiata sulla salsiccia gialla senza toccare il fondo."
       },
@@ -581,8 +581,8 @@
       "direzione": "destra",
       "tipo": "veloce",
       "marcia_indicativa": null,
-      "riferimento_frenata": "Nessuna frenata: e' in pieno.",
-      "insidia": "Si deve appena baciare la linea bianca, piu' o meno a meta' del cordolo, con lo sterzo morbido per un trasferimento di carico dolce. Dopo l'apice si apre lo sterzo e si lascia correre la macchina sulla via di fuga, per la massima velocita' sul rettilineo.",
+      "riferimento_frenata": "Nessuna frenata: è in pieno.",
+      "insidia": "Si deve appena baciare la linea bianca, più o meno a metà del cordolo, con lo sterzo morbido per un trasferimento di carico dolce. Dopo l'apice si apre lo sterzo e si lascia correre la macchina sulla via di fuga, per la massima velocità sul rettilineo.",
       "costo_errore": "Medio: comanda il rettilineo di 1047 m e quindi la staccata della T1.",
       "sorpasso": {
         "possibile": false,
@@ -599,19 +599,19 @@
       },
       "track_limits": {
         "rischio": "medio",
-        "note": "La linea bianca va appena baciata a meta' cordolo, non superata."
+        "note": "La linea bianca va appena baciata a metà cordolo, non superata."
       },
-      "differenza_gara_qualifica": "Uguale in gara e in qualifica. In gara e' la curva dove si prende la scia per attaccare alla T1.",
+      "differenza_gara_qualifica": "Uguale in gara e in qualifica. In gara è la curva dove si prende la scia per attaccare alla T1.",
       "progressione": {
         "prendi_il_giro": "Resta sul gas con uno sterzo morbido.",
-        "guadagni": "Bacia la linea bianca a meta' cordolo.",
+        "guadagni": "Bacia la linea bianca a metà cordolo.",
         "al_limite": "Traiettoria che bacia la linea bianca e lascia correre la macchina in uscita, senza un filo di sterzo di troppo."
       },
       "origine": "fonte",
       "confidence": "alta"
     }
   ],
-  "track_limits_generale": "Barcellona ha vie di fuga larghe e cordoli dipinti, e il confine vero e' la linea bianca: alla Renault basta tenere due ruote sul cordolo dipinto, alla Campsa le ruote interne non devono superare la linea bianca continua. Le salsicce sono il problema piu' grosso: quelle interne della chicane sono come un muro, quella gialla in uscita dalla La Caixa fa intervenire il controllo di trazione, e alla T13 la salsiccia fa decollare la macchina.",
+  "track_limits_generale": "Barcellona ha vie di fuga larghe e cordoli dipinti, e il confine vero è la linea bianca: alla Renault basta tenere due ruote sul cordolo dipinto, alla Campsa le ruote interne non devono superare la linea bianca continua. Le salsicce sono il problema più grosso: quelle interne della chicane sono come un muro, quella gialla in uscita dalla La Caixa fa intervenire il controllo di trazione, e alla T13 la salsiccia fa decollare la macchina.",
   "pit": {
     "tempo_perso_s": null,
     "limite_kmh": 50,
@@ -619,7 +619,7 @@
     "note": "Limite standard ACC di 50 km/h. Il lato dei box e il tempo perso non sono dati da nessuna fonte: da vedere e misurare in gioco.",
     "fonte": "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
   },
-  "traffico_multiclass": "Il rettilineo dei box e quello posteriore sono i posti giusti per farsi passare o passare. I posti sbagliati sono la Renault, dove affiancarsi costa gomme a tutti e due, e il terzo settore lento, dalla T12 alla chicane, dove non c'e' spazio per due traiettorie.",
+  "traffico_multiclass": "Il rettilineo dei box e quello posteriore sono i posti giusti per farsi passare o passare. I posti sbagliati sono la Renault, dove affiancarsi costa gomme a tutti e due, e il terzo settore lento, dalla T12 alla chicane, dove non c'è spazio per due traiettorie.",
   "meteo_e_luce": {
     "condizioni_tipiche": null,
     "sul_bagnato": null,
@@ -627,11 +627,11 @@
     "di_notte": null,
     "al_tramonto": null
   },
-  "gomme_e_freni_pista": "Barcellona e' una pista da gomme: nove curve su sedici girano a destra, e le piu' lunghe e veloci (la Renault, la Campsa, la T12) caricano a lungo l'anteriore sinistro, che e' la gomma da tenere d'occhio. Il sottosterzo alla Renault e' il modo piu' rapido per consumarla. I freni lavorano in tre punti pesanti, la T1, la La Caixa e la chicane, senza estremi.",
-  "errore_del_principiante": "Entrare piano nelle curve lunghe per paura e poi cercare il gas in sottosterzo. Alla Renault, Coach Dave lo dice chiaro: se col gas la macchina allarga, sei entrato troppo piano. Il secondo errore e' la chicane: si arriva lunghi con grande facilita', e si perde tutto il rettilineo dei box.",
+  "gomme_e_freni_pista": "Barcellona è una pista da gomme: nove curve su sedici girano a destra, e le più lunghe e veloci (la Renault, la Campsa, la T12) caricano a lungo l'anteriore sinistro, che è la gomma da tenere d'occhio. Il sottosterzo alla Renault è il modo più rapido per consumarla. I freni lavorano in tre punti pesanti, la T1, la La Caixa e la chicane, senza estremi.",
+  "errore_del_principiante": "Entrare piano nelle curve lunghe per paura e poi cercare il gas in sottosterzo. Alla Renault, Coach Dave lo dice chiaro: se col gas la macchina allarga, sei entrato troppo piano. Il secondo errore è la chicane: si arriva lunghi con grande facilità, e si perde tutto il rettilineo dei box.",
   "gt3_ref_lap_time": {
     "valore": "1:43.5",
-    "contesto": "Passo di riferimento GT3 in hotlap su pista ottimale: Full Grip indica circa 1:42.8 per un pilota di vertice, 1:43.5 per un pilota veloce e 1:44.5 per un pilota esperto. Il giro di riferimento di Coach Dave con l'Aston Martin V8 Vantage GT3 e' 1:43.2. Il tempo e' un ordine di grandezza, da confermare con una misura presa dalle sessioni vere.",
+    "contesto": "Passo di riferimento GT3 in hotlap su pista ottimale: Full Grip indica circa 1:42.8 per un pilota di vertice, 1:43.5 per un pilota veloce e 1:44.5 per un pilota esperto. Il giro di riferimento di Coach Dave con l'Aston Martin V8 Vantage GT3 è 1:43.2. Il tempo è un ordine di grandezza, da confermare con una misura presa dalle sessioni vere.",
     "fonte": "https://www.fullgripmotorsport.com/academy/trackguides/barcelona"
   },
   "gt3_fuel_per_lap_l": {
@@ -641,13 +641,13 @@
   },
   "chicche": [
     {
-      "testo": "La chicane prima dell'ultima curva e' stata introdotta nel 2007 per rallentare il finale del giro. Dal 2023 la Formula 1 non la usa piu'; in ACC c'e'.",
+      "testo": "La chicane prima dell'ultima curva è stata introdotta nel 2007 per rallentare il finale del giro. Dal 2023 la Formula 1 non la usa più; in ACC c'è.",
       "perche_interessa_al_pilota": "I video delle gare di Formula 1 dal 2023 in poi mostrano un finale di giro diverso da quello di ACC: non vanno presi come riferimento per le ultime curve.",
       "fonte": "https://en.wikipedia.org/wiki/Circuit_de_Barcelona-Catalunya"
     },
     {
-      "testo": "Il rettilineo dei box e' lungo 1047 m, e la T1 e' il punto di sorpasso principale. All'interno e all'esterno si passa con la stessa difficolta': chi tiene l'esterno alla T1 si ritrova all'interno alla T2.",
-      "perche_interessa_al_pilota": "Alla T1 si puo' attaccare anche dall'esterno, se si ha la pazienza di chiudere il sorpasso alla T2.",
+      "testo": "Il rettilineo dei box è lungo 1047 m, e la T1 è il punto di sorpasso principale. All'interno e all'esterno si passa con la stessa difficoltà: chi tiene l'esterno alla T1 si ritrova all'interno alla T2.",
+      "perche_interessa_al_pilota": "Alla T1 si può attaccare anche dall'esterno, se si ha la pazienza di chiudere il sorpasso alla T2.",
       "fonte": "https://en.wikipedia.org/wiki/Circuit_de_Barcelona-Catalunya"
     }
   ],

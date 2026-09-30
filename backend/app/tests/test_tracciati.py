@@ -418,6 +418,18 @@ test("zandvoort: i 14 sensi sono quelli verificati", sensi == SENSI_ZANDVOORT, f
 imola_t1 = ((cat.track_guide("imola") or {}).get("curve") or [{}])[0].get("direzione")
 test("imola: la T1 è una piega a destra", imola_t1 == "destra", f"{imola_t1}")
 
+# Le guide arrivavano con gli accenti in apostrofo («e'», «piu'», «velocita'»), e a schermo
+# si leggevano così: convertiti il 30/09 (Entry #055, scripts/accenti_guide.py). Una guida
+# nuova scritta allo stesso modo fa fallire questo test: si passa lo script e si ricontrolla.
+from scripts.accenti_guide import PAROLA, RESTANO  # noqa: E402
+
+apostrofi = {}
+for p in sorted(GUIDE_DIR.glob("*.json")):
+    parole = sorted({m.group(1) for m in PAROLA.finditer(p.read_text(encoding="utf-8"))} - RESTANO)
+    if parole:
+        apostrofi[p.stem] = parole
+test("le guide hanno gli accenti veri, non l'apostrofo (e' → è, piu' → più…)", not apostrofi, f"{apostrofi}")
+
 passed = sum(1 for _, ok in results if ok)
 total = len(results)
 failed = [name for name, ok in results if not ok]

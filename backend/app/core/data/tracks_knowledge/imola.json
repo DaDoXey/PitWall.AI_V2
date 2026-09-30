@@ -3,7 +3,7 @@
   "verifica_catalogo": {
     "lunghezza_confermata": true,
     "curve_confermate": true,
-    "note": "4.909 km e 19 curve trovano riscontro su piu' fonti indipendenti. Il senso di marcia e' ANTIORARIO, uno dei pochi del calendario: dato che manca nella nostra tabella d'impronta e che vale la pena aggiungere, perche' ribalta tutto il discorso sullo stress gomme. La numerazione qui sotto e' quella pubblicata e concorda fra le fonti consultate: Tamburello 2-3-4, Villeneuve 5-6, Tosa 7, kink 8, Piratella 9-10, Acque Minerali 11-12-13, Variante Alta 14-15, kink 16, Rivazza 17-18, kink finale 19. La curva 1 e' la piega sul rettilineo del traguardo, li' dove stava la vecchia Variante Bassa.",
+    "note": "4.909 km e 19 curve trovano riscontro su più fonti indipendenti. Il senso di marcia è ANTIORARIO, uno dei pochi del calendario: dato che manca nella nostra tabella d'impronta e che vale la pena aggiungere, perché ribalta tutto il discorso sullo stress gomme. La numerazione qui sotto è quella pubblicata e concorda fra le fonti consultate: Tamburello 2-3-4, Villeneuve 5-6, Tosa 7, kink 8, Piratella 9-10, Acque Minerali 11-12-13, Variante Alta 14-15, kink 16, Rivazza 17-18, kink finale 19. La curva 1 è la piega sul rettilineo del traguardo, lì dove stava la vecchia Variante Bassa.",
     "fonte_lunghezza": "https://en.wikipedia.org/wiki/2025_Imola_Formula_3_round",
     "fonte_numerazione": "https://lapmeta.com/en/track/variation/193/track_map"
   },
@@ -22,7 +22,7 @@
     },
     "rettilineo_piu_lungo_m": {
       "fonte": null,
-      "nota": "L'unico numero trovato (358 m) non dice come e' misurato e sembra corto per il rettilineo dei box: scartato finche' non c'e' una fonte."
+      "nota": "L'unico numero trovato (358 m) non dice come è misurato e sembra corto per il rettilineo dei box: scartato finché non c'è una fonte."
     },
     "variante_acc": {
       "fonte": "https://en.wikipedia.org/wiki/Imola_Circuit",
@@ -38,15 +38,15 @@
     },
     {
       "n": 2,
-      "carattere": "Il settore del dislivello: salita cieca verso Piratella, discesa su Acque Minerali, risalita alla Variante Alta. Sessantotto metri di dislivello sul giro, fra i piu' marcati d'Europa.",
+      "carattere": "Il settore del dislivello: salita cieca verso Piratella, discesa su Acque Minerali, risalita alla Variante Alta. Sessantotto metri di dislivello sul giro, fra i più marcati d'Europa.",
       "cosa_decide": "Quanto ti fidi dell'auto quando non vedi dove vai. Piratella e Acque Minerali si affrontano quasi alla cieca.",
-      "errore_costoso": "Frenare tardi in discesa su Acque Minerali: l'auto e' leggera dietro e la ghiaia e' subito fuori."
+      "errore_costoso": "Frenare tardi in discesa su Acque Minerali: l'auto è leggera dietro e la ghiaia è subito fuori."
     },
     {
       "n": 3,
-      "carattere": "Variante Alta sul punto piu' alto, poi la discesa lunga fino alla doppia Rivazza e il rientro sul traguardo.",
+      "carattere": "Variante Alta sul punto più alto, poi la discesa lunga fino alla doppia Rivazza e il rientro sul traguardo.",
       "cosa_decide": "La trazione fuori dalla seconda Rivazza, che comanda tutto il rettilineo del traguardo.",
-      "errore_costoso": "Esagerare sul cordolo della Variante Alta: e' il punto dove si buttano via piu' gare a Imola."
+      "errore_costoso": "Esagerare sul cordolo della Variante Alta: è il punto dove si buttano via più gare a Imola."
     }
   ],
   "curve": [
@@ -56,7 +56,7 @@
       "tipo": "veloce",
       "marcia_indicativa": "6a",
       "riferimento_frenata": null,
-      "insidia": "Piega sul rettilineo, si passa a fondo. Conta solo perche' e' li' che, fino al 2008, c'era la Variante Bassa: nei video vecchi vedrai una chicane che tu non hai.",
+      "insidia": "Piega sul rettilineo, si passa a fondo. Conta solo perché è lì che, fino al 2008, c'era la Variante Bassa: nei video vecchi vedrai una chicane che tu non hai.",
       "costo_errore": "Basso.",
       "sorpasso": {
         "possibile": false,
@@ -65,7 +65,7 @@
       },
       "gomme": {
         "stress": "basso",
-        "note": "Leggerissima piega a destra sul rettilineo del traguardo: verificata in gioco da Edoardo (28/09/2026), e sulla mappa numerata verificata la piega a destra e' la prima. Coach Dave la chiama «left-hand kink»: fonte in contrasto, lasciata a vista."
+        "note": "Leggerissima piega a destra sul rettilineo del traguardo: verificata in gioco da Edoardo (28/09/2026), e sulla mappa numerata verificata la piega a destra è la prima. Coach Dave la chiama «left-hand kink»: fonte in contrasto, lasciata a vista."
       },
       "freni": {
         "stress": "nullo",
@@ -81,8 +81,8 @@
       "direzione": "destra",
       "progressione": {
         "prendi_il_giro": "Passa a fondo e tieniti al centro: serve solo a impostare la staccata della Tamburello.",
-        "guadagni": "Allarga la piega per arrivare piu' dritto alla frenata.",
-        "al_limite": "Nessuna correzione di volante: ogni movimento qui e' velocita' persa in staccata."
+        "guadagni": "Allarga la piega per arrivare più dritto alla frenata.",
+        "al_limite": "Nessuna correzione di volante: ogni movimento qui è velocità persa in staccata."
       }
     },
     {
@@ -90,8 +90,8 @@
       "nome": "Variante Tamburello",
       "tipo": "lenta",
       "marcia_indicativa": "2a-3a",
-      "riferimento_frenata": "Staccata in fondo al rettilineo del traguardo, in piano. Cerca il cartello e non improvvisare: la velocita' d'arrivo e' alta e l'errore si paga.",
-      "insidia": "Prima parte della variante sinistra-destra-sinistra. Entri veloce e devi gia' pensare all'uscita della 4: se imposti solo la 2 arrivi male a tutte e tre.",
+      "riferimento_frenata": "Staccata in fondo al rettilineo del traguardo, in piano. Cerca il cartello e non improvvisare: la velocità d'arrivo è alta e l'errore si paga.",
+      "insidia": "Prima parte della variante sinistra-destra-sinistra. Entri veloce e devi già pensare all'uscita della 4: se imposti solo la 2 arrivi male a tutte e tre.",
       "costo_errore": "Alto: comanda tutto l'allungo verso la Villeneuve.",
       "sorpasso": {
         "possibile": true,
@@ -104,19 +104,19 @@
       },
       "freni": {
         "stress": "alto",
-        "note": "La frenata piu' impegnativa del giro insieme a Tosa."
+        "note": "La frenata più impegnativa del giro insieme a Tosa."
       },
       "track_limits": {
         "rischio": "alto",
-        "note": "I cordoli della variante sono aggressivi: tagliare qui e' il modo piu' comune di perdere il giro a Imola."
+        "note": "I cordoli della variante sono aggressivi: tagliare qui è il modo più comune di perdere il giro a Imola."
       },
-      "differenza_gara_qualifica": "Al primo giro di gara e' un imbuto: arrivano tutti insieme dopo un rettilineo lungo e la variante e' strettissima. Lascia margine.",
+      "differenza_gara_qualifica": "Al primo giro di gara è un imbuto: arrivano tutti insieme dopo un rettilineo lungo e la variante è strettissima. Lascia margine.",
       "origine": "mestiere",
       "confidence": "alta",
       "direzione": "sinistra",
       "progressione": {
-        "prendi_il_giro": "Frena al cartello e non improvvisare: la velocita' d'arrivo e' alta.",
-        "guadagni": "Sposta la frenata avanti a piccoli passi, pensando gia' all'uscita della 4.",
+        "prendi_il_giro": "Frena al cartello e non improvvisare: la velocità d'arrivo è alta.",
+        "guadagni": "Sposta la frenata avanti a piccoli passi, pensando già all'uscita della 4.",
         "al_limite": "Ingresso al limite con rilascio lungo, sacrificando la 2 e la 3 per essere in trazione alla 4."
       }
     },
@@ -152,7 +152,7 @@
       "progressione": {
         "prendi_il_giro": "Meno cordolo di quanto ti dice l'istinto: quello alto scompone la macchina.",
         "guadagni": "Stringi la traiettoria tenendo la ruota interna sul cordolo basso.",
-        "al_limite": "Traiettoria quasi dritta fra i tre apici, con il cordolo preso dove e' piatto e mai di petto."
+        "al_limite": "Traiettoria quasi dritta fra i tre apici, con il cordolo preso dove è piatto e mai di petto."
       }
     },
     {
@@ -161,7 +161,7 @@
       "tipo": "lenta",
       "marcia_indicativa": "3a",
       "riferimento_frenata": null,
-      "insidia": "Uscita della variante: e' l'unica delle tre che conta davvero per il tempo. Sacrifica le prime due per essere gia' in trazione qui.",
+      "insidia": "Uscita della variante: è l'unica delle tre che conta davvero per il tempo. Sacrifica le prime due per essere già in trazione qui.",
       "costo_errore": "Alto per effetto: comanda l'allungo verso la Villeneuve.",
       "sorpasso": {
         "possibile": false,
@@ -178,16 +178,16 @@
       },
       "track_limits": {
         "rischio": "alto",
-        "note": "Il cordolo esterno in uscita e' il punto piu' controllato della variante."
+        "note": "Il cordolo esterno in uscita è il punto più controllato della variante."
       },
       "differenza_gara_qualifica": null,
       "origine": "mestiere",
       "confidence": "alta",
       "direzione": "sinistra",
       "progressione": {
-        "prendi_il_giro": "E' l'unica delle tre che conta: esci pulito anche a costo di perdere sulle prime due.",
+        "prendi_il_giro": "È l'unica delle tre che conta: esci pulito anche a costo di perdere sulle prime due.",
         "guadagni": "Anticipa il gas e allunga la traiettoria verso l'esterno.",
-        "al_limite": "Gas gia' aperto in appoggio con la macchina ancora piegata: comanda tutto l'allungo verso la Villeneuve."
+        "al_limite": "Gas già aperto in appoggio con la macchina ancora piegata: comanda tutto l'allungo verso la Villeneuve."
       }
     },
     {
@@ -195,13 +195,13 @@
       "nome": "Variante Villeneuve",
       "tipo": "media",
       "marcia_indicativa": "4a",
-      "riferimento_frenata": "Si arriva lanciati: la prima parte e' quasi una piega, il freno vero arriva dopo. Non frenare prima della sinistra, frena dentro.",
-      "insidia": "L'errore classico e' staccare troppo presto trattandola come una chicane normale: perdi velocita' dove non serve e poi arrivi comunque lungo sulla destra.",
+      "riferimento_frenata": "Si arriva lanciati: la prima parte è quasi una piega, il freno vero arriva dopo. Non frenare prima della sinistra, frena dentro.",
+      "insidia": "L'errore classico è staccare troppo presto trattandola come una chicane normale: perdi velocità dove non serve e poi arrivi comunque lungo sulla destra.",
       "costo_errore": "Medio-alto.",
       "sorpasso": {
         "possibile": true,
-        "come": "Possibile ma rischioso: serve arrivarci gia' affiancati dalla Tamburello.",
-        "come_ci_si_difende": "Traiettoria stretta, e' sufficiente."
+        "come": "Possibile ma rischioso: serve arrivarci già affiancati dalla Tamburello.",
+        "come_ci_si_difende": "Traiettoria stretta, è sufficiente."
       },
       "gomme": {
         "stress": "anteriore destro",
@@ -220,8 +220,8 @@
       "confidence": "alta",
       "direzione": "sinistra",
       "progressione": {
-        "prendi_il_giro": "Non frenare prima della sinistra: frena dentro, la prima parte e' quasi una piega.",
-        "guadagni": "Ritarda ancora il freno e tieni piu' velocita' nella prima parte.",
+        "prendi_il_giro": "Non frenare prima della sinistra: frena dentro, la prima parte è quasi una piega.",
+        "guadagni": "Ritarda ancora il freno e tieni più velocità nella prima parte.",
         "al_limite": "Rilascio deciso invece della staccata, con la macchina che ruota sul freno e resta larga per la destra."
       }
     },
@@ -231,7 +231,7 @@
       "tipo": "lenta",
       "marcia_indicativa": "3a",
       "riferimento_frenata": null,
-      "insidia": "La destra che chiude la variante. In uscita c'e' poco spazio prima della staccata di Tosa: se esci largo, arrivi male alla curva piu' lenta del giro.",
+      "insidia": "La destra che chiude la variante. In uscita c'è poco spazio prima della staccata di Tosa: se esci largo, arrivi male alla curva più lenta del giro.",
       "costo_errore": "Alto.",
       "sorpasso": {
         "possibile": false,
@@ -255,9 +255,9 @@
       "confidence": "alta",
       "direzione": "destra",
       "progressione": {
-        "prendi_il_giro": "Esci stretto e dritto: dopo c'e' poco spazio prima della staccata di Tosa.",
+        "prendi_il_giro": "Esci stretto e dritto: dopo c'è poco spazio prima della staccata di Tosa.",
         "guadagni": "Anticipa il gas raddrizzando prima.",
-        "al_limite": "Uscita al filo dell'asfalto con la staccata di Tosa gia' impostata: e' un pezzo unico, non due curve."
+        "al_limite": "Uscita al filo dell'asfalto con la staccata di Tosa già impostata: è un pezzo unico, non due curve."
       }
     },
     {
@@ -265,17 +265,17 @@
       "nome": "Tosa",
       "tipo": "lenta",
       "marcia_indicativa": "1a-2a",
-      "riferimento_frenata": "Staccata secca in fondo al breve rettilineo. E' la curva piu' stretta del circuito: se hai un dubbio, frena prima.",
+      "riferimento_frenata": "Staccata secca in fondo al breve rettilineo. È la curva più stretta del circuito: se hai un dubbio, frena prima.",
       "insidia": "Tornante sinistro che si chiude. In uscita la pista sale: se arrivi con il posteriore ancora scarico, pattini appena apri il gas.",
-      "costo_errore": "Molto alto: l'uscita comanda tutta la salita verso Piratella, che e' lunga.",
+      "costo_errore": "Molto alto: l'uscita comanda tutta la salita verso Piratella, che è lunga.",
       "sorpasso": {
         "possibile": true,
         "come": "Secondo punto di sorpasso del circuito, all'interno in staccata. Serve essere usciti bene dalla Villeneuve.",
-        "come_ci_si_difende": "Chiudi l'interno. Attenzione pero': chi ti passa in staccata qui esce spesso peggio di te e te lo ritrovi davanti lento in salita."
+        "come_ci_si_difende": "Chiudi l'interno. Attenzione però: chi ti passa in staccata qui esce spesso peggio di te e te lo ritrovi davanti lento in salita."
       },
       "gomme": {
         "stress": "anteriore destro in ingresso, posteriore in trazione",
-        "note": "E' la curva che chiede piu' trazione del giro. Se hai il posteriore che scivola in uscita da Tosa, guarda il differenziale prima delle pressioni."
+        "note": "È la curva che chiede più trazione del giro. Se hai il posteriore che scivola in uscita da Tosa, guarda il differenziale prima delle pressioni."
       },
       "freni": {
         "stress": "molto alto",
@@ -285,13 +285,13 @@
         "rischio": "medio",
         "note": null
       },
-      "differenza_gara_qualifica": "Con il pieno la trazione in uscita e' molto peggiore: nei primi giri sii progressivo con il gas o consumi il posteriore per tutto lo stint.",
+      "differenza_gara_qualifica": "Con il pieno la trazione in uscita è molto peggiore: nei primi giri sii progressivo con il gas o consumi il posteriore per tutto lo stint.",
       "origine": "mestiere",
       "confidence": "alta",
       "direzione": "sinistra",
       "progressione": {
-        "prendi_il_giro": "Se hai un dubbio frena prima: e' la curva piu' stretta del circuito.",
-        "guadagni": "Entra piu' forte lasciando ruotare la macchina sul freno, ma non toccare il gas finche' non e' dritta.",
+        "prendi_il_giro": "Se hai un dubbio frena prima: è la curva più stretta del circuito.",
+        "guadagni": "Entra più forte lasciando ruotare la macchina sul freno, ma non toccare il gas finché non è dritta.",
         "al_limite": "Staccata tardissima, ingresso lentissimo e trazione progressiva in salita: qui il posteriore pattina a chi ha fretta."
       }
     },
@@ -326,7 +326,7 @@
       "direzione": "destra",
       "progressione": {
         "prendi_il_giro": "Passa a fondo e posizionati a sinistra per l'ingresso della Piratella.",
-        "guadagni": "Allarga per prendere la 9 con piu' velocita'.",
+        "guadagni": "Allarga per prendere la 9 con più velocità.",
         "al_limite": "Una linea sola dalla Tosa alla Piratella, senza correzioni sulla salita."
       }
     },
@@ -353,15 +353,15 @@
       },
       "track_limits": {
         "rischio": "medio",
-        "note": "Cordolo interno usabile con misura, l'esterno in uscita e' controllato."
+        "note": "Cordolo interno usabile con misura, l'esterno in uscita è controllato."
       },
-      "differenza_gara_qualifica": "Curva cieca e' anche curva dove non ti fai passare: chi ti segue non vede.",
+      "differenza_gara_qualifica": "Curva cieca è anche curva dove non ti fai passare: chi ti segue non vede.",
       "origine": "mestiere",
       "confidence": "alta",
       "direzione": "sinistra",
       "progressione": {
-        "prendi_il_giro": "Usa un riferimento a bordo pista: la curva e' cieca, non guardare l'apice.",
-        "guadagni": "Entra piu' veloce fidandoti del riferimento invece che dell'occhio.",
+        "prendi_il_giro": "Usa un riferimento a bordo pista: la curva è cieca, non guardare l'apice.",
+        "guadagni": "Entra più veloce fidandoti del riferimento invece che dell'occhio.",
         "al_limite": "Ingresso pieno sul culmine con la macchina che si alleggerisce mentre gira: subito dopo la pista precipita, e storti non si perdona."
       }
     },
@@ -371,7 +371,7 @@
       "tipo": "media",
       "marcia_indicativa": "4a-5a",
       "riferimento_frenata": null,
-      "insidia": "Uscita in discesa. L'auto si scarica e prende velocita' da sola: apri il gas gradualmente o ti ritrovi largo con la ghiaia a destra.",
+      "insidia": "Uscita in discesa. L'auto si scarica e prende velocità da sola: apri il gas gradualmente o ti ritrovi largo con la ghiaia a destra.",
       "costo_errore": "Alto.",
       "sorpasso": {
         "possibile": false,
@@ -395,7 +395,7 @@
       "confidence": "media",
       "direzione": "sinistra",
       "progressione": {
-        "prendi_il_giro": "Apri il gas gradualmente in discesa: la macchina prende velocita' da sola.",
+        "prendi_il_giro": "Apri il gas gradualmente in discesa: la macchina prende velocità da sola.",
         "guadagni": "Anticipa il gas tenendo la traiettoria stretta.",
         "al_limite": "Discesa presa in pieno appoggio, con la ghiaia a destra a un metro dalla ruota."
       }
@@ -405,13 +405,13 @@
       "nome": "Acque Minerali",
       "tipo": "media",
       "marcia_indicativa": "3a",
-      "riferimento_frenata": "Frenata in discesa: anticipa rispetto a quello che ti dice l'istinto. E' il punto in cui piu' piloti vanno lunghi a Imola.",
-      "insidia": "Arrivi in discesa con l'auto leggera dietro e devi girare a destra. La combinazione discesa + inserimento e' quella che manda in testacoda.",
+      "riferimento_frenata": "Frenata in discesa: anticipa rispetto a quello che ti dice l'istinto. È il punto in cui più piloti vanno lunghi a Imola.",
+      "insidia": "Arrivi in discesa con l'auto leggera dietro e devi girare a destra. La combinazione discesa + inserimento è quella che manda in testacoda.",
       "costo_errore": "Molto alto: ghiaia subito fuori, gara finita.",
       "sorpasso": {
         "possibile": true,
         "come": "Difficile, ma qualcosa si fa all'interno se chi ti precede sbaglia la discesa.",
-        "come_ci_si_difende": "Frena presto e stai stretto: qui la difesa e' facile perche' l'attaccante fatica a fermare l'auto."
+        "come_ci_si_difende": "Frena presto e stai stretto: qui la difesa è facile perché l'attaccante fatica a fermare l'auto."
       },
       "gomme": {
         "stress": "anteriore sinistro",
@@ -419,20 +419,20 @@
       },
       "freni": {
         "stress": "alto",
-        "note": "Frenata in discesa: e' quella che chiede piu' equilibrio all'impianto, non piu' potenza."
+        "note": "Frenata in discesa: è quella che chiede più equilibrio all'impianto, non più potenza."
       },
       "track_limits": {
         "rischio": "medio",
         "note": null
       },
-      "differenza_gara_qualifica": "Con il pieno la staccata in discesa e' molto piu' lunga. E' la curva dove piu' spesso si sbaglia al primo stint.",
+      "differenza_gara_qualifica": "Con il pieno la staccata in discesa è molto più lunga. È la curva dove più spesso si sbaglia al primo stint.",
       "origine": "mestiere",
       "confidence": "alta",
       "direzione": "destra",
       "progressione": {
-        "prendi_il_giro": "Anticipa la frenata rispetto all'istinto: si frena in discesa ed e' il punto dove piu' gente va lunga.",
+        "prendi_il_giro": "Anticipa la frenata rispetto all'istinto: si frena in discesa ed è il punto dove più gente va lunga.",
         "guadagni": "Ritarda il freno con rilascio progressivo, tenendo la macchina in appoggio.",
-        "al_limite": "Frenata tarda in discesa con inserimento simultaneo: e' la combinazione che manda in testacoda, e fuori c'e' la ghiaia."
+        "al_limite": "Frenata tarda in discesa con inserimento simultaneo: è la combinazione che manda in testacoda, e fuori c'è la ghiaia."
       }
     },
     {
@@ -441,7 +441,7 @@
       "tipo": "media",
       "marcia_indicativa": "3a",
       "riferimento_frenata": null,
-      "insidia": "Secondo apice della doppia destra. Qui devi gia' accelerare progressivamente: la risalita verso la Variante Alta e' lunga e ogni km/h conta.",
+      "insidia": "Secondo apice della doppia destra. Qui devi già accelerare progressivamente: la risalita verso la Variante Alta è lunga e ogni km/h conta.",
       "costo_errore": "Alto per effetto.",
       "sorpasso": {
         "possibile": false,
@@ -465,9 +465,9 @@
       "confidence": "alta",
       "direzione": "destra",
       "progressione": {
-        "prendi_il_giro": "Accelera progressivamente dal secondo apice: la risalita e' lunga.",
+        "prendi_il_giro": "Accelera progressivamente dal secondo apice: la risalita è lunga.",
         "guadagni": "Anticipa il gas e allarga l'uscita.",
-        "al_limite": "Trazione piena gia' dal secondo apice, con la macchina larga fino all'asfalto esterno."
+        "al_limite": "Trazione piena già dal secondo apice, con la macchina larga fino all'asfalto esterno."
       }
     },
     {
@@ -501,7 +501,7 @@
       "direzione": "sinistra",
       "progressione": {
         "prendi_il_giro": "Se sei arrivato pulito dalla 12, qui non devi fare niente.",
-        "guadagni": "Allarga per guadagnare velocita' sulla salita.",
+        "guadagni": "Allarga per guadagnare velocità sulla salita.",
         "al_limite": "Piatta, con la traiettoria che sfrutta tutta la pista in uscita."
       }
     },
@@ -510,9 +510,9 @@
       "nome": "Variante Alta",
       "tipo": "media",
       "marcia_indicativa": "3a-4a",
-      "riferimento_frenata": "Staccata in salita, sul punto piu' alto del circuito. La salita aiuta a fermare l'auto: si stacca piu' tardi che ad Acque Minerali.",
-      "insidia": "Chicane destra-sinistra su un dosso, presa a velocita' alta. Il cordolo e' altissimo: prenderlo di petto scarica completamente una sospensione e ti manda dritto contro le barriere in uscita.",
-      "costo_errore": "Molto alto. E' il punto dove si buttano piu' gare a Imola.",
+      "riferimento_frenata": "Staccata in salita, sul punto più alto del circuito. La salita aiuta a fermare l'auto: si stacca più tardi che ad Acque Minerali.",
+      "insidia": "Chicane destra-sinistra su un dosso, presa a velocità alta. Il cordolo è altissimo: prenderlo di petto scarica completamente una sospensione e ti manda dritto contro le barriere in uscita.",
+      "costo_errore": "Molto alto. È il punto dove si buttano più gare a Imola.",
       "sorpasso": {
         "possibile": false,
         "come": null,
@@ -528,16 +528,16 @@
       },
       "track_limits": {
         "rischio": "alto",
-        "note": "Il cordolo interno cancella il giro con facilita' e, se lo prendi troppo, ti manda anche a muro. Doppio motivo per starne fuori."
+        "note": "Il cordolo interno cancella il giro con facilità e, se lo prendi troppo, ti manda anche a muro. Doppio motivo per starne fuori."
       },
-      "differenza_gara_qualifica": "In qualifica si tende ad aggredire il cordolo per l'ultimo decimo: e' esattamente il modo in cui si perde il giro buono. In gara stanne largo e basta.",
+      "differenza_gara_qualifica": "In qualifica si tende ad aggredire il cordolo per l'ultimo decimo: è esattamente il modo in cui si perde il giro buono. In gara stanne largo e basta.",
       "origine": "mestiere",
       "confidence": "alta",
       "direzione": "destra",
       "progressione": {
         "prendi_il_giro": "Frena tardi sfruttando la salita, ma prendi il cordolo di piatto: quello alto scarica una sospensione.",
-        "guadagni": "Sposta la staccata avanti e aggredisci di piu' il cordolo interno.",
-        "al_limite": "Chicane presa quasi dritta sul dosso, con il cordolo aggredito nel punto giusto: e' il posto dove si buttano piu' gare a Imola."
+        "guadagni": "Sposta la staccata avanti e aggredisci di più il cordolo interno.",
+        "al_limite": "Chicane presa quasi dritta sul dosso, con il cordolo aggredito nel punto giusto: è il posto dove si buttano più gare a Imola."
       }
     },
     {
@@ -546,7 +546,7 @@
       "tipo": "media",
       "marcia_indicativa": "4a",
       "riferimento_frenata": null,
-      "insidia": "Uscita della variante con le barriere vicine. Se hai scomposto l'auto sul cordolo della 14, e' qui che finisci fuori.",
+      "insidia": "Uscita della variante con le barriere vicine. Se hai scomposto l'auto sul cordolo della 14, è qui che finisci fuori.",
       "costo_errore": "Molto alto.",
       "sorpasso": {
         "possibile": false,
@@ -572,7 +572,7 @@
       "progressione": {
         "prendi_il_giro": "Esci pulito: le barriere sono vicine e se hai scomposto la macchina alla 14 finisci fuori qui.",
         "guadagni": "Anticipa il gas raddrizzando prima.",
-        "al_limite": "Uscita piena al filo del cordolo, con la macchina gia' in trazione verso la discesa."
+        "al_limite": "Uscita piena al filo del cordolo, con la macchina già in trazione verso la discesa."
       }
     },
     {
@@ -606,8 +606,8 @@
       "direzione": "destra",
       "progressione": {
         "prendi_il_giro": "Passa a fondo e posizionati per la staccata della Rivazza.",
-        "guadagni": "Allarga la piega per arrivare piu' dritto alla frenata.",
-        "al_limite": "Nessuna correzione: e' solo un raccordo verso il punto piu' importante del giro."
+        "guadagni": "Allarga la piega per arrivare più dritto alla frenata.",
+        "al_limite": "Nessuna correzione: è solo un raccordo verso il punto più importante del giro."
       }
     },
     {
@@ -615,9 +615,9 @@
       "nome": "Rivazza",
       "tipo": "lenta",
       "marcia_indicativa": "2a-3a",
-      "riferimento_frenata": "Staccata in discesa in fondo al tratto veloce. Un'altra frenata dove l'auto e' leggera dietro: sii progressivo nel rilascio.",
-      "insidia": "Prima delle due sinistre. Il rischio e' entrare troppo forte per prepararsi alla seconda: la 17 va sacrificata, il tempo lo fa la 18.",
-      "costo_errore": "Alto: la ghiaia e' subito fuori e l'uscita comanda tutto il rettilineo del traguardo.",
+      "riferimento_frenata": "Staccata in discesa in fondo al tratto veloce. Un'altra frenata dove l'auto è leggera dietro: sii progressivo nel rilascio.",
+      "insidia": "Prima delle due sinistre. Il rischio è entrare troppo forte per prepararsi alla seconda: la 17 va sacrificata, il tempo lo fa la 18.",
+      "costo_errore": "Alto: la ghiaia è subito fuori e l'uscita comanda tutto il rettilineo del traguardo.",
       "sorpasso": {
         "possibile": true,
         "come": "Interno in staccata, ma serve essere molto vicini in un tratto dove la scia non aiuta molto.",
@@ -641,8 +641,8 @@
       "direzione": "sinistra",
       "progressione": {
         "prendi_il_giro": "Sacrificala: il tempo lo fa la 18. Frena presto e sii progressivo nel rilascio.",
-        "guadagni": "Entra un filo piu' forte, ma senza rubare niente alla seconda.",
-        "al_limite": "Ingresso volutamente lento con la macchina caricata sul davanti, gia' impostata sulla 18."
+        "guadagni": "Entra un filo più forte, ma senza rubare niente alla seconda.",
+        "al_limite": "Ingresso volutamente lento con la macchina caricata sul davanti, già impostata sulla 18."
       }
     },
     {
@@ -651,7 +651,7 @@
       "tipo": "lenta",
       "marcia_indicativa": "2a-3a",
       "riferimento_frenata": null,
-      "insidia": "La curva piu' importante del giro per il tempo sul traguardo. Devi essere in trazione piena il prima possibile, e per farlo devi entrare piano.",
+      "insidia": "La curva più importante del giro per il tempo sul traguardo. Devi essere in trazione piena il prima possibile, e per farlo devi entrare piano.",
       "costo_errore": "Molto alto per effetto: quello che perdi qui lo paghi per tutto il rettilineo e ti espone al sorpasso alla Tamburello.",
       "sorpasso": {
         "possibile": false,
@@ -660,7 +660,7 @@
       },
       "gomme": {
         "stress": "posteriore destro in trazione",
-        "note": "Insieme a Tosa e' il punto dove il posteriore lavora di piu'. Le due curve insieme spiegano quasi tutto il degrado posteriore a Imola."
+        "note": "Insieme a Tosa è il punto dove il posteriore lavora di più. Le due curve insieme spiegano quasi tutto il degrado posteriore a Imola."
       },
       "freni": {
         "stress": "medio",
@@ -668,14 +668,14 @@
       },
       "track_limits": {
         "rischio": "alto",
-        "note": "Cordolo d'uscita con ghiaia oltre: e' un doppio rischio, giro cancellato o gara finita."
+        "note": "Cordolo d'uscita con ghiaia oltre: è un doppio rischio, giro cancellato o gara finita."
       },
-      "differenza_gara_qualifica": "In gara e' la curva che decide se subisci o meno il sorpasso al giro dopo. Vale piu' un'uscita pulita che un ingresso aggressivo.",
+      "differenza_gara_qualifica": "In gara è la curva che decide se subisci o meno il sorpasso al giro dopo. Vale più un'uscita pulita che un ingresso aggressivo.",
       "origine": "mestiere",
       "confidence": "alta",
       "direzione": "sinistra",
       "progressione": {
-        "prendi_il_giro": "Entra piano per essere in trazione il prima possibile: e' la curva piu' importante per il tempo sul traguardo.",
+        "prendi_il_giro": "Entra piano per essere in trazione il prima possibile: è la curva più importante per il tempo sul traguardo.",
         "guadagni": "Anticipa la trazione di qualche metro, raddrizzando prima il volante.",
         "al_limite": "Trazione piena dall'apice con la macchina dritta e l'uscita fino al limite dell'asfalto: quello che perdi qui lo paghi per tutto il rettilineo."
       }
@@ -686,7 +686,7 @@
       "tipo": "veloce",
       "marcia_indicativa": "5a",
       "riferimento_frenata": null,
-      "insidia": "Leggera piega a destra sul rientro verso il traguardo, si passa a fondo. Serve solo a non perdere velocita'.",
+      "insidia": "Leggera piega a destra sul rientro verso il traguardo, si passa a fondo. Serve solo a non perdere velocità.",
       "costo_errore": "Basso.",
       "sorpasso": {
         "possibile": false,
@@ -710,33 +710,33 @@
       "confidence": "media",
       "progressione": {
         "prendi_il_giro": "Passa a fondo e tieni la macchina dritta.",
-        "guadagni": "Allarga la piega per non perdere velocita' sul traguardo.",
+        "guadagni": "Allarga la piega per non perdere velocità sul traguardo.",
         "al_limite": "Una linea sola dall'uscita della Rivazza al traguardo."
       },
       "direzione": "destra"
     }
   ],
-  "track_limits_generale": "Imola e' severa e lo e' su piu' punti: uscita della Tamburello, uscita della Villeneuve, uscita di Acque Minerali, cordolo interno della Variante Alta, uscita della seconda Rivazza. La regola pratica: a Imola i cordoli non sono un guadagno, sono una tassa. I cordoli alti scompongono l'auto e la ghiaia e' quasi sempre subito oltre, quindi il rischio non e' solo il giro cancellato. Se ti serve l'ultimo decimo, cercalo nella trazione fuori dalla Rivazza, non sui cordoli.",
+  "track_limits_generale": "Imola è severa e lo è su più punti: uscita della Tamburello, uscita della Villeneuve, uscita di Acque Minerali, cordolo interno della Variante Alta, uscita della seconda Rivazza. La regola pratica: a Imola i cordoli non sono un guadagno, sono una tassa. I cordoli alti scompongono l'auto e la ghiaia è quasi sempre subito oltre, quindi il rischio non è solo il giro cancellato. Se ti serve l'ultimo decimo, cercalo nella trazione fuori dalla Rivazza, non sui cordoli.",
   "pit": {
     "tempo_perso_s": null,
     "limite_kmh": null,
     "lato_box": null,
-    "note": "Il lato dei box non e' dato da nessuna fonte: da vedere in gioco.",
+    "note": "Il lato dei box non è dato da nessuna fonte: da vedere in gioco.",
     "fonte": null
   },
-  "traffico_multiclass": "I punti sensati per farsi superare sono i rettilinei: quello del traguardo e la salita fra Tosa e Piratella. Non lasciare passare in nessuna delle due varianti del primo settore, ne' alla Variante Alta: non c'e' spazio e i cordoli fanno il resto. In qualifica il traffico ad Acque Minerali o alla Variante Alta rovina irrimediabilmente il giro, perche' sono i due punti in cui non puoi recuperare con la potenza.",
+  "traffico_multiclass": "I punti sensati per farsi superare sono i rettilinei: quello del traguardo e la salita fra Tosa e Piratella. Non lasciare passare in nessuna delle due varianti del primo settore, né alla Variante Alta: non c'è spazio e i cordoli fanno il resto. In qualifica il traffico ad Acque Minerali o alla Variante Alta rovina irrimediabilmente il giro, perché sono i due punti in cui non puoi recuperare con la potenza.",
   "meteo_e_luce": {
-    "condizioni_tipiche": "Circuito compatto, condizioni piuttosto uniformi su tutto il tracciato: a differenza di Spa non ti trovi meta' pista diversa dall'altra.",
+    "condizioni_tipiche": "Circuito compatto, condizioni piuttosto uniformi su tutto il tracciato: a differenza di Spa non ti trovi metà pista diversa dall'altra.",
     "sul_bagnato": "Il dislivello diventa il problema: le frenate in discesa (Acque Minerali, Rivazza) sono le prime a tradirti. I cordoli delle varianti sul bagnato sono da evitare del tutto.",
-    "punti_acqua": "Le zone basse, quindi il fondo della discesa verso Acque Minerali e l'uscita della Rivazza, sono i punti dove l'acqua ristagna piu' a lungo.",
-    "di_notte": "Piratella e Acque Minerali, gia' cieche di giorno, di notte vanno guidate completamente a memoria.",
-    "al_tramonto": "Il sole basso puo' dare fastidio in salita verso Piratella e in uscita dalla Variante Alta."
+    "punti_acqua": "Le zone basse, quindi il fondo della discesa verso Acque Minerali e l'uscita della Rivazza, sono i punti dove l'acqua ristagna più a lungo.",
+    "di_notte": "Piratella e Acque Minerali, già cieche di giorno, di notte vanno guidate completamente a memoria.",
+    "al_tramonto": "Il sole basso può dare fastidio in salita verso Piratella e in uscita dalla Variante Alta."
   },
-  "gomme_e_freni_pista": "Imola e' un circuito da trazione e da cordoli, non da appoggio lungo. Il posteriore lavora soprattutto in due punti, l'uscita di Tosa e l'uscita della seconda Rivazza: se vedi il posteriore degradare piu' dell'anteriore, il problema nasce li' e quasi sempre e' un problema di progressione sul gas o di differenziale, non di pressioni. I freni sono chiamati spesso e due delle frenate principali (Acque Minerali, Rivazza) sono in discesa, quindi conta il bilanciamento piu' della potenza frenante. Il senso antiorario ribalta lo schema abituale: qui e' il lato DESTRO dell'auto a essere caricato di piu' nelle curve principali. Se ti aspetti il classico anteriore sinistro cotto e non lo trovi, non e' un errore di lettura: e' Imola.",
-  "errore_del_principiante": "Attaccare i cordoli. Chi arriva a Imola dopo aver imparato altri circuiti prova a guadagnare sulle varianti prendendo il cordolo come farebbe altrove, e a Imola i cordoli sono alti, scompongono l'auto e hanno la ghiaia subito dietro. Il secondo errore, gemello del primo, e' frenare tardi in discesa su Acque Minerali. Qui si va forte stando puliti, non aggressivi.",
+  "gomme_e_freni_pista": "Imola è un circuito da trazione e da cordoli, non da appoggio lungo. Il posteriore lavora soprattutto in due punti, l'uscita di Tosa e l'uscita della seconda Rivazza: se vedi il posteriore degradare più dell'anteriore, il problema nasce lì e quasi sempre è un problema di progressione sul gas o di differenziale, non di pressioni. I freni sono chiamati spesso e due delle frenate principali (Acque Minerali, Rivazza) sono in discesa, quindi conta il bilanciamento più della potenza frenante. Il senso antiorario ribalta lo schema abituale: qui è il lato DESTRO dell'auto a essere caricato di più nelle curve principali. Se ti aspetti il classico anteriore sinistro cotto e non lo trovi, non è un errore di lettura: è Imola.",
+  "errore_del_principiante": "Attaccare i cordoli. Chi arriva a Imola dopo aver imparato altri circuiti prova a guadagnare sulle varianti prendendo il cordolo come farebbe altrove, e a Imola i cordoli sono alti, scompongono l'auto e hanno la ghiaia subito dietro. Il secondo errore, gemello del primo, è frenare tardi in discesa su Acque Minerali. Qui si va forte stando puliti, non aggressivi.",
   "gt3_ref_lap_time": {
     "valore": "1:42",
-    "contesto": "GT3 in ACC, qualifica, asciutto, aria pulita. Ordine di grandezza: i tempi da alieno stanno intorno a 1:40-1:41, un buon riferimento amatoriale e' 1:44.",
+    "contesto": "GT3 in ACC, qualifica, asciutto, aria pulita. Ordine di grandezza: i tempi da alieno stanno intorno a 1:40-1:41, un buon riferimento amatoriale è 1:44.",
     "fonte": null,
     "origine": "mestiere",
     "confidence": "media",
@@ -752,18 +752,18 @@
   },
   "chicche": [
     {
-      "testo": "Imola e' uno dei pochi circuiti del calendario che si percorre in senso antiorario.",
-      "perche_interessa_al_pilota": "Ribalta lo schema mentale sullo stress gomme: qui e' il lato destro dell'auto a soffrire, non il sinistro come nella maggior parte dei circuiti. Cambia la lettura delle temperature e cambia il modo di impostare il collo e la testa nel primo settore.",
+      "testo": "Imola è uno dei pochi circuiti del calendario che si percorre in senso antiorario.",
+      "perche_interessa_al_pilota": "Ribalta lo schema mentale sullo stress gomme: qui è il lato destro dell'auto a soffrire, non il sinistro come nella maggior parte dei circuiti. Cambia la lettura delle temperature e cambia il modo di impostare il collo e la testa nel primo settore.",
       "fonte": "https://lapmeta.com/en/track/variation/193/track_map"
     },
     {
-      "testo": "Il dislivello del tracciato e' di circa 68 metri, fra i piu' marcati dei circuiti europei.",
-      "perche_interessa_al_pilota": "Spiega perche' le frenate in discesa (Acque Minerali, Rivazza) sono cosi' esigenti e perche' Piratella e' cieca: non e' una tua impressione, e' geometria. Va tenuto presente anche nel setup, perche' l'auto si scarica e si ricarica in continuazione.",
+      "testo": "Il dislivello del tracciato è di circa 68 metri, fra i più marcati dei circuiti europei.",
+      "perche_interessa_al_pilota": "Spiega perché le frenate in discesa (Acque Minerali, Rivazza) sono così esigenti e perché Piratella è cieca: non è una tua impressione, è geometria. Va tenuto presente anche nel setup, perché l'auto si scarica e si ricarica in continuazione.",
       "fonte": "https://plantrackday.com/en/circuits/imola-50"
     },
     {
-      "testo": "Tamburello e Villeneuve erano curvoni velocissimi fino al 1994: sono state trasformate in varianti dopo quell'anno. La Variante Bassa, l'ultima chicane prima del traguardo, e' stata invece eliminata nel rifacimento successivo.",
-      "perche_interessa_al_pilota": "Serve per non confondersi con i materiali di riferimento: se trovi un onboard o una mappa con una chicane prima del traguardo, e' un layout che tu non guidi e i riferimenti di frenata non sono trasferibili.",
+      "testo": "Tamburello e Villeneuve erano curvoni velocissimi fino al 1994: sono state trasformate in varianti dopo quell'anno. La Variante Bassa, l'ultima chicane prima del traguardo, è stata invece eliminata nel rifacimento successivo.",
+      "perche_interessa_al_pilota": "Serve per non confondersi con i materiali di riferimento: se trovi un onboard o una mappa con una chicane prima del traguardo, è un layout che tu non guidi e i riferimenti di frenata non sono trasferibili.",
       "fonte": "https://www.racingcircuits.info/europe/italy/imola.html"
     }
   ],
