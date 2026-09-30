@@ -2582,7 +2582,40 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 **Verifica:** validatore `check_track_knowledge.py` «ERRORI: nessuno»; `verifica_ancore.py zandvoort` con output **identico prima e dopo** (le 3 «NON REGGE» c'erano già); Monza 11/11 ancore. Suite **1014/1014** (1013 + il test degli accenti). Scheda di Monza a schermo: «È il punto di sorpasso», «più violenta», «Velocità pura», «lì vanno tutti uguali»; nessuna parola con l'apostrofo finale nel testo della pagina.
 
 **File protetti:** ☑ nessuno toccato.
-**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `6acd69c` guide, script e test · docs nel commit successivo).
+**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `6acd69c` guide, script e test · `9002e4e` docs).
+
+---
+
+## Entry #056 — Lezioni: collegamenti giusti con l'app e lezioni consigliate dal verdetto
+
+| Campo | Valore |
+|---|---|
+| Data | 30/09/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `frontend/src/lib/lessons.ts` · `frontend/src/app/(app)/lezioni/page.tsx` · `frontend/src/app/(app)/lezioni/[slug]/page.tsx` · `frontend/src/app/(app)/telemetry/page.tsx` · `docs/A_Lezione_con_Gigi_ContentPack_v1.md` · `docs/03-v2-architecture.md` |
+| Commit | vedi sotto |
+| Contesto | Ultima pagina della revisione (la Setup si rivede dopo la verifica dei range). Indice 729 px, lezione ~1050: le misure andavano già bene, i problemi erano i collegamenti. |
+
+**Catalogo messaggi:**
+1. «andiamo avanti» → diagnosi di Lezioni e 4 proposte: LiCo → Consumo della Dashboard; Gomme → Telemetria sul tab Gomme e freni; «aggancio PitWall» → «nell'app»; «Consigliate» dal profilo e dal verdetto (tabella da mostrare prima). Nota sui contenuti della lezione 06.
+2. «ok a tutte le proposte, procedi» → 1-3 fatte e verificate; tabella verdetto → lezione mostrata.
+3. «1 va bene la tabella, 2 va bene la proposta. ok procedi.» → «Consigliate per te» e valori community segnati nella lezione 06.
+
+**Diagnosi (prima):** la lezione LiCo diceva «si lega al calcolo strategia carburante» e apriva la Console, dove dalla #052 «Calcola carburante» è spento sulle sessioni vere; la lezione Gomme apriva la Telemetria sull'ultimo tab usato; «aggancio PitWall» era gergo nostro e sbilanciava le card; `recommendLessons` (dal profilo) esisteva ma l'indice non la usava, e nessuna lezione veniva dal verdetto.
+
+**Modifica:**
+- **LiCo** → la Dashboard: «Il consumo misurato della sessione aperta è nella Dashboard, indicatore Consumo: il LiCo è come lo abbassi in pista».
+- **Gomme** → `/telemetry?tab=gomme`: la Telemetria legge il parametro una volta all'arrivo (senza `useSearchParams`, che in build chiederebbe un Suspense) e apre «Gomme e freni».
+- «aggancio PitWall» → **«nell'app»** (card) e **«Nell'app»** (riquadro della lezione); etichetta in fondo alla card, card allineate.
+- **«Consigliate per te»** in cima all'indice (`lezioniConsigliate` in `lib/lessons.ts`): le voci del verdetto in ordine di gravità con la tabella decisa da Edoardo (gomme → 06; ritmo che cala → 07; costanza, giro mai messo insieme, settore, frenata ballerina → 02; «Perdi … in curva» → 01; v-min incostante → 04; troppo tempo in folle → 05; giri buttati → nessuna), poi i punti deboli del profilo; senza doppioni, al massimo 3, ognuna col motivo («dal verdetto: …», «dal tuo profilo: …»). Né verdetto né profilo → la sezione non c'è.
+- **Lezione 06**: «ottimale 80–90°C» e «±0.1 psi ogni ±1°C» detti per quello che sono, valori della community da confermare; la finestra 70–100°C al core indicata come Kunos. Stesso testo nel content pack in `docs/`.
+
+**Risultato osservato** (1536×639): demo → consigliate 07 (ritmo che cala), 06 (pressioni posteriori), 02 (settore 3); Ferrari a Monza → 06, 01 (curva 5), 04 (v-min in curva 5); dal riquadro «Nell'app» della lezione 06 la Telemetria si apre su «Gomme e freni» (anche scrivendo l'indirizzo); indice 908 px con le consigliate. Rotte `/lezioni`, `/lezioni/gomme-finestra`, `/telemetry`, `/` 200; console senza errori.
+
+**Verifica:** `tsc --noEmit` 0 errori · backend non toccato.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `9082b5e` Lezioni · docs nel commit successivo).
 
 ---
 

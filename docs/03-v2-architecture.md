@@ -37,7 +37,7 @@ HAZARD-V2-B) + `cd frontend && npm run dev` (:3000). Health `GET :8000/` →
 | `/setup` | `(app)/setup/page.tsx` | **Setup**: 5 tab / 49 slider ACC, parametri indicati dal verdetto, setup grezzo della sessione, upload screenshot · `GET /api/catalog`, `/api/setup-params`, `/api/sessions/{id}`; `POST /api/setup/from-image` |
 | `/sessioni` | `(app)/sessioni/page.tsx` | **Sessioni** (L4; riordinata nella Entry #053): in cima l'archivio a gruppi (Le tue / Riferimenti / Demo, gli stessi della colonna), sotto «Aggiungi una sessione» — PC a tab (Export MoTeC, File di ACC, Registrazione dal vivo), console con la sessione manuale e il racconto |
 | `/tracciati` · `/tracciati/[id]` | `(app)/tracciati/…` | **Tracciati** (dal 18/09; riordinata nella Entry #054): indice dei 25 circuiti a quattro colonne, con «guida», «layout», «aperta ora» e le sessioni in archivio per pista; scheda con foto e numeri (dati di pista della guida compresi), mappa verificata accanto al curva per curva, settori, sezioni brevi a coppie, chicche e fonti · `GET /api/catalog`, `/api/catalog/track/{id}`, `/guida` |
-| `/lezioni` · `/lezioni/[slug]` | `(app)/lezioni/…` | **A Lezione con Gigi**: indice e dettaglio, contenuti read-only da `lib/lessons.ts` |
+| `/lezioni` · `/lezioni/[slug]` | `(app)/lezioni/…` | **A Lezione con Gigi**: indice (con «Consigliate per te» dal verdetto della sessione aperta e dal profilo, Entry #056) e dettaglio, contenuti read-only da `lib/lessons.ts` |
 | `/crediti` | `(app)/crediti/page.tsx` | Crediti delle immagini Wikimedia Commons: legge `public/assets/ATTRIBUTIONS.md` a build-time |
 | `/login` | `(auth)/login/page.tsx` | Google Sign-In (popup) oppure modalità demo; profilo solo in `sessionStorage`, nessuna sessione server |
 

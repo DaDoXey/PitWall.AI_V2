@@ -116,8 +116,8 @@
 **Come si fa (ACC v1.9, mescola dry DHF — dato aggiornato):**
 - **Finestra pressioni operative (a CALDO): ~26.0–27.0 psi** per tutte le classi GT (dal v1.9, mescola DHF).
 - Le pressioni che imposti in garage sono **a FREDDO** e più basse: salgono nei primi giri fino a entrare nella finestra a caldo. Regola le pressioni a freddo così che a caldo caschino in finestra.
-- **Temperatura di lavoro 70–100°C, ottimale 80–90°C.** Tieni **<15°C di spread** tra interno ed esterno del battistrada (si gestisce con camber/toe e brake ducts).
-- Regola pratica: **±0.1 psi ogni ±1°C** di temperatura ambiente.
+- **Temperatura di lavoro al core 70–100°C** (finestra Kunos); «ottimale 80–90°C» è un valore della community, da confermare (Entry #056). Tieni **<15°C di spread** tra interno ed esterno del battistrada (si gestisce con camber/toe e brake ducts).
+- Regola pratica della community, da confermare (Entry #056): **±0.1 psi ogni ±1°C** di temperatura ambiente.
 
 **Errori comuni:** leggere le pressioni a freddo come se fossero operative; gonfiare troppo (contatto ridotto, meno grip) o troppo poco (gomma fiacca, si scalda male); ignorare lo spread di temperatura.
 
