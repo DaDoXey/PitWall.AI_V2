@@ -180,9 +180,11 @@ def risposta_dal_motore(report: ReportAnalisi, bundle: SessionBundle, domanda: s
         primo = report.verdetto[0]
         prova = primo.prova[:1].upper() + primo.prova[1:]
         diagnosi.append(f"Il problema numero uno: **{primo.titolo}**. {prova}.")
-        altri = [v.titolo for v in report.verdetto[1:4]]
-        if altri:
-            diagnosi.append("Poi, in ordine di gravità: " + "; ".join(altri) + ".")
+        # Le altre voci non si elencano: quelle di gomme e guida hanno la loro sezione qui
+        # sotto (causa, setup, guida), e l'elenco intero è il verdetto della Dashboard.
+        if len(report.verdetto) > 1:
+            diagnosi.append(f"Qui sotto la causa e le correzioni; il verdetto completo "
+                            f"({len(report.verdetto)} voci) è nella Dashboard.")
     elif report.giri_totali:
         diagnosi.append("Con questi dati il motore non trova perdite dimostrabili.")
     else:
@@ -193,7 +195,13 @@ def risposta_dal_motore(report: ReportAnalisi, bundle: SessionBundle, domanda: s
 
     # ── Causa meccanica ──
     causa: list[str] = []
-    if gomme:
+    primo = report.verdetto[0] if report.verdetto else None
+    if gomme and gomme[0] is primo:
+        # il problema numero uno è già scritto sopra: qui si dice solo dove sta
+        altre_gomme = [v.titolo for v in gomme[1:3]]
+        causa.append("Dai numeri, la causa sta nelle gomme: è il problema numero uno qui sopra"
+                     + ("; poi " + "; ".join(altre_gomme) if altre_gomme else "") + ".")
+    elif gomme:
         causa.append("Dai numeri, la causa sta nelle gomme: " + "; ".join(
             v.titolo for v in gomme[:3]) + ".")
     elif report.ha_canali:
@@ -222,12 +230,13 @@ def risposta_dal_motore(report: ReportAnalisi, bundle: SessionBundle, domanda: s
                      "possono dare solo sul racconto.")
 
     # ── Note ──
+    # Cosa regge e le note sui dati stanno nella Dashboard (con i nomi dei canali, che al
+    # pilota non dicono niente): qui solo il rimando.
     note: list[str] = []
-    for p in report.cosa_regge[:3]:
-        note.append(f"Regge: {p.titolo} ({p.prova}).")
-    for d in report.dati_mancanti[:3]:
-        note.append(f"Dato mancante o assunzione: {d}.")
-    if domanda.strip():
+    if report.cosa_regge or report.dati_mancanti:
+        note.append("Cosa regge e le note sui dati sono nella Dashboard"
+                    + (f" ({len(report.dati_mancanti)} note)." if report.dati_mancanti else "."))
+    if domanda.strip() and domanda.strip().lower() != "analizza la sessione":
         note.append(f"Alla domanda «{domanda.strip()[:160]}» rispondono i numeri qui sopra: "
                     "per un commento su misura serve Gigi dal vivo.")
     note.append("Risposta composta dal motore di analisi, senza modello linguistico.")

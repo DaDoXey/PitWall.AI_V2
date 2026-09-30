@@ -602,7 +602,7 @@ def _verdetto(
             apice = ""
         voci.append(VoceVerdetto(
             gravita=len(voci) + 1,
-            titolo=f"Perdi {riga.perdita_media_ms/1000:.2f} s a giro in {dove}",
+            titolo=f"Perdi {riga.perdita_media_ms/1000:.3f} s a giro in {dove}",
             prova=(f"{apice}tempo migliore sul tratto {riga.tempo_migliore_ms/1000:.3f} s, "
                    f"medio {riga.tempo_medio_ms/1000:.3f} s "
                    f"su {riga.giri_considerati} giri"),

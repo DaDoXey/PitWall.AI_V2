@@ -89,6 +89,23 @@ test("G09 la risposta dal motore ha le 5 sezioni, in ordine", cinque_sezioni(dal
 test("G10 apre con la prima voce del verdetto", report.verdetto[0].titolo in dal_motore)
 test("G11 dichiara di non venire da un modello", "senza modello linguistico" in dal_motore)
 
+
+def sezione(testo: str, titolo: str) -> str:
+    return testo.split(f"## {titolo}\n", 1)[1].split("\n## ", 1)[0]
+
+
+diagnosi_m = sezione(dal_motore, "Diagnosi")
+test("G11b la diagnosi dice solo il problema numero uno, il resto sta sotto e in Dashboard",
+     all(v.titolo not in diagnosi_m for v in report.verdetto[1:])
+     and (len(report.verdetto) <= 1 or "nella Dashboard" in diagnosi_m), diagnosi_m)
+test("G11c la causa meccanica non ripete il problema numero uno",
+     report.verdetto[0].titolo not in sezione(dal_motore, "Causa Meccanica Probabile"), dal_motore)
+note_m = sezione(dal_motore, "Note Aggiuntive")
+test("G11d le note non ripetono cosa regge né i nomi dei canali",
+     "Regge:" not in note_m and "Dato mancante" not in note_m and "nella Dashboard" in note_m, note_m)
+test("G11e «Analizza la sessione» non viene ripetuta come domanda senza risposta",
+     "Alla domanda" not in risposta_dal_motore(report, bundle, "Analizza la sessione"))
+
 console = SessionBundle(
     meta=Meta(fonte=Fonte.MANUALE, piattaforma="playstation", car="ferrari_296_gt3",
               track="spa"),

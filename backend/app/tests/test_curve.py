@@ -20,6 +20,7 @@ Eseguire con (dalla cartella backend/):
 """
 
 import pathlib
+import re
 import sys
 
 try:
@@ -248,6 +249,9 @@ test("C41 la voce più grave è sulla curva 2", "curva 2" in r.verdetto[0].titol
      r.verdetto[0].titolo)
 test("C42 la voce più grave cita i decimi persi",
      "0.2" in r.verdetto[0].titolo or "0.3" in r.verdetto[0].titolo,
+     r.verdetto[0].titolo)
+test("C42b …al millesimo, come il resto dell'app («Perdi 0.184 s»)",
+     re.search(r"^Perdi \d+\.\d{3} s a giro", r.verdetto[0].titolo) is not None,
      r.verdetto[0].titolo)
 test("C43 ogni voce porta la prova numerica", all(v.prova for v in r.verdetto))
 test("C44 ogni voce porta l'azione da fare", all(v.azione for v in r.verdetto))
