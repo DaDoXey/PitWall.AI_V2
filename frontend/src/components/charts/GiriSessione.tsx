@@ -5,7 +5,7 @@
 // stato del giro (di ritmo, migliore, box, invalido), delta e perdite per settore sono
 // decisi dal motore.
 import type { Report } from "@/lib/api";
-import { delta, numero, perdita, secondi, tempoGiro } from "@/lib/formato";
+import { delta, ETICHETTA_FONTE_CARBURANTE, numero, perdita, secondi, tempoGiro } from "@/lib/formato";
 import { INSTRUMENT, STATE } from "@/lib/instrument";
 import { COLORS } from "@/lib/theme";
 
@@ -23,6 +23,10 @@ export default function GiriSessione({ report }: { report: Report }) {
   const scala = Math.max(0, ...report.giri.filter((g) => g.di_ritmo).map((g) => g.delta_migliore_ms ?? 0));
   // senza split in nessun giro (es. MoTeC senza settori) spariscono colonne e riquadro dei settori
   const haSplit = report.giri.some((g) => g.splits_ms.some((v) => v));
+  // Il consumo giro per giro è una misura solo dalla shared memory: dal setup o dai litri
+  // scritti a mano è lo stesso numero su ogni riga, e la tabella lo deve dire.
+  const fonteConsumo = report.carburante.fonte;
+  const consumoStimato = fonteConsumo === "setup" || fonteConsumo === "manuale";
 
   return (
     <div className={`grid items-start gap-4 ${haSplit ? "lg:grid-cols-[minmax(0,1fr)_320px]" : ""}`}>
@@ -41,7 +45,7 @@ export default function GiriSessione({ report }: { report: Report }) {
                   </>
                 )}
                 <th className="py-2 pr-3">Δ migliore</th>
-                <th className="py-2 pr-3">Carburante</th>
+                <th className="py-2 pr-3">Carburante{consumoStimato && fonteConsumo ? ` · ${ETICHETTA_FONTE_CARBURANTE[fonteConsumo]}` : ""}</th>
                 <th className="py-2">Stato</th>
               </tr>
             </thead>
@@ -84,6 +88,8 @@ export default function GiriSessione({ report }: { report: Report }) {
         <p className="mt-2 text-[0.7rem] text-muted">
           In viola {haSplit ? "il giro e i settori migliori" : "il giro migliore"}. «Fuori ritmo» = oltre il +10% dal migliore: contato, ma escluso da
           medie, costanza e degrado.{!haSplit && " Questa sessione non ha i tempi dei settori."}
+          {fonteConsumo === "setup" && " Il carburante è la stima salvata da ACC nel setup, uguale per ogni giro: non è misurato."}
+          {fonteConsumo === "manuale" && " Il carburante è la media dei litri che hai scritto, ripartita sui giri: non è misurato giro per giro."}
         </p>
       </Riquadro>
 

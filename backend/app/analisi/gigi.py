@@ -36,7 +36,9 @@ def _intestazione(report: ReportAnalisi, bundle: SessionBundle) -> str:
     pezzi = [
         f"vettura {report.car or 'non indicata'}",
         f"pista {report.track or 'non indicata'}",
-        f"sessione {report.tipo_sessione}",
+        # «?» = il file non dice che sessione era (MoTeC): al modello va detto a parole.
+        ("tipo di sessione non indicato" if report.tipo_sessione == "?"
+         else f"sessione {report.tipo_sessione}"),
         f"fonte {report.fonte}",
     ]
     if meta.piattaforma:
@@ -71,8 +73,17 @@ def _blocco_report(report: ReportAnalisi, bundle: SessionBundle) -> list[str]:
         righe.append(f"degrado dal giro {report.degrado.dal_giro}: "
                      f"{report.degrado.pendenza_ms_giro} ms/giro (R² {report.degrado.r_quadro})")
     if report.carburante.calcolabile:
-        righe.append(f"consumo {report.carburante.consumo_medio_l_giro} l/giro "
-                     f"su {report.carburante.giri_misurati} giri")
+        consumo = f"consumo {report.carburante.consumo_medio_l_giro} l/giro"
+        # Un consumo misurato e uno dichiarato non valgono uguale (decisione del 17/09):
+        # il modello deve saperlo, o racconta una stima come una misura.
+        if report.carburante.fonte == "setup":
+            righe.append(f"{consumo}: è la stima salvata da ACC nel setup (fuelPerLap), uguale per "
+                         f"ogni giro, NON una misura di questa sessione")
+        elif report.carburante.fonte == "manuale":
+            righe.append(f"{consumo}: media ricavata dai litri scritti dal pilota a inizio e fine, "
+                         f"ripartita sui giri, NON misurata giro per giro")
+        else:
+            righe.append(f"{consumo} misurato su {report.carburante.giri_misurati} giri")
     if report.settori:
         righe.append("settori (migliore / perdita media a giro): " + " · ".join(
             f"S{s.numero} {s.migliore_ms / 1000:.3f} s / {s.perdita_media_ms} ms"

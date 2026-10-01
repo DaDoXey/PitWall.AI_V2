@@ -202,11 +202,42 @@ try:
          r.status_code == 200 and STREAM and "il pilota sta ascoltando la fase" not in STREAM[0]["system"])
 
     # -----------------------------------------------------------------------
+    print("\n── Il contesto dice da dove vengono i numeri ─────────────────────")
+    # -----------------------------------------------------------------------
+    from app.analisi import analizza
+    from app.analisi.debrief import debrief
+    from app.analisi.gigi import contesto_chat
+    from app.bundle import store
+    from app.bundle.adapters import canali_del_bundle
+    from app.bundle.schema import FonteCarburante, TipoSessione
+
+    bundle = store.leggi(demo.DEMO_ID)
+    canali = canali_del_bundle(bundle)
+    report = analizza(bundle, canali)
+    testo = contesto_chat(report, bundle, debrief(report))
+    test("C15 demo: consumo «misurato su 8 giri» e tipo di sessione FP",
+         "l/giro misurato su 8 giri" in testo and "sessione FP" in testo)
+
+    bundle.carburante_fonte = FonteCarburante.SETUP
+    bundle.meta.tipo_sessione = TipoSessione.SCONOSCIUTO
+    report = analizza(bundle, canali)
+    testo = contesto_chat(report, bundle, debrief(report))
+    test("C16 consumo dal setup: il contesto dice che è una stima, NON una misura",
+         "fuelPerLap" in testo and "NON una misura" in testo and "misurato su" not in testo)
+    test("C17 sessione di tipo sconosciuto: «non indicato», mai «sessione ?»",
+         "tipo di sessione non indicato" in testo and "sessione ?" not in testo)
+
+    bundle.carburante_fonte = FonteCarburante.MANUALE
+    report = analizza(bundle, canali)
+    test("C18 consumo scritto dal pilota: il contesto dice che non è misurato giro per giro",
+         "NON misurata giro per giro" in contesto_chat(report, bundle, debrief(report)))
+
+    # -----------------------------------------------------------------------
     print("\n── Tetto di spesa ────────────────────────────────────────────────")
     # -----------------------------------------------------------------------
     prepara(tetto="0")
     r = client.post(URL, json={"messages": DOMANDA})
-    test("C15 tetto della chat a 0: 429 con il motivo, nessuna chiamata",
+    test("C19 tetto della chat a 0: 429 con il motivo, nessuna chiamata",
          r.status_code == 429 and not STREAM and "tetto" in r.json().get("detail", ""),
          f"{r.status_code} {r.text[:120]}")
 
@@ -217,10 +248,10 @@ try:
         if ultima.status_code != 200:
             break
         n += 1
-    test("C16 tetto a $0,10: dopo un po' di risposte arriva il 429, e la spesa resta sotto il tetto",
+    test("C20 tetto a $0,10: dopo un po' di risposte arriva il 429, e la spesa resta sotto il tetto",
          0 < n < 200 and ultima.status_code == 429 and budget._carica()["spesa_giorno"]["chat"] <= 0.10,
          f"risposte {n}, ultimo {ultima.status_code}, spesa {budget._carica()['spesa_giorno']['chat']}")
-    test("C18 ogni risposta data era vera: mai il messaggio di guasto di agent.py al posto del 429",
+    test("C21 ogni risposta data era vera: mai il messaggio di guasto di agent.py al posto del 429",
          len(STREAM) == n, f"chiamate {len(STREAM)}, risposte {n}")
 
     # -----------------------------------------------------------------------
@@ -228,39 +259,39 @@ try:
     # -----------------------------------------------------------------------
     prepara()
     r = client.post(URL, json={"messages": scambi(chat.MAX_DOMANDE)})
-    test("C18 dodicesima domanda: ancora 200", r.status_code == 200, f"{r.status_code}")
+    test("C22 dodicesima domanda: ancora 200", r.status_code == 200, f"{r.status_code}")
     al_modello = STREAM[0]["messages"] if STREAM else []
-    test("C19 al modello solo la coda: al massimo 8 messaggi, il primo del pilota, l'ultimo la domanda",
+    test("C23 al modello solo la coda: al massimo 8 messaggi, il primo del pilota, l'ultimo la domanda",
          0 < len(al_modello) <= chat.MAX_MESSAGGI_AL_MODELLO and al_modello[0]["role"] == "user"
          and al_modello[-1] == {"role": "user", "content": "domanda 12"},
          str([(m["role"], m["content"]) for m in al_modello]))
 
     prepara()
     r = client.post(URL, json={"messages": scambi(chat.MAX_DOMANDE + 1)})
-    test("C20 tredicesima domanda: 409 «conversazione piena», nessuna chiamata",
+    test("C24 tredicesima domanda: 409 «conversazione piena», nessuna chiamata",
          r.status_code == 409 and not STREAM, f"{r.status_code}")
 
     r = client.post(URL, json={"messages": DOMANDA + [{"role": "assistant", "content": "ecco"}]})
-    test("C21 ultimo messaggio non del pilota: 422, nessuna chiamata",
+    test("C25 ultimo messaggio non del pilota: 422, nessuna chiamata",
          r.status_code == 422 and not STREAM, f"{r.status_code}")
 
     r = client.post(URL, json={"messages": [{"role": "user", "content": "a" * (chat.MAX_CARATTERI_DOMANDA + 1)}]})
-    test("C22 domanda oltre i 1000 caratteri: 422, nessuna chiamata",
+    test("C26 domanda oltre i 1000 caratteri: 422, nessuna chiamata",
          r.status_code == 422 and not STREAM, f"{r.status_code}")
 
     r = client.post(URL, json={"messages": []})
-    test("C23 nessun messaggio: 422", r.status_code == 422 and not STREAM, f"{r.status_code}")
+    test("C27 nessun messaggio: 422", r.status_code == 422 and not STREAM, f"{r.status_code}")
 
     r = client.post(URL, json={"messages": [
         {"role": "user", "content": "prima"}, {"role": "user", "content": "seconda"}]})
-    test("C24 due messaggi di fila del pilota: al modello ne arriva uno solo, uniti",
+    test("C28 due messaggi di fila del pilota: al modello ne arriva uno solo, uniti",
          r.status_code == 200 and STREAM and STREAM[0]["messages"] == [
              {"role": "user", "content": "prima\nseconda"}],
          str(STREAM[0]["messages"] if STREAM else r.status_code))
 
     prepara()
     r = client.post("/api/sessions/20200101-000000-monza_bmw_m4_gt3-0000/chat", json={"messages": DOMANDA})
-    test("C25 sessione che non esiste: 404, nessuna chiamata",
+    test("C29 sessione che non esiste: 404, nessuna chiamata",
          r.status_code == 404 and not STREAM, f"{r.status_code}")
 
 finally:
