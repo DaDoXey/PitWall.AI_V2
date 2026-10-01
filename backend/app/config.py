@@ -42,6 +42,16 @@ def allow_live() -> bool:
     return os.getenv("PITWALL_ALLOW_LIVE", "0").strip().lower() in ("1", "true", "yes", "on")
 
 
+def chat_live() -> bool:
+    """True se la chat dal vivo di Gigi può chiamare il modello (Entry #061).
+
+    Interruttore suo, separato da PITWALL_ALLOW_LIVE: accende solo la chat, mentre
+    Rapporto completo e screenshot restano in demo-mode. Spento di default, quindi in
+    deploy pubblico nessuno consuma la chiave; la spesa resta dentro il tetto "chat".
+    """
+    return os.getenv("PITWALL_CHAT_LIVE", "0").strip().lower() in ("1", "true", "yes", "on")
+
+
 def demo_mode() -> bool:
     """True se si serve la cache demo (nessuna rete). Forzata in deploy pubblico."""
     if not allow_live():

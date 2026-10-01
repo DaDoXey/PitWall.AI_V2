@@ -206,6 +206,22 @@ def disponibile(categoria: str) -> bool:
             and stato["spesa_mese"] < tetto_mensile())
 
 
+def regge(categoria: str, modello: str, testo_input: str, max_output: int) -> bool:
+    """True se `prenota()` accetterebbe questa chiamata adesso. Controllo preventivo
+    come `disponibile()`, ma col costo massimo della chiamata: serve alla chat (#061),
+    che risponde in streaming e deve dire «tetto finito» PRIMA di cominciare. La
+    garanzia vera resta in `prenota()`."""
+    massimo = costo_massimo(modello, testo_input, max_output)
+    try:
+        with _lock:
+            stato = _carica()
+    except StatoSpesaIllegibile:
+        log.exception("stato della spesa illeggibile")
+        return False
+    return (stato["spesa_giorno"][categoria] + massimo <= tetto_giornaliero(categoria)
+            and stato["spesa_mese"] + massimo <= tetto_mensile())
+
+
 def prenota(categoria: str, modello: str, testo_input: str, max_output: int,
             immagini: int = 0) -> Prenotazione:
     """Mette in conto il costo massimo della chiamata, o solleva `SpesaRifiutata`."""

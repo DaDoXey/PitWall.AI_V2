@@ -61,6 +61,7 @@ export type Health = {
   demo_mode: boolean;
   live_allowed: boolean;
   recorder_allowed: boolean;
+  chat_live?: boolean; // la chat dal vivo di Gigi: interruttore suo e chiave presente (#061)
 };
 
 export function getHealth() {
@@ -387,9 +388,44 @@ export async function salvaTagli(id: string, tagli: number[] | null): Promise<De
   return res.json() as Promise<Debrief>;
 }
 
-/** Lo stato del backend: se Gigi dal vivo può rispondere (live consentito e demo-mode spenta). */
+/** Lo stato del backend: `chat_live` dice se Gigi dal vivo può rispondere alla radio. */
 export function getStatoBackend() {
-  return getJSON<{ status: string; demo_mode: boolean; live_allowed: boolean }>("/");
+  return getJSON<Health>("/");
+}
+
+export type MessaggioChat = { role: "user" | "assistant"; content: string };
+
+/**
+ * Gigi dal vivo (#061): manda la conversazione e riceve la risposta pezzo per pezzo.
+ * `onPezzo` viene chiamato a ogni pezzo di testo; la promessa si chiude a risposta finita.
+ * Se la chat non può rispondere (spenta, tetto di spesa, conversazione piena) solleva
+ * ApiError con il `detail` del backend, già scritto per il pilota.
+ */
+export async function chatConGigi(
+  id: string,
+  corpo: { messages: MessaggioChat[]; fase?: number; profile?: string },
+  onPezzo: (pezzo: string) => void,
+  signal?: AbortSignal,
+): Promise<void> {
+  const res = await fetch(`${API_BASE}/api/sessions/${encodeURIComponent(id)}/chat`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(corpo),
+    signal,
+  });
+  if (!res.ok) throw await leggiErrore(res);
+  if (!res.body) {
+    onPezzo(await res.text());
+    return;
+  }
+  const lettore = res.body.getReader();
+  const decoder = new TextDecoder();
+  for (;;) {
+    const { done, value } = await lettore.read();
+    if (done) break;
+    const pezzo = decoder.decode(value, { stream: true });
+    if (pezzo) onPezzo(pezzo);
+  }
 }
 
 export function getAnalisi(id: string) {

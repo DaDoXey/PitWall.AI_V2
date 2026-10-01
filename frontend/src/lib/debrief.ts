@@ -79,7 +79,12 @@ export type Messaggio = {
   prova?: string;
   fase?: number; // indice della fase di cui parla (per «in onda»)
   collegamenti?: Collegamento[];
+  dalVivo?: boolean; // scambio con il modello (#061): gli altri vengono dal debrief
+  errore?: boolean; // la chat non ha risposto: non conta e non torna al modello
 };
+
+/** Le domande che il pilota può scrivere a Gigi dal vivo in una conversazione (come il backend). */
+export const MAX_DOMANDE_DAL_VIVO = 12;
 
 /** La radio all'apertura: un messaggio di Gigi per ogni fase. */
 export function messaggiIniziali(d: Debrief): Messaggio[] {

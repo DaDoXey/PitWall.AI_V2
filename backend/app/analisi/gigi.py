@@ -161,6 +161,60 @@ def contesto(report: ReportAnalisi, bundle: SessionBundle, domanda: str,
     return "\n".join(righe)
 
 
+def _blocco_debrief(debrief, fase: int | None) -> list[str]:
+    """Le fasi che il pilota vede alla radio, e quella che sta ascoltando."""
+    if not debrief.fasi:
+        return ["[DEBRIEF]", "nessuna fase: la sessione non ha giri di ritmo"]
+    righe = ["[DEBRIEF — le fasi che il pilota vede alla radio]"]
+    for i, f in enumerate(debrief.fasi, start=1):
+        giri = f"giri {f.giri[0]}–{f.giri[-1]}" if len(f.giri) > 1 else f"giro {f.giri[0]}"
+        righe.append(f"{i}. {f.nome} ({giri}): {f.messaggio} — prova: {f.prova}")
+    if debrief.in_ballo_ms is not None:
+        righe.append(f"distacco fra la media dei giri di ritmo e il giro migliore: {debrief.in_ballo_ms} ms a giro")
+    if debrief.prima_cosa:
+        righe.append(f"prima cosa da fare: {debrief.prima_cosa.titolo} — {debrief.prima_cosa.azione}")
+    if fase is not None and 0 <= fase < len(debrief.fasi):
+        righe += ["", "[FASE IN ASCOLTO]",
+                  f"il pilota sta ascoltando la fase {fase + 1}, «{debrief.fasi[fase].nome}»"]
+    return righe
+
+
+def _blocco_click(regole: dict[str, dict] | None) -> list[str]:
+    """Quanto vale un click per questa vettura, parametro per parametro."""
+    if not regole:
+        return ["[CLICK DELLA VETTURA]",
+                "nessuna tabella per questa vettura: non si sa quanto vale un click. I valori di "
+                "[SETUP] senza unità sono click del gioco, non psi né gradi: non sommarci mai una "
+                "variazione in psi o gradi. Le correzioni dille solo come variazione nelle unità "
+                "reali (es. «+0.2 psi a freddo»), senza numeri di click"]
+    passi, elenchi = [], []
+    for chiave, regola in sorted(regole.items()):
+        if regola.get("tipo") == "lineare" and regola.get("passo"):
+            passi.append(f"{chiave}={regola['passo']} {regola.get('unita', '')}".strip())
+        else:
+            elenchi.append(chiave)
+    righe = ["[CLICK DELLA VETTURA]", "un click vale: " + ", ".join(passi)]
+    if elenchi:
+        righe.append("a scatti non regolari (di' solo la direzione, in click): " + ", ".join(elenchi))
+    return righe
+
+
+def contesto_chat(report: ReportAnalisi, bundle: SessionBundle, debrief, fase: int | None = None,
+                  profilo: str | None = None, regole: dict[str, dict] | None = None) -> str:
+    """Il contesto della chat dal vivo (Entry #061): lo stesso report dell'analisi a 5
+    sezioni, più il debrief fase per fase, la fase in ascolto e i click della vettura.
+    Senza [DOMANDA]: le domande sono i messaggi della conversazione."""
+    righe = _blocco_report(report, bundle) + [""] + _blocco_setup(bundle)
+    racconto = _blocco_racconto(bundle)
+    if racconto:
+        righe += [""] + racconto
+    if profilo and profilo.strip():
+        righe += ["", "[PROFILO PILOTA]", profilo.strip()]
+    righe += [""] + _blocco_debrief(debrief, fase)
+    righe += [""] + _blocco_click(regole)
+    return "\n".join(righe)
+
+
 # ─────────────────────────────────────────────
 # Risposta senza modello
 # ─────────────────────────────────────────────

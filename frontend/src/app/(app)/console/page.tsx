@@ -7,18 +7,30 @@
 // Una cosa alla volta: in onda c'è un solo messaggio, quello della fase ascoltata; le
 // domande e le risposte si accodano sotto, come una conversazione.
 // Scelta di Edoardo fra tre concetti: la radio (B) + il tavolo del debrief (C) + una
-// cosa alla volta (A). La chat dal vivo arriva con la #061.
-import { useCallback, useEffect, useMemo, useState } from "react";
+// cosa alla volta (A).
+// Gigi dal vivo (#061): con PITWALL_CHAT_LIVE acceso la casella della radio scrive al
+// modello, che risponde in streaming sulla sessione aperta (12 domande a conversazione).
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import MappaFase from "@/components/console/MappaFase";
 import Radio from "@/components/console/Radio";
 import RapportoCompleto from "@/components/console/RapportoCompleto";
 import StrisciaGiri from "@/components/console/StrisciaGiri";
-import { ApiError, getDebrief, getSetupParams, salvaTagli, type Debrief } from "@/lib/api";
-import { alternaTaglio, DOMANDE, messaggiIniziali, rispondi, titoloPrimaCosa, type Domanda, type Messaggio } from "@/lib/debrief";
+import { ApiError, chatConGigi, getDebrief, getSetupParams, getStatoBackend, salvaTagli, type Debrief } from "@/lib/api";
+import {
+  alternaTaglio,
+  DOMANDE,
+  MAX_DOMANDE_DAL_VIVO,
+  messaggiIniziali,
+  rispondi,
+  titoloPrimaCosa,
+  type Domanda,
+  type Messaggio,
+} from "@/lib/debrief";
 import { tempoGiro } from "@/lib/formato";
 import { fadeInUp } from "@/lib/motion";
+import { profileContextLine, useProfile } from "@/lib/profile";
 import { useSessione } from "@/lib/sessione";
 import type { SetupParams } from "@/lib/setup";
 
@@ -36,6 +48,7 @@ function faseIniziale(d: Debrief): number {
 
 export default function ConsolePage() {
   const { idSessione, sessione, report, nomi } = useSessione();
+  const { profile } = useProfile();
   const [debrief, setDebrief] = useState<Debrief | null>(null);
   const [errore, setErrore] = useState<string | null>(null);
   const [attiva, setAttiva] = useState(0);
@@ -44,8 +57,14 @@ export default function ConsolePage() {
   const [conversazione, setConversazione] = useState<Messaggio[]>([]);
   const [params, setParams] = useState<SetupParams | null>(null);
   const [rapporto, setRapporto] = useState(false);
+  const [dalVivo, setDalVivo] = useState(false);
+  const [inRisposta, setInRisposta] = useState(false);
+  const interrompi = useRef<AbortController | null>(null);
 
   const riparti = useCallback((d: Debrief) => {
+    interrompi.current?.abort();
+    interrompi.current = null;
+    setInRisposta(false);
     setDebrief(d);
     setConversazione([]);
     setAttiva(faseIniziale(d));
@@ -64,6 +83,16 @@ export default function ConsolePage() {
       vivo = false;
     };
   }, [idSessione, riparti]);
+
+  // Gigi dal vivo c'è solo se il backend ha la chat accesa (interruttore suo e chiave).
+  useEffect(() => {
+    getStatoBackend()
+      .then((s) => setDalVivo(Boolean(s.chat_live)))
+      .catch(() => setDalVivo(false));
+  }, []);
+
+  // Si cambia sessione (o pagina) mentre Gigi risponde: la risposta si interrompe.
+  useEffect(() => () => interrompi.current?.abort(), [idSessione]);
 
   // Le regole della vettura: la prima cosa da fare si dice in click, quando si può.
   useEffect(() => {
@@ -98,6 +127,55 @@ export default function ConsolePage() {
       { id: `gigi-${n}`, da: "gigi", testo: r.testo, prova: d === "perche" ? r.prova : undefined, fase: r.fase },
     ]);
     if (r.fase !== undefined) setAttiva(r.fase);
+  };
+
+  // Una domanda scritta a Gigi dal vivo: al modello va solo la conversazione dal vivo
+  // (le risposte preparate vengono dal debrief, che il modello ha già nel contesto).
+  const scrivi = async (testo: string) => {
+    if (!idSessione || inRisposta) return;
+    const n = Date.now();
+    const tu: Messaggio = { id: `tu-${n}`, da: "tu", testo, dalVivo: true };
+    const idRisposta = `gigi-${n}`;
+    const storia = [...conversazione.filter((m) => m.dalVivo && !m.errore && m.testo), tu];
+    const segna = (cambia: (m: Messaggio) => Messaggio, anche?: string) =>
+      setConversazione((c) => c.map((m) => (m.id === idRisposta || m.id === anche ? cambia(m) : m)));
+    setConversazione((c) => [...c, tu, { id: idRisposta, da: "gigi", testo: "", dalVivo: true }]);
+    setInRisposta(true);
+    setInRiproduzione(false);
+    const controllo = new AbortController();
+    interrompi.current = controllo;
+    let ricevuto = "";
+    try {
+      await chatConGigi(
+        idSessione,
+        {
+          messages: storia.map((m) => ({ role: m.da === "tu" ? ("user" as const) : ("assistant" as const), content: m.testo })),
+          fase: attiva,
+          profile: profile ? profileContextLine(profile) : undefined,
+        },
+        (pezzo) => {
+          ricevuto += pezzo;
+          segna((m) => ({ ...m, testo: m.testo + pezzo }));
+        },
+        controllo.signal,
+      );
+      // Risposta vuota, o il messaggio di guasto di agent.py: non è una risposta di Gigi.
+      if (!ricevuto.trim()) throw new Error("Gigi non ha risposto: riprova.");
+      if (ricevuto.startsWith("⚠️")) segna((m) => ({ ...m, errore: true }), tu.id);
+    } catch (e) {
+      if (controllo.signal.aborted) return;
+      const motivo =
+        e instanceof ApiError || (e instanceof Error && e.message.startsWith("Gigi non ha risposto"))
+          ? e.message
+          : "Collegamento con Gigi caduto: riprova.";
+      segna((m) => (m.id === idRisposta ? { ...m, testo: motivo, errore: true } : { ...m, errore: true }), tu.id);
+      if (e instanceof ApiError && e.status === 503) setDalVivo(false);
+    } finally {
+      if (interrompi.current === controllo) {
+        interrompi.current = null;
+        setInRisposta(false);
+      }
+    }
   };
 
   const taglia = async (tagli: number[] | null) => {
@@ -235,7 +313,12 @@ export default function ConsolePage() {
               messaggio={messaggioDiFase}
               conversazione={conversazione}
               nomeFase={faseInOnda?.nome}
-              dalVivo={false}
+              dalVivo={dalVivo}
+              inRisposta={inRisposta}
+              domandeDalVivo={conversazione.filter((m) => m.da === "tu" && m.dalVivo && !m.errore).length}
+              maxDomande={MAX_DOMANDE_DAL_VIVO}
+              onScrivi={scrivi}
+              onNuova={() => setConversazione([])}
               onProssima={() => debrief.fasi.length > 0 && vaiAFase((attiva + 1) % debrief.fasi.length)}
               onDomanda={chiedi}
             />

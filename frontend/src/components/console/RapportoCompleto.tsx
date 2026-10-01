@@ -86,9 +86,10 @@ export default function RapportoCompleto({ aperto, onChiudi }: { aperto: boolean
 
 // ─────────────────────────────────────────────
 // Markdown-lite → React: grassetto **…**, `code`, liste, paragrafi.
-// Porta _md_lite della v1; nessuna libreria esterna.
+// Porta _md_lite della v1; nessuna libreria esterna. Lo usa anche la radio per le
+// risposte di Gigi dal vivo (#061), che il modello scrive con grassetti ed elenchi.
 // ─────────────────────────────────────────────
-function SectionBody({ body }: { body: string }) {
+export function SectionBody({ body }: { body: string }) {
   if (!body.trim()) {
     return <span className="italic text-muted">— sezione non disponibile</span>;
   }
