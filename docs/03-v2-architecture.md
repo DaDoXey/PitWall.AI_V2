@@ -122,8 +122,8 @@ Nessun workflow nel repo. L'ipotesi dei doc di planning era frontend → **Verce
 
 ## 9 · Note aperte (vedi `INCIDENTS.md`)
 - **Unico incidente aperto:** INC-V2-003, in corso: `car_setup_ranges.json` converte i click nel valore del gioco
-  vettura per vettura (Entry #057); per ora c'è la sola BMW M4 GT3 (45 parametri su 49, da fonti concordi, non ancora
-  visti in gioco). Le altre vetture restano in click; la pagina Setup si rifà nella #058.
+  vettura per vettura (Entry #057); per ora BMW M4 GT3 (45 parametri su 49) e Ferrari 488 GT3 Evo (43 su 49, Entry #063): da fonti concordi, non ancora
+  visti in gioco. Le altre vetture restano in click; la pagina Setup si rifà nella #058.
 - LLM reale **mai acceso**: manca lo stress test.
 - Chat dal vivo (#061): provata col modello vero solo da script (claude-haiku-4-5, ~$0,005 a domanda); spenta di default.
 - `api/vision.py` è `async` ma chiama il parser sincrono: blocca l'event loop per tutta la chiamata al modello.

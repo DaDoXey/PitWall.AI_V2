@@ -23,7 +23,7 @@ Per ognuno: **ID · Data · Severità · Stato · Area · Sintomo · Causa radic
 ### INC-V2-003 — Override `car_setup_ranges.json` no-op (la vettura non cambia i 49 parametri)
 | | |
 |---|---|
-| **Data** | rilevato 09/07/2026 · **Stato:** 🟡 Medio · `APERTO — in corso dal 30/09/2026 (1 vettura)` |
+| **Data** | rilevato 09/07/2026 · **Stato:** 🟡 Medio · `APERTO — in corso dal 30/09/2026 (2 vetture)` |
 | **Area** | Backend / dati ACC (protetto-adiacente) |
 
 - **Sintomo:** selezionare un'altra vettura nel Setup **non** cambia i range/default dei 49 parametri.
@@ -38,6 +38,10 @@ Per ognuno: **ID · Data · Severità · Stato · Area · Sintomo · Causa radic
   parametri su 49 da almeno due fonti indipendenti concordi (Race Element, acc-setup-diff, simsource),
   **non ancora visti in gioco**; caster, splitter e bumpstop rate restano `DA_VERIFICARE`. Si chiude
   quando sono in tabella le vetture che Edoardo guida. La pagina Setup si rifà nella #058.
+- **Seconda vettura (Entry #063, 01/10/2026):** Ferrari 488 GT3 Evo, 43 parametri su 49 da almeno due fonti
+  concordi, **non visti in gioco** (scelta di Edoardo: va bene lo stato «fonti»). Restano `DA_VERIFICARE`
+  camber (una sola fonte), caster (elenco contro retta) e splitter (fonti in contrasto). Qui il bumpstop
+  rate si usa: Race Element e acc-setup-diff concordano. La sessione Ferrari in archivio è stata riconvertita.
 - **File:** `backend/app/core/data/car_setup_ranges.json`.
 - **Rif.:** MEGAPROMPT_STATE_REPORT §6 B2.
 

@@ -2840,6 +2840,36 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #063 — Click della Ferrari 488 GT3 Evo (INC-V2-003, seconda vettura)
+
+| Campo | Valore |
+|---|---|
+| Data | 01/10/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `backend/app/core/data/car_setup_ranges.json` (protetto) · `app/tests/test_setup_ranges.py` · `INCIDENTS.md` · `docs/03` · archivio: sessione Ferrari riconvertita |
+| Commit | `8a276c8` + commit docs, pushati l'01/10/2026 |
+| Contesto | Punto 2 dell'ordine dell'01/10: senza tabella, sulla Ferrari (la sessione di riferimento di Edoardo) Console e chat restavano in psi. |
+
+**Catalogo messaggi:**
+1. «ok push e ok procedi, va bene la 3» → push della #062, file protetto sbloccato, stato «da fonti, non visto in gioco» accettato anche per la Ferrari.
+
+**Fonti lette l'01/10/2026:** Race Element `Cars/GT3/Ferrari488GT3evo.cs` (RE), acc-setup-diff `CarData.js` + `App.js` (ASD), acc-setup-comparison `setup.py` (SIMSOURCE). Regola della #057: un valore si usa se almeno due fonti indipendenti concordano.
+
+**Modifica:**
+- Voce `ferrari_488_gt3_evo` nella tabella, **43 parametri su 49** usabili: pressioni 20.3 + 0.1 psi · convergenza −0.4 + 0.01° su tutte e quattro · ripartizione 47.0 + 0.2 % · molle (11 valori per asse: ant. 94–189, post. 106–212 kN/m) · bumpstop rate 300 + 100 N · altezze 55 mm + click · precarico 20 + 10 Nm · TC, ABS, barre, bumpstop range, ammortizzatori, ala e prese freni = il click (mappa motore = click + 1).
+- Restano in click: **camber** (solo RE dà una regola), **caster** (RE un elenco di 99 valori, ASD e simsource una retta: coincidono agli estremi, non in mezzo), **splitter** (RE il click, ASD il click + 1).
+- La voce è stata generata dalla voce BMW (stesse 49 chiavi, stesso ordine) da uno script che prima verifica di saper riscrivere il file identico: il diff sono 691 righe aggiunte e nessuna tolta.
+- `riconverti_setup.py`: 1 sessione riconvertita (Monza · Ferrari 488, 43 valori), copia in `_backup_riconversione/20261001-154559`.
+
+**Risultato osservato:** `/api/setup-params?car=ferrari_488_gt3_evo` porta 43 regole; il setup di Monza si legge 25.1 / 26.0 / 25.3 / 25.9 psi a freddo, ripartizione 57 %, molle 176000 / 134000 N/m. Gigi dal vivo, alla domanda «per le pressioni quanti click?»: «Ant.SX +0.2 psi = +2 click, Post.SX +0.3 psi = +3 click, da 25.1 a 25.3 e da 25.3 a 25.6 psi a freddo» (una domanda vera, $0,005). La «prima cosa da fare» della Console usa la stessa regola (0.2 e 0.3 psi con click da 0.1): non vista a schermo.
+
+**Verifica:** `test_setup_ranges` **40/40** (+8 dal ciclo sulle vetture, +7 sulla Ferrari) · suite **1143/1143** in 22 file · frontend non toccato.
+
+**File protetti:** ☑ sbloccato con «ok procedi» → `data/car_setup_ranges.json` (solo la voce nuova; BMW e `_meta` identici).
+**Decisione:** ☑ Mantenuto — «ok push» dell'01/10/2026.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
