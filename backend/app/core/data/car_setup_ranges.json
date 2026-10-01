@@ -674,6 +674,697 @@
           ]
         }
       }
+    },
+    "ferrari_488_gt3_evo": {
+      "nome": "Ferrari 488 GT3 Evo",
+      "stato": "fonti",
+      "nota": "Tabella dell'01/10/2026 (Entry #063), dalle fonti: nessun valore visto a schermo in ACC. Race Element: Cars/GT3/Ferrari488GT3evo.cs (ultima modifica del file 26/07/2025). Restano in click camber, caster e splitter (stato DA_VERIFICARE sul parametro). Massimi noti solo per le molle e il caster.",
+      "params": {
+        "tire_press_fl": {
+          "tipo": "lineare",
+          "base": 20.3,
+          "passo": 0.1,
+          "click_max": null,
+          "unita": "psi",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SIMSOURCE",
+            "PLC"
+          ]
+        },
+        "tire_press_fr": {
+          "tipo": "lineare",
+          "base": 20.3,
+          "passo": 0.1,
+          "click_max": null,
+          "unita": "psi",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SIMSOURCE",
+            "PLC"
+          ]
+        },
+        "tire_press_rl": {
+          "tipo": "lineare",
+          "base": 20.3,
+          "passo": 0.1,
+          "click_max": null,
+          "unita": "psi",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SIMSOURCE",
+            "PLC"
+          ]
+        },
+        "tire_press_rr": {
+          "tipo": "lineare",
+          "base": 20.3,
+          "passo": 0.1,
+          "click_max": null,
+          "unita": "psi",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SIMSOURCE",
+            "PLC"
+          ]
+        },
+        "camber_fl": {
+          "tipo": "lineare",
+          "base": -4.0,
+          "passo": 0.1,
+          "click_max": null,
+          "unita": "°",
+          "fonti": [
+            "RE"
+          ],
+          "stato": "DA_VERIFICARE",
+          "nota": "solo Race Element dà una regola (ASD mostra i click): una fonte non basta, resta in click"
+        },
+        "camber_fr": {
+          "tipo": "lineare",
+          "base": -4.0,
+          "passo": 0.1,
+          "click_max": null,
+          "unita": "°",
+          "fonti": [
+            "RE"
+          ],
+          "stato": "DA_VERIFICARE",
+          "nota": "solo Race Element dà una regola (ASD mostra i click): una fonte non basta, resta in click"
+        },
+        "camber_rl": {
+          "tipo": "lineare",
+          "base": -3.5,
+          "passo": 0.1,
+          "click_max": null,
+          "unita": "°",
+          "fonti": [
+            "RE"
+          ],
+          "stato": "DA_VERIFICARE",
+          "nota": "solo Race Element dà una regola (ASD mostra i click): una fonte non basta, resta in click"
+        },
+        "camber_rr": {
+          "tipo": "lineare",
+          "base": -3.5,
+          "passo": 0.1,
+          "click_max": null,
+          "unita": "°",
+          "fonti": [
+            "RE"
+          ],
+          "stato": "DA_VERIFICARE",
+          "nota": "solo Race Element dà una regola (ASD mostra i click): una fonte non basta, resta in click"
+        },
+        "toe_fl": {
+          "tipo": "lineare",
+          "base": -0.4,
+          "passo": 0.01,
+          "click_max": null,
+          "unita": "°",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SIMSOURCE"
+          ]
+        },
+        "toe_fr": {
+          "tipo": "lineare",
+          "base": -0.4,
+          "passo": 0.01,
+          "click_max": null,
+          "unita": "°",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SIMSOURCE"
+          ]
+        },
+        "toe_rl": {
+          "tipo": "lineare",
+          "base": -0.4,
+          "passo": 0.01,
+          "click_max": null,
+          "unita": "°",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SIMSOURCE"
+          ]
+        },
+        "toe_rr": {
+          "tipo": "lineare",
+          "base": -0.4,
+          "passo": 0.01,
+          "click_max": null,
+          "unita": "°",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SIMSOURCE"
+          ]
+        },
+        "caster": {
+          "tipo": "elenco",
+          "valori": [
+            5.0,
+            5.1,
+            5.3,
+            5.5,
+            5.6,
+            5.8,
+            6.0,
+            6.1,
+            6.3,
+            6.5,
+            6.6,
+            6.8,
+            7.0,
+            7.1,
+            7.3,
+            7.5,
+            7.6,
+            7.8,
+            8.0,
+            8.1,
+            8.3,
+            8.5,
+            8.6,
+            8.8,
+            9.0,
+            9.1,
+            9.3,
+            9.5,
+            9.6,
+            9.8,
+            9.9,
+            10.1,
+            10.3,
+            10.4,
+            10.6,
+            10.8,
+            10.9,
+            11.1,
+            11.2,
+            11.4,
+            11.6,
+            11.7,
+            11.9,
+            12.1,
+            12.2,
+            12.4,
+            12.5,
+            12.7,
+            12.9,
+            13.0,
+            13.2,
+            13.3,
+            13.5,
+            13.7,
+            13.8,
+            14.0,
+            14.1,
+            14.3,
+            14.4,
+            14.6,
+            14.8,
+            14.9,
+            15.1,
+            15.2,
+            15.4,
+            15.5,
+            15.7,
+            15.9,
+            16.0,
+            16.2,
+            16.3,
+            16.5,
+            16.6,
+            16.8,
+            16.9,
+            17.1,
+            17.3,
+            17.4,
+            17.6,
+            17.7,
+            17.9,
+            18.0,
+            18.2,
+            18.3,
+            18.5,
+            18.6,
+            18.8,
+            18.9,
+            19.1,
+            19.2,
+            19.4,
+            19.5,
+            19.7,
+            19.8,
+            20.0,
+            20.1,
+            20.3,
+            20.4,
+            20.6
+          ],
+          "unita": "°",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SIMSOURCE"
+          ],
+          "stato": "DA_VERIFICARE",
+          "nota": "RE dà un elenco di 99 valori (5.0–20.6), ASD e simsource una retta (5.0 + 0.159 × click): gli estremi coincidono, i valori in mezzo no (click 1: 5.1 contro 5.2). Resta in click"
+        },
+        "tc1": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "tc2": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "abs": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "ecu_map": {
+          "tipo": "lineare",
+          "base": 1,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ],
+          "nota": "il gioco conta le mappe da 1: click 0 = mappa 1"
+        },
+        "brake_bias": {
+          "tipo": "lineare",
+          "base": 47.0,
+          "passo": 0.2,
+          "click_max": null,
+          "unita": "%",
+          "fonti": [
+            "RE",
+            "ASD",
+            "SIMSOURCE"
+          ]
+        },
+        "arb_front": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "arb_rear": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "wheel_rate_front": {
+          "tipo": "elenco",
+          "valori": [
+            94000,
+            101000,
+            107000,
+            113000,
+            120000,
+            126000,
+            138600,
+            151000,
+            163800,
+            176000,
+            189000
+          ],
+          "unita": "N/m",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "wheel_rate_rear": {
+          "tipo": "elenco",
+          "valori": [
+            106000,
+            113000,
+            120000,
+            127000,
+            134000,
+            141000,
+            155000,
+            169500,
+            183600,
+            198000,
+            212000
+          ],
+          "unita": "N/m",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "bumpstop_rate_front": {
+          "tipo": "lineare",
+          "base": 300,
+          "passo": 100,
+          "click_max": null,
+          "unita": "N",
+          "fonti": [
+            "RE",
+            "ASD"
+          ],
+          "nota": "RE e ASD concordano su 300 + 100 × click (sulla BMW no)"
+        },
+        "bumpstop_rate_rear": {
+          "tipo": "lineare",
+          "base": 300,
+          "passo": 100,
+          "click_max": null,
+          "unita": "N",
+          "fonti": [
+            "RE",
+            "ASD"
+          ],
+          "nota": "RE e ASD concordano su 300 + 100 × click (sulla BMW no)"
+        },
+        "bumpstop_range_front": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "bumpstop_range_rear": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "preload": {
+          "tipo": "lineare",
+          "base": 20,
+          "passo": 10,
+          "click_max": null,
+          "unita": "Nm",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "bump_fl": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "fast_bump_fl": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "rebound_fl": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "fast_rebound_fl": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "bump_fr": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "fast_bump_fr": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "rebound_fr": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "fast_rebound_fr": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "bump_rl": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "fast_bump_rl": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "rebound_rl": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "fast_rebound_rl": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "bump_rr": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "fast_bump_rr": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "rebound_rr": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "fast_rebound_rr": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "ride_height_front": {
+          "tipo": "lineare",
+          "base": 55,
+          "passo": 1,
+          "click_max": null,
+          "unita": "mm",
+          "fonti": [
+            "RE",
+            "ASD"
+          ],
+          "nota": "dal primo valore di rideHeight"
+        },
+        "ride_height_rear": {
+          "tipo": "lineare",
+          "base": 55,
+          "passo": 1,
+          "click_max": null,
+          "unita": "mm",
+          "fonti": [
+            "RE",
+            "ASD"
+          ],
+          "nota": "dal terzo valore di rideHeight (il secondo e il quarto sono altro)"
+        },
+        "splitter": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ],
+          "stato": "DA_VERIFICARE",
+          "nota": "RE mostra il click, ASD il click + 1: fonti in contrasto, resta in click"
+        },
+        "wing": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "brake_duct_front": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        },
+        "brake_duct_rear": {
+          "tipo": "lineare",
+          "base": 0,
+          "passo": 1,
+          "click_max": null,
+          "unita": "",
+          "fonti": [
+            "RE",
+            "ASD"
+          ]
+        }
+      }
     }
   }
 }

@@ -117,6 +117,41 @@ test("R18 niente code di virgola mobile (20.3 + 0.1 × 57 = 26.0)",
      and repr(click_in_reale(bmw["toe_fl"], 7)) == "-0.13")
 
 # ---------------------------------------------------------------------------
+# 2b. Ferrari 488 GT3 Evo (Entry #063): seconda vettura, dalle fonti
+# ---------------------------------------------------------------------------
+ferrari = regole_vettura("ferrari_488_gt3_evo")
+test("F01 Ferrari 488 GT3 Evo: 43 regole usabili", len(ferrari) == 43, str(len(ferrari)))
+test("F02 camber, caster e splitter restano fuori (DA_VERIFICARE)",
+     not {"camber_fl", "camber_fr", "camber_rl", "camber_rr", "caster", "splitter"} & set(ferrari))
+test("F03 il bumpstop rate si usa: qui Race Element e acc-setup-diff concordano (300 + 100 × click)",
+     click_in_reale(ferrari["bumpstop_rate_front"], 0) == 300.0
+     and click_in_reale(ferrari["bumpstop_rate_rear"], 4) == 700.0)
+attesi_ferrari = {  # click del setup di Monza 7801 -> valore atteso dalle fonti
+    ("tire_press_fl", 48): 25.1,
+    ("tire_press_fr", 57): 26.0,
+    ("toe_fl", 0): -0.4,
+    ("toe_rl", 35): -0.05,
+    ("ecu_map", 0): 1.0,
+    ("brake_bias", 50): 57.0,
+    ("wheel_rate_front", 9): 176000.0,
+    ("wheel_rate_rear", 4): 134000.0,
+    ("preload", 28): 300.0,
+    ("ride_height_front", 0): 55.0,
+    ("ride_height_rear", 3): 58.0,
+}
+sbagliati = {k: click_in_reale(ferrari[k[0]], k[1]) for k, v in attesi_ferrari.items()
+             if click_in_reale(ferrari[k[0]], k[1]) != v}
+test("F04 i click del setup di Monza danno i valori delle fonti", not sbagliati, str(sbagliati))
+test("F05 ripartizione di frenata: 47 + 0.2 per click (tre fonti), non la regola della BMW",
+     click_in_reale(ferrari["brake_bias"], 0) == 47.0 and click_in_reale(ferrari["brake_bias"], 1) == 47.2)
+test("F06 molle: undici valori per asse, oltre l'ultimo → None",
+     click_in_reale(ferrari["wheel_rate_front"], 10) == 189000.0
+     and click_in_reale(ferrari["wheel_rate_rear"], 10) == 212000.0
+     and click_in_reale(ferrari["wheel_rate_front"], 11) is None)
+test("F07 le regole della BMW non sono cambiate (48.5 + 0.3, convergenza anteriore da -0.2)",
+     click_in_reale(bmw["brake_bias"], 0) == 48.5 and click_in_reale(bmw["toe_fl"], 0) == -0.2)
+
+# ---------------------------------------------------------------------------
 # 3. Un click che la regola non copre resta un click
 # ---------------------------------------------------------------------------
 test("R19 oltre l'ultimo valore di un elenco → None",
