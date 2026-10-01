@@ -2,7 +2,7 @@
   "fonte": "ACC Server Admin Handbook v1.10.2 — Kunos Simulazioni, appendice IX.3",
   "estratto_il": "2026-09-15",
   "estratto_da": "backend/scripts/estrai_lista_vetture_handbook.py",
-  "nota": "Tabella COMPLETA carModelId -> vettura, comprese le GT3 uscite dopo il documento della shared memory e l'intera classe GT2. Gli slug (`acc_car_id`) vengono dal catalogo di PitWall, agganciato per nome: le vetture senza slug sono quelle che il catalogo ancora non copre (Lotto 2).",
+  "nota": "Tabella COMPLETA carModelId -> vettura, comprese le GT3 uscite dopo il documento della shared memory e l'intera classe GT2. Gli slug (`acc_car_id`) vengono dal catalogo di PitWall, agganciato per nome: dal Lotto 2 (Entry #064) il catalogo copre tutte le 54 vetture; gli slug delle GT2 vengono da Race Element (ConversionFactory.cs).",
   "vetture": [
     {
       "car_model_id": 0,
@@ -81,8 +81,8 @@
       "nome_handbook": "Porsche 991II GT3 Cup",
       "acc_car_id": "porsche_991ii_gt3_cup",
       "fonte_slug": "appendice 2 del documento shared memory",
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "id_catalogo": "porsche_911_gt3_cup_991",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 10,
@@ -153,8 +153,8 @@
       "nome_handbook": "Lamborghini Huracan SuperTrofeo",
       "acc_car_id": "lamborghini_huracan_st",
       "fonte_slug": "appendice 2 del documento shared memory",
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "id_catalogo": "lamborghini_huracan_super_trofeo",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 19,
@@ -217,32 +217,32 @@
       "nome_handbook": "Ferrari 488 Challenge Evo",
       "acc_car_id": "ferrari_488_challenge_evo",
       "fonte_slug": "appendice 2 del documento shared memory",
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "id_catalogo": "ferrari_488_challenge_evo",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 27,
       "nome_handbook": "BMW M2 CS Racing",
       "acc_car_id": "bmw_m2_cs_racing",
       "fonte_slug": "appendice 2 del documento shared memory",
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "id_catalogo": "bmw_m2_cs_racing",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 28,
       "nome_handbook": "Porsche 911 GT3 Cup (Type 992)",
       "acc_car_id": "porsche_992_gt3_cup",
       "fonte_slug": "appendice 2 del documento shared memory",
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "id_catalogo": "porsche_911_gt3_cup_992",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 29,
       "nome_handbook": "Lamborghini Huracan Super Trofeo EVO2",
       "acc_car_id": "lamborghini_huracan_st_evo2",
       "fonte_slug": "appendice 2 del documento shared memory",
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "id_catalogo": "lamborghini_huracan_super_trofeo_evo2",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 30,
@@ -305,136 +305,136 @@
       "nome_handbook": "Alpine A110 GT4",
       "acc_car_id": "alpine_a110_gt4",
       "fonte_slug": "appendice 2 del documento shared memory",
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "id_catalogo": "alpine_a110_gt4",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 51,
       "nome_handbook": "AMR V8 Vantage GT4",
       "acc_car_id": "amr_v8_vantage_gt4",
       "fonte_slug": "appendice 2 del documento shared memory",
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "id_catalogo": "aston_martin_vantage_gt4",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 52,
       "nome_handbook": "Audi R8 LMS GT4",
       "acc_car_id": "audi_r8_gt4",
       "fonte_slug": "appendice 2 del documento shared memory",
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "id_catalogo": "audi_r8_lms_gt4",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 53,
       "nome_handbook": "BMW M4 GT4",
       "acc_car_id": "bmw_m4_gt4",
       "fonte_slug": "appendice 2 del documento shared memory",
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "id_catalogo": "bmw_m4_gt4",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 55,
       "nome_handbook": "Chevrolet Camaro GT4",
       "acc_car_id": "chevrolet_camaro_gt4r",
       "fonte_slug": "appendice 2 del documento shared memory",
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "id_catalogo": "chevrolet_camaro_gt4r",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 56,
       "nome_handbook": "Ginetta G55 GT4",
       "acc_car_id": "ginetta_g55_gt4",
       "fonte_slug": "appendice 2 del documento shared memory",
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "id_catalogo": "ginetta_g55_gt4",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 57,
       "nome_handbook": "KTM X-Bow GT4",
       "acc_car_id": "ktm_xbow_gt4",
       "fonte_slug": "appendice 2 del documento shared memory",
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "id_catalogo": "ktm_xbow_gt4",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 58,
       "nome_handbook": "Maserati MC GT4",
       "acc_car_id": "maserati_mc_gt4",
       "fonte_slug": "appendice 2 del documento shared memory",
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "id_catalogo": "maserati_granturismo_mc_gt4",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 59,
       "nome_handbook": "McLaren 570S GT4",
       "acc_car_id": "mclaren_570s_gt4",
       "fonte_slug": "appendice 2 del documento shared memory",
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "id_catalogo": "mclaren_570s_gt4",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 60,
       "nome_handbook": "Mercedes-AMG GT4",
       "acc_car_id": "mercedes_amg_gt4",
       "fonte_slug": "appendice 2 del documento shared memory",
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "id_catalogo": "mercedes_amg_gt4",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 61,
       "nome_handbook": "Porsche 718 Cayman GT4",
       "acc_car_id": "porsche_718_cayman_gt4_mr",
       "fonte_slug": "appendice 2 del documento shared memory",
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "id_catalogo": "porsche_718_cayman_gt4_clubsport",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 80,
       "nome_handbook": "Audi R8 LMS GT2",
-      "acc_car_id": null,
-      "fonte_slug": null,
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "acc_car_id": "audi_r8_lms_gt2",
+      "fonte_slug": "Race Element, ConversionFactory.cs (carName dei setup di ACC)",
+      "id_catalogo": "audi_r8_lms_gt2",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 82,
       "nome_handbook": "KTM XBOW GT2",
-      "acc_car_id": null,
-      "fonte_slug": null,
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "acc_car_id": "ktm_xbow_gt2",
+      "fonte_slug": "Race Element, ConversionFactory.cs (carName dei setup di ACC)",
+      "id_catalogo": "ktm_xbow_gt2",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 83,
       "nome_handbook": "Maserati MC20 GT2",
-      "acc_car_id": null,
-      "fonte_slug": null,
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "acc_car_id": "maserati_mc20_gt2",
+      "fonte_slug": "Race Element, ConversionFactory.cs (carName dei setup di ACC)",
+      "id_catalogo": "maserati_mc20_gt2",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 84,
       "nome_handbook": "Mercedes AMG GT2",
-      "acc_car_id": null,
-      "fonte_slug": null,
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "acc_car_id": "mercedes_amg_gt2",
+      "fonte_slug": "Race Element, ConversionFactory.cs (carName dei setup di ACC)",
+      "id_catalogo": "mercedes_amg_gt2",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 85,
       "nome_handbook": "Porsche 911 GT2 RS CS Evo",
-      "acc_car_id": null,
-      "fonte_slug": null,
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "acc_car_id": "porsche_991_gt2_rs_mr",
+      "fonte_slug": "Race Element, ConversionFactory.cs (carName dei setup di ACC)",
+      "id_catalogo": "porsche_911_gt2_rs_clubsport_evo",
+      "nel_catalogo_pitwall": true
     },
     {
       "car_model_id": 86,
       "nome_handbook": "Porsche 935",
-      "acc_car_id": null,
-      "fonte_slug": null,
-      "id_catalogo": null,
-      "nel_catalogo_pitwall": false
+      "acc_car_id": "porsche_935",
+      "fonte_slug": "Race Element, ConversionFactory.cs (carName dei setup di ACC)",
+      "id_catalogo": "porsche_935",
+      "nel_catalogo_pitwall": true
     }
   ]
 }

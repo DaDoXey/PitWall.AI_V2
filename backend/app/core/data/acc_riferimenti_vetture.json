@@ -36,10 +36,16 @@
     }
   ],
   "vetture_del_catalogo_senza_riferimenti": [
+    "audi_r8_lms_gt2",
     "ferrari_296_gt3",
     "ford_mustang_gt3",
+    "ktm_xbow_gt2",
     "lamborghini_huracan_gt3_evo2",
+    "maserati_mc20_gt2",
     "mclaren_720s_gt3_evo",
+    "mercedes_amg_gt2",
+    "porsche_935",
+    "porsche_991_gt2_rs_mr",
     "porsche_992_gt3_r"
   ],
   "vetture": [

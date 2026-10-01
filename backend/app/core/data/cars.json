@@ -1242,5 +1242,1057 @@
         "status": "da_risolvere"
       }
     }
+  },
+  {
+    "id": "alpine_a110_gt4",
+    "acc_car_id": "alpine_a110_gt4",
+    "brand": "Alpine",
+    "model": "A110 GT4",
+    "year": 2018,
+    "category": "GT4",
+    "gt3_generation": null,
+    "dlc": true,
+    "dlc_pack": "GT4 Pack",
+    "specs": {
+      "engine": "1.8L 4 cilindri turbo",
+      "power_hp": 400,
+      "weight_kg": 1080,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media",
+      "nota": "potenza 350–400 CV a seconda del BoP; peso dichiarato per la A110 GT4+"
+    },
+    "has_tc": null,
+    "has_abs": null,
+    "setup_ranges_ref": "alpine_a110_gt4",
+    "caption_it": "Motore centrale, quattro cilindri 1.8 turbo e poco più di mille chili: è fra le più leggere della classe e fra le meno potenti. Sulla carta paga in rettilineo contro le V8 e rende dove conta il peso.",
+    "caption_fonte": "dai dati tecnici: nessuna fonte letta descrive come si guida in ACC",
+    "fonti": [
+      "https://www.alpine-cars.co.uk/competition/a110-gt4.html"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "Alpine logo",
+        "commons_category": "Category:Alpine (automobile) logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Alpine A110 GT4",
+        "commons_category": "Category:Alpine A110 GT4",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "aston_martin_vantage_gt4",
+    "acc_car_id": "amr_v8_vantage_gt4",
+    "brand": "Aston Martin",
+    "model": "V8 Vantage GT4",
+    "year": 2018,
+    "category": "GT4",
+    "gt3_generation": null,
+    "dlc": true,
+    "dlc_pack": "GT4 Pack",
+    "specs": {
+      "engine": "4.0L V8 biturbo",
+      "power_hp": null,
+      "weight_kg": null,
+      "drivetrain": "RWD",
+      "gearbox": null,
+      "bop_variable": true,
+      "confidence": "da_verificare",
+      "nota": "potenza, peso e cambio della versione GT4 non trovati in una fonte del costruttore (omologata a marzo 2019)"
+    },
+    "has_tc": null,
+    "has_abs": null,
+    "setup_ranges_ref": "aston_martin_vantage_gt4",
+    "caption_it": "V8 4.0 biturbo davanti e trazione dietro. È la più stabile della classe in quasi ogni situazione e ha una delle frenate migliori del gruppo.",
+    "caption_fonte": "https://coachdaveacademy.com/tutorials/what-is-the-fastest-gt4-car-in-acc/",
+    "fonti": [
+      "https://coachdaveacademy.com/tutorials/what-is-the-fastest-gt4-car-in-acc/",
+      "https://www.motorauthority.com/news/1117230_aston-martin-vantage-gt3-and-gt4-customer-race-cars-revealed"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "Aston Martin logo",
+        "commons_category": "Category:Aston Martin logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Aston Martin Vantage GT4",
+        "commons_category": "Category:Aston Martin Vantage GT4",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "audi_r8_lms_gt4",
+    "acc_car_id": "audi_r8_gt4",
+    "brand": "Audi",
+    "model": "R8 LMS GT4",
+    "year": 2018,
+    "category": "GT4",
+    "gt3_generation": null,
+    "dlc": true,
+    "dlc_pack": "GT4 Pack",
+    "specs": {
+      "engine": "5.2L V10 aspirato",
+      "power_hp": 495,
+      "weight_kg": 1460,
+      "drivetrain": "RWD",
+      "gearbox": "7 marce doppia frizione (S tronic)",
+      "bop_variable": true,
+      "confidence": "media",
+      "nota": "fino a 495 CV a seconda del BoP; 1460 kg è il peso di omologazione"
+    },
+    "has_tc": null,
+    "has_abs": null,
+    "setup_ranges_ref": "audi_r8_lms_gt4",
+    "caption_it": "V10 aspirato 5.2 in posizione centrale, trazione posteriore e cambio a doppia frizione di serie. È la GT4 più pesante fra quelle con il peso dichiarato: 1460 kg di omologazione.",
+    "caption_fonte": "dai dati tecnici: nessuna fonte letta descrive come si guida in ACC",
+    "fonti": [
+      "https://www.audi.com/en/sport/motorsport/audi-sport-customer-racing/r8-lms-gt4.html"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "Audi logo",
+        "commons_category": "Category:Audi logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Audi R8 LMS GT4",
+        "commons_category": "Category:Audi R8 LMS GT4",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "bmw_m4_gt4",
+    "acc_car_id": "bmw_m4_gt4",
+    "brand": "BMW",
+    "model": "M4 GT4",
+    "year": 2018,
+    "category": "GT4",
+    "gt3_generation": null,
+    "dlc": true,
+    "dlc_pack": "GT4 Pack",
+    "specs": {
+      "engine": "3.0L 6 cilindri in linea biturbo",
+      "power_hp": 431,
+      "weight_kg": 1430,
+      "drivetrain": "RWD",
+      "gearbox": "7 marce doppia frizione",
+      "bop_variable": true,
+      "confidence": "media",
+      "nota": "«più di 431 CV» secondo BMW; il valore in gara dipende dal BoP"
+    },
+    "has_tc": null,
+    "has_abs": null,
+    "setup_ranges_ref": "bmw_m4_gt4",
+    "caption_it": "Sei cilindri in linea biturbo davanti, come la sorella GT3, e gli stessi punti di forza: forte sui cordoli e ben bilanciata. Le manca un po' di finezza rispetto alla Porsche 718 Cayman.",
+    "caption_fonte": "https://coachdaveacademy.com/tutorials/under-the-hood-tips-and-tricks-to-driving-bmw-m4-gt4/",
+    "fonti": [
+      "https://www.goodingco.com/lot/2018-bmw-m4-gt4",
+      "https://coachdaveacademy.com/tutorials/under-the-hood-tips-and-tricks-to-driving-bmw-m4-gt4/"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "BMW logo",
+        "commons_category": "Category:BMW logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "BMW M4 GT4",
+        "commons_category": "Category:BMW M4 GT4",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "chevrolet_camaro_gt4r",
+    "acc_car_id": "chevrolet_camaro_gt4r",
+    "brand": "Chevrolet",
+    "model": "Camaro GT4.R",
+    "year": 2017,
+    "category": "GT4",
+    "gt3_generation": null,
+    "dlc": true,
+    "dlc_pack": "GT4 Pack",
+    "specs": {
+      "engine": "6.2L V8 aspirato",
+      "power_hp": 480,
+      "weight_kg": 1429,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media",
+      "nota": "le fonti danno fra 420 e 480 CV; peso 3150 libbre"
+    },
+    "has_tc": null,
+    "has_abs": null,
+    "setup_ranges_ref": "chevrolet_camaro_gt4r",
+    "caption_it": "V8 aspirato 6.2 di grande cilindrata davanti, costruita da Pratt & Miller, la stessa officina delle Corvette da corsa. Cambio sequenziale Xtrac a sei marce.",
+    "caption_fonte": "dai dati tecnici: nessuna fonte letta descrive come si guida in ACC",
+    "fonti": [
+      "https://www.topgear.com/car-news/motorsport/gt4r-racecar-ps190k-chevrolet-camaro",
+      "https://www.digitaltrends.com/cars/chevrolet-camaro-gt4r/"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "Chevrolet logo",
+        "commons_category": "Category:Chevrolet logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Chevrolet Camaro GT4.R",
+        "commons_category": "Category:Chevrolet Camaro GT4.R",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "ginetta_g55_gt4",
+    "acc_car_id": "ginetta_g55_gt4",
+    "brand": "Ginetta",
+    "model": "G55 GT4",
+    "year": 2012,
+    "category": "GT4",
+    "gt3_generation": null,
+    "dlc": true,
+    "dlc_pack": "GT4 Pack",
+    "specs": {
+      "engine": "3.7L V6 aspirato",
+      "power_hp": 370,
+      "weight_kg": 1085,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media",
+      "nota": "370 CV secondo Wikipedia, 385 secondo altre fonti"
+    },
+    "has_tc": null,
+    "has_abs": null,
+    "setup_ranges_ref": "ginetta_g55_gt4",
+    "caption_it": "La più anziana della classe: V6 Ford 3.7 aspirato e 1085 kg, con un cambio Hewland sequenziale. Leggera quanto l'Alpine, ma con il motore davanti.",
+    "caption_fonte": "dai dati tecnici: nessuna fonte letta descrive come si guida in ACC",
+    "fonti": [
+      "https://en.wikipedia.org/wiki/Ginetta_G55"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "Ginetta logo",
+        "commons_category": "Category:Ginetta",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Ginetta G55",
+        "commons_category": "Category:Ginetta G55",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "ktm_xbow_gt4",
+    "acc_car_id": "ktm_xbow_gt4",
+    "brand": "KTM",
+    "model": "X-Bow GT4",
+    "year": 2016,
+    "category": "GT4",
+    "gt3_generation": null,
+    "dlc": true,
+    "dlc_pack": "GT4 Pack",
+    "specs": {
+      "engine": "2.0L 4 cilindri turbo",
+      "power_hp": 360,
+      "weight_kg": 999,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media",
+      "nota": "320 CV al debutto, 360 nelle versioni successive"
+    },
+    "has_tc": null,
+    "has_abs": null,
+    "setup_ranges_ref": "ktm_xbow_gt4",
+    "caption_it": "Monoscocca in carbonio, quattro cilindri 2.0 turbo di origine Audi dietro il pilota e 999 kg: è la più leggera della classe. Sviluppata da KTM con Reiter Engineering.",
+    "caption_fonte": "dai dati tecnici: nessuna fonte letta descrive come si guida in ACC",
+    "fonti": [
+      "https://en.wikipedia.org/wiki/KTM_X-Bow",
+      "https://autoindustriya.com/racing-news/ktm-x-bow-gt4-fitted-with-320-ps-2-liter-tfsi-engine.html"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "KTM logo",
+        "commons_category": "Category:KTM logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "KTM X-Bow GT4",
+        "commons_category": "Category:KTM X-Bow GT4",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "maserati_granturismo_mc_gt4",
+    "acc_car_id": "maserati_mc_gt4",
+    "brand": "Maserati",
+    "model": "GranTurismo MC GT4",
+    "year": 2016,
+    "category": "GT4",
+    "gt3_generation": null,
+    "dlc": true,
+    "dlc_pack": "GT4 Pack",
+    "specs": {
+      "engine": "4.7L V8 aspirato",
+      "power_hp": 430,
+      "weight_kg": 1410,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce a comando elettroidraulico",
+      "bop_variable": true,
+      "confidence": "media",
+      "nota": "430 CV con la strozzatura GT4 (488 senza)"
+    },
+    "has_tc": null,
+    "has_abs": null,
+    "setup_ranges_ref": "maserati_granturismo_mc_gt4",
+    "caption_it": "Gran turismo a motore anteriore: V8 aspirato 4.7 e cambio al retrotreno, in schema transaxle. È fra le più pesanti della classe.",
+    "caption_fonte": "dai dati tecnici: nessuna fonte letta descrive come si guida in ACC",
+    "fonti": [
+      "https://racer.com/2015/12/09/maserati-reveals-gt4-granturismo-mc/"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "Maserati logo",
+        "commons_category": "Category:Maserati logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Maserati GranTurismo MC GT4",
+        "commons_category": "Category:Maserati GranTurismo MC GT4",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "mclaren_570s_gt4",
+    "acc_car_id": "mclaren_570s_gt4",
+    "brand": "McLaren",
+    "model": "570S GT4",
+    "year": 2016,
+    "category": "GT4",
+    "gt3_generation": null,
+    "dlc": true,
+    "dlc_pack": "GT4 Pack",
+    "specs": {
+      "engine": "3.8L V8 biturbo",
+      "power_hp": null,
+      "weight_kg": null,
+      "drivetrain": "RWD",
+      "gearbox": "7 marce doppia frizione",
+      "bop_variable": true,
+      "confidence": "da_verificare",
+      "nota": "potenza e peso in assetto GT4 non trovati in una fonte del costruttore (le fonti lette riportano i dati stradali)"
+    },
+    "has_tc": null,
+    "has_abs": null,
+    "setup_ranges_ref": "mclaren_570s_gt4",
+    "caption_it": "Monoscocca in carbonio e V8 3.8 biturbo in posizione centrale, con il cambio a sette marce della versione stradale.",
+    "caption_fonte": "dai dati tecnici: nessuna fonte letta descrive come si guida in ACC",
+    "fonti": [
+      "https://cars.mclaren.com/customer-racing/models/570s-gt4"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "McLaren logo",
+        "commons_category": "Category:McLaren logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "McLaren 570S GT4",
+        "commons_category": "Category:McLaren 570S GT4",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "mercedes_amg_gt4",
+    "acc_car_id": "mercedes_amg_gt4",
+    "brand": "Mercedes-AMG",
+    "model": "AMG GT4",
+    "year": 2016,
+    "category": "GT4",
+    "gt3_generation": null,
+    "dlc": true,
+    "dlc_pack": "GT4 Pack",
+    "specs": {
+      "engine": "4.0L V8 biturbo",
+      "power_hp": 476,
+      "weight_kg": 1390,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media",
+      "nota": "fino a 476 CV al lancio (350 kW); le versioni successive arrivano a 510"
+    },
+    "has_tc": null,
+    "has_abs": null,
+    "setup_ranges_ref": "mercedes_amg_gt4",
+    "caption_it": "V8 4.0 biturbo davanti e cambio sequenziale al retrotreno. Dà il meglio sulle piste veloci come Monza e Indianapolis: ottima velocità in rettilineo e buona stabilità.",
+    "caption_fonte": "https://coachdaveacademy.com/tutorials/under-the-hood-tips-and-tricks-to-driving-the-mercedes-amg-gt4/",
+    "fonti": [
+      "https://justcars.com.au/news-and-reviews/mercedes-amg-gt4-revealed/13832",
+      "https://coachdaveacademy.com/tutorials/under-the-hood-tips-and-tricks-to-driving-the-mercedes-amg-gt4/"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "Mercedes-AMG logo",
+        "commons_category": "Category:Mercedes-AMG logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Mercedes-AMG GT4",
+        "commons_category": "Category:Mercedes-AMG GT4",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "porsche_718_cayman_gt4_clubsport",
+    "acc_car_id": "porsche_718_cayman_gt4_mr",
+    "brand": "Porsche",
+    "model": "718 Cayman GT4 Clubsport",
+    "year": 2019,
+    "category": "GT4",
+    "gt3_generation": null,
+    "dlc": true,
+    "dlc_pack": "GT4 Pack",
+    "specs": {
+      "engine": "3.8L 6 cilindri boxer aspirato",
+      "power_hp": 425,
+      "weight_kg": 1320,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce doppia frizione (PDK)",
+      "bop_variable": true,
+      "confidence": "alta"
+    },
+    "has_tc": null,
+    "has_abs": null,
+    "setup_ranges_ref": "porsche_718_cayman_gt4_clubsport",
+    "caption_it": "Il riferimento della classe: sei cilindri boxer aspirato in posizione centrale. Consuma poco le gomme e ha un telaio che lascia ruotare la vettura in inserimento con fiducia: i suoi stint sono fra i più lunghi.",
+    "caption_fonte": "https://coachdaveacademy.com/tutorials/what-is-the-fastest-gt4-car-in-acc/",
+    "fonti": [
+      "https://motorsports.porsche.com/usa/en/category/cars/718-cayman-gt4-clubsport",
+      "https://coachdaveacademy.com/tutorials/what-is-the-fastest-gt4-car-in-acc/"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "Porsche logo",
+        "commons_category": "Category:Porsche logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Porsche 718 Cayman GT4 Clubsport",
+        "commons_category": "Category:Porsche 718 Cayman GT4 Clubsport",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "porsche_911_gt3_cup_991",
+    "acc_car_id": "porsche_991ii_gt3_cup",
+    "brand": "Porsche",
+    "model": "911 GT3 Cup (991.2)",
+    "year": 2017,
+    "category": "GTC",
+    "gt3_generation": null,
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "4.0L 6 cilindri boxer aspirato",
+      "power_hp": 485,
+      "weight_kg": 1200,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": false,
+    "has_abs": false,
+    "setup_ranges_ref": "porsche_911_gt3_cup_991",
+    "caption_it": "La 911 della Carrera Cup: sei cilindri boxer 4.0 aspirato a sbalzo dietro, senza controllo di trazione e senza ABS. È molto difficile da tenere: gas e freno vanno dosati dal pilota, senza rete.",
+    "caption_fonte": "https://coachdaveacademy.com/tutorials/acc-challengers-pack",
+    "fonti": [
+      "https://www.goodingco.com/lot/2017-porsche-991-gt3-cup",
+      "https://coachdaveacademy.com/tutorials/acc-challengers-pack",
+      "https://coachdaveacademy.com/tutorials/the-ultimate-guide-to-acc-single-make-cars/"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "Porsche logo",
+        "commons_category": "Category:Porsche logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Porsche 911 GT3 Cup 991",
+        "commons_category": "Category:Porsche 911 GT3 Cup 991",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "porsche_911_gt3_cup_992",
+    "acc_car_id": "porsche_992_gt3_cup",
+    "brand": "Porsche",
+    "model": "911 GT3 Cup (992)",
+    "year": 2021,
+    "category": "GTC",
+    "gt3_generation": null,
+    "dlc": true,
+    "dlc_pack": "Challengers Pack",
+    "specs": {
+      "engine": "4.0L 6 cilindri boxer aspirato",
+      "power_hp": 510,
+      "weight_kg": 1260,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "alta"
+    },
+    "has_tc": false,
+    "has_abs": true,
+    "setup_ranges_ref": "porsche_911_gt3_cup_992",
+    "caption_it": "La Cup della generazione 992: 510 CV, niente controllo di trazione e, per la prima volta su una Cup, l'ABS. Poca aerodinamica: il gas va aperto con dolcezza, ed è un po' più gentile della 991.2.",
+    "caption_fonte": "https://coachdaveacademy.com/tutorials/the-ultimate-guide-to-acc-single-make-cars/",
+    "fonti": [
+      "https://download.newsroom.porsche.com/dam/jcr:584909f3-fb23-4181-b134-ab56d3ba3153/PI20201212e_TechSpecs_Porsche%20911%20GT3%20Cup.pdf",
+      "https://coachdaveacademy.com/tutorials/the-ultimate-guide-to-acc-single-make-cars/",
+      "https://coachdaveacademy.com/tutorials/acc-challengers-pack"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "Porsche logo",
+        "commons_category": "Category:Porsche logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Porsche 911 GT3 Cup 992",
+        "commons_category": "Category:Porsche 911 GT3 Cup 992",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "lamborghini_huracan_super_trofeo",
+    "acc_car_id": "lamborghini_huracan_st",
+    "brand": "Lamborghini",
+    "model": "Huracán Super Trofeo",
+    "year": 2015,
+    "category": "GTC",
+    "gt3_generation": null,
+    "dlc": false,
+    "dlc_pack": null,
+    "specs": {
+      "engine": "5.2L V10 aspirato",
+      "power_hp": 620,
+      "weight_kg": 1270,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media",
+      "nota": "1270 kg è il peso a secco"
+    },
+    "has_tc": null,
+    "has_abs": null,
+    "setup_ranges_ref": "lamborghini_huracan_super_trofeo",
+    "caption_it": "La Huracán del monomarca Lamborghini: V10 aspirato 5.2 da 620 CV e sola trazione posteriore. Peso a secco 1270 kg, con il 58% sul retrotreno.",
+    "caption_fonte": "dai dati tecnici: nessuna fonte letta descrive come si guida in ACC",
+    "fonti": [
+      "https://www.supercars.net/blog/2015-lamborghini-huracan-lp-620-2-super-trofeo/"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "Lamborghini logo",
+        "commons_category": "Category:Lamborghini logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Lamborghini Huracán Super Trofeo",
+        "commons_category": "Category:Lamborghini Huracán Super Trofeo",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "lamborghini_huracan_super_trofeo_evo2",
+    "acc_car_id": "lamborghini_huracan_st_evo2",
+    "brand": "Lamborghini",
+    "model": "Huracán Super Trofeo EVO2",
+    "year": 2021,
+    "category": "GTC",
+    "gt3_generation": null,
+    "dlc": true,
+    "dlc_pack": "Challengers Pack",
+    "specs": {
+      "engine": "5.2L V10 aspirato",
+      "power_hp": 620,
+      "weight_kg": null,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media",
+      "nota": "peso della EVO2 non dichiarato nelle fonti lette"
+    },
+    "has_tc": null,
+    "has_abs": null,
+    "setup_ranges_ref": "lamborghini_huracan_super_trofeo_evo2",
+    "caption_it": "Più facile della Porsche Cup e più veloce sul giro. Ha meno aderenza di una GT3 in curva ma è molto più rapida in rettilineo; tende al sovrasterzo in inserimento e a centro curva.",
+    "caption_fonte": "https://coachdaveacademy.com/tutorials/the-ultimate-guide-to-acc-single-make-cars/",
+    "fonti": [
+      "https://www.goodingco.com/lot/2021-lamborghini-huracan-super-trofeo-evo2",
+      "https://coachdaveacademy.com/tutorials/the-ultimate-guide-to-acc-single-make-cars/",
+      "https://coachdaveacademy.com/tutorials/acc-challengers-pack"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "Lamborghini logo",
+        "commons_category": "Category:Lamborghini logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Lamborghini Huracán Super Trofeo EVO2",
+        "commons_category": "Category:Lamborghini Huracán Super Trofeo EVO2",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "ferrari_488_challenge_evo",
+    "acc_car_id": "ferrari_488_challenge_evo",
+    "brand": "Ferrari",
+    "model": "488 Challenge Evo",
+    "year": 2020,
+    "category": "GTC",
+    "gt3_generation": null,
+    "dlc": true,
+    "dlc_pack": "Challengers Pack",
+    "specs": {
+      "engine": "3.9L V8 biturbo",
+      "power_hp": 670,
+      "weight_kg": 1280,
+      "drivetrain": "RWD",
+      "gearbox": "7 marce doppia frizione",
+      "bop_variable": true,
+      "confidence": "media"
+    },
+    "has_tc": null,
+    "has_abs": null,
+    "setup_ranges_ref": "ferrari_488_challenge_evo",
+    "caption_it": "La 488 del Ferrari Challenge: 670 CV e meno carico di una GT3. Nelle curve medie e veloci va alzato il piede, ma in rettilineo è 10–15 km/h più veloce della GT3; sul giro sta fra le GT3 e le Super Trofeo.",
+    "caption_fonte": "https://coachdaveacademy.com/tutorials/the-ultimate-guide-to-acc-single-make-cars/",
+    "fonti": [
+      "https://www.conceptcarz.com/s30204/ferrari-488-challenge-evo.aspx",
+      "https://coachdaveacademy.com/tutorials/the-ultimate-guide-to-acc-single-make-cars/",
+      "https://coachdaveacademy.com/tutorials/acc-challengers-pack"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "Ferrari logo",
+        "commons_category": "Category:Ferrari logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Ferrari 488 Challenge Evo",
+        "commons_category": "Category:Ferrari 488 Challenge Evo",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "bmw_m2_cs_racing",
+    "acc_car_id": "bmw_m2_cs_racing",
+    "brand": "BMW",
+    "model": "M2 CS Racing",
+    "year": 2020,
+    "category": "TCX",
+    "gt3_generation": null,
+    "dlc": true,
+    "dlc_pack": "Challengers Pack",
+    "specs": {
+      "engine": "3.0L 6 cilindri in linea biturbo",
+      "power_hp": 365,
+      "weight_kg": 1544,
+      "drivetrain": "RWD",
+      "gearbox": "7 marce doppia frizione",
+      "bop_variable": true,
+      "confidence": "media",
+      "nota": "280–365 CV a seconda del BoP; peso 3405 libbre secondo Coach Dave Academy"
+    },
+    "has_tc": null,
+    "has_abs": true,
+    "setup_ranges_ref": "bmw_m2_cs_racing",
+    "caption_it": "La più lenta e la più prevedibile del gioco, quindi la più adatta a chi comincia. Ha meno carico aerodinamico di ogni altra vettura di ACC e tende al sovrasterzo in accelerazione.",
+    "caption_fonte": "https://coachdaveacademy.com/tutorials/the-ultimate-guide-to-acc-single-make-cars/",
+    "fonti": [
+      "https://www.bmwblog.com/2019/12/11/bmw-m2-cs-racing-all-the-technical-specs/",
+      "https://coachdaveacademy.com/tutorials/the-ultimate-guide-to-acc-single-make-cars/",
+      "https://coachdaveacademy.com/tutorials/acc-challengers-pack"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "BMW logo",
+        "commons_category": "Category:BMW logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "BMW M2 CS Racing",
+        "commons_category": "Category:BMW M2 CS Racing",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "audi_r8_lms_gt2",
+    "acc_car_id": "audi_r8_lms_gt2",
+    "brand": "Audi",
+    "model": "R8 LMS GT2",
+    "year": 2021,
+    "category": "GT2",
+    "gt3_generation": null,
+    "dlc": true,
+    "dlc_pack": "GT2 Pack",
+    "specs": {
+      "engine": "5.2L V10 aspirato",
+      "power_hp": 640,
+      "weight_kg": 1350,
+      "drivetrain": "RWD",
+      "gearbox": null,
+      "bop_variable": true,
+      "confidence": "media",
+      "nota": "cambio non indicato nelle fonti lette"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "audi_r8_lms_gt2",
+    "caption_it": "V10 aspirato da 640 CV. Brilla per prontezza e per il rendimento nelle curve lente, e si guida in modo simile alle altre Audi di ACC.",
+    "caption_fonte": "https://coachdaveacademy.com/announcements/everything-you-need-to-know-about-the-acc-gt2-pack-dlc/",
+    "fonti": [
+      "https://www.audi.com/en/audi-r8-lms-gt2-2020-12841/technical-data-audi-r8-lms-gt2-12845",
+      "https://coachdaveacademy.com/announcements/everything-you-need-to-know-about-the-acc-gt2-pack-dlc/"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "Audi logo",
+        "commons_category": "Category:Audi logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Audi R8 LMS GT2",
+        "commons_category": "Category:Audi R8 LMS GT2",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "ktm_xbow_gt2",
+    "acc_car_id": "ktm_xbow_gt2",
+    "brand": "KTM",
+    "model": "X-Bow GT2",
+    "year": 2021,
+    "category": "GT2",
+    "gt3_generation": null,
+    "dlc": true,
+    "dlc_pack": "GT2 Pack",
+    "specs": {
+      "engine": "2.5L 5 cilindri turbo",
+      "power_hp": 600,
+      "weight_kg": 1048,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "alta",
+      "nota": "1048 kg senza carburante"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "ktm_xbow_gt2",
+    "caption_it": "La leggera della classe: cinque cilindri 2.5 turbo di origine Audi da 600 CV su poco più di mille chili. Agile ed estremamente efficace in frenata.",
+    "caption_fonte": "https://coachdaveacademy.com/announcements/everything-you-need-to-know-about-the-acc-gt2-pack-dlc/",
+    "fonti": [
+      "https://www.ktm.com/en-th/models/x-bow/x-bow-gt2-2020/technical-specifications.html",
+      "https://coachdaveacademy.com/announcements/everything-you-need-to-know-about-the-acc-gt2-pack-dlc/"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "KTM logo",
+        "commons_category": "Category:KTM logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "KTM X-Bow GT2",
+        "commons_category": "Category:KTM X-Bow GT2",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "maserati_mc20_gt2",
+    "acc_car_id": "maserati_mc20_gt2",
+    "brand": "Maserati",
+    "model": "MC20 GT2",
+    "year": 2023,
+    "category": "GT2",
+    "gt3_generation": null,
+    "dlc": true,
+    "dlc_pack": "GT2 Pack",
+    "specs": {
+      "engine": "3.0L V6 biturbo",
+      "power_hp": 621,
+      "weight_kg": null,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media",
+      "nota": "peso a secco non dichiarato: lo fissa il BoP"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "maserati_mc20_gt2",
+    "caption_it": "V6 Nettuno 3.0 biturbo da 621 CV su monoscocca in carbonio. Ruota con facilità in inserimento: è agile, e proprio per questo va gestita con attenzione.",
+    "caption_fonte": "https://coachdaveacademy.com/announcements/everything-you-need-to-know-about-the-acc-gt2-pack-dlc/",
+    "fonti": [
+      "https://www.motor1.com/news/674564/maserati-gt2-debut-specs/",
+      "https://coachdaveacademy.com/announcements/everything-you-need-to-know-about-the-acc-gt2-pack-dlc/"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "Maserati logo",
+        "commons_category": "Category:Maserati logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Maserati MC20 GT2",
+        "commons_category": "Category:Maserati MC20 GT2",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "mercedes_amg_gt2",
+    "acc_car_id": "mercedes_amg_gt2",
+    "brand": "Mercedes-AMG",
+    "model": "AMG GT2",
+    "year": 2023,
+    "category": "GT2",
+    "gt3_generation": null,
+    "dlc": true,
+    "dlc_pack": "GT2 Pack",
+    "specs": {
+      "engine": "4.0L V8 biturbo",
+      "power_hp": 707,
+      "weight_kg": 1400,
+      "drivetrain": "RWD",
+      "gearbox": "6 marce sequenziale",
+      "bop_variable": true,
+      "confidence": "media",
+      "nota": "meno di 1400 kg"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "mercedes_amg_gt2",
+    "caption_it": "La più potente: V8 4.0 biturbo da 707 CV davanti. Ha il vantaggio in rettilineo e paga in maneggevolezza, per via del motore anteriore.",
+    "caption_fonte": "https://coachdaveacademy.com/announcements/everything-you-need-to-know-about-the-acc-gt2-pack-dlc/",
+    "fonti": [
+      "https://www.motor1.com/news/625616/mercedes-amg-gt2-race-car/",
+      "https://coachdaveacademy.com/announcements/everything-you-need-to-know-about-the-acc-gt2-pack-dlc/"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "Mercedes-AMG logo",
+        "commons_category": "Category:Mercedes-AMG logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Mercedes-AMG GT2",
+        "commons_category": "Category:Mercedes-AMG GT2",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "porsche_911_gt2_rs_clubsport_evo",
+    "acc_car_id": "porsche_991_gt2_rs_mr",
+    "brand": "Porsche",
+    "model": "911 GT2 RS Clubsport Evo",
+    "year": 2023,
+    "category": "GT2",
+    "gt3_generation": null,
+    "dlc": true,
+    "dlc_pack": "GT2 Pack",
+    "specs": {
+      "engine": "3.8L 6 cilindri boxer biturbo",
+      "power_hp": 700,
+      "weight_kg": 1390,
+      "drivetrain": "RWD",
+      "gearbox": "7 marce doppia frizione (PDK)",
+      "bop_variable": true,
+      "confidence": "media",
+      "nota": "dati della 911 GT2 RS Clubsport, su cui la Evo si basa"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "porsche_911_gt2_rs_clubsport_evo",
+    "caption_it": "Sei cilindri boxer 3.8 biturbo da 700 CV: una delle GT2 più veloci in rettilineo. Pacchetto equilibrato, con il carattere tipico della 911.",
+    "caption_fonte": "https://coachdaveacademy.com/announcements/everything-you-need-to-know-about-the-acc-gt2-pack-dlc/",
+    "fonti": [
+      "https://motorsports.porsche.com/international/en/category/cars/911-gt2-rs-clubsport",
+      "https://coachdaveacademy.com/announcements/everything-you-need-to-know-about-the-acc-gt2-pack-dlc/"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "Porsche logo",
+        "commons_category": "Category:Porsche logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Porsche 911 GT2 RS Clubsport",
+        "commons_category": "Category:Porsche 911 GT2 RS Clubsport",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
+  },
+  {
+    "id": "porsche_935",
+    "acc_car_id": "porsche_935",
+    "brand": "Porsche",
+    "model": "935",
+    "year": 2019,
+    "category": "GT2",
+    "gt3_generation": null,
+    "dlc": true,
+    "dlc_pack": "GT2 Pack",
+    "specs": {
+      "engine": "3.8L 6 cilindri boxer biturbo",
+      "power_hp": 700,
+      "weight_kg": 1380,
+      "drivetrain": "RWD",
+      "gearbox": "7 marce doppia frizione (PDK)",
+      "bop_variable": true,
+      "confidence": "alta"
+    },
+    "has_tc": true,
+    "has_abs": true,
+    "setup_ranges_ref": "porsche_935",
+    "caption_it": "L'omaggio alla 935/78 «Moby Dick», costruito in 77 esemplari sulla base della 911 GT2 RS: 700 CV e 1380 kg. Resta veloce nonostante l'età e si guida in modo simile alla GT2 RS Clubsport.",
+    "caption_fonte": "https://coachdaveacademy.com/announcements/everything-you-need-to-know-about-the-acc-gt2-pack-dlc/",
+    "fonti": [
+      "https://newsroom.porsche.com/en_AU/motorsports/media-guide/race-cars/porsche-935-2019.html",
+      "https://coachdaveacademy.com/announcements/everything-you-need-to-know-about-the-acc-gt2-pack-dlc/"
+    ],
+    "assets": {
+      "logo": {
+        "commons_query": "Porsche logo",
+        "commons_category": "Category:Porsche logos",
+        "preferred_format": "svg",
+        "license_expected": "PD-textlogo o marchio registrato",
+        "status": "da_risolvere"
+      },
+      "photo": {
+        "commons_query": "Porsche 935 (2019)",
+        "commons_category": "Category:Porsche 935 (2019)",
+        "preferred_format": "jpg",
+        "license_expected": "CC BY-SA (da confermare)",
+        "status": "da_risolvere"
+      }
+    }
   }
 ]

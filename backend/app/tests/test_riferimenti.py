@@ -122,9 +122,13 @@ for numero, slug in nuove.items():
          trovata.get("riferimenti_completi") is False)
 test("R08f le vetture delle appendici restano complete",
      (rif.vettura_da_car_model_id(30) or {}).get("riferimenti_completi") is True)
-test("R08g la classe GT2 è nella lista, senza slug (catalogo non ancora esteso)",
-     (rif.vettura_da_car_model_id(86) or {}).get("acc_car_id") is None
+test("R08g la classe GT2 è nella lista, con lo slug di ACC e senza tabelle (Lotto 2, #064)",
+     (rif.vettura_da_car_model_id(86) or {}).get("acc_car_id") == "porsche_935"
+     and (rif.vettura_da_car_model_id(86) or {}).get("riferimenti_completi") is False
      and "935" in (rif.vettura_da_car_model_id(86) or {}).get("nome_handbook", ""))
+test("R08i tutte le 54 vetture della lista hanno uno slug e sono nel catalogo",
+     all(v.get("acc_car_id") and v.get("nel_catalogo_pitwall") for v in lista),
+     str([v["nome_handbook"] for v in lista if not v.get("acc_car_id") or not v.get("nel_catalogo_pitwall")]))
 test("R08h le stranezze di Kunos sono quelle attese",
      (rif.vettura_da_car_model_id(10) or {}).get("acc_car_id") == "nissan_gt_r_gt3_2017"
      and (rif.vettura_da_car_model_id(11) or {}).get("acc_car_id")

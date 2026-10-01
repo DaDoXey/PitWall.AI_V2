@@ -1,6 +1,7 @@
-"""core/catalog.py — catalogo vetture e circuiti ACC (Lotto 1).
+"""core/catalog.py — catalogo vetture e circuiti ACC (Lotto 1 e Lotto 2).
 
-Sorgente di verità del CATALOGO: `data/cars.json` (31 GT3) e `data/tracks.json`
+Sorgente di verità del CATALOGO: `data/cars.json` (54 vetture: 31 GT3 del Lotto 1,
+11 GT4, 6 GT2, 5 monomarca e 1 TCX del Lotto 2) e `data/tracks.json`
 (25 circuiti). NON è un file protetto: i numeri delle sessioni stanno nell'archivio
 (session bundle, demo compresa), qui vive solo l'anagrafica (identità, specifiche,
 didascalie, riferimenti asset).

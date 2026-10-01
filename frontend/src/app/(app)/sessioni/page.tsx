@@ -31,6 +31,7 @@ import {
   type StatoRegistratore,
   urlEsportaMotec,
 } from "@/lib/api";
+import { CLASSI_VETTURE } from "@/lib/catalog";
 import { useProfile } from "@/lib/profile";
 import { GRUPPI_SESSIONI, useSessione } from "@/lib/sessione";
 import { data, ETICHETTA_PIATTAFORMA, ETICHETTA_TIPO, etichettaFonte, giri, tempoGiro } from "@/lib/formato";
@@ -604,11 +605,19 @@ function PercorsoConsole({ piattaforma }: { piattaforma: Piattaforma }) {
           <span className={etichetta}>Vettura</span>
           <select value={car} onChange={(e) => setCar(e.target.value)} className={campo}>
             <option value="">Non indicata</option>
-            {(catalogo?.cars ?? []).map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.display_name}
-              </option>
-            ))}
+            {/* Dal Lotto 2 le vetture sono 54: nel selettore stanno per classe. */}
+            {CLASSI_VETTURE.map(([classe, nome]) => {
+              const dellaClasse = (catalogo?.cars ?? []).filter((c) => c.category === classe);
+              return dellaClasse.length === 0 ? null : (
+                <optgroup key={classe} label={nome}>
+                  {dellaClasse.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.display_name}
+                    </option>
+                  ))}
+                </optgroup>
+              );
+            })}
           </select>
         </label>
         <label className="flex flex-col gap-1">

@@ -2,11 +2,20 @@
 // Liste di presentazione: i range setup reali arrivano comunque da
 // /api/setup-params (override per vettura nel DB JSON, fallback ai generici).
 //
-// ⚠️ NON sono la fonte: dal Lotto 1 il catalogo completo (31 vetture GT3,
+// ⚠️ NON sono la fonte: dal Lotto 2 il catalogo completo (54 vetture: 31 GT3, 11 GT4, 6 GT2, 5 monomarca, 1 TCX;
 // 25 circuiti) arriva da `GET /api/catalog` (backend `core/catalog.py`) via
 // `getCatalog()`. Queste liste restano come **fallback** se il backend non
 // risponde, così i selettori non si svuotano mai. Il backend risolve
 // indifferentemente slug o nomi di display.
+
+/** Le classi del catalogo (campo `category`), nell'ordine in cui si mostrano nei selettori. */
+export const CLASSI_VETTURE: [string, string][] = [
+  ["GT3", "GT3"],
+  ["GT4", "GT4"],
+  ["GT2", "GT2"],
+  ["GTC", "Monomarca (Cup · Super Trofeo · Challenge)"],
+  ["TCX", "TCX"],
+];
 
 export const CAR_LIST_FALLBACK = [
   "BMW M4 GT3",
