@@ -2870,6 +2870,46 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #064 — Lotto 2: le 23 vetture non GT3 nel catalogo
+
+| Campo | Valore |
+|---|---|
+| Data | 01/10/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `backend/app/core/data/cars.json` · `acc_lista_vetture_handbook.json` · `acc_riferimenti_vetture.json` · NEW `backend/scripts/consegne/lotto_2_vetture.py` · NEW `backend/scripts/build_photos_proof.py` · `core/catalog.py` (commento) · `app/tests/test_riferimenti.py` · `frontend`: `sessioni/page.tsx`, `lib/catalog.ts` · docs |
+| Commit | `3c48d0f` + commit docs, pushati l'01/10/2026 |
+| Contesto | Punto 3 dell'ordine dell'01/10. Il Lotto 1 aveva portato le 31 GT3; restavano 11 GT4, 6 GT2, 5 monomarca (GTC) e la BMW M2 CS Racing (TCX). |
+
+**Catalogo messaggi:**
+1. «1 falla te la ricerca, è più comodo. 2 va bene. 3 va bene. ok push ed ok procedi» → ricerca fatta da me (non da Claude Desktop), schede complete come le GT3, foto con provino mio e scelta a occhio di Edoardo. («ok push» era per la #063.)
+
+2. «ok fatto il json, ok procedi» → `photos_lotto2.json` dai Download: 23 foto scelte su 23, nessuna «Nessuna adatta».
+
+**Ricerca (01/10/2026), con le fonti scritte vettura per vettura nello script di consegna:**
+- **Slug di ACC** (`acc_car_id`): Race Element, `ConversionFactory.cs` — compresi i sei delle GT2, che l'handbook di Kunos non dava.
+- **Pacchetti**: GT4 Pack (15/07/2020), Challengers Pack (23/03/2022), GT2 Pack (24/01/2024); 991.2 Cup e Huracán Super Trofeo 2015 sono contenuto base.
+- **Specifiche**: siti dei costruttori dove ci sono (Alpine, Audi, KTM, Porsche, McLaren), altrimenti stampa di settore e Wikipedia; tratti di guida da Coach Dave Academy, la fonte community già scelta per le guide.
+- **TC e ABS in ACC**: detti solo dove una fonte lo dice — tutte le GT2 con TC e ABS; 991.2 Cup senza TC né ABS; 992 Cup senza TC, con ABS; M2 CS Racing con ABS. Le altre restano `null`: la scheda non scrive «senza TC» su una vettura di cui non sappiamo.
+
+**Modifica:**
+- `cars.json`: da 31 a **54 vetture** (GT3 31 · GT4 11 · GT2 6 · GTC 5 · TCX 1), stesso schema; in più `caption_fonte`, `fonti` e `specs.nota` sulle voci nuove. Le 31 GT3 sono identiche a prima (diff: sole aggiunte).
+- **Dati lasciati vuoti apposta**: Aston Martin Vantage GT4 (potenza, peso, cambio) e McLaren 570S GT4 (potenza, peso) sono `da_verificare` — le fonti lette danno i numeri stradali o si contraddicono; peso della Huracán ST EVO2 e della Maserati MC20 GT2 non dichiarato; cambio dell'Audi R8 LMS GT2 non indicato.
+- **Didascalie**: 15 con tratti di guida presi da Coach Dave Academy; 8 (Alpine, Audi GT4, Camaro, Ginetta, KTM GT4, Maserati GT4, McLaren, Huracán Super Trofeo 2015) dicono solo com'è fatta la vettura, perché nessuna fonte letta descrive come si guida in ACC.
+- `acc_lista_vetture_handbook.json`: le 23 righe agganciate al catalogo (slug e id); `acc_riferimenti_vetture.json`: le 6 GT2 dichiarate senza riferimenti (il documento della shared memory si ferma alla 1.8.12).
+- Selettore della vettura in «Aggiungi una sessione» raggruppato per classe (`CLASSI_VETTURE` in `lib/catalog.ts`).
+- `build_photos_proof.py`: provino delle foto per le vetture senza foto. 650 candidati da Wikimedia Commons per le 23 vetture, solo licenze libere e almeno 1000 px; export `photos_lotto2.json` nello schema di `photos.json`.
+
+**Verifica:** suite **1144/1144** in 22 file (`test_riferimenti` 74/74, +1) · `tsc --noEmit` 0 · `/api/catalog` → 54 vetture con le cinque classi · le 54 vetture si risolvono per id, slug ACC e nome (54 nomi univoci) · il provino si apre e le miniature si caricano (controllato via script: la scheda di prova di Chrome era nascosta e nelle catture risultano nere).
+
+**Foto (messaggio 2):** le 23 voci aggiunte a `backend/scripts/photos.json` (53 → 76, formato del file invariato), poi `apply_photos.py`: 76 foto applicate, `manifest.json` 52 vetture + 24 circuiti, `ATTRIBUTIONS.md` da 78 a 101 righe — nessuna riga di prima è sparita, 23 nuove, tutte a 6 colonne; `/crediti` risponde 200 e porta le vetture nuove. Restano senza foto apposta le tre di sempre (Audi R8 LMS Evo II GT3, Reiter R-EX, Valencia). **Maserati MC20 GT2 corretta al ricontrollo (messaggio 3):** la foto scelta era la **GT2 Stradale**, cioè la versione stradale (lo diceva la targhetta). Fra i 25 candidati l'unica vettura da corsa è «Maserati GT2 (55054641642)» (LP Racing · apm Monaco, esposta a un salone, pannello «Maserati Corse GT2», CC BY-SA 4.0, Alexandre Prevot): sostituita in `photos.json` e riapplicata. Nota per il futuro: `apply_photos.py --only <id>` riscrive `ATTRIBUTIONS.md` con le sole righe di quella vettura (101 → 26, in silenzio): per cambiare una foto si rilancia il giro intero (confronto riga per riga: cambia solo la riga della Maserati).
+
+**Aperto:** i **ritagli** delle 23 foto nuove (`build_crop_tool.py` → `/assets/_ritaglio.html`, export `crops.json`): senza ritaglio la foto si vede centrata. Nota vecchia riemersa: il nome a schermo «Mercedes-AMG AMG GT3/GT4/GT2» ripete «AMG» (era già così per le GT3).
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» dell'01/10/2026; i ritagli delle 23 foto restano a parte.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]

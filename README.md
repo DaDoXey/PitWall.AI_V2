@@ -191,9 +191,10 @@ rate, and an unreadable spending record blocks calls.
 2. **Track guides** for all 25 ACC circuits: sectors and corner by corner.
 3. **Track maps**: 5 of 25 layouts verified. The other 20 still need replacing, and no page shows
    the maps yet.
-4. **Catalogue batch 2**: 23 GT4, GT2, GTC and TCX cars.
+4. ~~Catalogue batch 2~~ done: 54 cars (31 GT3, 11 GT4, 6 GT2, 5 one-make, 1 TCX); photo crops for the
+   23 new ones still to do.
 5. **Per-car setup ranges** (INC-V2-003, in progress): setup clicks become in-game values through a
-   per-car table; the BMW M4 GT3 is done, the other cars stay in clicks.
+   per-car table; the BMW M4 GT3 and the Ferrari 488 GT3 Evo are done, the other cars stay in clicks.
 6. **Deployment**.
 
 ## Deployment
