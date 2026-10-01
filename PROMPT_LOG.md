@@ -2771,6 +2771,45 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #061 — Gigi dal vivo alla radio (chat)
+
+| Campo | Valore |
+|---|---|
+| Data | 01/10/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | NEW `backend/app/api/chat.py` · `analisi/gigi.py` (`contesto_chat`) · `config.py` (`chat_live`) · `budget.py` (`regge`) · `main.py` · NEW `app/tests/test_chat.py` · `frontend`: `console/page.tsx`, `components/console/Radio.tsx`, `lib/api.ts`, `lib/debrief.ts` |
+| Commit | `b5c7967` (chat) + commit docs, pushati l'01/10/2026 |
+| Contesto | Terza entry della nuova Console: la casella della radio scrive al modello. |
+
+**Catalogo messaggi:**
+1. «ok iniziamo con la #061» → giro di domande. Scelte di Edoardo: **interruttore solo per la chat**; tetto **$0,10 al giorno**; contesto **tutto** (report, setup, debrief, fase); **microfono tolto per ora**. Già decisi il 30/09: 12 domande a conversazione, ultimi 8 messaggi al modello, 800 token, fuori tema = regola nel prompt (protetto).
+
+2. «ok procedi, modificato il .env» → prompt della chat sbloccato. Nel `.env` le modifiche erano finite su altre righe (`ALLOW_LIVE=1`, tetto dell'analisi «o.10»): segnalato, nessuna prova.
+3. «ok no avevo sbagliato, riprova ed ok procedi. ho sistemato il valore» → `.env` sistemato da me su tre righe (`PITWALL_ALLOW_LIVE=0`, `PITWALL_CHAT_LIVE=1`, `PITWALL_BUDGET_CHAT_GIORNO=0.10`; il tetto dell'analisi resta a 0.10 come l'ha lasciato lui), copia di prima in scratchpad, chiave mai stampata. Poi la prova vera.
+
+4. «ok push ed ok procedi, dobbiamo essere precisi con le analisi e queste banalità non sono ammesse. in caso cambiamo il modello e mettiamo quello di haiku più recente» → blocco PRECISIONE nel prompt (sotto). Il modello resta `claude-haiku-4-5`: è già l'Haiku più recente.
+
+**Modifica:**
+- **Rotta** `POST /api/sessions/{id}/chat`: risposta in streaming (testo semplice) da `agent.chat_with_gigi`, che non è stato toccato. 503 chat spenta o senza chiave · 429 tetto finito · 409 conversazione piena · 422 domanda oltre 1000 caratteri o ultimo messaggio non del pilota. Nel log solo lunghezze.
+- **Interruttore** `PITWALL_CHAT_LIVE=1` (`config.chat_live`): accende solo la chat; Rapporto completo e screenshot restano in demo-mode. `GET /` porta `chat_live` (interruttore e chiave).
+- **Contesto** (`contesto_chat`): report del motore, setup, racconto, profilo, le fasi del debrief con messaggio e prova, distacco, prima cosa da fare, la fase in ascolto, e quanto vale un click per la vettura (o «nessuna tabella: unità reali»).
+- **Tetto**: `budget.regge()` controlla il costo massimo PRIMA dello streaming. Senza, a tetto quasi finito `agent.py` avrebbe risposto «problema di collegamento, controlla la API key» con un 200 (trovato dal test C16).
+- **Console**: la casella scrive a Gigi (Invio o freccia), contatore «2/12», risposta che arriva pezzo per pezzo con l'etichetta «GIGI · DAL VIVO»; al modello va solo la conversazione dal vivo (le risposte preparate vengono dal debrief, già nel contesto); a conversazione piena «Nuova conversazione»; errori in ambra nella conversazione, e lo scambio fallito non conta. Senza chat la casella resta spenta, com'era. Via il microfono.
+
+- **Prompt della chat** (protetto, «ok procedi» dell'01/10): blocco PERIMETRO (fuori tema = una frase e si torna alla sessione), correzioni di setup in click quando c'è la tabella, rimando al «Rapporto completo», riga su [DEBRIEF] e [FASE IN ASCOLTO].
+- **Dalla prova vera**: senza tabella dei click il modello scriveva «da 48 a circa 48.2 click» (sommava psi ai click grezzi del setup) → il blocco [CLICK DELLA VETTURA] ora dice che quei valori sono click e che la correzione va data solo in unità reali; le risposte arrivano con grassetti ed elenchi → nella radio passano dallo stesso markdown-lite del Rapporto completo (`SectionBody` esportato).
+
+**Prova col modello vero (01/10, claude-haiku-4-5, 5 domande, $0,0229 = ~$0,0046 a domanda):** primo pezzo in 1,5–5 s, risposta completa in 2–7 s. Ferrari Monza: guida sulla Variante Ascari con i numeri del report (0.19 s, v-min 139 km/h); fuori tema («mondiale 2006») rifiutato in una frase; pressioni dopo la correzione: «+0.2 psi Ant.SX, +0.3 psi Post.SX», e dice di non avere la tabella dei click. Demo BMW: «Post.SX +6 click, Post.DX +8 click», gli stessi della prima cosa da fare. Da tenere d'occhio: sulla demo ha detto «95 °C, sopra il limite» (95 è la media, la finestra arriva a 100; il fuori finestra è il 38% del tempo) e qualche espressione storta («butta giù il freno», «centralizza l'Ascari»). Non ancora vista a schermo col modello vero: lo streaming a schermo è stato visto solo col modello finto.
+
+**Precisione (messaggio 4):** nel prompt della chat il blocco PRECISIONE: media, picco e percentuale di tempo non si scambiano; prima di dire «sopra/sotto/fuori» si confrontano i due numeri; le correzioni sono SOLO quelle delle «azione» del verdetto e della prima cosa da fare (stessi parametri, stesse quantità); su ciò che il contesto non dice si risponde «i dati di questa sessione non lo dimostrano»; italiano corretto, niente gergo inventato né vezzeggiativi. Prima della regola sulle correzioni haiku aveva inventato «rebound Post.DX +2 click (da 24 a 26)» con una causa sua. Dopo, sulle stesse domande della demo: pressioni +6 / +8 click e basta; «media 95 °C, il 38% del tempo sopra i 100 °C, picchi fino a 105 °C»; alla domanda su ammortizzatori e ala «i dati di questa sessione non lo dimostrano». Restano modi colloquiali («scalda come un forno»). Spesa della giornata dopo 12 domande vere: $0,0621 (~$0,006 l'una col prompt più lungo).
+
+**Verifica:** `test_chat.py` **25/25** (modello finto, nessuna spesa) · suite **1124/1124** in 22 file · `tsc --noEmit` 0 · a schermo (1536×695, Monza · Ferrari 488) con un backend di prova a modello finto: due domande, streaming, storia al modello (1 poi 3 messaggi), contatore 2/12, la pagina non scorre. 
+
+**File protetti:** ☑ sbloccato con «ok procedi» → `core/prompts/chat_system_prompt.txt` (solo le quattro modifiche concordate). `agent.py` non toccato.
+**Decisione:** ☑ Mantenuto — «ok push» dell'01/10/2026.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]

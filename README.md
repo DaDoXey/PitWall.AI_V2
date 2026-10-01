@@ -17,7 +17,8 @@ under way: taking PitWall from a demo to a product, with a real LLM underneath.
 
 The LLM client is already implemented: a 5-section validated analysis, with retries and a model
 cascade, switched on with `PITWALL_ALLOW_LIVE=1` + `PITWALL_DEMO_MODE=0` + the API key. The client
-also contains a streaming chat for Gigi, which is not wired to any route yet. Every model call goes
+also contains a streaming chat for Gigi, served by `POST /api/sessions/{id}/chat` behind its own
+switch (`PITWALL_CHAT_LIVE=1`, off by default). Every model call goes
 through a daily and monthly **spending cap**. **The real LLM stays off by default** until it has
 been stress-tested (see Roadmap).
 
@@ -83,6 +84,7 @@ specified in [`docs/04-rework-dati.md`](docs/04-rework-dati.md).
 | GET | `/api/sessions/{id}/export/motec` | The session as .ld + .ldx (zip) to open in MoTeC i2 |
 | GET | `/api/sessions/{id}/debrief` | Gigi's debrief, phase by phase (engine only, no model) |
 | PUT | `/api/sessions/{id}/debrief/tagli` | Phases cut by hand, saved in the session (`null` = Gigi's) |
+| POST | `/api/sessions/{id}/chat` | Gigi live on the Console radio: streamed answer on the open session (needs `PITWALL_CHAT_LIVE=1`; 503 off, 429 cap reached, 409 conversation full) |
 | POST | `/api/sessions/{id}/export/setup` | The session setup with the changed clicks, as a JSON file to load back into ACC |
 | GET | `/api/sessions` | Stored sessions, DEMO included |
 | GET | `/api/sessions/{id}` | One session (session bundle) |
@@ -175,7 +177,7 @@ even with concurrent requests. Amounts are in dollars, the currency Anthropic bi
 |---|---|---|
 | `analisi` | Console, `POST /api/analysis` | `PITWALL_BUDGET_ANALISI_GIORNO=0.50` |
 | `screenshot` | Setup, `POST /api/setup/from-image` | `PITWALL_BUDGET_SCREENSHOT_GIORNO=0.25` |
-| `chat` | Gigi's chat (not wired) | `PITWALL_BUDGET_CHAT_GIORNO=0` |
+| `chat` | Gigi live on the Console, `POST /api/sessions/{id}/chat` | `PITWALL_BUDGET_CHAT_GIORNO=0` |
 
 On top of the three categories there is an overall **monthly** cap, `PITWALL_BUDGET_MESE=5.00`. The
 day resets at midnight (server time). Once a cap is reached, the analysis answers from the cache with
