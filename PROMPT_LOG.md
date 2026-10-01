@@ -2706,7 +2706,7 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 | Data | 30/09/2026 |
 | Agente dev | Claude Code (claude-opus-5-5) |
 | Area | NEW `backend/app/analisi/debrief.py` · `backend/app/bundle/schema.py` (`fasi_tagli`) · `backend/app/api/sessions.py` (2 rotte) · NEW `backend/app/tests/test_debrief.py` · docs |
-| Commit | `5ba9b01` motore, rotte e test · docs nel commit successivo |
+| Commit | `5ba9b01` motore, rotte e test · `7de3b6a` docs |
 | Contesto | Prima delle tre entry della nuova Engineer Console (#059 motore · #060 Console · #061 chat di Gigi). |
 
 **Catalogo messaggi:**
@@ -2724,7 +2724,50 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 **Verifica:** suite **1097/1097** (+37 `test_debrief`); rotte provate sul backend vivo.
 
 **File protetti:** ☑ nessuno toccato.
-**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `5ba9b01` · docs nel commit successivo).
+**Decisione:** ☑ Mantenuto — «ok push» il 30/09 (commit `5ba9b01` · `7de3b6a` docs).
+
+---
+
+## Entry #060 — Engineer Console: Gigi alla radio del muretto
+
+| Campo | Valore |
+|---|---|
+| Data | 30/09/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `frontend/src/app/(app)/console/page.tsx` (riscritta) · NEW `frontend/src/components/console/` (`Onda`, `StrisciaGiri`, `MappaFase`, `Radio`, `RapportoCompleto`) · NEW `frontend/src/lib/debrief.ts` · `lib/api.ts` · `lib/console.ts` · `app/globals.css` · `components/ui/GigiTour.tsx` · `backend/app/analisi/debrief.py` (`stato_gomme`) · `test_debrief.py` · docs |
+| Commit | `366a2d6` (console e motore) + commit docs, pushati l'01/10/2026 |
+| Contesto | Seconda delle tre entry della nuova Console: la tavola D scelta da Edoardo (radio + debrief + una cosa alla volta) costruita dentro PitWall sul debrief della #059. |
+
+**Catalogo messaggi:**
+1. «ok push, poi procedi con la #060».
+2. «ok devo dire molto meglio però forse è meglio pulire la schermata, mi sembra un po' troppo piena e confusionaria» → sei fonti di rumore proposte; «mi piace molto la schermata ma la ritengo troppo piena. vedi te altri fix» → pulizia (sotto). La mappa nella colonna di sinistra resta: l'aveva scelta Edoardo il 29/09 perché la colonna era «troppo vuota».
+3. (01/10) «mi sembra una schermata troppo piena di informazioni e l'utente medio penso che non possa capire bene tutto» (guardata su demo e Monza · Ferrari 488) → una cosa alla volta (sotto). La #060 si pusha a rifinitura finita.
+4. (01/10) «lì va bene metterci la chat con gigi come avevamo già fatto e va bene lo spazio vuoto a sinistra ma rendiamolo migliore, meglio sopra il punto, era meglio il distacco messo come prima […] rendiamolo più appetibile» → scelte: conversazione + casella, «la sessione in numeri» a sinistra, la conversazione resta al cambio di fase.
+
+**Modifica:**
+- **La pagina.** In testa «GIGI · RADIO» con la cuffia, la sessione, **In ballo** (media − migliore, in ambra), lo stato di Gigi dal vivo e il pulsante **Rapporto completo**. A sinistra la **striscia dei giri** e la **pista della fase**; a destra **la prima cosa da fare** e **la radio**. Tarata sull'area contenuti del tuo schermo (1152 × ~575 px): la pagina non scorre, scorre solo la radio.
+- **Striscia dei giri** (`StrisciaGiri`): le fasi come intestazioni cliccabili (colore per tipo: avvio grigio, il giro viola, il calo rosso, la tenuta verde), i giri con lo scarto dal migliore (il migliore in viola con il tempo), una **fessura fra due giri**: clic = taglia una fase nuova o unisce (salvato nella sessione), «Torna alle fasi di Gigi». **▶ Riascolta il debrief** fa scorrere le fasi ogni 4.5 s.
+- **Pista della fase** (`MappaFase`): la mappa verificata con i punti della fase quando la pista è agganciata alla guida (primo punto rosso che pulsa); altrimenti «Dove perdi in questa fase» in elenco. Le quattro gomme colorate con lo stato del motore (in finestra · bassa · alta · oltre i 100 °C). Mappa non verificata: lo dice.
+- **Radio** (`Radio`): un messaggio di Gigi per fase, con la prova in piccolo; quello della fase ascoltata è **in onda** (onda rossa che si muove, riquadro acceso, link alle altre sezioni: Telemetria su Giri/Curve/Gomme e freni, lezione sulla finestra gomme). Le tue domande con la loro onda grigia. **Domande preparate** che il debrief sa rispondere da solo: La prossima · Perché? · Dove perdo? · E le gomme? · Il giro migliore? — ognuna porta anche la striscia e la mappa sulla fase di cui parla. La casella resta spenta finché non c'è Gigi dal vivo (#061).
+- **La prima cosa da fare**: la voce più grave che tocca il setup, detta in click con la tabella della vettura («Alza le pressioni: Post.SX +6 · Post.DX +8 click»), in psi dove la tabella non c'è; «Nel setup →».
+- **Rapporto completo** (`RapportoCompleto`, pannello a destra in un portale): le 5 sezioni di sempre, dalla stessa rotta (cache sulla demo, motore altrove).
+- `lib/debrief.ts`: agganci dagli argomenti, barre dell'onda deterministiche, titolo della prima cosa, risposte preparate, taglio sì/no. Via gli scenari rapidi (`CHIPS`). Onda animata in `globals.css` (ferma con «riduci movimento»). Tour: nuova frase sulla Console.
+- **Backend**: ogni fase porta `stato_gomme` per ruota (ok · bassa · alta · calda, stesse finestre Kunos del messaggio; niente nell'avvio, sul bagnato o senza canali): i conti restano nel motore.
+
+**Pulizia (messaggio 2):** testata con solo «In ballo 0.684 s a giro» (media e migliore nel tooltip) e «Rapporto completo», lo stato dal vivo lo dice la casella della radio; via la riga d'istruzioni sotto la striscia (nel tooltip; resta «Fasi tagliate da te · torna a quelle di Gigi» solo dopo un taglio) e le fessure fra i giri si vedono solo passandoci sopra; la prima cosa da fare su una riga (il titolo della voce nel tooltip); nella radio la prova solo sul messaggio in onda, gli altri al massimo su due righe; sulla mappa un solo riquadro nell'angolo vuoto con gomme e «dove perdi».
+
+**Una cosa alla volta (messaggio 3, 01/10):** la stessa cosa era detta quattro volte (colonna di sinistra, mappa, messaggio, riga di prova) e con numeri diversi fra sessione e fase. Ora: alla radio **un solo messaggio**, quello della fase in onda o la risposta all'ultima domanda («Mi hai chiesto: …»), con le domande subito sotto; la **prova** esce solo con «Perché?»; casella e microfono nascosti finché non c'è Gigi dal vivo (#061; via anche la lettura dello stato del backend dalla pagina); sulla mappa il **nome solo sul punto peggiore**, gli altri pallini numerati con il nome nel tooltip (senza punti sulla mappa: una riga «Perdi di più»); nella striscia scritto solo il tempo del giro migliore, gli altri «G3» con tempo e scarto nel tooltip; in testata «Hai 0.35 s a giro di margine» al posto di «In ballo»; `Sidebar`: il pannello della pista **non compare sulla Console** (sulle altre pagine resta). Scelte di Edoardo: un messaggio, un punto con nome, pannello nascosto sulla Console; il resto «vedi tu». Verificato a 1536×695 su demo e Monza · Ferrari 488 («Perché?» compreso); `tsc` 0, rotte 200; backend non toccato.
+
+**Rifinitura (messaggio 4, 01/10):** sotto le domande torna la **conversazione** (domande tue e risposte di Gigi accodate, restano al cambio di fase; il messaggio in onda in alto è sempre quello della fase) e in fondo la **casella** con il microfono, spenta fino alla #061; l'etichetta del punto peggiore sta **sopra il punto** (sotto se è in cima alla mappa, allineata al bordo vicino ai lati); in testata torna il **Distacco** come numero ambra in un riquadro («Distacco · media · giro migliore · +0.349 s a giro»), al posto di «di margine»; nella colonna di sinistra, solo sulla Console, NEW `components/ui/PannelloSessione.tsx`: giro migliore, media, giri di ritmo (questi dal debrief). Verificato a 1536×695 su Monza · Ferrari 488 con tre domande: la pagina non scorre, scorre la conversazione; `tsc` 0.
+
+**Colonna piena (messaggio 5, 01/10):** «rimane lo spazio vuoto nella colonna di sinistra» → `PannelloSessione` riempito di contenuto fino in fondo: due riquadri (Migliore, Media) e sotto i **giri di ritmo uno per uno** con tempo e scarto (il migliore in viola), che sulla striscia sono solo barre; le righe si spartiscono l'altezza (ResizeObserver, come `PannelloPista`). Verificato a 1536×695: 6 giri sulla Ferrari, 8 sulla demo, tutti dentro, senza vuoto sotto. Scartata la riga «Costanza»: sulla Ferrari dà ± 8.243 s (deviazione su tutti i giri, non solo quelli di ritmo), accanto alla media di ritmo confonde. `tsc` 0.
+
+**Risultato osservato** (1536×639, demo, prima del messaggio 3): In ballo 0.684 s; fasi L'avvio · Il giro · Il calo con gli scarti; in onda il calo con l'onda rossa; mappa di Monza con «Dove perdi in questa fase» (la demo non è agganciata); gomme «Post.SX pressione bassa · Post.DX oltre i 100 °C al core»; «Dove perdo?» risponde e porta la fase all'avvio; il taglio fra G6 e G7 dà «Il calo · G5–6» e «Il calo · G7–8» (poi rimesse le fasi di Gigi). Nota: con la scheda di Chrome in secondo piano le animazioni si fermano a metà nelle catture (la pagina è a posto).
+
+**Verifica:** `tsc --noEmit` 0 errori · rotte `/ /console /setup /telemetry` 200 · suite **1099/1099** (+2 `test_debrief` sullo stato delle gomme).
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» dell'01/10/2026.
 
 ---
 
