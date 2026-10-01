@@ -25,6 +25,7 @@ import {
   IconTracks,
 } from "@/components/ui/NavIcons";
 import PannelloPista from "@/components/ui/PannelloPista";
+import PannelloSessione from "@/components/ui/PannelloSessione";
 import QuickNotes from "@/components/ui/QuickNotes";
 import type { Riassunto } from "@/lib/api";
 import { GRUPPI_SESSIONI, useSessione } from "@/lib/sessione";
@@ -149,6 +150,7 @@ function Voce({ href, label, icon: Icon, piccola }: (typeof NAV_SESSIONE)[number
 }
 
 export default function Sidebar() {
+  const path = usePathname();
   return (
     <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col border-r border-line bg-surface">
       {/* Testa: marchio e sessione aperta. Fuori dallo scroll: il selettore apre un
@@ -188,8 +190,10 @@ export default function Sidebar() {
         </div>
       </nav>
 
-      {/* Lo spazio che resta: la pista della sessione aperta (mappa, curva peggiore). */}
-      <PannelloPista />
+      {/* Lo spazio che resta: la pista della sessione aperta (mappa, curva peggiore).
+          Sulla Console la pista è già al centro, con i numeri della fase: qui restano
+          i numeri della sessione. */}
+      {attiva(path, "/console") ? <PannelloSessione /> : <PannelloPista />}
 
     </aside>
   );

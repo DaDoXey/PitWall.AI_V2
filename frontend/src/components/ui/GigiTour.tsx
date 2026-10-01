@@ -28,7 +28,7 @@ const TOUR_STEPS = [
   {
     href: "/console",
     label: "Engineer Console",
-    text: "Qui mi chiedi della sessione in parole tue — tipo «l'auto scivola dietro». Ti rispondo con diagnosi, causa, correzione del setup e correzione di guida, citando solo numeri misurati.",
+    text: "Qui ti faccio il debrief alla radio: la sessione fase per fase, dove hai lasciato tempo e la prima cosa da fare, citando solo numeri misurati. Le fasi le puoi ritagliare tu; il rapporto completo ha le cinque sezioni.",
   },
   {
     href: "/telemetry",

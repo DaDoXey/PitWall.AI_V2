@@ -68,6 +68,9 @@ class Fase(_Base):
     messaggio: str                          # quello che Gigi dice alla radio
     prova: str                              # i numeri, in piccolo
     punti: list[PuntoFase] = Field(default_factory=list)
+    # Lo stato di ogni ruota in questi giri (#060): «ok», «bassa», «alta», «calda».
+    # None nell'avvio (le gomme stanno salendo), sul bagnato o senza canali.
+    stato_gomme: dict[str, str] | None = None
     # Argomenti per gli agganci alle altre sezioni: «gomme», «freni», «ritmo»,
     # «curva:7», «settore:3». Il frontend li trasforma in link.
     argomenti: list[str] = Field(default_factory=list)
@@ -233,6 +236,31 @@ def _nome_curva(p: PuntoFase) -> str:
     return p.nome or f"curva {p.curva}"
 
 
+def _stato_gomme(report: ReportAnalisi, giri: list[int]) -> dict[str, str] | None:
+    """Ruota per ruota, in questi giri: calda (core oltre la finestra), bassa, alta, ok."""
+    gf = report.gomme_e_freni or {}
+    if (gf.get("gomme") or {}).get("mescola") not in (None, "asciutto"):
+        return None
+    per_giro = [p for p in gf.get("per_giro") or [] if p.get("giro") in giri]
+    if not per_giro:
+        return None
+    p_min, p_max = rif.finestra_pressione_asciutto()
+    _, t_max = rif.finestra_core_asciutto()
+    stato = {}
+    for r in RUOTE:
+        pressioni = [p["pressione"][r] for p in per_giro if (p.get("pressione") or {}).get(r) is not None]
+        temperature = [p["temperatura"][r] for p in per_giro if (p.get("temperatura") or {}).get(r) is not None]
+        if temperature and max(temperature) > t_max:
+            stato[r] = "calda"
+        elif pressioni and mean(pressioni) < p_min:
+            stato[r] = "bassa"
+        elif pressioni and mean(pressioni) > p_max:
+            stato[r] = "alta"
+        else:
+            stato[r] = "ok"
+    return stato
+
+
 def _gomme_fuori(report: ReportAnalisi, giri: list[int]) -> list[str]:
     """Le ruote fuori dalla finestra Kunos in questi giri, dette come le dice Gigi."""
     gf = report.gomme_e_freni or {}
@@ -344,7 +372,8 @@ def _fase(report: ReportAnalisi, tipo: TipoFase, giri: list[int], nome: str,
 
     return Fase(tipo=tipo, nome=nome, giri=giri, delta_medio_ms=delta_medio,
                 messaggio=" ".join(frasi), prova=" · ".join(x for x in prove if x),
-                punti=punti, argomenti=list(dict.fromkeys(argomenti)))
+                punti=punti, argomenti=list(dict.fromkeys(argomenti)),
+                stato_gomme=None if tipo == "avvio" else _stato_gomme(report, giri))
 
 
 def _prima_cosa(report: ReportAnalisi) -> PrimaCosa | None:

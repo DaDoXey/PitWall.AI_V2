@@ -97,3 +97,24 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent);
 }
+
+/* Engineer Console (#060): l'onda della radio si muove solo sul messaggio in onda. */
+@keyframes pw-onda {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+.pw-onda-viva rect {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pw-onda 0.8s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pw-onda-viva rect {
+    animation: none;
+  }
+}

@@ -43,8 +43,6 @@ export function parseSections(text: string): Section[] {
   return SECTIONS.map((s, i) => ({ title: s.title, icon: s.icon, body: bodies[i] ?? "" }));
 }
 
-// Chip scenari rapidi (prompt preset).
-export const CHIPS = ["Sottosterzo", "Calcola carburante", "Analizza gomme", "Bilanciamento freni"];
 
 // Etichetta leggibile della sorgente restituita dal backend.
 export const SOURCE_LABELS: Record<string, string> = {

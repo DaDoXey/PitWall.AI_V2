@@ -1,330 +1,249 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
+// Engineer Console (#060, 30/09/2026): Gigi alla radio del muretto. Il debrief della
+// sessione fase per fase (motore: analisi/debrief.py), la striscia dei giri con le fasi
+// da ascoltare e da ritagliare, la pista della fase in onda, la prima cosa da fare
+// fissata in cima, le domande preparate e il rapporto completo a 5 sezioni.
+// Una cosa alla volta: in onda c'è un solo messaggio, quello della fase ascoltata; le
+// domande e le risposte si accodano sotto, come una conversazione.
+// Scelta di Edoardo fra tre concetti: la radio (B) + il tavolo del debrief (C) + una
+// cosa alla volta (A). La chat dal vivo arriva con la #061.
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import PageHeader from "@/components/ui/PageHeader";
-import { fadeInUp, staggerContainer } from "@/lib/motion";
-import { postAnalysis } from "@/lib/api";
-import { profileContextLine, useProfile } from "@/lib/profile";
+import MappaFase from "@/components/console/MappaFase";
+import Radio from "@/components/console/Radio";
+import RapportoCompleto from "@/components/console/RapportoCompleto";
+import StrisciaGiri from "@/components/console/StrisciaGiri";
+import { ApiError, getDebrief, getSetupParams, salvaTagli, type Debrief } from "@/lib/api";
+import { alternaTaglio, DOMANDE, messaggiIniziali, rispondi, titoloPrimaCosa, type Domanda, type Messaggio } from "@/lib/debrief";
+import { tempoGiro } from "@/lib/formato";
+import { fadeInUp } from "@/lib/motion";
 import { useSessione } from "@/lib/sessione";
-import {
-  CHIPS,
-  DEMO_QUESTION,
-  DOMANDA_SESSIONE,
-  parseSections,
-  SETUP_SECTION_INDEX,
-  SOURCE_LABELS,
-  type Section,
-} from "@/lib/console";
+import type { SetupParams } from "@/lib/setup";
 
-type Analysis = { question: string; text: string; source: string };
+const PASSO_RIPRODUZIONE_MS = 4500;
+
+// All'apertura va in onda la fase dove c'è più in ballo (scarto medio più alto).
+function faseIniziale(d: Debrief): number {
+  let scelta = -1;
+  d.fasi.forEach((f, i) => {
+    if (f.tipo === "giro") return;
+    if (scelta < 0 || (f.delta_medio_ms ?? 0) > (d.fasi[scelta].delta_medio_ms ?? 0)) scelta = i;
+  });
+  return Math.max(scelta, 0);
+}
 
 export default function ConsolePage() {
-  const [data, setData] = useState<Analysis | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [err, setErr] = useState<string | null>(null);
-  const [typed, setTyped] = useState("");
-  const busy = useRef(false); // evita fetch sovrapposte (chip cliccati in serie)
-  // Profilo pilota dal wizard (megaprompt #9, FASE 5): allegato a ogni analisi
-  // come campo separato — usato dal ramo LLM reale, ignorato dalla demo-cache.
-  const { profile, ready: profileReady } = useProfile();
-  // L4: Gigi parla della sessione aperta, non più sempre della demo.
-  const { idSessione, sessione } = useSessione();
+  const { idSessione, sessione, report, nomi } = useSessione();
+  const [debrief, setDebrief] = useState<Debrief | null>(null);
+  const [errore, setErrore] = useState<string | null>(null);
+  const [attiva, setAttiva] = useState(0);
+  const [inRiproduzione, setInRiproduzione] = useState(false);
+  const [occupato, setOccupato] = useState(false);
+  const [conversazione, setConversazione] = useState<Messaggio[]>([]);
+  const [params, setParams] = useState<SetupParams | null>(null);
+  const [rapporto, setRapporto] = useState(false);
 
-  // Numero dell'ultima richiesta: una risposta arrivata tardi (sessione cambiata nel
-  // frattempo) non deve sovrascrivere quella della sessione aperta.
-  const ultima = useRef(0);
+  const riparti = useCallback((d: Debrief) => {
+    setDebrief(d);
+    setConversazione([]);
+    setAttiva(faseIniziale(d));
+    setInRiproduzione(false);
+  }, []);
 
-  // Analizza un prompt via backend (demo-cache / motore / LLM gated: la logica sta lì).
-  // `forza`: il cambio di sessione passa anche se un'analisi è ancora in corso.
-  async function analyze(prompt: string, forza = false) {
-    const p = prompt.trim();
-    if (!p || !idSessione || (busy.current && !forza)) return;
-    const numero = ++ultima.current;
-    busy.current = true;
-    setLoading(true);
-    setErr(null);
-    try {
-      const res = await postAnalysis(p, profile ? profileContextLine(profile) : undefined, idSessione);
-      if (numero === ultima.current) setData(res);
-    } catch {
-      if (numero === ultima.current) setErr("Backend non raggiungibile — avvia FastAPI su :8000 (vedi README).");
-    } finally {
-      if (numero === ultima.current) {
-        setLoading(false);
-        busy.current = false;
-      }
-    }
-  }
-
-  // Stato iniziale: console SEMPRE popolata (mai vuota). Sulla demo lo scenario
-  // canonico, sulle altre sessioni l'analisi generale. Si rifà a ogni cambio di
-  // sessione. Aspetta la lettura del profilo da localStorage (F5-fix #9).
   useEffect(() => {
-    if (profileReady && idSessione && sessione) {
-      setData(null);
-      analyze(sessione.demo ? DEMO_QUESTION : DOMANDA_SESSIONE, true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profileReady, idSessione, sessione?.id]);
+    if (!idSessione) return;
+    let vivo = true;
+    setDebrief(null);
+    setErrore(null);
+    getDebrief(idSessione)
+      .then((d) => vivo && riparti(d))
+      .catch(() => vivo && setErrore("Backend non raggiungibile — avvia FastAPI su :8000 (vedi README)."));
+    return () => {
+      vivo = false;
+    };
+  }, [idSessione, riparti]);
 
-  function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (typed.trim()) {
-      analyze(typed);
-      setTyped("");
-    }
-  }
+  // Le regole della vettura: la prima cosa da fare si dice in click, quando si può.
+  useEffect(() => {
+    if (!report?.car) return;
+    getSetupParams(report.car)
+      .then((d) => setParams(d as SetupParams))
+      .catch(() => setParams(null));
+  }, [report?.car]);
 
-  const sections = data ? parseSections(data.text) : [];
-  // Senza modello (live spento o ripiego) il motore risponde sempre con l'analisi della
-  // sessione, qualunque sia la domanda: scenari e testo libero si spengono e lo si dice.
-  // La demo ha le sue risposte preparate per scenario, e lì restano accesi.
-  const senzaModello = Boolean(data && !sessione?.demo && (data.source === "motore" || data.source === "fallback"));
+  // Il replay: una fase dopo l'altra, finché non si mette in pausa o si sceglie una fase.
+  useEffect(() => {
+    if (!inRiproduzione || !debrief) return;
+    const t = setInterval(() => setAttiva((a) => (a + 1) % debrief.fasi.length), PASSO_RIPRODUZIONE_MS);
+    return () => clearInterval(t);
+  }, [inRiproduzione, debrief]);
+
+  const vaiAFase = (i: number) => {
+    if (!debrief || !debrief.fasi.length) return;
+    setInRiproduzione(false);
+    setAttiva(Math.min(Math.max(i, 0), debrief.fasi.length - 1));
+  };
+
+  const chiedi = (d: Domanda) => {
+    if (!debrief) return;
+    const r = rispondi(debrief, d, attiva);
+    setInRiproduzione(false);
+    const n = Date.now();
+    setConversazione((c) => [
+      ...c,
+      { id: `tu-${n}`, da: "tu", testo: DOMANDE.find((x) => x.id === d)?.testo ?? "" },
+      // La prova, numero per numero, esce solo quando la si chiede.
+      { id: `gigi-${n}`, da: "gigi", testo: r.testo, prova: d === "perche" ? r.prova : undefined, fase: r.fase },
+    ]);
+    if (r.fase !== undefined) setAttiva(r.fase);
+  };
+
+  const taglia = async (tagli: number[] | null) => {
+    if (!idSessione || occupato) return;
+    setOccupato(true);
+    setErrore(null);
+    try {
+      riparti(await salvaTagli(idSessione, tagli));
+    } catch (e) {
+      setErrore(e instanceof ApiError ? e.message : "Fasi non salvate.");
+    } finally {
+      setOccupato(false);
+    }
+  };
+
+  const titoloPrima = useMemo(
+    () => (debrief?.prima_cosa ? titoloPrimaCosa(debrief.prima_cosa, params) : null),
+    [debrief, params],
+  );
+  const faseInOnda = debrief?.fasi[attiva];
+  const messaggioDiFase = useMemo(() => {
+    const m = debrief ? messaggiIniziali(debrief)[attiva] : undefined;
+    return m && { ...m, prova: undefined };
+  }, [debrief, attiva]);
+
+  const intestazione = (
+    <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+      <div className="flex items-center gap-3">
+        <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#5a0f1d] bg-[#1a0509]">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#E8002D" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+            <path d="M4 14v-2a8 8 0 0 1 16 0v2" />
+            <rect x="3" y="14" width="4" height="6" rx="1.5" />
+            <rect x="17" y="14" width="4" height="6" rx="1.5" />
+            <path d="M19 20a4 4 0 0 1-4 2h-2" />
+          </svg>
+        </span>
+        <div>
+          <h1 className="font-display text-[0.95rem] font-bold tracking-[0.14em]">
+            GIGI <span className="text-accent">· RADIO</span>
+          </h1>
+          <p className="font-mono text-[0.58rem] uppercase tracking-[0.16em] text-muted">
+            Debrief{sessione ? ` · ${nomi.pista(sessione.track)} · ${nomi.vettura(sessione.car)}` : ""}
+            {debrief ? ` · ${debrief.giri.length} giri di ritmo` : ""}
+          </p>
+        </div>
+      </div>
+      <div className="flex flex-wrap items-center gap-5">
+        {debrief?.in_ballo_ms != null && report?.ritmo.miglior_giro_ms != null && (
+          <div
+            className="flex items-center gap-3 rounded-xl border border-[#4a3a12] bg-[#17130a] px-3.5 py-1.5"
+            title={`La distanza fra la tua media (${tempoGiro(report.ritmo.media_ms)}) e il tuo giro migliore (${tempoGiro(report.ritmo.miglior_giro_ms)})`}
+          >
+            <div className="flex flex-col">
+              <span className="font-mono text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-warn">Distacco</span>
+              <span className="font-mono text-[0.54rem] tracking-[0.06em] text-muted">media · giro migliore</span>
+            </div>
+            <div className="flex items-baseline gap-1.5">
+              <span className="font-display text-2xl font-bold leading-none text-warn">+{(debrief.in_ballo_ms / 1000).toFixed(3)} s</span>
+              <span className="font-mono text-[0.62rem] text-muted">a giro</span>
+            </div>
+          </div>
+        )}
+        <button
+          type="button"
+          onClick={() => setRapporto(true)}
+          disabled={!idSessione}
+          className="rounded-md border border-line-strong px-3 py-1.5 font-mono text-[0.58rem] uppercase tracking-widest text-subtle transition hover:border-accent hover:text-white"
+        >
+          Rapporto completo
+        </button>
+      </div>
+    </div>
+  );
+
+  if (!idSessione)
+    return (
+      <div>
+        {intestazione}
+        <p className="text-sm text-subtle">
+          Nessuna sessione aperta: aprine una da{" "}
+          <Link href="/sessioni" className="text-white underline-offset-2 hover:underline">
+            Sessioni
+          </Link>
+          .
+        </p>
+      </div>
+    );
 
   return (
-    <div>
-      <PageHeader
-        title="Engineer Console"
-        subtitle="Gigi · Race Engineer"
-        azioni={
-          data && (
-            <span
-              className={`flex items-center gap-1.5 font-mono text-[0.6rem] uppercase tracking-widest ${
-                data.source === "api" ? "text-ok" : "text-subtle"
-              }`}
-            >
-              <span className={`h-1.5 w-1.5 rounded-full ${data.source === "api" ? "bg-ok" : "bg-muted"}`} />
-              {SOURCE_LABELS[data.source] ?? data.source}
-            </span>
-          )
-        }
-      />
+    <div className="flex h-[calc(100vh-4rem)] min-h-[520px] flex-col">
+      {intestazione}
+      {errore && <p className="mb-3 text-sm text-warn">{errore}</p>}
 
-      {/* Scenari rapidi */}
-      <div className="mb-2 font-mono text-[0.62rem] uppercase tracking-widest text-muted">
-        Scenari rapidi
-      </div>
-      <div className="mb-4 grid grid-cols-2 gap-2 md:grid-cols-4">
-        {CHIPS.map((chip) => (
-          <motion.button
-            key={chip}
-            onClick={() => analyze(chip)}
-            disabled={loading || senzaModello}
-            whileHover={{ y: -1 }}
-            whileTap={{ scale: 0.97 }}
-            className="rounded-md border border-line bg-surface px-3 py-2 text-sm text-subtle transition hover:border-line-strong hover:bg-raised disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {chip}
-          </motion.button>
-        ))}
-      </div>
-
-      {/* Input + ANALIZZA */}
-      <form onSubmit={onSubmit} className="mb-4 flex gap-2">
-        <input
-          value={typed}
-          onChange={(e) => setTyped(e.target.value)}
-          disabled={senzaModello}
-          placeholder={
-            senzaModello
-              ? "Le domande su misura arrivano con Gigi dal vivo"
-              : "Descrivi il problema in pista… (es. «L'auto scivola dietro in accelerazione»)"
-          }
-          className="flex-1 rounded-md border border-line bg-inset px-3 py-2 text-sm text-white placeholder:text-muted focus:border-accent focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-        />
-        <button
-          type="submit"
-          disabled={loading || senzaModello || !typed.trim()}
-          className="shrink-0 rounded-md bg-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          ⚙ ANALIZZA
-        </button>
-      </form>
-
-      {senzaModello && (
-        <p className="-mt-2 mb-4 text-[0.72rem] text-muted">
-          Gigi dal vivo è spento: qui risponde il motore di analisi, sempre con l&apos;analisi della sessione. Scenari e
-          domande libere tornano attivi con Gigi dal vivo.
-        </p>
-      )}
-
-      {err && <p className="mb-4 text-sm text-warn">{err}</p>}
-
-      {/* Barra "Analisi richiesta" + sorgente */}
-      {data && (
-        <div className="mb-4 flex flex-wrap items-center gap-2">
-          <span className="font-mono text-[0.6rem] uppercase tracking-widest text-muted">
-            Analisi richiesta
-          </span>
-          <span className="rounded-md border border-accent/25 bg-accent/10 px-2.5 py-1 text-[0.82rem] text-white">
-            {data.question}
-          </span>
-        </div>
-      )}
-
-      {/* Spinner / 5 card */}
-      {loading && !data ? (
-        <p className="text-sm text-subtle">Gigi sta analizzando…</p>
+      {!debrief ? (
+        !errore && <p className="text-sm text-subtle">Gigi sta riascoltando la sessione…</p>
       ) : (
-        <motion.div
-          key={data?.question} // nuova analisi → remount → l'ingresso a cascata ri-scatta
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-          className={loading ? "opacity-50 transition" : "transition"}
-        >
-          {sections.map((s, i) => (
-            <motion.div key={s.title} variants={fadeInUp}>
-              <AnalysisCard index={i} section={s} isSetup={i === SETUP_SECTION_INDEX} />
-            </motion.div>
-          ))}
+        <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="flex min-h-0 flex-1 gap-5">
+          <div className="flex min-h-0 min-w-0 flex-[1.1] flex-col gap-3">
+            {debrief.fasi.length > 0 ? (
+              <StrisciaGiri
+                debrief={debrief}
+                attiva={attiva}
+                inRiproduzione={inRiproduzione}
+                occupato={occupato}
+                onFase={vaiAFase}
+                onPlay={() => setInRiproduzione((p) => !p)}
+                onTaglio={(giro) => taglia(alternaTaglio(debrief.tagli, giro))}
+                onFasiDiGigi={() => taglia(null)}
+              />
+            ) : null}
+            {debrief.nota && <p className="-mt-1 font-mono text-[0.6rem] text-muted">{debrief.nota}</p>}
+            <MappaFase fase={faseInOnda} />
+          </div>
+
+          <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-3">
+            {debrief.prima_cosa && titoloPrima && (
+              <div className="flex items-center gap-4 rounded-2xl border border-[#5a0f1d] bg-[#140609] py-3 pl-4 pr-3">
+                <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                  <span className="font-mono text-[0.56rem] uppercase tracking-[0.18em] text-accent">La prima cosa da fare</span>
+                  <span className="text-[1.05rem] font-bold leading-snug tracking-tight" title={debrief.prima_cosa.titolo}>
+                    {titoloPrima}
+                  </span>
+                </div>
+                {Object.keys(debrief.prima_cosa.parametri).length > 0 && (
+                  <Link
+                    href="/setup"
+                    className="shrink-0 rounded-full bg-accent px-4 py-2 text-[0.8rem] font-semibold text-white transition hover:bg-accent-hover"
+                  >
+                    Nel setup →
+                  </Link>
+                )}
+              </div>
+            )}
+            <Radio
+              messaggio={messaggioDiFase}
+              conversazione={conversazione}
+              nomeFase={faseInOnda?.nome}
+              dalVivo={false}
+              onProssima={() => debrief.fasi.length > 0 && vaiAFase((attiva + 1) % debrief.fasi.length)}
+              onDomanda={chiedi}
+            />
+          </div>
         </motion.div>
       )}
+
+      <RapportoCompleto aperto={rapporto} onChiudi={() => setRapporto(false)} />
     </div>
   );
-}
-
-// ─────────────────────────────────────────────
-// Card analisi (una delle 5 sezioni)
-// ─────────────────────────────────────────────
-function AnalysisCard({
-  index,
-  section,
-  isSetup,
-}: {
-  index: number;
-  section: Section;
-  isSetup: boolean;
-}) {
-  const num = String(index + 1).padStart(2, "0");
-  return (
-    <div
-      className={`mb-3 rounded-xl border p-4 ${
-        isSetup ? "border-accent bg-accent/[0.06]" : "border-line bg-surface"
-      }`}
-    >
-      <div className="mb-2.5 flex items-center gap-2.5 border-b border-line pb-2.5">
-        <span className="font-mono text-[0.95rem] text-accent">{num}</span>
-        <span className="text-base">{section.icon}</span>
-        <span className="font-display text-[0.8rem] font-bold uppercase tracking-wide text-white">
-          {section.title}
-        </span>
-        {isSetup && (
-          <span className="ml-auto rounded border border-accent px-1.5 py-0.5 font-mono text-[0.56rem] uppercase tracking-widest text-accent">
-            Scheda Setup
-          </span>
-        )}
-      </div>
-      <div
-        className={`text-[0.86rem] leading-relaxed text-[#bbbbbb] ${
-          isSetup ? "rounded-lg border border-accent bg-inset p-3.5" : ""
-        }`}
-      >
-        <SectionBody body={section.body} />
-      </div>
-      {isSetup && (
-        <Link
-          href="/setup"
-          className="mt-3 inline-flex items-center gap-1 font-mono text-[0.62rem] uppercase tracking-widest text-accent transition hover:underline"
-        >
-          Vedi i parametri toccati dal verdetto in Setup →
-        </Link>
-      )}
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────
-// Markdown-lite → React: grassetto **…**, `code`, liste, paragrafi.
-// Porta _md_lite della v1; nessuna libreria esterna.
-// ─────────────────────────────────────────────
-function SectionBody({ body }: { body: string }) {
-  if (!body.trim()) {
-    return <span className="italic text-muted">— sezione non disponibile</span>;
-  }
-
-  const blocks: React.ReactNode[] = [];
-  let para: string[] = [];
-  let items: string[] = [];
-  let key = 0;
-
-  const flushPara = () => {
-    if (para.length) {
-      blocks.push(
-        <p key={key++} className="mb-2 last:mb-0">
-          {para.map((line, i) => (
-            <Fragment key={i}>
-              {i > 0 && <br />}
-              {renderInline(line)}
-            </Fragment>
-          ))}
-        </p>
-      );
-      para = [];
-    }
-  };
-  const flushList = () => {
-    if (items.length) {
-      blocks.push(
-        <ul key={key++} className="mb-2 list-disc pl-5 last:mb-0">
-          {items.map((it, i) => (
-            <li key={i} className="my-0.5">
-              {renderInline(it)}
-            </li>
-          ))}
-        </ul>
-      );
-      items = [];
-    }
-  };
-
-  for (const raw of body.split("\n")) {
-    const s = raw.trim();
-    if (!s) {
-      flushPara();
-      flushList();
-      continue;
-    }
-    if (/^(?:[-*]|\d+\.)\s+/.test(s)) {
-      flushPara();
-      items.push(s.replace(/^(?:[-*]|\d+\.)\s+/, ""));
-    } else {
-      flushList();
-      para.push(s);
-    }
-  }
-  flushPara();
-  flushList();
-
-  return <>{blocks}</>;
-}
-
-// Inline: **grassetto** e `code`. Tokenizza senza HTML grezzo (sicuro by-default in React).
-function renderInline(text: string): React.ReactNode {
-  const nodes: React.ReactNode[] = [];
-  const re = /\*\*(.+?)\*\*|`(.+?)`/g;
-  let last = 0;
-  let m: RegExpExecArray | null;
-  let key = 0;
-  while ((m = re.exec(text)) !== null) {
-    if (m.index > last) nodes.push(text.slice(last, m.index));
-    if (m[1] !== undefined) {
-      nodes.push(
-        <strong key={key++} className="font-semibold text-white">
-          {m[1]}
-        </strong>
-      );
-    } else {
-      nodes.push(
-        <code key={key++} className="rounded bg-raised px-1 py-0.5 font-mono text-[0.8em] text-accent">
-          {m[2]}
-        </code>
-      );
-    }
-    last = m.index + m[0].length;
-  }
-  if (last < text.length) nodes.push(text.slice(last));
-  return nodes;
 }

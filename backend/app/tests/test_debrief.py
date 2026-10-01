@@ -87,6 +87,9 @@ test("F08 il giro: tempo e distanza dal teorico",
 test("F09 il calo: il degrado del motore, la curva peggiore e le gomme",
      "352 millesimi" in calo.messaggio and "curva 7" in calo.messaggio
      and "Post.DX arriva a 105 °C" in calo.messaggio, calo.messaggio)
+test("F09b lo stato delle gomme nel calo: posteriori basse, la destra calda, anteriori ok",
+     calo.stato_gomme == {"FL": "ok", "FR": "ok", "RL": "bassa", "RR": "calda"}, str(calo.stato_gomme))
+test("F09c nell'avvio lo stato delle gomme non si dà", avvio.stato_gomme is None)
 test("F10 gli argomenti portano alle altre sezioni (ritmo, curve, gomme)",
      {"ritmo", "curva:7", "gomme"} <= set(calo.argomenti), str(calo.argomenti))
 test("F11 la prima cosa da fare è la voce più grave che tocca il setup",
@@ -124,7 +127,7 @@ s = debrief(r)
 test("F20 senza canali le fasi restano (avvio · il giro · dopo)",
      [f.tipo for f in s.fasi][:2] == ["avvio", "giro"] and len(s.fasi) == 3, str([f.tipo for f in s.fasi]))
 test("F21 …e parlano solo di tempi, dicendolo", s.nota is not None and "telemetria" in s.nota
-     and all(not f.punti for f in s.fasi))
+     and all(not f.punti and f.stato_gomme is None for f in s.fasi))
 test("F22 il giro buttato (out lap lento) resta fuori dal ritmo", 2 in s.fuori_ritmo, str(s.fuori_ritmo))
 test("F23 senza degrado dimostrato il dopo è «La tenuta», non «Il calo»",
      s.fasi[-1].tipo == "tenuta", s.fasi[-1].tipo)

@@ -346,6 +346,52 @@ export type Report = {
   ha_canali: boolean;
 };
 
+// ── Debrief fase per fase (Entry #059): la radio di Gigi nella Engineer Console ──
+export type TipoFase = "avvio" | "giro" | "calo" | "tenuta";
+export type PuntoFase = { curva: number; nome: string | null; perdita_ms: number; mappa: { x: number; y: number } | null };
+export type FaseDebrief = {
+  tipo: TipoFase;
+  nome: string;
+  giri: number[];
+  delta_medio_ms: number | null;
+  messaggio: string;
+  prova: string;
+  punti: PuntoFase[];
+  argomenti: string[]; // «ritmo», «gomme», «curva:7», «settore:3»
+  stato_gomme: Record<"FL" | "FR" | "RL" | "RR", "ok" | "bassa" | "alta" | "calda"> | null;
+};
+export type Debrief = {
+  fasi: FaseDebrief[];
+  tagli: number[];
+  tagli_automatici: number[];
+  manuale: boolean;
+  giri: { numero: number; tempo_ms: number; delta_ms: number; migliore: boolean }[];
+  fuori_ritmo: number[];
+  in_ballo_ms: number | null;
+  prima_cosa: { titolo: string; azione: string; categoria: string; parametri: Record<string, number | null> } | null;
+  nota: string | null;
+};
+
+export function getDebrief(id: string) {
+  return getJSON<Debrief>(`/api/sessions/${encodeURIComponent(id)}/debrief`);
+}
+
+/** Salva le fasi ritagliate a mano (null = torna a quelle di Gigi) e restituisce il debrief nuovo. */
+export async function salvaTagli(id: string, tagli: number[] | null): Promise<Debrief> {
+  const res = await fetch(`${API_BASE}/api/sessions/${encodeURIComponent(id)}/debrief/tagli`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tagli }),
+  });
+  if (!res.ok) throw await leggiErrore(res);
+  return res.json() as Promise<Debrief>;
+}
+
+/** Lo stato del backend: se Gigi dal vivo può rispondere (live consentito e demo-mode spenta). */
+export function getStatoBackend() {
+  return getJSON<{ status: string; demo_mode: boolean; live_allowed: boolean }>("/");
+}
+
 export function getAnalisi(id: string) {
   return getJSON<Report>(`/api/sessions/${encodeURIComponent(id)}/analisi`);
 }
