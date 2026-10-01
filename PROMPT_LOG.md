@@ -2810,6 +2810,36 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #062 — Numeri sospetti: da dove viene ogni numero che Gigi legge
+
+| Campo | Valore |
+|---|---|
+| Data | 01/10/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `backend/app/analisi/gigi.py` (contesto) · `app/tests/test_chat.py` · `frontend/src/components/charts/GiriSessione.tsx` |
+| Commit | `e7637b9` + commit docs, pushati l'01/10/2026 |
+| Contesto | Dopo la #061 Edoardo: «dobbiamo essere precisi con le analisi». Tre numeri sospetti annotati durante la #060/#061, controllati sul motore e sulle 6 sessioni dell'archivio. |
+
+**Catalogo messaggi:**
+1. «ok parti dal punto 1 poi continua con quest'ordine» (1 numeri sospetti · 2 click della Ferrari · 3 Lotto 2 · 4 guide · 5 Console parcheggiate · 6 fuori dal codice · 7 deploy).
+
+**Esito del controllo:**
+- **Costanza «± 8.243 s» sulla Ferrari a Monza: falso allarme mio.** Il motore dà 243 ms sui 6 giri di ritmo (`_costanza` lavora già sui soli giri di ritmo); avevo letto male «0.243» in una cattura rimpicciolita. Nessuna modifica.
+- **Carburante 3.10 l uguale in tutti i giri: non è un errore di calcolo, è la fonte.** Nelle sessioni MoTeC il consumo è `fuelPerLap` del setup di ACC (fonte «setup»), lo stesso numero su ogni giro. La Dashboard lo dichiarava già («dal setup»); non lo dichiaravano la tabella dei giri in Telemetria e il contesto di Gigi, che diceva «consumo 3.1 l/giro su 8 giri» come fosse una misura.
+- **«sessione ?»**: i file MoTeC non dicono che sessione era; al modello arrivava il punto interrogativo.
+
+**Modifica:**
+- `gigi.py`: il consumo porta la sua fonte («misurato su N giri» · «stima salvata da ACC nel setup, NON una misura» · «media dai litri scritti dal pilota, NON misurata giro per giro»); tipo sconosciuto → «tipo di sessione non indicato». Vale per la chat e per l'analisi a 5 sezioni (stesso blocco).
+- `GiriSessione.tsx`: colonna «Carburante · dal setup» (o «· inserito da te») e una riga sotto la tabella che dice che non è misurato.
+- Il motore e la logica del carburante non sono stati toccati.
+
+**Verifica:** `test_chat` **29/29** (+4 sul contesto) · `test_gigi` 36/36 · `test_analisi` 61/61 · `test_analisi_l4` 46/46 · `test_demo` 38/38 · `tsc --noEmit` 0. Non vista a schermo.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» dell'01/10/2026.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
