@@ -2969,6 +2969,38 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #067 — La guida «essenziale» e Kyalami
+
+| Campo | Valore |
+|---|---|
+| Data | 02/10/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `scripts/check_track_knowledge.py` · `core/catalog.py` · `api/catalog.py` · NEW `tracks_knowledge/kyalami.json` · NEW `scripts/sensi_da_mappa.py` · NEW `requirements-dev.txt` · `tests/test_tracciati.py` · `lib/api.ts` · `tracciati/page.tsx` · `tracciati/[id]/page.tsx` |
+| Commit | `ce2a9b2` · `3db5778` + commit docs, pushati il 02/10/2026 |
+| Contesto | Punto 4 dell'ordine (guide). Per i circuiti senza una guida scritta per ACC Edoardo ha scelto l'01/10 le guide «essenziali»: solo i fatti con la loro fonte, prima i circuiti che hanno già la mappa (Kyalami, Red Bull Ring). |
+
+**Catalogo messaggi:**
+1. «ok push e riprendiamo il lavoro» → push di #065 e #066 (`d5687eb` · `0c83800` · `b71b018`), poi il punto 2 della ripresa.
+2. Domande: sensi del Red Bull Ring → **lettura sulla mappa** (lo strumento sugli SVG non è affidabile); `sensi_da_mappa.py` → **nel repo con la #067**, Pillow in un requirements di sviluppo.
+
+**Due correzioni ai «fatti raccolti» dell'01/10, trovate rileggendo le fonti prima di scrivere:**
+- **Mineshaft è la T11, non la T12.** Il sito ufficiale elenca i 12 nomi in ordine di percorso e numera a parte le curve senza nome: i file delle icone sono `Turn-4`, `Tun-8`, `Turn-12`, `Turn-14`, e l'icona della Mineshaft ha la didascalia «Turn 11» (il sito scambia per errore le didascalie di Mineshaft e Turn 12). La lettura dell'01/10 aveva T11 senza nome e Mineshaft al 12, come la mappa di Commons.
+- **I sensi di T3 e T14 erano invertiti.** Lo strumento cercava il massimo di curvatura entro 70 px dal numero: vicino al «3» prendeva la piega di Barbeque e vicino al «14» la Cheetah. I due errori si compensavano e il conto tornava lo stesso (6 destre, 10 sinistre, come il sito ufficiale): la «validazione» dell'01/10 non valeva. Con la ricerca a 25 px ogni punto misurato cade sulla curva del suo numero (immagine `--salva-scheletro` guardata curva per curva), e coincide con la lettura a occhio delle due zone ingrandite: **T3 destra, T14 sinistra** (piega lieve).
+
+**Modifica:**
+- **Livello della guida**: campo `livello: "essenziale"` (assente = completa). Il validatore, sulle essenziali, chiede solo `id`, `verifica_catalogo`, `curve`, `fonti_curve`, `fonti`; per curva `n`, `nome` (anche null), `direzione`, `origine`, `confidence`. `tipo` null è lecito, una curva «mestiere» è un errore, e nomi e sensi devono dire da dove vengono (`fonti_curve`, stesso schema di `fonti_campi_pista`). Settori e progressione non si pretendono.
+- **Catalogo/API**: bandierina `guida_essenziale` nell'indice e nella scheda (`catalog.guide_is_essential`).
+- **Scheda** (`tracciati/[id]`): riquadro «Guida essenziale: solo i fatti verificati» sotto l'intestazione; le curve non si aprono (dentro non c'è niente) e sotto l'elenco ci sono le righe «Nomi · …» e «Sensi · …»; il **riferimento GT3** fra i numeri, con la fonte sotto (il riquadro promette i tempi, e la pagina finora non li mostrava per nessuna guida). **Elenco**: bandierina «guida essenziale» e «(1 essenziale)» nel sottotitolo.
+- **Guida di Kyalami** (15ª su 25): antiorario; 16 curve: T1 The Kink · T2 Crowthorne · T3 Jukskei Sweep · T4 — · T5 Barbeque · T6 Sunset · T7 Clubhouse Bend · T8 — · T9 The Esses · T10 Leeukop · T11 Mineshaft · T12 — · T13 The Crocodiles · T14 — · T15 Cheetah · T16 Ingwe; sensi dx sx dx sx sx dx sx sx dx sx sx sx dx sx dx sx. Riferimento GT3 1:41.5 Pro-Am (Traxion: Pro 1:39.40, Am 1:43.50). Limite box 50 km/h. Chicca: 1.532 m di quota, larghezza media 12 m. Dislivello, rettilineo, layout ACC, lato box, consumo: vuoti con la nota del perché.
+- **`sensi_da_mappa.py`**: ricerca a 25 px; nel docstring la regola «si accetta solo guardando `--salva-scheletro`» e il limite sugli SVG. **`requirements-dev.txt`** con `pillow==12.3.0` (installato nel venv; l'app non ne ha bisogno).
+
+**Verifica:** `check_track_knowledge.py` → nessun errore · `test_tracciati` **119/119** (+12: flag nella scheda e nell'indice, 4 della guida a disco, nomi/sensi/livello di Kyalami, 4 del validatore: la guida vera passa, una curva «mestiere» e l'assenza di `fonti_curve` sono respinte, senza `livello` la stessa guida è trattata da completa e respinta) · suite **1164/1164** in 22 file · `tsc --noEmit` 0 · rotte `/tracciati`, `/tracciati/kyalami`, `/tracciati/oulton_park` 200 · a schermo nel Chrome di Edoardo (1536×639): scheda di Kyalami dall'alto in fondo, elenco con la bandierina, Oulton (guida completa) con le curve che si aprono come prima e senza riquadro. Backend riavviato.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» del 02/10/2026; con lo stesso messaggio Edoardo chiede il riferimento GT3 anche sulle guide complete (entry a parte).
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
