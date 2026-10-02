@@ -61,13 +61,15 @@ MAPPE_DIR = REPO / "frontend" / "public" / "assets" / "tracks"
 GUIDE_DIR = BACKEND / "app" / "core" / "data" / "tracks_knowledge"
 
 # I layout scelti a occhio nei provini: cinque il 07/09/2026 (blocco 1), quattro
-# il 23/09/2026 (blocco 2), quattro il 24/09/2026 (blocco 3). Se un provino ne
-# approva altri, questa lista cresce INSIEME a tracks.json: il test esiste proprio
-# per non far divergere le due cose.
+# il 23/09/2026 (blocco 2), quattro il 24/09/2026 (blocco 3), il Red Bull Ring il
+# 25/09 e altri otto il 02/10/2026 (restano senza mappa Nordschleife, Oulton Park e Suzuka).
+# Se un provino ne approva altri, questa lista cresce INSIEME a tracks.json: il
+# test esiste proprio per non far divergere le due cose.
 VERIFICATE_ATTESE = {"spa_francorchamps", "imola", "zandvoort", "zolder", "kyalami",
                      "monza", "silverstone", "nurburgring_gp", "barcelona_catalunya",
                      "misano", "brands_hatch", "hungaroring", "paul_ricard",
-                     "red_bull_ring"}
+                     "red_bull_ring", "laguna_seca", "watkins_glen", "cota", "indianapolis",
+                     "donington_park", "snetterton", "valencia_ricardo_tormo", "mount_panorama"}
 
 print("\n" + "=" * 60)
 print("CATALOGO DEI TRACCIATI — lista, bandierine, mappe")

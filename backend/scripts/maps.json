@@ -23,19 +23,21 @@
     "id": "cota",
     "kind": "track",
     "role": "map",
-    "source_page": "https://commons.wikimedia.org/wiki/File:F1_circuits_2014-2018_-_Circuit_of_the_Americas_(version_2).svg",
-    "license": "CC0",
-    "author": "Firkin",
-    "sha1": "17f4bc32a69f18fa863cdbfe37b2e711388ed304"
+    "file": "frontend/public/assets/tracks/cota_map.svg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Austin_Formula_One_circuit_(2).svg",
+    "license": "CC BY-SA 4.0",
+    "author": "Sentoan",
+    "sha1": "a9bf6fb8bc1db82195a0996ef134a44f823e1f52"
   },
   {
     "id": "donington_park",
     "kind": "track",
     "role": "map",
-    "source_page": "https://commons.wikimedia.org/wiki/File:Donington_Park_short.svg",
-    "license": "CC BY-SA 3.0",
-    "author": "Donington as of 2006.svg: Will Pittenger derivative work: Gpmat",
-    "sha1": "27fdcdb9e0d27527a3456be464fb7bf293354954"
+    "file": "frontend/public/assets/tracks/donington_park_map.svg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Donington_circuit.svg",
+    "license": "CC BY-SA 4.0",
+    "author": "Gustavo Girardelli",
+    "sha1": "8b05863900482117b94654d24581683ea7cc9fcd"
   },
   {
     "id": "hungaroring",
@@ -61,10 +63,11 @@
     "id": "indianapolis",
     "kind": "track",
     "role": "map",
-    "source_page": "https://commons.wikimedia.org/wiki/File:Indianapolis_Motor_Speedway_Road_Course_2024.svg",
+    "file": "frontend/public/assets/tracks/indianapolis_map.svg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Indianapolis_Motor_Speedway_Grand_Prix_Road_Course_2024.svg",
     "license": "CC BY-SA 4.0",
     "author": "Stl66dmk",
-    "sha1": "3a924139a93d94d5424dceb01a4fb8e1bbabebe1"
+    "sha1": "6a0790d32e965f7c17d09c3b6f2c09d993bab855"
   },
   {
     "id": "kyalami",
@@ -80,10 +83,11 @@
     "id": "laguna_seca",
     "kind": "track",
     "role": "map",
-    "source_page": "https://commons.wikimedia.org/wiki/File:Laguna_seca_layout.svg",
-    "license": "Public domain",
-    "author": "Alexander Jones",
-    "sha1": "7f7749e095459fc3182fa82325a52d7ebbf4203a"
+    "file": "frontend/public/assets/tracks/laguna_seca_map.svg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Laguna_Seca.svg",
+    "license": "CC BY-SA 3.0",
+    "author": "Will Pittenger",
+    "sha1": "ae0c0fe9adf2e8261a4ed22c923c5f87c8ac45a3"
   },
   {
     "id": "misano",
@@ -109,6 +113,7 @@
     "id": "mount_panorama",
     "kind": "track",
     "role": "map",
+    "file": "frontend/public/assets/tracks/mount_panorama_map.svg",
     "source_page": "https://commons.wikimedia.org/wiki/File:Mount_Panorama_street_racing_circuit_in_Australia.svg",
     "license": "CC BY-SA 3.0",
     "author": "Will Pittenger",
@@ -176,10 +181,11 @@
     "id": "snetterton",
     "kind": "track",
     "role": "map",
-    "source_page": "https://commons.wikimedia.org/wiki/File:Snetterton_circuit_layout.svg",
-    "license": "Public domain",
-    "author": "Alexander Jones",
-    "sha1": "fd6cb66d81757146972221f94a07ad7f4e475efe"
+    "file": "frontend/public/assets/tracks/snetterton_map.svg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Snetterton_2011_300_annotated.svg",
+    "license": "CC BY-SA 4.0",
+    "author": "John Chapman",
+    "sha1": "056f74efa792e0dca6ad8a0a821e253e792d39f4"
   },
   {
     "id": "spa_francorchamps",
@@ -204,15 +210,17 @@
     "id": "valencia_ricardo_tormo",
     "kind": "track",
     "role": "map",
-    "source_page": "https://commons.wikimedia.org/wiki/File:Ricardo_Tormo_(Proposed_F1)_track_map.svg",
-    "license": "CC BY-SA 4.0",
-    "author": "Sentoan",
-    "sha1": "059254d1b9ba59066b61d54efd9be5a009bf2b02"
+    "file": "frontend/public/assets/tracks/valencia_ricardo_tormo_map.svg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Valencia_(Ricardo_Tormo)_track_map.svg",
+    "license": "CC BY-SA 3.0",
+    "author": "Will Pittenger",
+    "sha1": "c1c4eb88c525ababe5e6cee7597a305b0490437b"
   },
   {
     "id": "watkins_glen",
     "kind": "track",
     "role": "map",
+    "file": "frontend/public/assets/tracks/watkins_glen_map.svg",
     "source_page": "https://commons.wikimedia.org/wiki/File:Watkins_Glen_International_Long_Circuit_2024.svg",
     "license": "CC BY-SA 4.0",
     "author": "Stl66dmk",

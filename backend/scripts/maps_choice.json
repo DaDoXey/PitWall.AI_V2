@@ -172,6 +172,102 @@
       "height": 1956,
       "format": "svg",
       "note": "scelto a occhio nel provino del 25/09/2026 (candidati del blocco 4, cercati dal terminale); configurazione auto 2016-oggi, senza la chicane delle moto"
+    },
+    {
+      "id": "laguna_seca",
+      "titolo_file": "File:Laguna Seca.svg",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/57/Laguna_Seca.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Laguna_Seca.svg",
+      "license": "CC BY-SA 3.0",
+      "author": "Will Pittenger",
+      "width": 991,
+      "height": 984,
+      "format": "svg",
+      "note": "scelto a occhio nel provino del 02/10/2026 (candidato Claude Code); layout controllato sulle fonti"
+    },
+    {
+      "id": "watkins_glen",
+      "titolo_file": "File:Watkins Glen International Long Circuit 2024.svg",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Watkins_Glen_International_Long_Circuit_2024.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Watkins_Glen_International_Long_Circuit_2024.svg",
+      "license": "CC BY-SA 4.0",
+      "author": "Stl66dmk",
+      "width": 512,
+      "height": 268,
+      "format": "svg",
+      "note": "scelto a occhio nel provino del 02/10/2026 (candidato Claude Code); layout controllato sulle fonti"
+    },
+    {
+      "id": "cota",
+      "titolo_file": "File:Austin Formula One circuit (2).svg",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/9/98/Austin_Formula_One_circuit_%282%29.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Austin_Formula_One_circuit_(2).svg",
+      "license": "CC BY-SA 4.0",
+      "author": "Sentoan",
+      "width": 794,
+      "height": 859,
+      "format": "svg",
+      "note": "scelto a occhio nel provino del 02/10/2026 (candidato Claude Code); layout controllato sulle fonti"
+    },
+    {
+      "id": "indianapolis",
+      "titolo_file": "File:Indianapolis Motor Speedway Grand Prix Road Course 2024.svg",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8d/Indianapolis_Motor_Speedway_Grand_Prix_Road_Course_2024.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Indianapolis_Motor_Speedway_Grand_Prix_Road_Course_2024.svg",
+      "license": "CC BY-SA 4.0",
+      "author": "Stl66dmk",
+      "width": 512,
+      "height": 358,
+      "format": "svg",
+      "note": "scelto a occhio nel provino del 02/10/2026 (candidato Claude Code); layout controllato sulle fonti"
+    },
+    {
+      "id": "donington_park",
+      "titolo_file": "File:Donington circuit.svg",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/07/Donington_circuit.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Donington_circuit.svg",
+      "license": "CC BY-SA 4.0",
+      "author": "Gustavo Girardelli",
+      "width": 1500,
+      "height": 1500,
+      "format": "svg",
+      "note": "sostituisce «Donington as of 2010.svg» scelto nel provino: quella numera 11 curve, questa 12 come il catalogo e Wikipedia (è la mappa dell'infobox). Decisione di Edoardo, 02/10/2026"
+    },
+    {
+      "id": "snetterton",
+      "titolo_file": "File:Snetterton 2011 300 annotated.svg",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/2/26/Snetterton_2011_300_annotated.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Snetterton_2011_300_annotated.svg",
+      "license": "CC BY-SA 4.0",
+      "author": "John Chapman",
+      "width": 794,
+      "height": 349,
+      "format": "svg",
+      "note": "scelto a occhio nel provino del 02/10/2026 (candidato Claude Code); layout controllato sulle fonti"
+    },
+    {
+      "id": "valencia_ricardo_tormo",
+      "titolo_file": "File:Valencia (Ricardo Tormo) track map.svg",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Valencia_%28Ricardo_Tormo%29_track_map.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Valencia_(Ricardo_Tormo)_track_map.svg",
+      "license": "CC BY-SA 3.0",
+      "author": "Will Pittenger",
+      "width": 1966,
+      "height": 925,
+      "format": "svg",
+      "note": "scelto a occhio nel provino del 02/10/2026 (candidato Claude Code); layout controllato sulle fonti"
+    },
+    {
+      "id": "mount_panorama",
+      "titolo_file": "File:Mount Panorama street racing circuit in Australia.svg",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8d/Mount_Panorama_street_racing_circuit_in_Australia.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Mount_Panorama_street_racing_circuit_in_Australia.svg",
+      "license": "CC BY-SA 3.0",
+      "author": "Will Pittenger",
+      "width": 1495,
+      "height": 849,
+      "format": "svg",
+      "note": "scelto a occhio nel provino del 02/10/2026 (candidato Claude Code); layout controllato sulle fonti"
     }
   ]
 }

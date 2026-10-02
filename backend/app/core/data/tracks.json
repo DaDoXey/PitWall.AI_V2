@@ -227,8 +227,8 @@
         "preferred_format": "svg",
         "license_expected": "CC BY-SA (da confermare)",
         "status": "verificata",
-      "commons_file": "Brands Hatch.svg",
-      "verificata_nota": "layout GP 2003-oggi, scelto nel provino del 24/09/2026"
+        "commons_file": "Brands Hatch.svg",
+        "verificata_nota": "layout GP 2003-oggi, scelto nel provino del 24/09/2026"
       },
       "photo": {
         "commons_query": "Brands Hatch",
@@ -267,8 +267,8 @@
         "preferred_format": "svg",
         "license_expected": "CC BY-SA (da confermare)",
         "status": "verificata",
-      "commons_file": "Hungaroring.svg",
-      "verificata_nota": "layout GP 2003-oggi, scelto nel provino del 24/09/2026"
+        "commons_file": "Hungaroring.svg",
+        "verificata_nota": "layout GP 2003-oggi, scelto nel provino del 24/09/2026"
       },
       "photo": {
         "commons_query": "Hungaroring",
@@ -308,8 +308,8 @@
         "preferred_format": "svg",
         "license_expected": "CC BY-SA (da confermare)",
         "status": "verificata",
-      "commons_file": "Misano World Circuit.svg",
-      "verificata_nota": "layout GP 2008-oggi, scelto nel provino del 24/09/2026"
+        "commons_file": "Misano World Circuit.svg",
+        "verificata_nota": "layout GP 2008-oggi, scelto nel provino del 24/09/2026"
       },
       "photo": {
         "commons_query": "Misano World Circuit Marco Simoncelli",
@@ -349,8 +349,8 @@
         "preferred_format": "svg",
         "license_expected": "CC BY-SA (da confermare)",
         "status": "verificata",
-      "commons_file": "Le Castellet circuit map Formula One 2018 without corner names English 29 06 2021.svg",
-      "verificata_nota": "layout 1C-V2 con la chicane sul Mistral, versione 2018 con l'ingresso box sul rettilineo come in ACC; scelto nel provino del 24/09/2026"
+        "commons_file": "Le Castellet circuit map Formula One 2018 without corner names English 29 06 2021.svg",
+        "verificata_nota": "layout 1C-V2 con la chicane sul Mistral, versione 2018 con l'ingresso box sul rettilineo come in ACC; scelto nel provino del 24/09/2026"
       },
       "photo": {
         "commons_query": "Circuit Paul Ricard",
@@ -588,7 +588,9 @@
         "commons_category": "Category:Maps of Snetterton Motor Racing Circuit",
         "preferred_format": "svg",
         "license_expected": "CC BY-SA (da confermare)",
-        "status": "da_verificare"
+        "status": "verificata",
+        "commons_file": "Snetterton 2011 300 annotated.svg",
+        "verificata_nota": "Snetterton 300, 2011-oggi (mappa dell'infobox di Wikipedia), scelto nel provino del 02/10/2026"
       },
       "photo": {
         "commons_query": "Snetterton Circuit",
@@ -627,7 +629,9 @@
         "commons_category": "Category:Maps of Donington Park",
         "preferred_format": "svg",
         "license_expected": "CC BY-SA (da confermare)",
-        "status": "da_verificare"
+        "status": "verificata",
+        "commons_file": "Donington circuit.svg",
+        "verificata_nota": "Grand Prix Circuit, 12 curve (mappa dell'infobox di Wikipedia); sostituisce nel provino del 02/10/2026 «Donington as of 2010.svg», che ne numerava 11"
       },
       "photo": {
         "commons_query": "Donington Park",
@@ -665,7 +669,9 @@
         "commons_category": "Category:Maps of Mount Panorama Circuit",
         "preferred_format": "svg",
         "license_expected": "CC BY-SA (da confermare)",
-        "status": "da_verificare"
+        "status": "verificata",
+        "commons_file": "Mount Panorama street racing circuit in Australia.svg",
+        "verificata_nota": "Full Circuit 1987-oggi con The Chase, 23 curve: stesso tracciato della mappa dell'infobox di Wikipedia, scelto nel provino del 02/10/2026"
       },
       "photo": {
         "commons_query": "Mount Panorama Circuit Bathurst",
@@ -704,7 +710,9 @@
         "commons_category": "Category:Maps of Laguna Seca Raceway",
         "preferred_format": "svg",
         "license_expected": "CC BY-SA (da confermare)",
-        "status": "da_verificare"
+        "status": "verificata",
+        "commons_file": "Laguna Seca.svg",
+        "verificata_nota": "layout 1996-oggi (è la mappa dell'infobox di Wikipedia), scelto nel provino del 02/10/2026"
       },
       "photo": {
         "commons_query": "WeatherTech Raceway Laguna Seca",
@@ -822,7 +830,9 @@
         "commons_category": "Category:Maps of Indianapolis Motor Speedway",
         "preferred_format": "svg",
         "license_expected": "CC BY-SA (da confermare)",
-        "status": "da_verificare"
+        "status": "verificata",
+        "commons_file": "Indianapolis Motor Speedway Grand Prix Road Course 2024.svg",
+        "verificata_nota": "Grand Prix Road Course 2014-oggi, 3,925 km (mappa dell'infobox di Wikipedia), scelto nel provino del 02/10/2026"
       },
       "photo": {
         "commons_query": "Indianapolis Motor Speedway",
@@ -861,7 +871,9 @@
         "commons_category": "Category:Maps of Watkins Glen International",
         "preferred_format": "svg",
         "license_expected": "CC BY-SA (da confermare)",
-        "status": "da_verificare"
+        "status": "verificata",
+        "commons_file": "Watkins Glen International Long Circuit 2024.svg",
+        "verificata_nota": "Grand Prix Circuit con l'Inner Loop, 1992-oggi (mappa dell'infobox di Wikipedia), scelto nel provino del 02/10/2026"
       },
       "photo": {
         "commons_query": "Watkins Glen International",
@@ -900,7 +912,9 @@
         "commons_category": "Category:Maps of Circuit of the Americas",
         "preferred_format": "svg",
         "license_expected": "CC BY-SA (da confermare)",
-        "status": "da_verificare"
+        "status": "verificata",
+        "commons_file": "Austin Formula One circuit (2).svg",
+        "verificata_nota": "Grand Prix Circuit 2012-oggi, 20 curve: stesso tracciato della mappa dell'infobox di Wikipedia, scelto nel provino del 02/10/2026"
       },
       "photo": {
         "commons_query": "Circuit of the Americas",
@@ -938,7 +952,9 @@
         "commons_category": "Category:Maps of Circuit Ricardo Tormo",
         "preferred_format": "svg",
         "license_expected": "CC BY-SA (da confermare)",
-        "status": "da_verificare"
+        "status": "verificata",
+        "commons_file": "Valencia (Ricardo Tormo) track map.svg",
+        "verificata_nota": "Grand Prix Circuit 1999-oggi (mappa dell'infobox di Wikipedia), scelto nel provino del 02/10/2026"
       },
       "photo": {
         "commons_query": "Circuit Ricardo Tormo Valencia",
