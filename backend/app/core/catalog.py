@@ -264,9 +264,10 @@ def track_summary(track: dict[str, Any]) -> dict[str, Any]:
         "downforce_level": track.get("downforce_level"),
         "dlc": bool(track.get("dlc")),
         "dlc_pack": track.get("dlc_pack"),
-        # Due bandierine per la lista dei tracciati: dicono cosa il circuito
+        # Le bandierine per la lista dei tracciati: dicono cosa il circuito
         # ha davvero, senza costringere il client a chiedere 25 schede.
         "ha_guida": has_guide(track),
+        "guida_essenziale": guide_is_essential(track),
         "mappa_verificata": map_verified(track),
     }
 
@@ -338,6 +339,15 @@ def track_guide(track_id: str | None) -> dict[str, Any] | None:
 
 def has_guide(track: dict[str, Any]) -> bool:
     return (track.get("id") or "") in track_ids_with_guide()
+
+
+def guide_is_essential(track: dict[str, Any]) -> bool:
+    """Vero se la guida c'è ma è «essenziale»: solo i fatti verificati, nessun
+    consiglio di guida (circuiti senza una guida scritta per ACC, dal 02/10/2026).
+    Legge la guida solo per i circuiti che ce l'hanno: le altre restano fuori cache."""
+    if not has_guide(track):
+        return False
+    return (track_guide(track.get("id")) or {}).get("livello") == "essenziale"
 
 
 def map_verified(track: dict[str, Any]) -> bool:

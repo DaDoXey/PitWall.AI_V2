@@ -93,6 +93,7 @@ export default function TracciatiPage() {
   }, []);
 
   const conGuida = useMemo(() => (tracks ?? []).filter((t) => t.ha_guida).length, [tracks]);
+  const essenziali = useMemo(() => (tracks ?? []).filter((t) => t.guida_essenziale).length, [tracks]);
 
   const elenco = useMemo(() => {
     const t = tracks ?? [];
@@ -110,7 +111,8 @@ export default function TracciatiPage() {
         title="Tracciati"
         subtitle={
           tracks
-            ? `${tracks.length} circuiti ACC · ${conGuida} con la guida curva per curva`
+            ? `${tracks.length} circuiti ACC · ${conGuida} con la guida curva per curva` +
+              (essenziali ? ` (${essenziali} essenzial${essenziali === 1 ? "e" : "i"})` : "")
             : "catalogo ACC"
         }
       />
@@ -179,7 +181,9 @@ export default function TracciatiPage() {
                     {t.dlc && <span className="text-muted">DLC</span>}
                   </div>
                   <div className="mt-2.5 flex flex-wrap gap-1.5">
-                    <Bandierina acceso={t.ha_guida}>{t.ha_guida ? "guida" : "guida in arrivo"}</Bandierina>
+                    <Bandierina acceso={t.ha_guida}>
+                      {!t.ha_guida ? "guida in arrivo" : t.guida_essenziale ? "guida essenziale" : "guida"}
+                    </Bandierina>
                     {t.mappa_verificata && <Bandierina acceso>layout</Bandierina>}
                     {sessione?.track === t.id && <Bandierina acceso>aperta ora</Bandierina>}
                     {perPista.get(t.id) && (

@@ -139,6 +139,8 @@ export default function TracciatoPage() {
     ? DOWNFORCE_LABEL[track.downforce_level] ?? track.downforce_level
     : null;
   const meteo = guida?.meteo_e_luce ?? null;
+  // Guida essenziale: solo fatti (numero, nome, senso), niente da aprire sotto la curva.
+  const essenziale = guida?.livello === "essenziale";
   const conMappa = Boolean(track.mappa_verificata && assets.map);
   const conCurve = Boolean(guida?.curve && guida.curve.length > 0);
   const righeMeteo = meteo
@@ -230,6 +232,11 @@ export default function TracciatoPage() {
                   riquadro a sé, «La pista»). Un valore senza fonte seria è null e non si
                   disegna; uno con un solo riscontro si mostra, e lo dice sotto. */}
               {guida?.senso_marcia && <Fact label="Senso di marcia" value={guida.senso_marcia} />}
+              {/* Nella guida essenziale i tempi sono uno dei fatti promessi dal riquadro:
+                  il riferimento GT3 sta qui, e sotto la descrizione dice da dove viene. */}
+              {essenziale && guida?.gt3_ref_lap_time?.valore != null && (
+                <Fact label="Riferimento GT3" value={String(guida.gt3_ref_lap_time.valore)} />
+              )}
               {guida?.dislivello_m != null && <Fact label="Dislivello" value={`${guida.dislivello_m} m`} />}
               {guida?.rettilineo_piu_lungo_m != null && (
                 <Fact label="Rettilineo più lungo" value={`${guida.rettilineo_piu_lungo_m} m`} />
@@ -240,6 +247,14 @@ export default function TracciatoPage() {
               <p className="mt-3 text-[0.8rem] leading-relaxed text-subtle">
                 <span className="font-mono text-[0.55rem] uppercase tracking-widest text-muted">In ACC · </span>
                 {guida.variante_acc}
+              </p>
+            )}
+            {essenziale && guida?.gt3_ref_lap_time?.contesto && (
+              <p className="mt-3 text-[0.8rem] leading-relaxed text-subtle">
+                <span className="font-mono text-[0.55rem] uppercase tracking-widest text-muted">
+                  Riferimento GT3 ·{" "}
+                </span>
+                {guida.gt3_ref_lap_time.contesto}
               </p>
             )}
             {(() => {
@@ -267,6 +282,24 @@ export default function TracciatoPage() {
             )}
           </div>
         </motion.section>
+
+        {/* Guida essenziale: il circuito non ha una guida scritta per ACC, e qui si
+            pubblicano solo i fatti con la loro fonte. Va detto prima di tutto il resto,
+            perché il pilota non cerchi consigli che non ci sono. */}
+        {essenziale && (
+          <motion.section
+            variants={fadeInUp}
+            className="rounded-xl border border-dashed border-line bg-surface px-5 py-4"
+          >
+            <div className="font-mono text-[0.6rem] uppercase tracking-widest text-accent">
+              Guida essenziale: solo i fatti verificati
+            </div>
+            <p className="mt-1.5 text-sm leading-relaxed text-subtle">
+              Per questo circuito non esiste una guida scritta per ACC. Qui ci sono le curve con nome e
+              senso, i dati di pista e i tempi, ognuno con la sua fonte: nessun consiglio di guida.
+            </p>
+          </motion.section>
+        )}
 
         {/* La mappa numerata accanto al curva per curva: numero e curva si abbinano senza
             scorrere avanti e indietro. La mappa resta ferma mentre scorre l'elenco. */}
@@ -314,6 +347,13 @@ export default function TracciatoPage() {
               <div className="flex flex-col divide-y divide-line overflow-hidden rounded-lg border border-line">
                 {guida.curve!.map((c) => {
                   const apertaQui = aperta === c.n;
+                  if (essenziale) {
+                    return (
+                      <div key={c.n} className="bg-inset px-4 py-3">
+                        <TitoloCurva curva={c} />
+                      </div>
+                    );
+                  }
                   return (
                     <div key={c.n} className="bg-inset">
                       <button
@@ -339,6 +379,21 @@ export default function TracciatoPage() {
                   );
                 })}
               </div>
+              {/* Da dove vengono nomi e sensi: nella guida essenziale sono i fatti stessi. */}
+              {essenziale &&
+                ([
+                  ["Nomi", guida.fonti_curve?.nome?.nota],
+                  ["Sensi", guida.fonti_curve?.direzione?.nota],
+                ] as const)
+                  .filter(([, nota]) => !!nota)
+                  .map(([label, nota]) => (
+                    <p key={label} className="mt-3 text-[0.8rem] leading-relaxed text-subtle">
+                      <span className="font-mono text-[0.55rem] uppercase tracking-widest text-muted">
+                        {label} ·{" "}
+                      </span>
+                      {nota}
+                    </p>
+                  ))}
             </Sezione>
           )}
         </div>

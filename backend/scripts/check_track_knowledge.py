@@ -88,6 +88,16 @@ CAMPI_PISTA = ["id", "verifica_catalogo", "settori", "curve", "track_limits_gene
                "errore_del_principiante", "gt3_ref_lap_time", "gt3_fuel_per_lap_l",
                "chicche", "fonti"]
 
+# Guida «essenziale» (02/10/2026, Entry #067): per i circuiti senza una guida scritta
+# per ACC (Kyalami, Red Bull Ring, …) si pubblicano SOLO i fatti verificati — curve,
+# nomi, sensi, dati di pista, tempi — e nessun consiglio di guida. Le sezioni di prosa
+# non ci sono, quindi non si pretendono; in cambio ogni curva deve avere numero, nome
+# (anche null) e senso, e la guida deve dire da dove vengono nomi e sensi
+# (`fonti_curve`), come `fonti_campi_pista` lo dice per i dati di pista.
+LIVELLI_GUIDA = {"completa", "essenziale"}
+CAMPI_PISTA_ESSENZIALE = ["id", "verifica_catalogo", "curve", "fonti_curve", "fonti"]
+CAMPI_CURVA_ESSENZIALE = ["n", "nome", "direzione", "origine", "confidence"]
+
 _DESTRA = re.compile(r"\b(a destra|destra|destro|tornante destro)\b", re.I)
 _SINISTRA = re.compile(r"\b(a sinistra|sinistra|sinistro|tornante sinistro)\b", re.I)
 
@@ -163,33 +173,39 @@ def controlla_progressione(cid: str, curva: dict, e: Esito) -> None:
 
 
 def controlla_curva(cid: str, curva: dict, e: Esito, salta_direzione: bool = False,
-                    salta_progressione: bool = False) -> None:
+                    salta_progressione: bool = False, essenziale: bool = False) -> None:
     dove = f"{cid} T{curva.get('n')}"
-    for campo in CAMPI_CURVA:
+    for campo in CAMPI_CURVA_ESSENZIALE if essenziale else CAMPI_CURVA:
         if campo == "direzione" and salta_direzione:
             continue          # gia' segnalato una volta sola per l'intera guida
         if campo not in curva:
             e.errore(dove, f"manca il campo `{campo}`")
-    if not salta_progressione:
+    if not salta_progressione and not essenziale:
         controlla_progressione(cid, curva, e)
     if "direzione" in curva and curva["direzione"] is not None:
         if str(curva["direzione"]).strip().lower() not in DIREZIONI:
             e.errore(dove, f"direzione «{curva['direzione']}» fuori da "
                            f"{sorted(DIREZIONI)} (oppure null se la curva e' una "
                            f"sequenza che gira nei due sensi)")
-    if curva.get("tipo") not in TIPI:
+    # Nella guida essenziale il tipo (lenta/media/veloce) c'e' solo se una fonte lo dice:
+    # null e' lecito, un valore fuori vocabolario no.
+    if not (essenziale and curva.get("tipo") is None) and curva.get("tipo") not in TIPI:
         e.errore(dove, f"tipo «{curva.get('tipo')}» fuori da {sorted(TIPI)}")
     if curva.get("confidence") not in CONFIDENZE:
         e.errore(dove, f"confidence «{curva.get('confidence')}» fuori da {sorted(CONFIDENZE)}")
     if curva.get("origine") not in ORIGINI:
         e.errore(dove, f"origine «{curva.get('origine')}» fuori da {sorted(ORIGINI)}")
+    if essenziale and curva.get("origine") == "mestiere":
+        e.errore(dove, "guida essenziale con una curva «mestiere»: qui vanno solo fatti con fonte")
 
+    # Vocabolario di stress e rischio: nella guida essenziale si controlla solo quello
+    # che c'e' (un campo assente e' una scelta, non un buco).
     freni = (curva.get("freni") or {}).get("stress")
-    if freni not in STRESS:
+    if freni not in STRESS and not (essenziale and freni is None):
         e.controlla(dove, f"freni.stress «{freni}» non e' uno dei valori usati altrove "
                           f"({sorted(STRESS)}): vocabolario da uniformare")
     tl = (curva.get("track_limits") or {}).get("rischio")
-    if tl not in RISCHI:
+    if tl not in RISCHI and not (essenziale and tl is None):
         e.controlla(dove, f"track_limits.rischio «{tl}» fuori da {sorted(RISCHI)}")
 
     sorp = curva.get("sorpasso") or {}
@@ -211,9 +227,25 @@ def controlla_pista(percorso: Path, tracks: dict, e: Esito) -> None:
     if cid != percorso.stem:
         e.errore(cid, f"il file si chiama {percorso.name} ma dentro l'id e' «{cid}»")
 
-    for campo in CAMPI_PISTA:
+    livello = dati.get("livello", "completa")
+    if livello not in LIVELLI_GUIDA:
+        e.errore(cid, f"livello «{livello}» fuori da {sorted(LIVELLI_GUIDA)}")
+    essenziale = livello == "essenziale"
+
+    for campo in CAMPI_PISTA_ESSENZIALE if essenziale else CAMPI_PISTA:
         if campo not in dati:
             e.errore(cid, f"manca la sezione `{campo}`")
+    if essenziale:
+        # Nomi e sensi delle curve sono i fatti della guida essenziale: ognuno dei due
+        # dice da dove viene, con un link oppure con una nota che spiega come e' ricavato.
+        fc = dati.get("fonti_curve") or {}
+        for campo in ("nome", "direzione"):
+            voce = fc.get(campo) or {}
+            fonte = voce.get("fonte")
+            if not fonte and not voce.get("nota"):
+                e.errore(cid, f"fonti_curve.{campo}: ne' fonte ne' nota")
+            elif fonte and not str(fonte).startswith("http"):
+                e.errore(cid, f"fonti_curve.{campo}: fonte non e' un link: {fonte}")
     mancanti_racc = [c for c in CAMPI_PISTA_RACCOMANDATI if c not in dati]
     if mancanti_racc:
         e.controlla(cid, "campi chiesti dal blocco 2 in poi non presenti: "
@@ -256,7 +288,7 @@ def controlla_pista(percorso: Path, tracks: dict, e: Esito) -> None:
     elif cieche:
         e.errore(cid, f"`direzione` manca su {len(cieche)} curve su {len(curve)}: "
                       f"T{', T'.join(str(c.get('n')) for c in cieche)}")
-    senza_prog = [c for c in curve if "progressione" not in c]
+    senza_prog = [] if essenziale else [c for c in curve if "progressione" not in c]
     if curve and len(senza_prog) == len(curve):
         e.errore(cid, f"nessuna delle {len(curve)} curve ha `progressione`: guida "
                       f"consegnata prima che i tre livelli fossero chiesti, "
@@ -266,11 +298,11 @@ def controlla_pista(percorso: Path, tracks: dict, e: Esito) -> None:
                       f"T{', T'.join(str(c.get('n')) for c in senza_prog)}")
     for curva in curve:
         controlla_curva(cid, curva, e, salta_direzione=bool(cieche),
-                        salta_progressione=bool(senza_prog))
+                        salta_progressione=bool(senza_prog), essenziale=essenziale)
 
-    # --- settori
+    # --- settori (la guida essenziale non li racconta: le fonti danno i settori F1, non ACC)
     settori = dati.get("settori") or []
-    if len(settori) != 3:
+    if len(settori) != 3 and not (essenziale and not settori):
         e.controlla(cid, f"{len(settori)} settori invece di 3")
 
     # --- impronta del catalogo

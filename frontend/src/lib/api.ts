@@ -665,6 +665,8 @@ export type CatalogTrack = {
   dlc_pack: string | null;
   /** C'è una guida (nozioni curva per curva) per questo circuito. */
   ha_guida: boolean;
+  /** La guida c'è ma è «essenziale»: solo i fatti verificati, nessun consiglio. */
+  guida_essenziale: boolean;
   /** Il layout a disco è stato guardato e approvato: si può mostrare. */
   mappa_verificata: boolean;
 };
@@ -774,6 +776,14 @@ export type GuidaFonteCampo = {
 
 export type GuidaTracciato = {
   id: string;
+  /** "essenziale" = solo i fatti verificati (curve, nomi, sensi, dati di pista,
+   *  tempi), per i circuiti senza una guida scritta per ACC. Assente = completa. */
+  livello?: "completa" | "essenziale";
+  /** Guida essenziale: da dove vengono i nomi e i sensi delle curve. */
+  fonti_curve?: {
+    nome?: GuidaFonteCampo | null;
+    direzione?: GuidaFonteCampo | null;
+  } | null;
   verifica_catalogo?: {
     lunghezza_confermata?: boolean | null;
     curve_confermate?: boolean | null;
