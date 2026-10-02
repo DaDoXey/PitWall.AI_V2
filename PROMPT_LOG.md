@@ -3078,6 +3078,34 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #071 — Guide essenziali, blocco A: Laguna Seca, Watkins Glen, COTA, Indianapolis
+
+| Campo | Valore |
+|---|---|
+| Data | 02/10/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | NEW `tracks_knowledge/{laguna_seca,watkins_glen,cota,indianapolis}.json` · `data/tracks.json` · `tests/test_tracciati.py` · docs |
+| Commit | `8c0fc7a` + commit docs, pushati il 02/10/2026 |
+| Contesto | Dopo le mappe della #070, le guide essenziali degli 8 circuiti che ora le hanno, in due blocchi da quattro. |
+
+**Catalogo messaggi:**
+1. «ok push e procedi con le guide essenziali» → push della #070 (`2ea773c` · `7cc7211` · `fe5816d`), poi questo blocco. Prima del push corretto un mio errore: avevo scritto «senza mappa solo il Nordschleife», invece mancano anche Oulton Park e Suzuka (commento del test, entry #070, docs/03).
+
+**Metodo:** sensi letti sulla mappa verificata nel verso della freccia, curva per curva, poi confrontati con le fonti scritte; nomi solo dove una fonte li dà; riferimento GT3 da Track Titan (5% più veloce con Porsche 992, Ferrari 296, McLaren 720S Evo e BMW M4; controllato che ogni pagina sia del circuito chiesto); stesse sezioni di Kyalami e Red Bull Ring.
+- **Laguna Seca** (antiorario, 11 curve): il Corkscrew numerato 8-8A è **una curva sola** con senso null (gira nei due sensi, come ammette il validatore), così le curve restano 11 come il catalogo e Wikipedia. RaceControl: «11 (4 right, 7 left)» e la 1 «a fast, sweeping left-hander»; la 7, piega lieve prima del dosso, la decide il conto. Nomi da Wikipedia: Andretti Hairpin (2), Corkscrew (8; nel 2026 «Zanardi Corkscrew»), Rainey Curve (9). 1:22.4.
+- **Watkins Glen** (orario, 11 curve, long course con il Boot): 7 destre e 4 sinistre; il Boot come lo descrive Wikipedia (sinistra in discesa, due destre, sinistra che rientra). Nomi: The 90 (1), **Esses alle 3 e 4** (Wikipedia e NASA Speed News; altre guide le fanno partire dalla 2, che resta senza nome), Outer Loop (5; NASA Speed News: «The Carousel»), Toe e Heel (7, 8). L'Inner Loop non ha numero. 1:43.8.
+- **COTA** (antiorario, 20 curve, de.wiki e 24hseries): 9 destre e 11 sinistre, coerenti con Wikipedia (2 destra in discesa, 16-18 multi-apex a destra, ultime due sinistre). «Big Red» alla 1. Dislivello 40 m (de.wiki, fonte singola, a vista). 2:05.3.
+- **Indianapolis** (orario, Grand Prix Road Course 2014-oggi, 14 curve): 9 destre e 5 sinistre, nessuna piega dubbia; nessun nome nelle fonti. Senso orario da de.wiki. 1:35.5.
+- **Catalogo**: `corners_confidence` «alta» per i quattro (Laguna e COTA da «media», Watkins Glen e Indianapolis da «da_verificare»).
+- Due frasi di COTA riscritte senza «l'11%»: il test degli accenti prende «l'» per un apostrofo al posto dell'accento.
+
+**Verifica:** validatore senza errori (guide 20/25) · `test_tracciati` **147/147** (+22: 16 delle guide a disco, sensi dei quattro, nomi di Laguna Seca e Watkins Glen) · suite **1192/1192** · scheda di Laguna Seca nel Chrome di Edoardo dopo il riavvio del backend (mappa accanto alle 11 curve, Corkscrew senza senso, righe Nomi e Sensi). Frontend non toccato.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» del 02/10/2026.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
