@@ -2910,6 +2910,65 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #065 — Spa: la numerazione di Coach Dave
+
+| Campo | Valore |
+|---|---|
+| Data | 01/10/2026 |
+| Agente dev | Claude Code (claude-sonnet-5-5) |
+| Area | `backend/app/core/data/tracks_knowledge/spa_francorchamps.json` · `app/tests/test_tracciati.py` |
+| Commit | `d5687eb` + commit docs, pushati il 02/10/2026 |
+| Contesto | Punto 4 dell'ordine dell'01/10 (guide dei tracciati): prima di aprire altri circuiti, la numerazione di Spa rimandata dal 23/09. |
+
+**Catalogo messaggi:**
+1. «ok push, la maserati la ricontrolliamo adesso, i ritagli dopo» → push del Lotto 2 (`3c48d0f` · `e9a5c99`) e Maserati sostituita.
+2. Domande sulle guide (scelte di Edoardo): **guide «leggere» dai fatti** per i circuiti senza fonte scritta per ACC (curve, nomi, sensi, settori, record, tempi; nessun consiglio di guida inventato) · **Spa prima**.
+
+**Scoperta preliminare:** su 12 circuiti senza guida, **solo Oulton Park** ha una guida scritta di Coach Dave; Traxion (Kyalami, Red Bull Ring, Watkins Glen, Indianapolis, COTA…) pubblica video con due righe di introduzione (aperti Kyalami e Watkins Glen: zero curve spiegate nel testo).
+
+**Spa — cosa c'era di sbagliato** (Coach Dave, 19 curve): T2-T4 Eau Rouge e Raidillon · T5-T7 Les Combes · T8 Bruxelles (ex Rivage) · T9 senza nome · T10-T11 Pouhon · T12-T13 Fagnes · T14 Campus · **T15 Courbe Paul Frère** · **T16-T17 Blanchimont** · **T18-T19 Bus Stop**.
+- La guida aveva Blanchimont come una sola curva (T16), la Bus Stop a T17-T18 e una **«T19» in più** (una destra «prima del traguardo») che nello schema di Coach Dave non esiste.
+- T15 si chiamava «Stavelot»: per Coach Dave Stavelot è il vecchio nome di Campus (T14), e T15 è la Courbe Paul Frère. Wikipedia usa «Stavelot» solo come luogo e non numera le curve, quindi non arbitra; la mappa di Spa nel repo è un contorno senza numeri.
+- T8 si chiamava «Rivage»: Coach Dave dice «Bruxelles, formerly Rivage».
+- Una frase di pista metteva Blanchimont (una sinistra) fra le curve che caricano il lato sinistro: è il destro, come dice già la sua scheda.
+
+**Modifica:** nuova T17 (Blanchimont, seconda parte) con soli fatti di Coach Dave (apice tardo, astroturf in ingresso, niente cordolo interno, track limits in uscita); Bus Stop passata a T18 (destra) e T19 (sinistra); tolta la «T19»; T15 → «Courbe Paul Frère»; T8 → «Bruxelles»; 14 frasi con i nomi aggiornati (settori, track limits, traffico, meteo di notte, gomme e freni della pista). Il verso di ogni curva è verificato sul percorso della mappa (Blanchimont = la lunga sinistra prima della chicane; Bus Stop = destra-sinistra, come dice Coach Dave). Restano «mestiere» le marce e il resto del contenuto delle altre curve (come prima).
+
+**Verifica:** `check_track_knowledge.py --solo spa_francorchamps` → nessun errore (una sola voce «da controllare»: rettilineo da fonte singola, già a vista) · `test_tracciati` **103/103** (+4 che bloccano numerazione, nomi e sensi di Spa).
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» del 02/10/2026.
+
+---
+
+## Entry #066 — Oulton Park: la guida da Coach Dave
+
+| Campo | Valore |
+|---|---|
+| Data | 01/10/2026 |
+| Agente dev | Claude Code (claude-sonnet-5-5) |
+| Area | NEW `backend/app/core/data/tracks_knowledge/oulton_park.json` · `data/tracks.json` (Oulton Park) · docs |
+| Commit | `0c83800` + commit docs, pushati il 02/10/2026 |
+| Contesto | Punto 4, primo circuito nuovo dopo Spa. Oulton Park è l'unico dei 12 senza guida che ha una guida scritta di Coach Dave. |
+
+**Catalogo messaggi:** «continua con quest'ordine» (stesso filone della #065).
+
+**Guida (14ª su 25):** 17 curve, tutte con nome e senso, dal testo di Coach Dave: T1 Old Hall · T2 Denton's · T3 Cascades · T4 Island Bend · T5 Shell Oils · T6-T9 Britten's (destra, sinistra, destra, sinistra) · T10-T11 Hislop's · T12 Knickerbrook · T13 Clay Hill · T14 Water Tower · T15 Druids · T16 Lodge Corner · T17 Deer Leap. Dove Coach Dave dà un riferimento lo riporto com'è (la linea bianca che finisce a Old Hall, l'avvallamento di Cascades, il primo blocco arancione di Shell Oils, la macchia di cemento di Britten's, il casotto verde di Hislop's, il cartello bianco di Lodge Corner), con le marce che dice lui.
+- **Campi vuoti apposta** (nessuna fonte consultata li dà): `dislivello_m`, `rettilineo_piu_lungo_m`, lato dei box, tempo perso ai box, consumo per giro, meteo, traffico; il rischio dei limiti di pista su 9 curve dove Coach Dave non dice niente. La nota di ognuno dice perché.
+- **Senso di marcia «orario»**: nessuna fonte consultata lo scrive in chiaro; è ricavato dalla descrizione di Coach Dave (le curve grandi sono a destra: Old Hall, tornante di Shell Oils di 180°, Lodge di 90°) e dichiarato come tale nella nota, da confermare in gioco.
+- **Sorpasso**: una sola curva, Lodge Corner (T16), perché Coach Dave dice che il rettilineo dopo Druids è «uno dei pochi punti di sorpasso»; sulle altre non dice niente e resta «no».
+- **Tempo di riferimento GT3**: 1:35.0 (Pro/Am di Traxion; Pro 1:31.60, Am 1:40.00), con la fonte accanto.
+- Le due chicche vengono da Wikipedia (la chicane di Hislop's dopo la morte di Paul Warwick nel 1991; il paragone con la Nordschleife).
+
+**Catalogo corretto** (`tracks.json`): Oulton Park da **16 a 17 curve**, confidenza «alta»: Coach Dave ne numera 17 e Wikipedia dà 17 nella scheda. La lunghezza resta 4,332 km: la scheda di Wikipedia scrive 4,307 km ma il testo dice 2,692 miglia, che sono 4,332 km.
+
+**Verifica:** `check_track_knowledge.py` → nessun errore (9 voci «da controllare»: i limiti di pista senza fonte) · `test_tracciati` **107/107** · scheda `/tracciati/oulton_park` guardata a 1536×639 dopo il riavvio del backend (che tiene catalogo e guide in cache): 17 curve, senso orario, riga «in ACC». Mappa non verificata: la scheda non la mostra, come per gli altri circuiti senza mappa scelta.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» del 02/10/2026.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
