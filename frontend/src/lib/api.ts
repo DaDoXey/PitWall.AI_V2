@@ -764,6 +764,11 @@ export type GuidaValoreConFonte = {
   valore?: number | string | null;
   contesto?: string | null;
   fonte?: string | null;
+  /** "mestiere" = stima senza fonte (con la sua confidence): a schermo è «stima». */
+  origine?: string | null;
+  confidence?: string | null;
+  /** Sulle stime: perché non c'è una fonte. */
+  nota?: string | null;
 };
 
 /** Da dove viene un campo di pista: il link, oppure una nota che dice perché

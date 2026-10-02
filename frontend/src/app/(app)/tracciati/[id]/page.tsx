@@ -232,14 +232,17 @@ export default function TracciatoPage() {
                   riquadro a sé, «La pista»). Un valore senza fonte seria è null e non si
                   disegna; uno con un solo riscontro si mostra, e lo dice sotto. */}
               {guida?.senso_marcia && <Fact label="Senso di marcia" value={guida.senso_marcia} />}
-              {/* Nella guida essenziale i tempi sono uno dei fatti promessi dal riquadro:
-                  il riferimento GT3 sta qui, e sotto la descrizione dice da dove viene. */}
-              {essenziale && guida?.gt3_ref_lap_time?.valore != null && (
-                <Fact label="Riferimento GT3" value={String(guida.gt3_ref_lap_time.valore)} />
-              )}
               {guida?.dislivello_m != null && <Fact label="Dislivello" value={`${guida.dislivello_m} m`} />}
               {guida?.rettilineo_piu_lungo_m != null && (
                 <Fact label="Rettilineo più lungo" value={`${guida.rettilineo_piu_lungo_m} m`} />
+              )}
+              {/* Il riferimento GT3 chiude i numeri, e sotto la descrizione dice da dove
+                  viene. Le stime di mestiere (Imola, Spa: nessuna fonte) lo dichiarano. */}
+              {guida?.gt3_ref_lap_time?.valore != null && (
+                <Fact
+                  label={guida.gt3_ref_lap_time.origine === "mestiere" ? "Riferimento GT3 · stima" : "Riferimento GT3"}
+                  value={String(guida.gt3_ref_lap_time.valore)}
+                />
               )}
             </div>
             <p className="mt-4 text-sm leading-relaxed text-subtle">{track.description_it}</p>
@@ -247,14 +250,6 @@ export default function TracciatoPage() {
               <p className="mt-3 text-[0.8rem] leading-relaxed text-subtle">
                 <span className="font-mono text-[0.55rem] uppercase tracking-widest text-muted">In ACC · </span>
                 {guida.variante_acc}
-              </p>
-            )}
-            {essenziale && guida?.gt3_ref_lap_time?.contesto && (
-              <p className="mt-3 text-[0.8rem] leading-relaxed text-subtle">
-                <span className="font-mono text-[0.55rem] uppercase tracking-widest text-muted">
-                  Riferimento GT3 ·{" "}
-                </span>
-                {guida.gt3_ref_lap_time.contesto}
               </p>
             )}
             {(() => {
@@ -270,6 +265,17 @@ export default function TracciatoPage() {
                 </p>
               ) : null;
             })()}
+            {guida?.gt3_ref_lap_time?.valore != null && guida.gt3_ref_lap_time.contesto && (
+              <p className="mt-3 text-[0.8rem] leading-relaxed text-subtle">
+                <span className="font-mono text-[0.55rem] uppercase tracking-widest text-muted">
+                  Riferimento GT3 ·{" "}
+                </span>
+                {guida.gt3_ref_lap_time.contesto}
+                {guida.gt3_ref_lap_time.origine === "mestiere" && guida.gt3_ref_lap_time.nota
+                  ? ` ${guida.gt3_ref_lap_time.nota}`
+                  : ""}
+              </p>
+            )}
 
 
             {track.setup_focus_it && (
