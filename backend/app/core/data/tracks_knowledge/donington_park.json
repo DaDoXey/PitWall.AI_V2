@@ -1,0 +1,168 @@
+{
+  "id": "donington_park",
+  "livello": "essenziale",
+  "verifica_catalogo": {
+    "lunghezza_confermata": true,
+    "curve_confermate": true,
+    "fonte_lunghezza": "https://en.wikipedia.org/wiki/Donington_Park",
+    "note": "Wikipedia: Grand Prix Circuit (1986-oggi), 4,020 km e 12 curve, come il catalogo e la mappa verificata. Oversteer48 elenca 11 curve perché conta le Fogarty Esses come una sola: qui sono la 9 e la 10, come sulla mappa."
+  },
+  "senso_marcia": "orario",
+  "dislivello_m": null,
+  "rettilineo_piu_lungo_m": null,
+  "variante_acc": null,
+  "fonti_campi_pista": {
+    "senso_marcia": {
+      "fonte": "https://commons.wikimedia.org/wiki/File:Donington_circuit.svg",
+      "nota": "La numerazione della mappa verificata gira in senso orario; Oversteer48: la prima curva, Redgate, è una destra."
+    },
+    "dislivello_m": {
+      "nota": "Nessuna fonte consultata dà il dislivello in metri."
+    },
+    "rettilineo_piu_lungo_m": {
+      "nota": "Nessuna fonte consultata dà la lunghezza dei rettilinei in metri."
+    },
+    "variante_acc": {
+      "nota": "Il catalogo dà 4,02 km e 12 curve, il Grand Prix Circuit con il Melbourne Loop; nessuna fonte consultata lo scrive in chiaro per ACC."
+    }
+  },
+  "fonti_curve": {
+    "nome": {
+      "fonte": "https://oversteer48.com/donington-park-corners/",
+      "nota": "Nell'ordine del giro, da Oversteer48 e dalla mappa verificata: Redgate, Hollywood, Craner Curves, Old Hairpin, Starkey's Bridge, Schwantz Curve, McLean's, Coppice, Fogarty Esses (9-10), Melbourne Hairpin, Goddards."
+    },
+    "direzione": {
+      "fonte": "https://oversteer48.com/donington-park-corners/",
+      "nota": "Letti sul disegno della mappa verificata, nel verso del giro, e confermati da Oversteer48 curva per curva: destre Redgate, Hollywood (una piega), Old Hairpin, McLean's, Coppice; sinistre Craner Curves, Starkey's Bridge, Schwantz Curve; le Fogarty Esses sono sinistra-destra. Melbourne (destra) e Goddards (sinistra) sono due tornanti: il verso viene dal disegno."
+    }
+  },
+  "curve": [
+    {
+      "n": 1,
+      "nome": "Redgate",
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 2,
+      "nome": "Hollywood",
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 3,
+      "nome": "Craner Curves",
+      "direzione": "sinistra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 4,
+      "nome": "Old Hairpin",
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 5,
+      "nome": "Starkey's Bridge",
+      "direzione": "sinistra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 6,
+      "nome": "Schwantz Curve",
+      "direzione": "sinistra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 7,
+      "nome": "McLean's",
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 8,
+      "nome": "Coppice",
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 9,
+      "nome": "Fogarty Esses",
+      "direzione": "sinistra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 10,
+      "nome": "Fogarty Esses",
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 11,
+      "nome": "Melbourne Hairpin",
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 12,
+      "nome": "Goddards",
+      "direzione": "sinistra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    }
+  ],
+  "pit": {
+    "tempo_perso_s": null,
+    "limite_kmh": 50,
+    "lato_box": null,
+    "note": "Limite standard ACC di 50 km/h. Il lato dei box e il tempo perso non sono dati da nessuna fonte consultata: da vedere e misurare in gioco.",
+    "fonte": "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  },
+  "gt3_ref_lap_time": {
+    "valore": "1:26.5",
+    "contesto": "In ACC, secondo Track Titan, il 5% più veloce dei suoi utenti gira in 1:26.550 con la Porsche 911 (992) GT3 R, 1:26.465 con la Ferrari 296 GT3, 1:26.367 con la McLaren 720S GT3 Evo e 1:26.405 con la BMW M4 GT3; la media, con la Porsche, è intorno a 1:29.177. Un ordine di grandezza, da confrontare con le sessioni vere.",
+    "fonte": "https://app.tracktitan.io/track-guides/en/porsche_992_gt3_r-donington-assettoCorsaCompetizione-Track-Guide/1"
+  },
+  "gt3_fuel_per_lap_l": {
+    "valore": null,
+    "contesto": "Nessuna fonte consultata dà il consumo per giro: da misurare dalle sessioni.",
+    "fonte": null
+  },
+  "chicche": [
+    {
+      "testo": "Il Melbourne Loop fu costruito nel 1985 per allungare il giro a 2,498 miglia e ospitare il Motomondiale.",
+      "perche_interessa_al_pilota": null,
+      "fonte": "https://en.wikipedia.org/wiki/Donington_Park"
+    }
+  ],
+  "fonti": [
+    "https://en.wikipedia.org/wiki/Donington_Park",
+    "https://oversteer48.com/donington-park-corners/",
+    "https://commons.wikimedia.org/wiki/File:Donington_circuit.svg",
+    "https://app.tracktitan.io/track-guides/en/porsche_992_gt3_r-donington-assettoCorsaCompetizione-Track-Guide/1",
+    "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  ]
+}

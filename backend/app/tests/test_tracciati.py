@@ -495,6 +495,28 @@ nomi_wg = [c.get("nome") for c in (cat.track_guide("watkins_glen") or {}).get("c
 test("watkins_glen: The 90, Esses alle 3-4, Outer Loop, Toe e Heel",
      nomi_wg == ["The 90", None, "Esses", "Esses", "Outer Loop", None, "Toe", "Heel", None, None, None], f"{nomi_wg}")
 
+# Blocco B (02/10/2026, Entry #072). Snetterton: nomi e numeri dalla tabella di Wikipedia, la
+# 2 è «Wilson» dal 2016 (la mappa del 2015 dice ancora Montreal). Donington: 12 curve con le
+# Fogarty Esses alla 9-10. Valencia: 9 sinistre e 5 destre come Sky Sport. Bathurst: 23 curve,
+# nomi solo dove le due mappe e il testo di Wikipedia concordano.
+SENSI_BLOCCO_B = {
+    "donington_park": [d_, d_, s_, d_, s_, s_, d_, d_, s_, d_, d_, s_],
+    "snetterton": [d_, d_, s_, s_, s_, d_, d_, s_, d_, d_, d_, s_],
+    "valencia_ricardo_tormo": [s_, s_, s_, d_, d_, s_, s_, s_, s_, d_, d_, d_, s_, s_],
+    "mount_panorama": [s_, d_, s_, s_, d_, d_, s_, s_, s_, s_, d_, s_, d_, s_, d_, s_, d_, s_, s_, d_, s_, d_, s_],
+}
+for pista, attesi in SENSI_BLOCCO_B.items():
+    sensi = [c.get("direzione") for c in (cat.track_guide(pista) or {}).get("curve", [])]
+    test(f"{pista}: i {len(attesi)} sensi letti sulla mappa", sensi == attesi, f"{sensi}")
+nomi_sn = [c.get("nome") for c in (cat.track_guide("snetterton") or {}).get("curve", [])]
+test("snetterton: i 12 nomi di Wikipedia, la 2 è Wilson (ex Montreal)",
+     nomi_sn == ["Riches", "Wilson", "Palmer", "Agostini", "Hamilton", "Oggies", "Williams",
+                 "Brundle", "Nelson", "Bomb Hole", "Coram", "Murrays"], f"{nomi_sn}")
+nomi_ba = {c["n"]: c.get("nome") for c in (cat.track_guide("mount_panorama") or {}).get("curve", [])}
+test("mount_panorama: Hell Corner (1), Griffins Bend (2), Brock's Skyline (11), Murray's Corner (23)",
+     (nomi_ba.get(1), nomi_ba.get(2), nomi_ba.get(11), nomi_ba.get(23))
+     == ("Hell Corner", "Griffins Bend", "Brock's Skyline", "Murray's Corner"), f"{nomi_ba}")
+
 # Il validatore delle guide sulla guida essenziale: accetta quella vera, respinge le due
 # cose che la renderebbero un'altra cosa (un consiglio di mestiere, nomi e sensi senza fonte),
 # e una guida che NON si dichiara essenziale resta tenuta a tutti i campi della completa.
