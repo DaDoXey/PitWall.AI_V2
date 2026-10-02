@@ -3133,6 +3133,31 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #073 — I ritagli delle foto del Lotto 2
+
+| Campo | Valore |
+|---|---|
+| Data | 02/10/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `backend/scripts/crops.json` (+ fuori repo: `public/assets/crops.json`, manifest e ATTRIBUTIONS rigenerati) |
+| Commit | `b36e3a4` + commit docs, pushati il 02/10/2026 |
+| Contesto | Ultimo pezzo del Lotto 2 (#064): le 23 foto delle vetture non GT3 erano a disco senza ritaglio. |
+
+**Catalogo messaggi:**
+1. «ok push e procedi con i ritagli del Lotto 2» → push della #072 (`4b92ecd` · `c127ff9`), strumento di ritaglio rigenerato (`build_crop_tool.py`, 76 foto, 53 già fatte) e aperto nel Chrome di Edoardo.
+2. «ho esportato crops.json, applica i ritagli, l'unica cosa è che purtroppo alcune foto sono a bassa risoluzione oppure non mi soddisfano affatto però ci adattiamo così e fa niente.»
+
+**Modifica:** l'export di Edoardo (`Downloads/crops (1).json`: 76 voci, banda 540×280, nessuna foto mancante né in più) sostituisce `backend/scripts/crops.json` (53 voci). Oltre alle 23 nuove, l'export porta **10 ritagli vecchi spostati**: Audi R8 LMS, Bentley Continental 2015 e 2018, Ferrari 296 e 488, Honda NSX, Huracán GT3, McLaren 720S ed Evo, Nissan GT-R 2018. Sono spostamenti veri del riquadro (non arrotondamenti), probabilmente ritocchi rimasti nel browser da una sessione precedente: applicati come scelta di Edoardo, la versione di prima resta nella storia del repo. `apply_photos.py --no-download` lanciato per intero (mai `--only`, trappola dell'01/10).
+
+**Nota di Edoardo:** alcune foto del Lotto 2 sono a bassa risoluzione o non lo soddisfano; per ora si tengono. Possibile lavoro futuro: un provino per sostituirle.
+
+**Verifica:** ATTRIBUTIONS.md **identico riga per riga** a una copia presa prima (101 righe) · manifest 98 asset · `public/assets/crops.json` = `scripts/crops.json` (76) e servito dal frontend con le voci nuove. Nessuna sessione in archivio usa una vettura del Lotto 2, quindi la card in app non si può vedere con queste foto: l'anteprima dello strumento di ritaglio usa la stessa geometria della card.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» del 02/10/2026; Lotto 2 chiuso. Sessione chiusa da Edoardo («per ora basta così»).
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
