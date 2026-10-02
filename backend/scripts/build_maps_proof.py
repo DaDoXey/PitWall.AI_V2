@@ -88,7 +88,11 @@ THUMB_WIDTH = 1000
 # I titoli arrivano dentro un campo di prosa ("File:A.png / File:B.png",
 # "File:X.png (redirect: File:Y.png)"): si estraggono tutti, si risolvono e si
 # deduplicano sul titolo canonico restituito da Commons.
-_TITOLO_RE = re.compile(r"File:[^/,()]+?\.(?:svg|png|jpe?g|gif)", re.I)
+# Le parentesi possono stare DENTRO il nome («Valencia (Ricardo Tormo) track
+# map.svg», «Austin Formula One circuit (2).svg»): prima la regex le escludeva e
+# quei file perdevano il verdetto in silenzio (02/10/2026). Il titolo finisce
+# all'estensione seguita da fine, spazio, virgola, punto e virgola o «)».
+_TITOLO_RE = re.compile(r"File:[^/,]+?\.(?:svg|png|jpe?g|gif)(?=$|[\s,;)])", re.I)
 
 # Estensioni che quasi mai sono una planimetria: nella categoria "circuit maps"
 # finiscono anche foto aeree e scansioni. Non si scartano (le guarda lui), ma
