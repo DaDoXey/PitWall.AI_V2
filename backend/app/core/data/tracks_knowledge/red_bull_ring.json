@@ -1,0 +1,92 @@
+{
+  "id": "red_bull_ring",
+  "livello": "essenziale",
+  "verifica_catalogo": {
+    "lunghezza_confermata": true,
+    "curve_confermate": true,
+    "fonte_lunghezza": "https://www.24hseries.com/circuits/red-bull-ring",
+    "note": "24hseries dà 4,318 km, come il catalogo. Wikipedia spiega che il tracciato è lo stesso dal 1996, ma misurato 4,318 km fino al 2024 e 4,326 km dal 2025. Le curve sono 10 per Wikipedia, per formula1.com (citato da Wikipedia in tedesco: «sieben Rechts- und drei Linkskurven») e per la mappa verificata; 24hseries ne conta 8. La chicane alla curva 2 costruita nel 2022 è solo per le moto: le auto usano il layout di sempre."
+  },
+  "senso_marcia": "orario",
+  "dislivello_m": null,
+  "rettilineo_piu_lungo_m": null,
+  "variante_acc": "ACC usa il layout auto, quello della Formula 1, senza la chicane delle moto alla curva 2.",
+  "fonti_campi_pista": {
+    "senso_marcia": {
+      "fonte": "https://www.24hseries.com/circuits/red-bull-ring",
+      "nota": "«Circuit direction: Clockwise» su 24hseries; lo conferma il verso della freccia sulla mappa verificata."
+    },
+    "dislivello_m": {
+      "nota": "Nessuna fonte consultata dà il dislivello in metri del tracciato di oggi (i 65 m di Wikipedia sono del vecchio Österreichring). Wikipedia in tedesco dà le pendenze: 12% in salita e 9,3% in discesa."
+    },
+    "rettilineo_piu_lungo_m": {
+      "nota": "Nessuna fonte consultata dà la lunghezza dei rettilinei in metri."
+    },
+    "variante_acc": {
+      "fonte": "https://de.wikipedia.org/wiki/Red_Bull_Ring",
+      "nota": "Wikipedia: la variante della curva 2 è usata dalla MotoGP e dalle altre serie di moto, il percorso della Formula 1 è rimasto lo stesso. Il layout auto in ACC l'ha verificato Edoardo in gioco il 25/09/2026."
+    }
+  },
+  "fonti_curve": {
+    "nome": {
+      "fonte": "https://www.formula1.com/en/latest/article.turn-1-in-austria-renamed-in-honour-of-niki-lauda.3CnJNtxF6jILY5JOKrgNpO.html",
+      "nota": "La curva 1 si chiama Niki Lauda dal 30 giugno 2019 (formula1.com; il sito del circuito la chiama «Niki Lauda turn»). Le altre non hanno un nome ufficiale nelle fonti consultate: una mappa di Commons del 2021 scrive «Ams Ag» alla 3, «Rauch» alla 4 e «Rindt» alla 9, ma i primi due sono nomi di sponsor e nessuna fonte di oggi li conferma."
+    },
+    "direzione": {
+      "fonte": "https://de.wikipedia.org/wiki/Red_Bull_Ring",
+      "nota": "Letti sul disegno della mappa verificata, nel verso della freccia, curva per curva. La curva 2 è una piega lieve: la decide il conto di Wikipedia in tedesco (da formula1.com), 7 destre e 3 sinistre, perché le altre nove si leggono chiare (le sinistre sono la 6 e la 7, le «due veloci sinistre dell'infield»)."
+    }
+  },
+  "curve": [
+    { "n": 1, "nome": "Niki Lauda", "direzione": "destra", "tipo": null, "origine": "fonte", "confidence": "alta" },
+    { "n": 2, "nome": null, "direzione": "sinistra", "tipo": null, "origine": "fonte", "confidence": "media" },
+    { "n": 3, "nome": null, "direzione": "destra", "tipo": null, "origine": "fonte", "confidence": "alta" },
+    { "n": 4, "nome": null, "direzione": "destra", "tipo": null, "origine": "fonte", "confidence": "alta" },
+    { "n": 5, "nome": null, "direzione": "destra", "tipo": null, "origine": "fonte", "confidence": "alta" },
+    { "n": 6, "nome": null, "direzione": "sinistra", "tipo": null, "origine": "fonte", "confidence": "alta" },
+    { "n": 7, "nome": null, "direzione": "sinistra", "tipo": null, "origine": "fonte", "confidence": "alta" },
+    { "n": 8, "nome": null, "direzione": "destra", "tipo": null, "origine": "fonte", "confidence": "alta" },
+    { "n": 9, "nome": null, "direzione": "destra", "tipo": null, "origine": "fonte", "confidence": "alta" },
+    { "n": 10, "nome": null, "direzione": "destra", "tipo": null, "origine": "fonte", "confidence": "alta" }
+  ],
+  "pit": {
+    "tempo_perso_s": null,
+    "limite_kmh": 50,
+    "lato_box": null,
+    "note": "Limite standard ACC di 50 km/h. Il lato dei box e il tempo perso non sono dati da nessuna fonte consultata: da vedere e misurare in gioco.",
+    "fonte": "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  },
+  "gt3_ref_lap_time": {
+    "valore": "1:28.0",
+    "contesto": "In ACC, secondo Track Titan, il 5% più veloce dei suoi utenti gira in 1:28.117 con la Porsche 911 (992) GT3 R, 1:27.882 con la Ferrari 296 GT3, 1:27.917 con la McLaren 720S GT3 Evo e 1:28.037 con la BMW M4 GT3; la media, con la Porsche, è intorno a 1:30.827. Un ordine di grandezza, da confrontare con le sessioni vere.",
+    "fonte": "https://app.tracktitan.io/track-guides/en/porsche_992_gt3_r-red_bull_ring-assettoCorsaCompetizione-Track-Guide/1"
+  },
+  "gt3_fuel_per_lap_l": {
+    "valore": null,
+    "contesto": "Nessuna fonte consultata dà il consumo per giro: da misurare dalle sessioni.",
+    "fonte": null
+  },
+  "chicche": [
+    {
+      "testo": "Il 30 giugno 2019 la curva 1 è stata dedicata a Niki Lauda, l'unico austriaco ad aver vinto il Gran Premio di casa (1984, sul vecchio Österreichring).",
+      "perche_interessa_al_pilota": null,
+      "fonte": "https://en.wikipedia.org/wiki/Red_Bull_Ring"
+    },
+    {
+      "testo": "Le pendenze arrivano al 12% in salita e al 9,3% in discesa.",
+      "perche_interessa_al_pilota": null,
+      "fonte": "https://de.wikipedia.org/wiki/Red_Bull_Ring"
+    }
+  ],
+  "fonti": [
+    "https://www.24hseries.com/circuits/red-bull-ring",
+    "https://en.wikipedia.org/wiki/Red_Bull_Ring",
+    "https://de.wikipedia.org/wiki/Red_Bull_Ring",
+    "https://www.formula1.com/en/latest/article.turn-1-in-austria-renamed-in-honour-of-niki-lauda.3CnJNtxF6jILY5JOKrgNpO.html",
+    "https://www.redbullring.com/en/the-track/",
+    "https://commons.wikimedia.org/wiki/File:Spielberg_bare_map_numbers_contextless_2016_onwards.svg",
+    "https://commons.wikimedia.org/wiki/File:Spielberg_bare_map_numbers_contextless_2021_corner_names.svg",
+    "https://app.tracktitan.io/track-guides/en/porsche_992_gt3_r-red_bull_ring-assettoCorsaCompetizione-Track-Guide/1",
+    "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  ]
+}

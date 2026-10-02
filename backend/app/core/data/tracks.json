@@ -961,7 +961,7 @@
     "length_km": 4.318,
     "length_confidence": "media",
     "corners": 10,
-    "corners_confidence": "media",
+    "corners_confidence": "alta",
     "corners_note": "ACC usa il layout auto, identico a quello della Formula 1: senza la chicane delle moto dopo la curva 1 (verificato in gioco da Edoardo il 25/09/2026). La mappa verificata numera 10 curve, come Wikipedia.",
     "grid_size": 30,
     "pole_side": "sinistra",

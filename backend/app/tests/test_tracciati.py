@@ -461,6 +461,17 @@ test("kyalami: guida essenziale, antiorario, nessun consiglio di mestiere",
      and (cat.track_guide("kyalami") or {}).get("senso_marcia") == "antiorario"
      and all(c.get("origine") == "fonte" for c in kya))
 
+# Red Bull Ring (02/10/2026, Entry #069), guida essenziale. Sensi letti sulla mappa; la curva 2
+# è una piega lieve, decisa dal conto di formula1.com (7 destre, 3 sinistre). Di nome ufficiale
+# c'è solo la curva 1 (Niki Lauda, dal 2019): i nomi sponsor della mappa 2021 restano fuori.
+rbr = (cat.track_guide("red_bull_ring") or {}).get("curve", [])
+test("red_bull_ring: i 10 sensi (sinistre solo T2, T6, T7)",
+     [c.get("direzione") for c in rbr] == ["destra", "sinistra", "destra", "destra", "destra",
+                                            "sinistra", "sinistra", "destra", "destra", "destra"],
+     f"{[c.get('direzione') for c in rbr]}")
+test("red_bull_ring: solo la T1 ha un nome (Niki Lauda), le altre null",
+     [c.get("nome") for c in rbr] == ["Niki Lauda"] + [None] * 9, f"{[c.get('nome') for c in rbr]}")
+
 # Il validatore delle guide sulla guida essenziale: accetta quella vera, respinge le due
 # cose che la renderebbero un'altra cosa (un consiglio di mestiere, nomi e sensi senza fonte),
 # e una guida che NON si dichiara essenziale resta tenuta a tutti i campi della completa.
