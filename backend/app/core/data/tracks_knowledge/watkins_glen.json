@@ -1,0 +1,165 @@
+{
+  "id": "watkins_glen",
+  "livello": "essenziale",
+  "verifica_catalogo": {
+    "lunghezza_confermata": true,
+    "curve_confermate": true,
+    "fonte_lunghezza": "https://en.wikipedia.org/wiki/Watkins_Glen_International",
+    "note": "Wikipedia: Grand Prix Circuit con l'Inner Loop (1992-oggi), 5,552 km e 11 curve, come il catalogo. L'Inner Loop, la chicane sul rettilineo dopo le Esses, non ha un numero suo."
+  },
+  "senso_marcia": "orario",
+  "dislivello_m": null,
+  "rettilineo_piu_lungo_m": null,
+  "variante_acc": null,
+  "fonti_campi_pista": {
+    "senso_marcia": {
+      "fonte": "https://commons.wikimedia.org/wiki/File:Watkins_Glen_International_Long_Circuit_2024.svg",
+      "nota": "Il verso della freccia sulla mappa verificata: dopo il traguardo si gira a destra alla «The 90»."
+    },
+    "dislivello_m": {
+      "nota": "Nessuna fonte consultata dà il dislivello in metri."
+    },
+    "rettilineo_piu_lungo_m": {
+      "nota": "Nessuna fonte consultata dà la lunghezza dei rettilinei in metri."
+    },
+    "variante_acc": {
+      "nota": "Il catalogo dà 5,552 km, la lunghezza del long course con il Boot, e i tempi di ACC su Track Titan (intorno a 1:44) sono coerenti con quel percorso; nessuna fonte consultata lo scrive in chiaro."
+    }
+  },
+  "fonti_curve": {
+    "nome": {
+      "fonte": "https://en.wikipedia.org/wiki/Watkins_Glen_International",
+      "nota": "«The 90» alla 1 (Wikipedia e mappa); Esses alle 3 e 4 (Wikipedia: «turn 3-4 Esses section»; NASA Speed News: «Turns 3 and 4, the Uphill Esses»; altre guide fanno cominciare le Esses dalla 2, che qui resta senza nome); «Outer Loop» alla 5 (Wikipedia e mappa; NASA Speed News la chiama «The Carousel»); «Toe» e «Heel» del Boot alle 7 e 8 (mappa e NASA Speed News)."
+    },
+    "direzione": {
+      "fonte": "https://en.wikipedia.org/wiki/Watkins_Glen_International",
+      "nota": "Letti sul disegno della mappa verificata, nel verso della freccia, curva per curva: 7 destre e 4 sinistre. Wikipedia descrive il Boot come una sinistra in discesa (6), due destre (7 e 8) e una sinistra che rientra sul vecchio tracciato (9)."
+    }
+  },
+  "curve": [
+    {
+      "n": 1,
+      "nome": "The 90",
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 2,
+      "nome": null,
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 3,
+      "nome": "Esses",
+      "direzione": "sinistra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 4,
+      "nome": "Esses",
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 5,
+      "nome": "Outer Loop",
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 6,
+      "nome": null,
+      "direzione": "sinistra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 7,
+      "nome": "Toe",
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 8,
+      "nome": "Heel",
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 9,
+      "nome": null,
+      "direzione": "sinistra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 10,
+      "nome": null,
+      "direzione": "sinistra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 11,
+      "nome": null,
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    }
+  ],
+  "pit": {
+    "tempo_perso_s": null,
+    "limite_kmh": 50,
+    "lato_box": null,
+    "note": "Limite standard ACC di 50 km/h. Il lato dei box e il tempo perso non sono dati da nessuna fonte consultata: da vedere e misurare in gioco.",
+    "fonte": "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  },
+  "gt3_ref_lap_time": {
+    "valore": "1:43.8",
+    "contesto": "In ACC, secondo Track Titan, il 5% più veloce dei suoi utenti gira in 1:44.032 con la Porsche 911 (992) GT3 R, 1:43.515 con la Ferrari 296 GT3, 1:43.752 con la McLaren 720S GT3 Evo e 1:44.032 con la BMW M4 GT3; la media, con la Porsche, è intorno a 1:46.982. Un ordine di grandezza, da confrontare con le sessioni vere.",
+    "fonte": "https://app.tracktitan.io/track-guides/en/porsche_992_gt3_r-watkins_glen-assettoCorsaCompetizione-Track-Guide/1"
+  },
+  "gt3_fuel_per_lap_l": {
+    "valore": null,
+    "contesto": "Nessuna fonte consultata dà il consumo per giro: da misurare dalle sessioni.",
+    "fonte": null
+  },
+  "chicche": [
+    {
+      "testo": "Il Boot (o «Anvil») fu aggiunto per il Gran Premio di Formula 1 del 1971: quattro curve nuove che allungarono il giro da 3,78 a 5,43 km.",
+      "perche_interessa_al_pilota": null,
+      "fonte": "https://en.wikipedia.org/wiki/Watkins_Glen_International"
+    },
+    {
+      "testo": "L'Inner Loop, la chicane sul rettilineo dopo le Esses, c'è dal 1992.",
+      "perche_interessa_al_pilota": null,
+      "fonte": "https://en.wikipedia.org/wiki/Watkins_Glen_International"
+    }
+  ],
+  "fonti": [
+    "https://en.wikipedia.org/wiki/Watkins_Glen_International",
+    "https://nasaspeed.news/columns/driver-instruction/one-lap-around-watkins-glen-international-raceway/",
+    "https://commons.wikimedia.org/wiki/File:Watkins_Glen_International_Long_Circuit_2024.svg",
+    "https://app.tracktitan.io/track-guides/en/porsche_992_gt3_r-watkins_glen-assettoCorsaCompetizione-Track-Guide/1",
+    "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  ]
+}

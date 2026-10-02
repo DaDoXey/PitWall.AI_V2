@@ -474,6 +474,27 @@ test("red_bull_ring: i 10 sensi (sinistre solo T2, T6, T7)",
 test("red_bull_ring: solo la T1 ha un nome (Niki Lauda), le altre null",
      [c.get("nome") for c in rbr] == ["Niki Lauda"] + [None] * 9, f"{[c.get('nome') for c in rbr]}")
 
+# Blocco A delle guide essenziali (02/10/2026, Entry #071): sensi letti sulle mappe verificate
+# il 02/10 e confrontati con le fonti scritte. Laguna Seca: il Corkscrew (8-8A) è una curva sola
+# e gira nei due sensi, quindi senza senso; 4 destre e 7 sinistre come RaceControl. COTA: «Big
+# Red» alla 1. Watkins Glen: le Esses sono le 3 e 4 (Wikipedia, NASA Speed News).
+d_, s_ = "destra", "sinistra"
+SENSI_BLOCCO_A = {
+    "laguna_seca": [s_, s_, d_, d_, s_, s_, d_, None, s_, d_, s_],
+    "watkins_glen": [d_, d_, s_, d_, d_, s_, d_, d_, s_, s_, d_],
+    "cota": [s_, d_, s_, d_, s_, d_, s_, d_, s_, s_, s_, s_, d_, d_, s_, d_, d_, d_, s_, s_],
+    "indianapolis": [d_, s_, d_, d_, s_, d_, s_, d_, s_, d_, d_, d_, s_, d_],
+}
+for pista, attesi in SENSI_BLOCCO_A.items():
+    sensi = [c.get("direzione") for c in (cat.track_guide(pista) or {}).get("curve", [])]
+    test(f"{pista}: i {len(attesi)} sensi letti sulla mappa", sensi == attesi, f"{sensi}")
+nomi_ls = {c["n"]: c.get("nome") for c in (cat.track_guide("laguna_seca") or {}).get("curve", [])}
+test("laguna_seca: Andretti Hairpin (2), Corkscrew (8), Rainey Curve (9)",
+     (nomi_ls.get(2), nomi_ls.get(8), nomi_ls.get(9)) == ("Andretti Hairpin", "Corkscrew", "Rainey Curve"), f"{nomi_ls}")
+nomi_wg = [c.get("nome") for c in (cat.track_guide("watkins_glen") or {}).get("curve", [])]
+test("watkins_glen: The 90, Esses alle 3-4, Outer Loop, Toe e Heel",
+     nomi_wg == ["The 90", None, "Esses", "Esses", "Outer Loop", None, "Toe", "Heel", None, None, None], f"{nomi_wg}")
+
 # Il validatore delle guide sulla guida essenziale: accetta quella vera, respinge le due
 # cose che la renderebbero un'altra cosa (un consiglio di mestiere, nomi e sensi senza fonte),
 # e una guida che NON si dichiara essenziale resta tenuta a tutti i campi della completa.

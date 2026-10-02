@@ -1,0 +1,184 @@
+{
+  "id": "indianapolis",
+  "livello": "essenziale",
+  "verifica_catalogo": {
+    "lunghezza_confermata": true,
+    "curve_confermate": true,
+    "fonte_lunghezza": "https://en.wikipedia.org/wiki/Indianapolis_Motor_Speedway",
+    "note": "Wikipedia: Grand Prix Road Course (2014-oggi), 3,925 km e 14 curve, come il catalogo. Non è il tracciato della Formula 1 2000-2007 né quello delle moto."
+  },
+  "senso_marcia": "orario",
+  "dislivello_m": null,
+  "rettilineo_piu_lungo_m": null,
+  "variante_acc": null,
+  "fonti_campi_pista": {
+    "senso_marcia": {
+      "fonte": "https://de.wikipedia.org/wiki/Indianapolis_Motor_Speedway",
+      "nota": "Wikipedia in tedesco: a differenza dell'ovale, il tracciato interno si percorre in senso orario; lo conferma la freccia della mappa verificata."
+    },
+    "dislivello_m": {
+      "nota": "Nessuna fonte consultata dà il dislivello in metri."
+    },
+    "rettilineo_piu_lungo_m": {
+      "nota": "Nessuna fonte consultata dà la lunghezza dei rettilinei in metri."
+    },
+    "variante_acc": {
+      "nota": "Il catalogo dà 3,925 km e 14 curve, il Grand Prix Road Course dal 2014; nessuna fonte consultata lo scrive in chiaro per ACC."
+    }
+  },
+  "fonti_curve": {
+    "nome": {
+      "fonte": "https://en.wikipedia.org/wiki/Indianapolis_Motor_Speedway",
+      "nota": "Nessuna fonte consultata dà un nome alle curve del road course: restano numerate."
+    },
+    "direzione": {
+      "fonte": "https://commons.wikimedia.org/wiki/File:Indianapolis_Motor_Speedway_Grand_Prix_Road_Course_2024.svg",
+      "nota": "Letti sul disegno della mappa verificata, nel verso della freccia, curva per curva: 9 destre e 5 sinistre. Nessuna è una piega dubbia."
+    }
+  },
+  "curve": [
+    {
+      "n": 1,
+      "nome": null,
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 2,
+      "nome": null,
+      "direzione": "sinistra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 3,
+      "nome": null,
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 4,
+      "nome": null,
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 5,
+      "nome": null,
+      "direzione": "sinistra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 6,
+      "nome": null,
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 7,
+      "nome": null,
+      "direzione": "sinistra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 8,
+      "nome": null,
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 9,
+      "nome": null,
+      "direzione": "sinistra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 10,
+      "nome": null,
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 11,
+      "nome": null,
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 12,
+      "nome": null,
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 13,
+      "nome": null,
+      "direzione": "sinistra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 14,
+      "nome": null,
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    }
+  ],
+  "pit": {
+    "tempo_perso_s": null,
+    "limite_kmh": 50,
+    "lato_box": null,
+    "note": "Limite standard ACC di 50 km/h. Il lato dei box e il tempo perso non sono dati da nessuna fonte consultata: da vedere e misurare in gioco.",
+    "fonte": "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  },
+  "gt3_ref_lap_time": {
+    "valore": "1:35.5",
+    "contesto": "In ACC, secondo Track Titan, il 5% più veloce dei suoi utenti gira in 1:35.665 con la Porsche 911 (992) GT3 R, 1:35.327 con la Ferrari 296 GT3, 1:35.450 con la McLaren 720S GT3 Evo e 1:35.497 con la BMW M4 GT3; la media, con la Porsche, è intorno a 1:38.587. Un ordine di grandezza, da confrontare con le sessioni vere.",
+    "fonte": "https://app.tracktitan.io/track-guides/en/porsche_992_gt3_r-indianapolis-assettoCorsaCompetizione-Track-Guide/1"
+  },
+  "gt3_fuel_per_lap_l": {
+    "valore": null,
+    "contesto": "Nessuna fonte consultata dà il consumo per giro: da misurare dalle sessioni.",
+    "fonte": null
+  },
+  "chicche": [
+    {
+      "testo": "Il tracciato interno si percorre in senso orario, al contrario dell'ovale della 500 Miglia: il primo evento in senso orario fu il Gran Premio degli Stati Uniti di Formula 1 del 2000.",
+      "perche_interessa_al_pilota": null,
+      "fonte": "https://en.wikipedia.org/wiki/Indianapolis_Motor_Speedway"
+    }
+  ],
+  "fonti": [
+    "https://en.wikipedia.org/wiki/Indianapolis_Motor_Speedway",
+    "https://de.wikipedia.org/wiki/Indianapolis_Motor_Speedway",
+    "https://commons.wikimedia.org/wiki/File:Indianapolis_Motor_Speedway_Grand_Prix_Road_Course_2024.svg",
+    "https://app.tracktitan.io/track-guides/en/porsche_992_gt3_r-indianapolis-assettoCorsaCompetizione-Track-Guide/1",
+    "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  ]
+}

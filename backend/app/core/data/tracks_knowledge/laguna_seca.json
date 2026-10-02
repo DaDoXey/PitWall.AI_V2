@@ -1,0 +1,160 @@
+{
+  "id": "laguna_seca",
+  "livello": "essenziale",
+  "verifica_catalogo": {
+    "lunghezza_confermata": true,
+    "curve_confermate": true,
+    "fonte_lunghezza": "https://en.wikipedia.org/wiki/WeatherTech_Raceway_Laguna_Seca",
+    "note": "Wikipedia: 3,602 km e 11 curve, layout in uso dal 1996, come il catalogo. RaceControl conta 11 curve, 4 a destra e 7 a sinistra. Il Corkscrew è numerato 8 e 8A, ma conta come una curva sola: le 11 sono 1-11."
+  },
+  "senso_marcia": "antiorario",
+  "dislivello_m": null,
+  "rettilineo_piu_lungo_m": null,
+  "variante_acc": null,
+  "fonti_campi_pista": {
+    "senso_marcia": {
+      "fonte": "https://news.racecontrol.gg/tracks/weathertech-raceway-laguna-seca-track-guide-for-lmu/",
+      "nota": "Il verso della freccia sulla mappa verificata; RaceControl conta 7 sinistre su 11."
+    },
+    "dislivello_m": {
+      "nota": "Nessuna fonte consultata dà il dislivello del tracciato in metri."
+    },
+    "rettilineo_piu_lungo_m": {
+      "nota": "Nessuna fonte consultata dà la lunghezza dei rettilinei in metri."
+    },
+    "variante_acc": {
+      "nota": "Il circuito ha un solo layout auto in uso (1996-oggi, Wikipedia); nessuna fonte consultata lo dice per ACC in chiaro."
+    }
+  },
+  "fonti_curve": {
+    "nome": {
+      "fonte": "https://en.wikipedia.org/wiki/WeatherTech_Raceway_Laguna_Seca",
+      "nota": "Wikipedia: la curva 2 è la «Andretti Hairpin», la 9 la «Rainey Curve», le 8 e 8A il Corkscrew (che nel 2026 sarà ribattezzato «Zanardi Corkscrew»). Le altre non hanno un nome nelle fonti consultate."
+    },
+    "direzione": {
+      "fonte": "https://news.racecontrol.gg/tracks/weathertech-raceway-laguna-seca-track-guide-for-lmu/",
+      "nota": "Letti sul disegno della mappa verificata, nel verso della freccia, curva per curva. RaceControl: la 1 è una sinistra veloce, e le curve sono 4 a destra e 7 a sinistra. La 7 è una piega lieve prima del dosso: la decide il conto, perché le altre si leggono chiare. Il Corkscrew (8) è una sinistra-destra: il senso resta vuoto."
+    }
+  },
+  "curve": [
+    {
+      "n": 1,
+      "nome": null,
+      "direzione": "sinistra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 2,
+      "nome": "Andretti Hairpin",
+      "direzione": "sinistra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 3,
+      "nome": null,
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 4,
+      "nome": null,
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 5,
+      "nome": null,
+      "direzione": "sinistra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 6,
+      "nome": null,
+      "direzione": "sinistra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 7,
+      "nome": null,
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 8,
+      "nome": "Corkscrew",
+      "direzione": null,
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 9,
+      "nome": "Rainey Curve",
+      "direzione": "sinistra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 10,
+      "nome": null,
+      "direzione": "destra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    },
+    {
+      "n": 11,
+      "nome": null,
+      "direzione": "sinistra",
+      "tipo": null,
+      "origine": "fonte",
+      "confidence": "alta"
+    }
+  ],
+  "pit": {
+    "tempo_perso_s": null,
+    "limite_kmh": 50,
+    "lato_box": null,
+    "note": "Limite standard ACC di 50 km/h. Il lato dei box e il tempo perso non sono dati da nessuna fonte consultata: da vedere e misurare in gioco.",
+    "fonte": "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  },
+  "gt3_ref_lap_time": {
+    "valore": "1:22.4",
+    "contesto": "In ACC, secondo Track Titan, il 5% più veloce dei suoi utenti gira in 1:22.512 con la Porsche 911 (992) GT3 R, 1:22.300 con la Ferrari 296 GT3, 1:22.415 con la McLaren 720S GT3 Evo e 1:22.512 con la BMW M4 GT3; la media, con la Porsche, è intorno a 1:26.380. Un ordine di grandezza, da confrontare con le sessioni vere.",
+    "fonte": "https://app.tracktitan.io/track-guides/en/porsche_992_gt3_r-laguna_seca-assettoCorsaCompetizione-Track-Guide/1"
+  },
+  "gt3_fuel_per_lap_l": {
+    "valore": null,
+    "contesto": "Nessuna fonte consultata dà il consumo per giro: da misurare dalle sessioni.",
+    "fonte": null
+  },
+  "chicche": [
+    {
+      "testo": "Il rettilineo fra la 6 e la 7 si chiama «Rahal Straight», per Bobby Rahal, che vinse quattro gare CART di fila a Laguna Seca fra il 1984 e il 1987.",
+      "perche_interessa_al_pilota": null,
+      "fonte": "https://en.wikipedia.org/wiki/WeatherTech_Raceway_Laguna_Seca"
+    }
+  ],
+  "fonti": [
+    "https://en.wikipedia.org/wiki/WeatherTech_Raceway_Laguna_Seca",
+    "https://news.racecontrol.gg/tracks/weathertech-raceway-laguna-seca-track-guide-for-lmu/",
+    "https://commons.wikimedia.org/wiki/File:Laguna_Seca.svg",
+    "https://app.tracktitan.io/track-guides/en/porsche_992_gt3_r-laguna_seca-assettoCorsaCompetizione-Track-Guide/1",
+    "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  ]
+}
