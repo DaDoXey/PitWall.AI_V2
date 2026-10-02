@@ -3047,6 +3047,37 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #070 — Le mappe degli ultimi otto circuiti
+
+| Campo | Valore |
+|---|---|
+| Data | 02/10/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `scripts/build_maps_proof.py` · `scripts/maps_choice.json` · `scripts/maps.json` · `data/tracks.json` · `tests/test_tracciati.py` (+ fuori repo: 8 SVG in `public/assets/tracks/`, `ATTRIBUTIONS.md`, `manifest.json`) |
+| Commit | `2ea773c` · `7cc7211` + commit docs, pushati il 02/10/2026 |
+| Contesto | Punto 3 della ripresa: provino delle mappe per gli 8 circuiti senza layout verificato (laguna_seca, watkins_glen, cota, indianapolis, donington_park, snetterton, valencia, mount_panorama). |
+
+**Catalogo messaggi:**
+1. «ok procedi, direi che sta andando tutto bene finora» → provino costruito.
+2. «ok push, ho esportato maps_choice.json e controlla al volo i layout per vedere se risultano giusti dalle fonti come concordato in precedenza» → push di #068/#069 (`f52b2db` · `941dc63` · `b47c0f6`), controllo delle scelte, applicazione.
+
+**Provino:** categorie Commons vere trovate per tutti e 8 («… circuit maps»; quelle del catalogo «Maps of …» non esistono). 77 candidati scritti da me con verdetto dalla sola descrizione della pagina (anno, layout dichiarato) e il layout che usa ACC in testa a ogni circuito; il provino ci aggiunge il resto delle categorie (117 in tutto).
+- **Bug corretto in `build_maps_proof.py`**: la regex dei titoli escludeva le parentesi, e 6 proposte con «(…)» nel nome (fra cui la migliore di Valencia) perdevano il verdetto in silenzio, ricomparendo in fondo come «dalla categoria». Ora le parentesi sono ammesse nel nome e il titolo finisce all'estensione.
+
+**Controllo sulle fonti delle 8 scelte di Edoardo** (la mappa dell'infobox di Wikipedia per il layout in uso + lunghezza e curve del catalogo):
+- **Laguna Seca, Watkins Glen, Indianapolis, Snetterton, Valencia**: il file scelto è proprio quello dell'infobox (Laguna 1996-oggi 3,602 km/11 · Watkins Glen GP con Inner Loop 5,552/11 · Indianapolis GP Road Course 2014-oggi 3,925/14 · Snetterton 300 4,779/12 · Valencia GP 4,005/14).
+- **COTA** e **Mount Panorama**: file diverso dall'infobox, stesso tracciato messo a confronto (COTA 20 curve, solo ruotato; Bathurst 23 curve con The Chase alle 20-22).
+- **Donington**: layout 2010 giusto, ma la mappa scelta («Donington as of 2010.svg», che nella descrizione dice «may or may not be the current version») numerava **11** curve contro le 12 di catalogo e Wikipedia. Scelta di Edoardo: **«Donington circuit.svg»**, la mappa dell'infobox (12 curve, 4,02 km, aggiornata al 2011).
+
+**Applicazione:** `apply_maps.py --scelte` con le sole 8 (nessun file vecchio da togliere): 8 SVG da 34 a 436 KB; `maps.json` (8 voci aggiornate), `ATTRIBUTIONS.md` e manifest rigenerati (8 righe a 6 colonne). `maps_choice.json` (lo storico versionato) da 14 a 22 scelte, nota corretta («candidato Claude Code», il provino scrive ancora «Claude Desktop»). `tracks.json`: le 8 mappe `verificata` con file e nota; la riscrittura normalizza anche il rientro di 4 righe del blocco 3 (Brands Hatch, Hungaroring, Misano, Paul Ricard: 6 spazi invece di 8). `test_tracciati`: la lista dei layout approvati passa a 22.
+
+**Verifica:** `test_tracciati` **125/125** · suite **1170/1170** · validatore senza errori · catalogo: 22 mappe verificate, restano senza Nordschleife, Oulton Park e Suzuka · le 8 schede nel Chrome di Edoardo dopo il riavvio del backend: la mappa compare in tutte (Donington guardata a occhio; il suo SVG ha uno sfondo grigio chiaro proprio, appena diverso dall'avorio della placca).
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» del 02/10/2026.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]

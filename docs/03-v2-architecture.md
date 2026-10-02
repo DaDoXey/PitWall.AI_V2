@@ -129,4 +129,4 @@ Nessun workflow nel repo. L'ipotesi dei doc di planning era frontend → **Verce
 - `api/vision.py` è `async` ma chiama il parser sincrono: blocca l'event loop per tutta la chiamata al modello.
 - `agent.py:134` ha ancora `import streamlit` (non installato): dall'Entry #028 non è raggiungibile dall'API.
 - Tetto di spesa: il lucchetto è per un solo processo (con più worker servirebbe un lock su file).
-- Mappe dei circuiti: 5 layout su 25 verificati, nessuna pagina le mostra.
+- Mappe dei circuiti: 22 layout su 25 verificati (Entry #070), mostrati nella scheda del tracciato e nell'aggancio in sessione; mancano Nordschleife, Oulton Park e Suzuka.
