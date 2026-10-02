@@ -136,16 +136,26 @@ test(
     f"mappa={nords.get('mappa_verificata')}",
 )
 
-# Kyalami: layout verificato (blocco 1), guida ancora no. Le due bandierine
-# sono indipendenti e la scheda deve saperlo dire. (Fino al 23/09 il caso era
-# rovesciato su Monza, guida si' e layout no: col provino del blocco 2 anche
-# Monza ha la mappa.)
+# Kyalami: layout verificato (blocco 1) e, dal 02/10/2026 (Entry #067), una guida
+# «essenziale» — solo i fatti verificati, nessun consiglio di guida. La scheda deve
+# poterlo dire da sola, e le guide complete non devono risultare essenziali.
 r = client.get("/api/catalog/track/kyalami")
 kyalami = r.json() if r.status_code == 200 else {}
 test(
-    "Kyalami ha il layout verificato ma non ancora la guida",
-    kyalami.get("ha_guida") is False and kyalami.get("mappa_verificata") is True,
-    f"ha_guida={kyalami.get('ha_guida')} mappa={kyalami.get('mappa_verificata')}",
+    "Kyalami ha layout verificato e guida essenziale",
+    kyalami.get("ha_guida") is True and kyalami.get("guida_essenziale") is True
+    and kyalami.get("mappa_verificata") is True,
+    f"ha_guida={kyalami.get('ha_guida')} essenziale={kyalami.get('guida_essenziale')} "
+    f"mappa={kyalami.get('mappa_verificata')}",
+)
+essenziali = sorted(t["id"] for t in tracks if t.get("guida_essenziale"))
+test(
+    "nell'indice risulta essenziale solo una guida che lo dichiara",
+    essenziali == sorted(
+        p.stem for p in GUIDE_DIR.glob("*.json")
+        if json.loads(p.read_text(encoding="utf-8")).get("livello") == "essenziale"
+    ) and "kyalami" in essenziali and all(t.get("ha_guida") for t in tracks if t.get("guida_essenziale")),
+    f"{essenziali}",
 )
 
 r = client.get("/api/catalog/track/Spa-Francorchamps")
@@ -430,6 +440,56 @@ test("spa: i sensi delle ultime sei (destra, destra, sinistra, sinistra, destra,
      [c.get("direzione") for c in spa[13:]] == ["destra", "destra", "sinistra", "sinistra", "destra", "sinistra"],
      f"{[c.get('direzione') for c in spa[13:]]}")
 test("spa: T8 si chiama Bruxelles (ex Rivage)", len(spa) > 7 and spa[7].get("nome") == "Bruxelles")
+
+# Kyalami (02/10/2026, Entry #067), guida essenziale. Nomi dal sito ufficiale: le quattro
+# curve senza nome sono T4, T8, T12 e T14, e la Mineshaft è la Turn 11 (una prima lettura
+# l'aveva messa al 12, come la mappa di Commons). Sensi dal disegno della mappa, 6 destre e
+# 10 sinistre come il conto ufficiale: con la ricerca larga lo strumento invertiva T3 e T14
+# e il conto tornava lo stesso, quindi qui si blocca la sequenza, non il conto.
+kya = (cat.track_guide("kyalami") or {}).get("curve", [])
+test("kyalami: i 16 nomi del sito ufficiale, null dove non c'è nome",
+     [c.get("nome") for c in kya] == [
+         "The Kink", "Crowthorne", "Jukskei Sweep", None, "Barbeque", "Sunset", "Clubhouse Bend",
+         None, "The Esses", "Leeukop", "Mineshaft", None, "The Crocodiles", None, "Cheetah", "Ingwe"],
+     f"{[c.get('nome') for c in kya]}")
+SENSI_KYALAMI = ["destra", "sinistra", "destra", "sinistra", "sinistra", "destra", "sinistra", "sinistra",
+                 "destra", "sinistra", "sinistra", "sinistra", "destra", "sinistra", "destra", "sinistra"]
+test("kyalami: i 16 sensi letti sulla mappa (T3 destra, T14 sinistra)",
+     [c.get("direzione") for c in kya] == SENSI_KYALAMI, f"{[c.get('direzione') for c in kya]}")
+test("kyalami: guida essenziale, antiorario, nessun consiglio di mestiere",
+     (cat.track_guide("kyalami") or {}).get("livello") == "essenziale"
+     and (cat.track_guide("kyalami") or {}).get("senso_marcia") == "antiorario"
+     and all(c.get("origine") == "fonte" for c in kya))
+
+# Il validatore delle guide sulla guida essenziale: accetta quella vera, respinge le due
+# cose che la renderebbero un'altra cosa (un consiglio di mestiere, nomi e sensi senza fonte),
+# e una guida che NON si dichiara essenziale resta tenuta a tutti i campi della completa.
+sys.path.insert(0, str(BACKEND / "scripts"))
+import check_track_knowledge as ctk  # noqa: E402
+import tempfile  # noqa: E402
+
+TRACKS_RAW = {t["id"]: t for t in json.loads((BACKEND / "app" / "core" / "data" / "tracks.json").read_text(encoding="utf-8"))}
+
+
+def errori_guida(dati: dict) -> list[str]:
+    with tempfile.TemporaryDirectory() as d:
+        p = pathlib.Path(d) / f"{dati['id']}.json"
+        p.write_text(json.dumps(dati, ensure_ascii=False), encoding="utf-8")
+        e = ctk.Esito()
+        ctk.controlla_pista(p, TRACKS_RAW, e)
+        return e.errori
+
+
+vera = json.loads((GUIDE_DIR / "kyalami.json").read_text(encoding="utf-8"))
+test("validatore: la guida essenziale di Kyalami passa", not errori_guida(vera), f"{errori_guida(vera)}")
+con_mestiere = json.loads(json.dumps(vera))
+con_mestiere["curve"][0]["origine"] = "mestiere"
+test("validatore: una curva «mestiere» in una guida essenziale è respinta", bool(errori_guida(con_mestiere)))
+senza_fonti = {k: v for k, v in vera.items() if k != "fonti_curve"}
+test("validatore: una guida essenziale senza fonti_curve è respinta", bool(errori_guida(senza_fonti)))
+non_dichiarata = {k: v for k, v in vera.items() if k != "livello"}
+test("validatore: senza `livello` la stessa guida è trattata da completa e respinta",
+     bool(errori_guida(non_dichiarata)))
 
 # Le guide arrivavano con gli accenti in apostrofo («e'», «piu'», «velocita'»), e a schermo
 # si leggevano così: convertiti il 30/09 (Entry #055, scripts/accenti_guide.py). Una guida

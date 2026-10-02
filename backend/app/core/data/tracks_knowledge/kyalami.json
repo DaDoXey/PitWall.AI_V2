@@ -1,0 +1,87 @@
+{
+  "id": "kyalami",
+  "livello": "essenziale",
+  "verifica_catalogo": {
+    "lunghezza_confermata": true,
+    "curve_confermate": true,
+    "fonte_lunghezza": "https://www.kyalamigrandprixcircuit.com/grand-prix-circuit/",
+    "note": "Il sito ufficiale del circuito dà 4,522 km e 16 curve, 6 a destra e 10 a sinistra, come il catalogo. Conta anche 12 «corners»: sono le curve con un nome. Wikipedia descrive il layout 1961-1988, che girava in senso orario: non è quello di oggi."
+  },
+  "senso_marcia": "antiorario",
+  "dislivello_m": null,
+  "rettilineo_piu_lungo_m": null,
+  "variante_acc": null,
+  "fonti_campi_pista": {
+    "senso_marcia": {
+      "fonte": "https://www.kyalamigrandprixcircuit.com/grand-prix-circuit/",
+      "nota": "«Track run/direction: Anticlockwise» sul sito ufficiale; lo conferma il verso delle frecce sulla mappa verificata."
+    },
+    "dislivello_m": {
+      "nota": "Nessuna fonte consultata dà il dislivello in metri."
+    },
+    "rettilineo_piu_lungo_m": {
+      "nota": "Nessuna fonte consultata dà la lunghezza del rettilineo in metri."
+    },
+    "variante_acc": {
+      "nota": "Nessuna fonte consultata dice in chiaro quale layout riproduce ACC. La mappa verificata è quella del layout 2016."
+    }
+  },
+  "fonti_curve": {
+    "nome": {
+      "fonte": "https://www.kyalamigrandprixcircuit.com/grand-prix-circuit/",
+      "nota": "Il sito ufficiale elenca i 12 nomi in ordine di percorso e numera a parte le quattro curve senza nome (T4, T8, T12, T14); la Mineshaft è la Turn 11. La mappa verificata scrive i nomi accanto a numeri diversi (Jukskei Sweep fra 3 e 4, The Esses fra 8 e 9, Mineshaft al 12, The Crocodiles fra 13 e 14): vale il sito ufficiale."
+    },
+    "direzione": {
+      "fonte": "https://commons.wikimedia.org/wiki/File:Kyalami_Track_Map_2016.png",
+      "nota": "Letti sul disegno della mappa verificata, nel verso delle frecce, curva per curva: 6 destre e 10 sinistre, lo stesso conto del sito ufficiale. T1 (The Kink) e T14 sono pieghe lievi."
+    }
+  },
+  "curve": [
+    { "n": 1, "nome": "The Kink", "direzione": "destra", "tipo": null, "origine": "fonte", "confidence": "media" },
+    { "n": 2, "nome": "Crowthorne", "direzione": "sinistra", "tipo": null, "origine": "fonte", "confidence": "alta" },
+    { "n": 3, "nome": "Jukskei Sweep", "direzione": "destra", "tipo": null, "origine": "fonte", "confidence": "alta" },
+    { "n": 4, "nome": null, "direzione": "sinistra", "tipo": null, "origine": "fonte", "confidence": "alta" },
+    { "n": 5, "nome": "Barbeque", "direzione": "sinistra", "tipo": null, "origine": "fonte", "confidence": "alta" },
+    { "n": 6, "nome": "Sunset", "direzione": "destra", "tipo": null, "origine": "fonte", "confidence": "alta" },
+    { "n": 7, "nome": "Clubhouse Bend", "direzione": "sinistra", "tipo": null, "origine": "fonte", "confidence": "alta" },
+    { "n": 8, "nome": null, "direzione": "sinistra", "tipo": null, "origine": "fonte", "confidence": "alta" },
+    { "n": 9, "nome": "The Esses", "direzione": "destra", "tipo": null, "origine": "fonte", "confidence": "alta" },
+    { "n": 10, "nome": "Leeukop", "direzione": "sinistra", "tipo": null, "origine": "fonte", "confidence": "alta" },
+    { "n": 11, "nome": "Mineshaft", "direzione": "sinistra", "tipo": null, "origine": "fonte", "confidence": "alta" },
+    { "n": 12, "nome": null, "direzione": "sinistra", "tipo": null, "origine": "fonte", "confidence": "alta" },
+    { "n": 13, "nome": "The Crocodiles", "direzione": "destra", "tipo": null, "origine": "fonte", "confidence": "alta" },
+    { "n": 14, "nome": null, "direzione": "sinistra", "tipo": null, "origine": "fonte", "confidence": "media" },
+    { "n": 15, "nome": "Cheetah", "direzione": "destra", "tipo": null, "origine": "fonte", "confidence": "alta" },
+    { "n": 16, "nome": "Ingwe", "direzione": "sinistra", "tipo": null, "origine": "fonte", "confidence": "alta" }
+  ],
+  "pit": {
+    "tempo_perso_s": null,
+    "limite_kmh": 50,
+    "lato_box": null,
+    "note": "Limite standard ACC di 50 km/h. Il lato dei box e il tempo perso non sono dati da nessuna fonte consultata: da vedere e misurare in gioco.",
+    "fonte": "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  },
+  "gt3_ref_lap_time": {
+    "valore": "1:41.5",
+    "contesto": "Tempo di riferimento Pro-Am con una GT3 in ACC secondo Traxion (Pro 1:39.40, Pro-Am 1:41.50, Am 1:43.50). Un ordine di grandezza, da confrontare con le sessioni vere.",
+    "fonte": "https://traxion.gg/watch-kyalami-assetto-corsa-competizione-track-guide/"
+  },
+  "gt3_fuel_per_lap_l": {
+    "valore": null,
+    "contesto": "Nessuna fonte consultata dà il consumo per giro: da misurare dalle sessioni.",
+    "fonte": null
+  },
+  "chicche": [
+    {
+      "testo": "Il circuito sta a 1.532 m di quota (5.029 piedi), e la pista è larga in media 12 m.",
+      "perche_interessa_al_pilota": null,
+      "fonte": "https://www.kyalamigrandprixcircuit.com/grand-prix-circuit/"
+    }
+  ],
+  "fonti": [
+    "https://www.kyalamigrandprixcircuit.com/grand-prix-circuit/",
+    "https://commons.wikimedia.org/wiki/File:Kyalami_Track_Map_2016.png",
+    "https://traxion.gg/watch-kyalami-assetto-corsa-competizione-track-guide/",
+    "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  ]
+}

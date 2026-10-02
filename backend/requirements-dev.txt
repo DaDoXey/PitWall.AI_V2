@@ -1,0 +1,3 @@
+# Dipendenze dei soli strumenti di sviluppo (backend/scripts/), non dell'app:
+# l'API gira senza. Installazione: pip install -r requirements.txt -r requirements-dev.txt
+pillow==12.3.0  # scripts/sensi_da_mappa.py: legge il disegno delle mappe PNG
