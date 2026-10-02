@@ -3106,6 +3106,33 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #072 — Guide essenziali, blocco B: Donington, Snetterton, Valencia, Mount Panorama
+
+| Campo | Valore |
+|---|---|
+| Data | 02/10/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | NEW `tracks_knowledge/{donington_park,snetterton,valencia_ricardo_tormo,mount_panorama}.json` · `data/tracks.json` · `tests/test_tracciati.py` · docs |
+| Commit | `4b92ecd` + commit docs, pushati il 02/10/2026 |
+| Contesto | Secondo blocco delle guide essenziali, stesso metodo della #071. Con questo, 24 guide su 25: manca solo il Nordschleife, parcheggiato. |
+
+**Catalogo messaggi:**
+1. «ok push e procedi con il blocco B» → push della #071 (`8c0fc7a` · `bad9a27`), poi questo blocco.
+
+**Fatti e fonti:**
+- **Donington** (orario, 12 curve): sensi dalla mappa, confermati curva per curva da Oversteer48 (Redgate e Hollywood destre, Craner Curves, Starkey's Bridge e Schwantz Curve sinistre, McLean's e Coppice destre, Fogarty Esses sinistra-destra); Melbourne (destra) e Goddards (sinistra) sono tornanti senza verso scritto, dal disegno. Tutti e 12 i nomi nell'ordine di Oversteer48 e della mappa (Fogarty Esses alla 9-10; Oversteer48 conta 11 curve con le Esses come una). Driver61 descrive il National (senza Melbourne, Goddards chicane): non usato per il GP. 1:26.5.
+- **Snetterton** (orario, 12 curve, circuito 300): la mappa scelta ha i nomi ma non i numeri; la tabella di Wikipedia numera le 12 nello stesso ordine del giro. La 2 è **«Wilson»** dal 2016 (prima «Montreal», come sulla mappa del 2015). 7 destre e 5 sinistre; Wikipedia conferma Murrays sinistra. 1:46.2.
+- **Valencia** (antiorario, 14 curve): 9 sinistre e 5 destre (4, 5, 10, 11, 12), esattamente il conto di Sky Sport, che descrive anche 2, 4, 10, 12 e 14. Nomi dalla mappa verificata (è quella dell'infobox di Wikipedia), la 4 «Nico Terol» confermata da soymotero.net. 1:30.6.
+- **Mount Panorama** (antiorario, 23 curve): sensi dalla mappa, coerenti con le sezioni di Wikipedia (Hell Corner sinistra, Griffins Bend destra, The Cutting due sinistre, Quarry destra, Reid Park destra-sinistra, McPhillamy sinistra, Skyline destra, Murray's sinistra). Le Esses le ho seguite a occhio sul tratto ingrandito: `sensi_da_mappa.py` agganciava più numeri allo stesso punto e non seguiva la Chase disegnata in blu (risultati scartati). Esses e 18 a confidenza media. Nomi solo dove le due mappe e il testo concordano (14 su 23; la mappa scelta chiama «Quarry» la 2, Wikipedia «Griffins Bend»). Dislivello 174 m dalla mappa di Wikipedia (fonte singola, a vista). 2:00.7.
+- **Catalogo**: `corners_confidence` «alta» per Donington, Snetterton e Mount Panorama (Valencia lo era già).
+
+**Verifica:** validatore senza errori (guide 24/25) · `test_tracciati` **169/169** (+22) · suite **1214/1214** · scheda di Mount Panorama nel Chrome di Edoardo dopo il riavvio del backend (23 curve accanto alla mappa). Frontend non toccato.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» del 02/10/2026.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
