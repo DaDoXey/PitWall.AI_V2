@@ -1,0 +1,693 @@
+{
+  "id": "oulton_park",
+  "verifica_catalogo": {
+    "lunghezza_confermata": true,
+    "curve_confermate": true,
+    "fonte_lunghezza": "https://en.wikipedia.org/wiki/Oulton_Park",
+    "note": "ACC riproduce l'International Circuit: 4,332 km (2,692 miglia) e 17 curve. Il catalogo diceva 16 curve «da verificare»: Coach Dave ne numera 17 e Wikipedia (scheda del circuito) dà 17. Wikipedia scrive 4,307 km nella scheda ma 2,692 miglia nel testo, che sono 4,332 km: vale il testo, come il catalogo. I tre settori qui sotto sono una divisione descrittiva, non i settori di cronometraggio di ACC."
+  },
+  "senso_marcia": "orario",
+  "dislivello_m": null,
+  "rettilineo_piu_lungo_m": null,
+  "variante_acc": "ACC riproduce l'International Circuit, il layout lungo con 17 curve: la guida di Coach Dave si chiude con «a lap of the Oulton Park International Circuit».",
+  "fonti_campi_pista": {
+    "senso_marcia": {
+      "fonte": "https://coachdaveacademy.com/tutorials/oulton-park-track-guide/",
+      "nota": "Nessuna fonte consultata lo scrive in chiaro: si ricava dalla descrizione di Coach Dave, dove le curve grandi sono a destra (Old Hall, Shell Oils di 180°, Lodge di 90°) e le sinistre sono pieghe più brevi. Da confermare in gioco."
+    },
+    "dislivello_m": {
+      "nota": "Nessuna fonte consultata dà il dislivello in metri. Si sa solo che i cambi di quota sono forti: discesa di Cascades, salita di Clay Hill (13% secondo Wikipedia), compressione prima di Deer Leap."
+    },
+    "rettilineo_piu_lungo_m": {
+      "nota": "Nessuna fonte consultata dà la lunghezza del rettilineo: il campo resta vuoto."
+    },
+    "variante_acc": {
+      "fonte": "https://coachdaveacademy.com/tutorials/oulton-park-track-guide/",
+      "nota": "Il catalogo di PitWall dichiara lo stesso layout."
+    }
+  },
+  "settori": [
+    {
+      "n": 1,
+      "carattere": "Old Hall, Denton's, Cascades, Island Bend e il tornante di Shell Oils: il tratto più veloce, con la grande discesa.",
+      "cosa_decide": "L'uscita di Old Hall e il passo dolce a Cascades, che mettono in linea Island Bend e Shell Oils.",
+      "errore_costoso": "Gesti bruschi a Cascades: a quella velocità si perde l'aderenza e la sequenza dopo va in fumo."
+    },
+    {
+      "n": 2,
+      "carattere": "La chicane di Britten's, il lungo rettilineo, Hislop's e Knickerbrook: due chicane e una frenata fortissima.",
+      "cosa_decide": "La frenata di Hislop's in fondo alla discesa di Hilltop e il cambio di direzione dentro la chicane.",
+      "errore_costoso": "Arrivare lunghi alla prima parte di Hislop's: le altre due si pagano a catena."
+    },
+    {
+      "n": 3,
+      "carattere": "Clay Hill, Water Tower, Druids, Lodge Corner e Deer Leap: la salita, il tornante a due apici e l'ultima curva.",
+      "cosa_decide": "Druids e l'uscita sul rettilineo, dove sta uno dei pochi sorpassi, e Lodge Corner, l'ultima vera curva.",
+      "errore_costoso": "Uscire male da Druids: si perde il sorpasso e si arriva a Lodge Corner senza traiettoria."
+    }
+  ],
+  "curve": [
+    {
+      "n": 1,
+      "nome": "Old Hall",
+      "direzione": "destra",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Ci si porta sul lato sinistro della pista e si frena dove finisce la linea bianca continua sul bordo sinistro. Dalla quinta alla terza.",
+      "insidia": "Destra che apre il giro: conta più l'uscita dell'ingresso. Si gira presto e l'apice sta fra i due paletti accanto al cordolo; il gas si dà quando si raggiunge l'apice.",
+      "costo_errore": "Medio-alto: contano l'uscita e i limiti di pista, che qui sono severi.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Staccata e curva a destra: carico sull'anteriore sinistro."
+      },
+      "freni": {
+        "stress": "medio-alto",
+        "note": "Dalla quinta alla terza."
+      },
+      "track_limits": {
+        "rischio": "alto",
+        "note": "I limiti qui sono severi: le ruote interne devono restare dentro la linea bianca continua."
+      },
+      "differenza_gara_qualifica": null,
+      "progressione": {
+        "prendi_il_giro": "Frena dove finisce la linea bianca, terza, e aspetta: l'uscita conta più dell'ingresso.",
+        "guadagni": "Gira presto, ruota anteriore interna sul cordolo e gas all'apice, fra i due paletti.",
+        "al_limite": "Tutto il cordolo d'uscita, senza mai portare le ruote interne fuori dalla linea bianca."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 2,
+      "nome": "Denton's",
+      "direzione": "destra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna: è una piega a destra che si fa a gas pieno.",
+      "insidia": "Piega a destra a fondo, ma senza uscire di assetto: serve soprattutto a mettere la macchina per l'ingresso di Cascades, quindi in uscita si resta sulla destra.",
+      "costo_errore": "Medio: un'uscita sporca rovina l'ingresso di Cascades.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": null,
+        "note": null
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": null,
+        "note": null
+      },
+      "differenza_gara_qualifica": null,
+      "progressione": {
+        "prendi_il_giro": "Piena, restando a destra in uscita per aprire Cascades.",
+        "guadagni": "Sfrutta la piega per posizionare la macchina, non per guadagnare in sé.",
+        "al_limite": "Piena con la macchina già a destra: tutta la curva dopo dipende da qui."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 3,
+      "nome": "Cascades",
+      "direzione": "sinistra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Si entra il più a destra possibile. Il riferimento è il grande avvallamento sulla strada: lì si frena e si scalano due marce.",
+      "insidia": "Sinistra veloce in discesa che chiede precisione e pazienza: si frena girando dolcemente, sfruttando la pendenza naturale della strada. Con la velocità che c'è, un gesto brusco fa perdere aderenza.",
+      "costo_errore": "Medio-alto: da qui dipende l'ingresso di Island Bend.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Sinistra veloce in discesa: carico sull'anteriore destro."
+      },
+      "freni": {
+        "stress": "medio",
+        "note": "Si scalano due marce."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "Qui i limiti sono molto più indulgenti: si può usare gran parte del tappeto oltre il cordolo, se serve."
+      },
+      "differenza_gara_qualifica": null,
+      "progressione": {
+        "prendi_il_giro": "Frena all'avvallamento, scala due marce e gira dolcemente sfruttando la pendenza.",
+        "guadagni": "Appena l'avantreno morde, rilascia il freno: l'apice è il punto del cordolo più vicino alla fine del guardrail interno.",
+        "al_limite": "Il gas appena la macchina è carica e poi lasciarla correre fino all'uscita, tappeto compreso."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 4,
+      "nome": "Island Bend",
+      "direzione": "sinistra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Si entra a destra. Quando si passa la strada di accesso sulla destra si comincia a girare con calma. Si alza il piede e, se serve, un tocco di freno, secondo la macchina e la stabilità dietro.",
+      "insidia": "Sinistra velocissima: si gira con dolcezza per non destabilizzare la macchina. Non va lasciata allargare, perché serve tornare a sinistra per l'ingresso di Shell Oils.",
+      "costo_errore": "Alto: se si esce larghi si perde la posizione per Shell Oils.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Sinistra velocissima: carico sull'anteriore destro."
+      },
+      "freni": {
+        "stress": "basso",
+        "note": "Un'alzata di piede e, se serve, un tocco di freno."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "Il cordolo interno si può usare con le ruote interne."
+      },
+      "differenza_gara_qualifica": null,
+      "progressione": {
+        "prendi_il_giro": "Alza il piede in modo progressivo e gira con dolcezza dopo la strada d'accesso.",
+        "guadagni": "Cordolo interno con le ruote interne e gas all'apice.",
+        "al_limite": "Appena sotto la soglia dell'alzata di piede, senza far allargare la macchina."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 5,
+      "nome": "Shell Oils",
+      "direzione": "destra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Si entra sul lato sinistro. Quando la strada si raddrizza c'è un punto di posta arancione sul guardrail esterno: il primo blocco arancione è il riferimento. Si frena forte fino alla seconda.",
+      "insidia": "Tornante a destra di 180° molto sopraelevato, con due apici. Si gira presto e si tocca il cordolo, poi si lascia la macchina allargare un po' a metà curva, in attesa che ruoti; il gas si dà poco prima del secondo apice.",
+      "costo_errore": "Medio-alto: l'uscita a fionda decide la velocità dopo.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Tornante a destra: carico sull'anteriore sinistro."
+      },
+      "freni": {
+        "stress": "medio-alto",
+        "note": "Secondo punto di frenata più forte del giro, dopo Hislop's (oversteer48)."
+      },
+      "track_limits": {
+        "rischio": null,
+        "note": null
+      },
+      "differenza_gara_qualifica": null,
+      "progressione": {
+        "prendi_il_giro": "Frena al primo blocco arancione, seconda, e sfrutta la sopraelevazione per portare velocità.",
+        "guadagni": "Gira presto toccando il cordolo, lascia allargare la macchina a metà curva e aspetta che ruoti.",
+        "al_limite": "Gas poco prima del secondo apice: la macchina viene lanciata fuori e si apre lo sterzo."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 6,
+      "nome": "Britten's",
+      "direzione": "destra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna: piega a destra a gas pieno che apre la sequenza.",
+      "insidia": "È la piega a destra a fondo che apre il tratto di chicane verso il lungo rettilineo: si resta a destra per preparare l'ingresso della chicane.",
+      "costo_errore": "Medio: si paga nel resto della sequenza.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": null,
+        "note": null
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": null,
+        "note": null
+      },
+      "differenza_gara_qualifica": null,
+      "progressione": {
+        "prendi_il_giro": "Piena, e tieniti a destra per l'ingresso della chicane.",
+        "guadagni": "Preparare l'ingresso della sinistra che segue.",
+        "al_limite": "Piena e ferma sullo sterzo."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 7,
+      "nome": "Britten's",
+      "direzione": "sinistra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Si cerca una piccola macchia di cemento grigio sull'erba, a destra della pista, e si frena subito prima. Seconda marcia, trail braking dentro la prima parte della chicane.",
+      "insidia": "Prima sinistra della chicane: l'uso dei cordoli dipende dalla macchina. Se li assorbe bene, la ruota anteriore sinistra va tutta sul cordolo a sinistra continuando a frenare in trail braking.",
+      "costo_errore": "Medio-alto: il cambio di direzione è rapidissimo e l'uscita porta sul rettilineo.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Sinistra della chicane: carico sull'anteriore destro."
+      },
+      "freni": {
+        "stress": "medio-alto",
+        "note": "Seconda marcia."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Il tappeto e il cordolo si possono usare, in base alla macchina."
+      },
+      "differenza_gara_qualifica": null,
+      "progressione": {
+        "prendi_il_giro": "Frena subito prima della macchia di cemento, seconda, e continua in trail braking.",
+        "guadagni": "Ruota anteriore sinistra tutta sul cordolo, se la macchina li assorbe.",
+        "al_limite": "Cordolo sfruttato fino in fondo, con il cambio di direzione già previsto prima di entrare."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 8,
+      "nome": "Britten's",
+      "direzione": "destra",
+      "tipo": "lenta",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna: segue subito la sinistra.",
+      "insidia": "Destra della chicane: le ruote interne vanno sul cordolo interno rosso e bianco. Troppo poco cordolo e le ruote sbattono sul bordo; troppo e si perde velocità in uscita.",
+      "costo_errore": "Medio: il cambio di direzione è molto rapido.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Destra della chicane: carico sull'anteriore sinistro."
+      },
+      "freni": {
+        "stress": "basso",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": null,
+        "note": "L'uso del cordolo conta: sbagliarlo costa velocità di uscita."
+      },
+      "differenza_gara_qualifica": null,
+      "progressione": {
+        "prendi_il_giro": "Anticipa il cambio di peso prima di entrare e metti le ruote interne sul cordolo rosso e bianco.",
+        "guadagni": "Dopo l'apice rimetti il gas in modo progressivo per spingere la macchina verso l'ultima parte.",
+        "al_limite": "Il giusto cordolo: né troppo poco né troppo, perché decide la velocità d'uscita."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 9,
+      "nome": "Britten's",
+      "direzione": "sinistra",
+      "tipo": "lenta",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna: ultima sinistra della chicane.",
+      "insidia": "Ultima parte della chicane: tappeto e cordolo a sinistra si possono usare ancora, in base alla macchina. Si esce lasciando correre la macchina verso destra.",
+      "costo_errore": "Medio: l'uscita decide la velocità sul lungo rettilineo.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Sinistra della chicane: carico sull'anteriore destro."
+      },
+      "freni": {
+        "stress": "basso",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Il cordolo sinistro si taglia e si resta sul tappeto, secondo la macchina."
+      },
+      "differenza_gara_qualifica": null,
+      "progressione": {
+        "prendi_il_giro": "Continua sul tappeto e taglia il cordolo sinistro in uscita.",
+        "guadagni": "Raddrizza l'ultima curva per aumentare la velocità d'uscita.",
+        "al_limite": "Lascia correre la macchina verso destra il più possibile."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 10,
+      "nome": "Hislop's",
+      "direzione": "destra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Ci si sposta a sinistra lungo il rettilineo. Il riferimento è il casotto verde dei commissari sulla sinistra, circa dopo il cartello «1». Si frena forte in linea retta e si scala in fretta, fino alla seconda; si gira passando il cartello nero sulla protezione sinistra.",
+      "insidia": "Prima parte della chicane di Hislop's, destra: il punto dove si frena di più in tutto il giro (oversteer48). Si usa la parte piatta del cordolo rosso e bianco per il primo apice.",
+      "costo_errore": "Alto: la prima parte decide la posizione per le altre due.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Staccata in discesa e curva a destra: carico sull'anteriore sinistro."
+      },
+      "freni": {
+        "stress": "alto",
+        "note": "La frenata più forte del giro, in fondo alla discesa di Hilltop."
+      },
+      "track_limits": {
+        "rischio": null,
+        "note": null
+      },
+      "differenza_gara_qualifica": null,
+      "progressione": {
+        "prendi_il_giro": "Frena forte e dritto al casotto verde dei commissari, seconda, gira al cartello nero.",
+        "guadagni": "Usa la parte piatta del cordolo rosso e bianco per il primo apice.",
+        "al_limite": "Tutta la frenata fino alla seconda, con la macchina già al centro della strada per la sinistra."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 11,
+      "nome": "Hislop's",
+      "direzione": "sinistra",
+      "tipo": "lenta",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna: arriva subito dopo la prima parte.",
+      "insidia": "Seconda parte, sinistra: il cambio di direzione arriva in fretta. Si usa il cordolo interno attenti alle gomme che scendono appena dentro; il gas va dosato con pazienza per non allargare nella curva dopo.",
+      "costo_errore": "Medio-alto: un'uscita larga rovina Knickerbrook.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore destro",
+        "note": "Sinistra della chicane: carico sull'anteriore destro."
+      },
+      "freni": {
+        "stress": "basso",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": null,
+        "note": null
+      },
+      "differenza_gara_qualifica": null,
+      "progressione": {
+        "prendi_il_giro": "Il cambio di direzione veloce, con il cordolo interno.",
+        "guadagni": "Pazienza con il gas, per non finire larghi.",
+        "al_limite": "Cordolo interno pieno, ma con le gomme ben dentro il bordo."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 12,
+      "nome": "Knickerbrook",
+      "direzione": "destra",
+      "tipo": "media",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Si porta la macchina a sinistra almeno a metà fra l'uscita della chicane e la curva. Poco dopo si gira per l'apice, con la gomma anteriore destra sul cordolo e un leggero tocco di freno.",
+      "insidia": "Destra che chiude la sequenza di Hislop's. Appena dopo l'apice si rimette il gas e si apre lo sterzo, senza usare troppo il cordolo d'uscita: tende a ribattere.",
+      "costo_errore": "Medio-alto: l'uscita porta sulla salita di Clay Hill.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Destra: carico sull'anteriore sinistro."
+      },
+      "freni": {
+        "stress": "basso",
+        "note": "Un leggero tocco di freno."
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Il cordolo d'uscita si può usare, ma senza aggressività: tende a ribattere."
+      },
+      "differenza_gara_qualifica": null,
+      "progressione": {
+        "prendi_il_giro": "Porta la macchina a sinistra almeno a metà e gira per l'apice con un tocco di freno.",
+        "guadagni": "Anteriore destra sul cordolo e gas appena dopo l'apice.",
+        "al_limite": "Uscita con lo sterzo aperto, lasciando correre la macchina sul cordolo senza essere aggressivo."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 13,
+      "nome": "Clay Hill",
+      "direzione": "sinistra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna: è una piega a sinistra in salita, a gas pieno.",
+      "insidia": "Piega facile in salita, ma la strada continua a curvare a sinistra dopo: l'apice è tardo, a metà del cordolo interno, o in uscita si finisce senza strada.",
+      "costo_errore": "Medio: se si esce largo si rovina la linea di Water Tower.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": null,
+        "note": null
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": null,
+        "note": null
+      },
+      "differenza_gara_qualifica": null,
+      "progressione": {
+        "prendi_il_giro": "Piena, con l'apice tardo a metà del cordolo interno.",
+        "guadagni": "Apice tardo e uscita pulita per Water Tower.",
+        "al_limite": "Piena e senza correzioni, per non rischiare di finire la strada all'uscita."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 14,
+      "nome": "Water Tower",
+      "direzione": "sinistra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna: piega a sinistra finale, a gas pieno.",
+      "insidia": "Ultima piega a sinistra prima di Druids: si resta a sinistra, perché questo apre l'ingresso della curva dopo.",
+      "costo_errore": "Medio: l'ingresso a Druids dipende da come si resta a sinistra qui.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": null,
+        "note": null
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": null,
+        "note": null
+      },
+      "differenza_gara_qualifica": null,
+      "progressione": {
+        "prendi_il_giro": "Piena, restando a sinistra per aprire Druids.",
+        "guadagni": "Resta il più a sinistra possibile.",
+        "al_limite": "Piena e già a sinistra: la frenata di Druids parte da qui."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 15,
+      "nome": "Druids",
+      "direzione": "destra",
+      "tipo": "media",
+      "marcia_indicativa": "3a",
+      "riferimento_frenata": "Si frena appena la macchina si raddrizza e si scala in terza, mirando al primo cordolo per il primo apice.",
+      "insidia": "Destra a due apici: dopo il primo si lascia correre la macchina per preparare il secondo e l'uscita. Appena l'avantreno ha preso e si sa di arrivare al secondo apice senza allargare, gas subito: portare la velocità giusta senza rovinare l'uscita è un equilibrio sottile.",
+      "costo_errore": "Alto: l'uscita porta sul rettilineo, uno dei pochi punti di sorpasso del circuito.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Destra a due apici: carico sull'anteriore sinistro."
+      },
+      "freni": {
+        "stress": "medio",
+        "note": "Terza marcia."
+      },
+      "track_limits": {
+        "rischio": "basso",
+        "note": "L'uscita si apre usando il cordolo."
+      },
+      "differenza_gara_qualifica": null,
+      "progressione": {
+        "prendi_il_giro": "Frena appena la macchina si è raddrizzata, terza, primo apice sul cordolo.",
+        "guadagni": "Lascia correre la macchina fra i due apici e rimetti il gas appena puoi.",
+        "al_limite": "Più velocità sul primo apice senza compromettere l'uscita: è un equilibrio."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 16,
+      "nome": "Lodge Corner",
+      "direzione": "destra",
+      "tipo": "lenta",
+      "marcia_indicativa": "2a",
+      "riferimento_frenata": "Si entra a sinistra e si usa il cartello bianco d'angolo a sinistra come riferimento. Si frena forte mentre la strada scende, e si scala in seconda.",
+      "insidia": "In teoria è una semplice destra a 90°, in realtà molto tecnica: i cambi di quota la rendono ancora più difficile. Si gira prima di quanto sembri, perché la strada sale verso l'apice, e l'apice è tardo.",
+      "costo_errore": "Alto: è l'ultima vera curva, e l'uscita porta sul traguardo.",
+      "sorpasso": {
+        "possibile": true,
+        "come": "Il rettilineo dopo Druids è, per Coach Dave, uno dei pochi punti di sorpasso del circuito: l'attacco si fa con la staccata di Lodge Corner.",
+        "come_ci_si_difende": "Chiudere l'interno prima della frenata."
+      },
+      "gomme": {
+        "stress": "anteriore sinistro",
+        "note": "Destra a 90°: carico sull'anteriore sinistro."
+      },
+      "freni": {
+        "stress": "alto",
+        "note": "Frenata in discesa."
+      },
+      "track_limits": {
+        "rischio": "alto",
+        "note": "Oltre il cordolo c'è il tappeto: usarlo vuol dire aver superato i limiti."
+      },
+      "differenza_gara_qualifica": null,
+      "progressione": {
+        "prendi_il_giro": "Frena al cartello bianco, seconda, e gira prima di quanto pensi, perché la strada sale.",
+        "guadagni": "Apice tardo con l'anteriore destra sul cordolo interno, a metà fra i due paletti, come alla curva 1.",
+        "al_limite": "Sterzo dolce e gas progressivo fino all'uscita larga sul cordolo, attenti al sovrasterzo in trazione per via della sopraelevazione."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    },
+    {
+      "n": 17,
+      "nome": "Deer Leap",
+      "direzione": "sinistra",
+      "tipo": "veloce",
+      "marcia_indicativa": null,
+      "riferimento_frenata": "Nessuna: dopo Lodge Corner si sale a tutto gas.",
+      "insidia": "Ultima piega a sinistra sul rettilineo del traguardo: si sale a gas pieno e si resta sull'interno.",
+      "costo_errore": "Basso: ma una cattiva uscita da Lodge Corner si porta sul traguardo.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": null,
+        "note": null
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": null,
+        "note": null
+      },
+      "differenza_gara_qualifica": null,
+      "progressione": {
+        "prendi_il_giro": "Gas pieno in salita e restare all'interno.",
+        "guadagni": "Una sola linea da Lodge Corner al traguardo.",
+        "al_limite": "Piena, sull'interno, senza correzioni."
+      },
+      "origine": "fonte",
+      "confidence": "media"
+    }
+  ],
+  "track_limits_generale": "I limiti sono severi a Old Hall (ruote interne dentro la linea bianca continua), indulgenti a Cascades (si può usare gran parte del tappeto) e di nuovo severi a Lodge Corner, dove il tappeto oltre il cordolo vuol dire limiti superati. Nelle chicane di Britten's e Hislop's l'uso dei cordoli dipende dalla macchina: se li assorbe bene si può usare il tappeto.",
+  "pit": {
+    "tempo_perso_s": null,
+    "limite_kmh": 50,
+    "lato_box": null,
+    "note": "Limite standard ACC di 50 km/h. Il lato dei box e il tempo perso non sono dati da nessuna fonte consultata: da vedere e misurare in gioco.",
+    "fonte": "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  },
+  "traffico_multiclass": null,
+  "meteo_e_luce": {
+    "condizioni_tipiche": null,
+    "sul_bagnato": null,
+    "punti_acqua": null,
+    "di_notte": null,
+    "al_tramonto": null
+  },
+  "gomme_e_freni_pista": "Per i freni Oulton Park è facile: la frenata più forte è in fondo alla discesa di Hilltop, per la chicane di Hislop's, e la seconda è Island Bend verso Shell Oils (oversteer48). Per le gomme nessuna fonte consultata dà temperature o consumi: restano da misurare.",
+  "errore_del_principiante": "Dare troppo all'ingresso: a Old Hall, dice Coach Dave, conta l'uscita e la pazienza, non l'ingresso. E guidare Cascades a gesti bruschi: a quella velocità la macchina perde aderenza, e con Island Bend subito dopo l'errore si porta dietro.",
+  "gt3_ref_lap_time": {
+    "valore": "1:35.0",
+    "contesto": "Tempo di riferimento Pro/Am con una GT3 in ACC secondo Traxion (Pro 1:31.60, Pro/Am 1:35.00, Am 1:40.00). Un ordine di grandezza, da confrontare con le sessioni vere.",
+    "fonte": "https://traxion.gg/watch-oulton-park-assetto-corsa-competizione-track-guide/"
+  },
+  "gt3_fuel_per_lap_l": {
+    "valore": null,
+    "contesto": "Nessuna fonte consultata pubblica il consumo per giro a Oulton Park: dipende da vettura, mappa motore e passo. Va misurato dalle sessioni vere, non stimato.",
+    "fonte": null
+  },
+  "chicche": [
+    {
+      "testo": "Il Knickerbrook era un curvone a destra in quinta, in contropendenza, alla fine della discesa di Hilltop. La morte di Paul Warwick nel 1991 portò alla chicane di Hislop's, installata circa 135 m prima.",
+      "perche_interessa_al_pilota": "Gli onboard precedenti al 1991 mostrano un Knickerbrook molto più veloce: non vanno presi come riferimento per la frenata di Hislop's.",
+      "fonte": "https://en.wikipedia.org/wiki/Oulton_Park"
+    },
+    {
+      "testo": "Wikipedia lo paragona alla Nordschleife per i cambi di pendenza, le gobbe cieche e le curve strette.",
+      "perche_interessa_al_pilota": "Le variazioni di quota più forti sono la discesa di Cascades, la salita di Clay Hill dopo Knickerbrook e la compressione prima di Deer Leap: lì la macchina cambia carico e i gesti bruschi si pagano.",
+      "fonte": "https://en.wikipedia.org/wiki/Oulton_Park"
+    }
+  ],
+  "fonti": [
+    "https://coachdaveacademy.com/tutorials/oulton-park-track-guide/",
+    "https://en.wikipedia.org/wiki/Oulton_Park",
+    "https://traxion.gg/watch-oulton-park-assetto-corsa-competizione-track-guide/",
+    "https://oversteer48.com/oulton-park-trackdays/",
+    "https://coachdaveacademy.com/tutorials/understanding-penalties-in-acc/"
+  ]
+}
