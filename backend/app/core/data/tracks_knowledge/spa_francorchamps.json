@@ -38,13 +38,13 @@
     },
     {
       "n": 2,
-      "carattere": "Il settore del carico aerodinamico e della sensibilità: Malmedy, Rivage, Pouhon, Fagnes. Poca frenata, tanta velocità di percorrenza.",
+      "carattere": "Il settore del carico aerodinamico e della sensibilità: Malmedy, Bruxelles, Pouhon, Fagnes. Poca frenata, tanta velocità di percorrenza.",
       "cosa_decide": "Se l'auto è stabile in appoggio lungo. Pouhon è il vero esame del setup: se lì il posteriore scappa, il problema è aerodinamico o di bilanciamento, non di gomme.",
-      "errore_costoso": "Entrare lungo a Rivage e rovinare l'uscita in discesa verso il tratto seguente."
+      "errore_costoso": "Entrare lungo a Bruxelles e rovinare l'uscita in discesa verso il tratto seguente."
     },
     {
       "n": 3,
-      "carattere": "Stavelot, il lunghissimo allungo di Blanchimont, poi la staccata violenta della Bus Stop.",
+      "carattere": "Campus e la Courbe Paul Frère, il lunghissimo allungo di Blanchimont, poi la staccata violenta della Bus Stop.",
       "cosa_decide": "La trazione in uscita dalla Bus Stop, perché porta dritta sul traguardo e poi su La Source.",
       "errore_costoso": "Prendere troppo cordolo alla Bus Stop: scarica l'auto e ti fa arrivare storto sul traguardo."
     }
@@ -267,7 +267,7 @@
       "marcia_indicativa": "4a",
       "riferimento_frenata": "Più un rilascio deciso che una staccata vera.",
       "insidia": "Curva a destra in leggera discesa: l'auto scarica sul davanti e il posteriore diventa nervoso in inserimento.",
-      "costo_errore": "Medio. In uscita c'è poco spazio prima della discesa verso Rivage.",
+      "costo_errore": "Medio. In uscita c'è poco spazio prima della discesa verso Bruxelles.",
       "sorpasso": {
         "possibile": false,
         "come": null,
@@ -297,7 +297,7 @@
     },
     {
       "n": 8,
-      "nome": "Rivage",
+      "nome": "Bruxelles",
       "tipo": "lenta",
       "marcia_indicativa": "2a",
       "riferimento_frenata": "Frenata in discesa, curva cieca: non vedi l'apice quando stacchi. Usa un riferimento a bordo pista, non l'occhio sulla curva.",
@@ -336,7 +336,7 @@
       "tipo": "media",
       "marcia_indicativa": "3a-4a",
       "riferimento_frenata": null,
-      "insidia": "Sinistra in discesa dopo Rivage: si prende in scorrimento, ma la discesa ti fa arrivare più veloce di quanto ti aspetti.",
+      "insidia": "Sinistra in discesa dopo Bruxelles: si prende in scorrimento, ma la discesa ti fa arrivare più veloce di quanto ti aspetti.",
       "costo_errore": "Medio.",
       "sorpasso": {
         "possibile": false,
@@ -512,7 +512,7 @@
       "marcia_indicativa": "3a",
       "riferimento_frenata": "Staccata corta e decisa dopo il tratto delle Fagnes.",
       "insidia": "È una destra stretta in mezzo a un settore veloce: il ritmo ti porta a entrare troppo forte. Rallenta più di quanto ti sembri giusto.",
-      "costo_errore": "Medio-alto: l'uscita porta verso Stavelot e poi su Blanchimont, quindi si paga a lungo.",
+      "costo_errore": "Medio-alto: l'uscita porta verso la Courbe Paul Frère e poi su Blanchimont, quindi si paga a lungo.",
       "sorpasso": {
         "possibile": true,
         "come": "Interno in staccata, ma serve essere già molto vicino.",
@@ -537,12 +537,12 @@
       "progressione": {
         "prendi_il_giro": "Rallenta più di quanto ti sembri giusto: il ritmo del settore veloce ti porta a entrare troppo forte.",
         "guadagni": "Ritarda la staccata e cerca l'apice tardi.",
-        "al_limite": "Ingresso lento e uscita in trazione piena verso Stavelot: si paga a lungo, fino a Blanchimont."
+        "al_limite": "Ingresso lento e uscita in trazione piena verso la Courbe Paul Frère: si paga a lungo, fino a Blanchimont."
       }
     },
     {
       "n": 15,
-      "nome": "Stavelot",
+      "nome": "Courbe Paul Frère",
       "tipo": "veloce",
       "marcia_indicativa": "5a",
       "riferimento_frenata": "Rilascio.",
@@ -555,7 +555,7 @@
       },
       "gomme": {
         "stress": "anteriore sinistro e posteriore sinistro",
-        "note": "Appoggio lungo sul lato sinistro: è l'altra faccia di Pouhon. Se hai il lato sinistro caldo, Stavelot è la causa principale."
+        "note": "Appoggio lungo sul lato sinistro: è l'altra faccia di Pouhon. Se hai il lato sinistro caldo, la Courbe Paul Frère è la causa principale."
       },
       "freni": {
         "stress": "basso",
@@ -612,6 +612,41 @@
     },
     {
       "n": 17,
+      "nome": "Blanchimont",
+      "tipo": "veloce",
+      "marcia_indicativa": "6a",
+      "riferimento_frenata": "Nessuna: è la seconda parte della stessa sinistra, a gas pieno.",
+      "insidia": "Coach Dave numera Blanchimont come due curve (16 e 17), ma è una sola sinistra velocissima: apice tardo, sterzo pulito e niente cordolo interno, che a questa velocità scarica la macchina.",
+      "costo_errore": "Molto alto: le barriere sono vicine e l'uscita larga è dove si controllano i track limits.",
+      "sorpasso": {
+        "possibile": false,
+        "come": null,
+        "come_ci_si_difende": null
+      },
+      "gomme": {
+        "stress": "lato destro",
+        "note": null
+      },
+      "freni": {
+        "stress": "nullo",
+        "note": null
+      },
+      "track_limits": {
+        "rischio": "medio",
+        "note": "Avvicinati al cordolo interno senza toccarlo: così il limite non è un problema."
+      },
+      "differenza_gara_qualifica": null,
+      "origine": "mestiere",
+      "confidence": "media",
+      "direzione": "sinistra",
+      "progressione": {
+        "prendi_il_giro": "Entra tenendo la macchina a destra, usa un po' di astroturf in ingresso per aprire la curva e vai all'apice tardi, con lo sterzo pulito.",
+        "guadagni": "Avvicinati al cordolo interno senza toccarlo: toccarlo a questa velocità scarica la macchina.",
+        "al_limite": "Tutta l'uscita che serve, ma con i track limits sotto controllo."
+      }
+    },
+    {
+      "n": 18,
       "nome": "Bus Stop",
       "tipo": "lenta",
       "marcia_indicativa": "2a",
@@ -646,7 +681,7 @@
       }
     },
     {
-      "n": 18,
+      "n": 19,
       "nome": "Bus Stop",
       "tipo": "lenta",
       "marcia_indicativa": "2a",
@@ -679,44 +714,9 @@
         "guadagni": "Anticipa il gas e raddrizza prima, usando il cordolo interno.",
         "al_limite": "Cordolo pieno e trazione già aperta in appoggio: l'uscita porta sul rettilineo del traguardo e poi su La Source."
       }
-    },
-    {
-      "n": 19,
-      "nome": null,
-      "tipo": "veloce",
-      "marcia_indicativa": "3a-4a",
-      "riferimento_frenata": null,
-      "insidia": "Ultima piega a destra prima del traguardo, si prende in accelerazione. Non è una curva, è un'uscita.",
-      "costo_errore": "Medio per effetto: comanda la velocità sul traguardo e quindi la scia per chi ti segue.",
-      "sorpasso": {
-        "possibile": false,
-        "come": null,
-        "come_ci_si_difende": "Se esci male da qui, chi ti segue ti passa a La Source. È lì che si perde la posizione, non in staccata."
-      },
-      "gomme": {
-        "stress": "posteriore sinistro in trazione",
-        "note": null
-      },
-      "freni": {
-        "stress": "nullo",
-        "note": null
-      },
-      "track_limits": {
-        "rischio": "medio",
-        "note": null
-      },
-      "differenza_gara_qualifica": null,
-      "origine": "mestiere",
-      "confidence": "media",
-      "progressione": {
-        "prendi_il_giro": "Prendila in accelerazione senza correzioni: non è una curva, è un'uscita.",
-        "guadagni": "Allarga per non perdere velocità sul traguardo.",
-        "al_limite": "Una linea sola dalla Bus Stop al traguardo: comanda la scia di chi ti segue."
-      },
-      "direzione": "destra"
     }
   ],
-  "track_limits_generale": "I punti caldi sono tre: uscita di Pouhon, uscita di Stavelot, cordolo interno della Bus Stop. Sulla Bus Stop non barare: è il taglio più controllato del circuito. Su Raidillon e Les Combes i cordoli si possono aggredire senza problemi. Verifica sempre in sessione libera dove ACC mette il limite nella tua versione, perché cambia fra un aggiornamento e l'altro.",
+  "track_limits_generale": "I punti caldi sono tre: uscita di Pouhon, uscita della Courbe Paul Frère, cordolo interno della Bus Stop. Sulla Bus Stop non barare: è il taglio più controllato del circuito. Su Raidillon e Les Combes i cordoli si possono aggredire senza problemi. Verifica sempre in sessione libera dove ACC mette il limite nella tua versione, perché cambia fra un aggiornamento e l'altro.",
   "pit": {
     "tempo_perso_s": null,
     "limite_kmh": null,
@@ -724,15 +724,15 @@
     "note": "L'ingresso ai box è alla Bus Stop, quindi la corsia si stacca proprio nel punto di sorpasso: nella finestra dei pit stop stai attento a chi alza il piede davanti a te. Il lato dei box non è dato da nessuna fonte: da vedere in gioco.",
     "fonte": null
   },
-  "traffico_multiclass": "Il tratto Kemmel e il rettilineo Stavelot-Blanchimont sono i punti dove far passare: c'è spazio e non ci sono traiettorie da rovinare. Non lasciare passare a Pouhon né a Eau Rouge, è pericoloso per entrambi. In qualifica il traffico peggiore è quello lento nel secondo settore: se ti trovi un'auto a Pouhon il giro è finito, meglio abortire subito e rilanciare.",
+  "traffico_multiclass": "Il tratto Kemmel e il rettilineo Paul Frère-Blanchimont sono i punti dove far passare: c'è spazio e non ci sono traiettorie da rovinare. Non lasciare passare a Pouhon né a Eau Rouge, è pericoloso per entrambi. In qualifica il traffico peggiore è quello lento nel secondo settore: se ti trovi un'auto a Pouhon il giro è finito, meglio abortire subito e rilanciare.",
   "meteo_e_luce": {
     "condizioni_tipiche": "Circuito lungo 7 km nelle Ardenne: è normale avere metà pista bagnata e metà asciutta. Non è un bug del gioco, è Spa.",
     "sul_bagnato": "Eau Rouge-Raidillon e Blanchimont smettono di essere a fondo. Pouhon diventa la curva più insidiosa del giro. Rivedi il riferimento di frenata a Les Combes: sul bagnato serve molto più anticipo.",
     "punti_acqua": "La zona bassa fra Eau Rouge e il Kemmel e la discesa verso Pouhon sono i punti dove l'acqua si raccoglie e resta più a lungo.",
-    "di_notte": "Il tratto centrale, Rivage-Pouhon-Fagnes, è il meno illuminato: i riferimenti visivi spariscono e devi guidare sulla memoria del tracciato.",
+    "di_notte": "Il tratto centrale, Bruxelles-Pouhon-Fagnes, è il meno illuminato: i riferimenti visivi spariscono e devi guidare sulla memoria del tracciato.",
     "al_tramonto": "Il sole basso dà fastidio in uscita da alcune curve del secondo settore: alza la visiera e non fidarti dei riferimenti lontani."
   },
-  "gomme_e_freni_pista": "Spa è un circuito da carico aerodinamico lungo e da poche frenate. Le gomme non si consumano per la trazione ma per l'appoggio prolungato: il lato destro (Pouhon) e il lato sinistro (Stavelot, Blanchimont) si caricano in momenti diversi del giro, quindi le temperature tendono a restare più equilibrate che altrove. I freni hanno tanto tempo per raffreddarsi ma vengono chiamati due volte a giro in modo violento (Les Combes e Bus Stop): il rischio non è il surriscaldamento continuo, è la frenata fredda dopo il rettilineo. Consumo carburante fra i più alti del calendario per via della lunghezza del giro e della percentuale di pieno gas.",
+  "gomme_e_freni_pista": "Spa è un circuito da carico aerodinamico lungo e da poche frenate. Le gomme non si consumano per la trazione ma per l'appoggio prolungato: il lato destro (Pouhon, Blanchimont) e il lato sinistro (Campus, Courbe Paul Frère) si caricano in momenti diversi del giro, quindi le temperature tendono a restare più equilibrate che altrove. I freni hanno tanto tempo per raffreddarsi ma vengono chiamati due volte a giro in modo violento (Les Combes e Bus Stop): il rischio non è il surriscaldamento continuo, è la frenata fredda dopo il rettilineo. Consumo carburante fra i più alti del calendario per via della lunghezza del giro e della percentuale di pieno gas.",
   "errore_del_principiante": "Guardare Eau Rouge come la difficoltà del circuito. Non lo è: con una GT3 in ordine si passa a fondo. Il tempo a Spa si perde in uscita da La Source e nel secondo settore, che sono lenti e noiosi da imparare. Chi arriva qui la prima volta passa un'ora a rifinire il Raidillon e continua a perdere sei decimi a Pouhon.",
   "gt3_ref_lap_time": {
     "valore": "2:17",

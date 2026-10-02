@@ -418,6 +418,19 @@ test("zandvoort: i 14 sensi sono quelli verificati", sensi == SENSI_ZANDVOORT, f
 imola_t1 = ((cat.track_guide("imola") or {}).get("curve") or [{}])[0].get("direzione")
 test("imola: la T1 è una piega a destra", imola_t1 == "destra", f"{imola_t1}")
 
+# Spa (01/10/2026, Entry #065): numerazione di Coach Dave, 19 curve. T15 è la Courbe Paul Frère
+# (Stavelot è il vecchio nome di Campus, T14), Blanchimont occupa T16 e T17, la Bus Stop T18
+# (destra) e T19 (sinistra): prima la guida aveva una «T19» in più, una destra che non esiste.
+spa = (cat.track_guide("spa_francorchamps") or {}).get("curve", [])
+test("spa: 19 curve numerate 1-19", [c.get("n") for c in spa] == list(range(1, 20)), f"{[c.get('n') for c in spa]}")
+test("spa: T14 Campus, T15 Courbe Paul Frère, T16-T17 Blanchimont, T18-T19 Bus Stop",
+     [c.get("nome") for c in spa[13:]] == ["Campus", "Courbe Paul Frère", "Blanchimont", "Blanchimont", "Bus Stop", "Bus Stop"],
+     f"{[c.get('nome') for c in spa[13:]]}")
+test("spa: i sensi delle ultime sei (destra, destra, sinistra, sinistra, destra, sinistra)",
+     [c.get("direzione") for c in spa[13:]] == ["destra", "destra", "sinistra", "sinistra", "destra", "sinistra"],
+     f"{[c.get('direzione') for c in spa[13:]]}")
+test("spa: T8 si chiama Bruxelles (ex Rivage)", len(spa) > 7 and spa[7].get("nome") == "Bruxelles")
+
 # Le guide arrivavano con gli accenti in apostrofo («e'», «piu'», «velocita'»), e a schermo
 # si leggevano così: convertiti il 30/09 (Entry #055, scripts/accenti_guide.py). Una guida
 # nuova scritta allo stesso modo fa fallire questo test: si passa lo script e si ricontrolla.
