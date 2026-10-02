@@ -3001,6 +3001,52 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #068 — Il riferimento GT3 su tutte le guide
+
+| Campo | Valore |
+|---|---|
+| Data | 02/10/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `frontend/src/app/(app)/tracciati/[id]/page.tsx` · `lib/api.ts` |
+| Commit | `f52b2db` + commit docs, pushati il 02/10/2026 |
+| Contesto | Nella #067 il tempo di riferimento GT3 compariva solo sulle guide essenziali; le 14 complete lo avevano nei dati ma nessuna pagina lo mostrava. |
+
+**Catalogo messaggi:**
+1. «mostralo anche sulle complete. ok push ed ok procedi.» → push della #067; questo lavoro è nuovo e va col prossimo «ok push».
+
+**Modifica:** il riferimento GT3 sta in fondo alla fila dei numeri della scheda per ogni guida che ha un valore, e sotto la descrizione la riga «Riferimento GT3 · …» dice da dove viene (dopo «fonte singola», che resta attaccata ai dati di pista). Le **stime di mestiere** (Imola 1:42, Spa 2:17: nessuna fonte, confidenza media) si leggono «Riferimento GT3 · stima» e la riga riporta anche la loro `nota` («Nessuna fonte pubblica certifica i tempi in ACC…»). Zandvoort e Zolder non hanno un valore e non mostrano niente. Tipo `GuidaValoreConFonte` con `origine`, `confidence`, `nota`.
+
+**Verifica:** `tsc --noEmit` 0 · nel Chrome di Edoardo: Spa (stima con la nota, dopo «fonte singola»), Monza e Kyalami (con fonte), Zandvoort (nessun riferimento). Backend non toccato.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» del 02/10/2026.
+
+---
+
+## Entry #069 — Red Bull Ring: guida essenziale
+
+| Campo | Valore |
+|---|---|
+| Data | 02/10/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | NEW `tracks_knowledge/red_bull_ring.json` · `data/tracks.json` (Red Bull Ring) · `tests/test_tracciati.py` · docs |
+| Commit | `941dc63` + commit docs, pushati il 02/10/2026 |
+| Contesto | Secondo circuito con mappa e senza guida scritta per ACC («ok procedi»). Sensi letti a occhio sulla mappa, scelta di Edoardo nella #067. |
+
+**Fatti e fonti:**
+- **Sensi**: letti sulla mappa verificata nel verso della freccia (traguardo verso ovest, orario). Nove curve si leggono chiare: destre T1, T3, T4, T5 (dentro la lunga piega fra 4 e 6), T8, T9, T10; sinistre T6, T7. La **T2** è una piega lieve sul tratto in salita (il disegno piega prima a destra e poi a sinistra, il numero sta sul flesso): la decide Wikipedia in tedesco, che cita formula1.com: «sieben Rechts- und drei Linkskurven» e «die beiden schnellen Linkskurven im Infield» → T2 **sinistra**. Il conto qui scioglie l'unica curva dubbia, non convalida le altre (la lezione della #067).
+- **Nomi**: solo la **T1 «Niki Lauda»** (formula1.com, rinomina del 30/06/2019; il sito del circuito la chiama «Niki Lauda turn»). La mappa di Commons del 2021 scrive «Ams Ag» (3), «Rauch» (4), «Rindt» (9): i primi due sono sponsor e nessuna fonte di oggi li conferma, quindi restano null e la nota li riporta.
+- **Pista**: orario (24hseries, «Clockwise»); 4,318 km (24hseries e catalogo; Wikipedia: stesso tracciato misurato 4,326 km dal 2025); 10 curve (Wikipedia en, formula1.com via de.wiki, mappa; 24hseries ne conta 8). Layout auto senza la chicane delle moto alla 2 (de.wiki + verifica in gioco di Edoardo del 25/09). Dislivello in metri: nessuna fonte del tracciato di oggi (i 65 m sono dell'Österreichring); le pendenze (12% e 9,3%) vanno nelle chicche.
+- **Riferimento GT3 1:28.0** da Track Titan: il 5% più veloce gira in 1:27.882 (Ferrari 296), 1:27.917 (McLaren 720S Evo), 1:28.037 (BMW M4), 1:28.117 (Porsche 992); media 1:30.827 (Porsche). Traxion non ha tempi per questo circuito, Full Grip mostra Monza per ogni indirizzo, SimRacingSetup blocca i bot.
+- **Catalogo**: `corners_confidence` da «media» ad «alta» (10 curve con tre fonti concordi).
+
+**Verifica:** `check_track_knowledge.py` → nessun errore (guide mancanti 9/25) · `test_tracciati` **125/125** (+6: 4 della guida a disco, sensi e nomi del Red Bull Ring) · suite **1170/1170** · `tsc` 0 · scheda `/tracciati/red_bull_ring` nel Chrome di Edoardo dopo il riavvio del backend: riquadro essenziale, 10 curve con i sensi, righe Nomi e Sensi, riferimento 1:28.0, «10 curve» senza «da verificare».
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» del 02/10/2026.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]

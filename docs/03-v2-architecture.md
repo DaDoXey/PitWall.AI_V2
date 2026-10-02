@@ -68,7 +68,7 @@ Le schede vettura/circuito (`SessionBriefing`) leggono `GET /api/catalog/car/{id
   da `api/chat.py` dalla #061), ⚠️`setup_params.py` (+ ⚠️`data/car_setup_ranges.json`), ⚠️`vision_parser.py`,
   ⚠️`prompts/` (`system_prompt_v5.txt`, `chat_system_prompt.txt`), ⚠️`demo_responses.py`, `riferimenti_fisica.py`
   (+ `data/acc_riferimenti_fisica_v19.json` Kunos e `acc_riferimenti_community.json`), `riferimenti_acc.py`,
-  `catalog.py` + `data/cars.json` (54 vetture: 31 GT3, 11 GT4, 6 GT2, 5 monomarca, 1 TCX — Lotto 2, Entry #064) e `data/tracks.json` (25 circuiti), `data/tracks_knowledge/` (guide: 15 su 25, al 02/10; Kyalami è «essenziale», solo i fatti con fonte — campo `livello`), `data/tracks_anchors/` (ancore delle curve: inizio, apice, uscita sul giro e punto sulla mappa per ogni curva della guida; Monza e Zandvoort al 28/09; formato e validatore in `core/ancore.py`, rilevamento in `analisi/eventi_curva.py`).
+  `catalog.py` + `data/cars.json` (54 vetture: 31 GT3, 11 GT4, 6 GT2, 5 monomarca, 1 TCX — Lotto 2, Entry #064) e `data/tracks.json` (25 circuiti), `data/tracks_knowledge/` (guide: 16 su 25, al 02/10; Kyalami e Red Bull Ring sono «essenziali», solo i fatti con fonte — campo `livello`), `data/tracks_anchors/` (ancore delle curve: inizio, apice, uscita sul giro e punto sulla mappa per ogni curva della guida; Monza e Zandvoort al 28/09; formato e validatore in `core/ancore.py`, rilevamento in `analisi/eventi_curva.py`).
 - **`tests/`**: 19 file, 1005 test offline (elenco nei README).
 - **`backend/scripts/`** (fuori da `app/`): pipeline delle immagini (foto, ritagli, mappe, crediti) e validatore delle guide.
 - **`backend/logs/`** (gitignorata): `pitwall.log`, `llm_spesa.json`, e i registri `llm_token_log.md` / `llm_incidents.md`
