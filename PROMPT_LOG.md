@@ -3314,6 +3314,34 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #078 — Gli attrezzi: la verifica in un comando solo (pacchetto 1.0)
+
+| Campo | Valore |
+|---|---|
+| Data | 05/10/2026 |
+| Area | NEW `strumenti/` (`verifica.py`, `guardiano.py`, `hooks/pre-commit`, `server.ps1`, `numeri_documenti.py`, `numeri.json`) · NEW `frontend/e2e/` + `playwright.config.ts` · NEW `.github/workflows/verifica.yml` · `.gitignore` · README · docs/03 |
+| Commit | `ab0be2c` + commit docs, pushati il 05/10/2026 |
+
+**Perché.** Edoardo ha chiesto una tabella di marcia e tempi più corti «ingegnandosi», senza togliere sicurezza né qualità. Il primo pacchetto della tabella sono gli attrezzi che fanno risparmiare tempo a ogni seduta. Da questa voce il registro è breve, per sua scelta: cosa, perché, verifica, decisione.
+
+**Cosa.**
+- `python strumenti/verifica.py`: test del backend, tipi, numeri dei documenti e, con i server accesi, pagine, cinque percorsi nel browser e 27 catture (nove pagine su tre formati di schermo) con l'elenco di quelle cambiate. Verde o rosso; un passo saltato lo dice.
+- Guardiano prima di ogni commit: rifiuta file protetti (salvo `PITWALL_OK_PROCEDI=1` dopo un «ok procedi»), `.env` e gli altri file che non devono entrare nel repository, e ogni testo che somigli a una chiave.
+- `server.ps1`: avvia, ferma, riavvia, stato.
+- `numeri_documenti.py`: i conteggi dei test nei README e in `docs/03` li scrive il codice; ogni rotta dell'API deve comparire nelle tabelle dei README.
+- Controlli a ogni push su GitHub (la verifica veloce).
+- Playwright fra gli strumenti di sviluppo del frontend.
+
+**Trovato dagli attrezzi al primo giro.** La rotta `GET /api/catalog/track/{id}/guida` mancava nei due README: aggiunta · sei file di test usano la memoria condivisa finta di ACC e in parallelo si disturbano: la verifica li mette in fila · la Console regge senza modifiche a 1920×1080 e 1366×768, e nessuna pagina scorre in orizzontale sui tre formati.
+
+**Verifica.** Verifica completa verde: 1270 test, 0 errori di tipo, 9 pagine, 5 percorsi, 27 catture · guardiano provato con `.env` e `agent.py` in stage: commit rifiutato, poi tutto ripulito (anche dagli oggetti locali di Git).
+
+**Decisioni di Edoardo:** attrezzi nel repository · Playwright sì · versione `0.9.0` fino alla beta (si applica nel pacchetto 1.1).
+**File protetti:** ☑ nessuno modificato (`agent.py` toccato e ripristinato per provare il guardiano).
+**Decisione:** ☐ in attesa dell'«ok push»; il «finito quando» si chiude quando il primo push fa partire i controlli su GitHub.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]

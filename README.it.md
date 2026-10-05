@@ -40,12 +40,13 @@ backend/       FastAPI
     telemetria/  # shared memory di ACC: strutture, lettore, dizionario, registratore, banco sintetico
     motec/       # file MoTeC: lettore .ld/.ldx, scrittore con l'impaginazione esatta di ACC, export
     analisi/     # motore deterministico: ritmo, costanza, curve, gomme e freni; contesto di Gigi
-    tests/       # 1270 test offline in 23 file: observability 24, budget 31, bundle 37, adattatori 96,
-                 # analisi 61, analisi_l4 46, demo 38, gigi 36, sessions 61, telemetria 97,
-                 # riferimenti 74, registratore 69, curve 75, telemetria_bundle 50,
-                 # motec 43, motec_bundle 45, motec_export 17, tracciati 169, aggancio 37,
-                 # setup_ranges 40, debrief 39, chat 29, confronto 56
+    tests/       # 1270 test offline in 23 file: adattatori 96, aggancio 37, analisi 61,
+                 # analisi_l4 46, budget 31, bundle 37, chat 29, confronto 56, curve 75,
+                 # debrief 39, demo 38, gigi 36, motec 43, motec_bundle 45, motec_export 17,
+                 # observability 24, registratore 69, riferimenti 74, sessions 61,
+                 # setup_ranges 40, telemetria 97, telemetria_bundle 50, tracciati 169
   scripts/       # pipeline delle immagini, validatore delle guide, validazione MoTeC sui file veri
+strumenti/     verifica in un comando, guardiano dei commit, avvio dei server, numeri dei documenti
 frontend/      Next.js 15.5 (App Router) + TypeScript + Tailwind + Recharts + Framer Motion
   src/
     app/         # layout + pagine (elenco sotto)
@@ -78,6 +79,7 @@ specificato in [`docs/04-rework-dati.md`](docs/04-rework-dati.md).
 | GET | `/api/catalog` | Catalogo vetture e circuiti |
 | GET | `/api/catalog/car/{car_id}` | Scheda di una vettura |
 | GET | `/api/catalog/track/{track_id}` | Scheda di un circuito |
+| GET | `/api/catalog/track/{track_id}/guida` | Guida del circuito: settori e curva per curva |
 | POST | `/api/sessions/import/setup` | Importa un setup salvato in ACC |
 | POST | `/api/sessions/import/results` | Importa un file di risultati di ACC (409 se il file ha più vetture) |
 | POST | `/api/sessions/manuale` | Sessione manuale (chi gioca su console): tempi, setup, racconto del pilota |
@@ -129,12 +131,15 @@ Apri <http://localhost:3000>. Senza un Client ID Google si entra con **«Entra i
 > **Mai `npm run build` con `npm run dev` acceso:** corrompe `.next` (HAZARD-V2-A). Con il dev
 > attivo, per controllare i tipi usa `npx tsc --noEmit`.
 
-### Test
+### Verifica
+Un comando solo, dalla radice del repository, risponde verde o rosso:
 ```bash
-cd backend
-./.venv/Scripts/python app/tests/test_observability.py   # log e request-id, offline
-./.venv/Scripts/python app/tests/test_budget.py          # tetto di spesa, offline (client finto)
+python strumenti/verifica.py            # test, tipi, documenti; con i server accesi anche
+                                        # pagine, cinque percorsi nel browser e catture
+python strumenti/verifica.py --veloce   # senza browser: è quella che gira su GitHub a ogni push
 ```
+I test del backend girano senza rete e senza spesa. Gli altri attrezzi (avvio dei server,
+guardiano dei commit, numeri dei documenti) sono descritti in [`strumenti/`](strumenti/README.md).
 
 ### Log
 Il backend scrive in `backend/logs/` (gitignorata):
@@ -188,18 +193,21 @@ fallita resta al costo massimo, un modello fuori listino si paga al listino più
 della spesa illeggibile blocca le chiamate.
 
 ## Roadmap
-1. ~~Accensione e stress test dell'LLM reale~~ fatto il primo giro, con il tetto di spesa in
-   funzione; Gigi dal vivo è collegato alla Console. Il modello resta spento di default.
-2. **Guide dei tracciati**: 24 circuiti su 25 (manca il Nordschleife); dieci sono guide «essenziali»,
-   con i soli fatti che hanno una fonte.
-3. **Mappe dei circuiti**: 22 layout su 25 verificati e visibili in `/tracciati` (mancano
-   Nordschleife, Oulton Park e Suzuka).
-4. ~~Lotto 2 del catalogo~~ fatto: 54 vetture (31 GT3, 11 GT4, 6 GT2, 5 monomarca, 1 TCX), con i
-   ritagli delle foto.
-5. **Range di setup per vettura** (INC-V2-003, in corso): i click del setup diventano i valori del
-   gioco con una tabella per vettura; ci sono la BMW M4 GT3 e la Ferrari 488 GT3 Evo, le altre
-   restano in click.
-6. **Deploy** dimostrativo in sola lettura, e la prima prova con piloti esterni.
+PitWall oggi è un progetto personale che gira in locale. Il piano porta a due uscite:
+
+1. **Attrezzi e vetrina online.** Verifica con un comando solo, dipendenze aggiornate, rotte di
+   scrittura chiuse, prova su altri schermi e browser, primo deploy in sola lettura con la demo.
+2. **Pronti per la prova.** Landing page, uno spazio privato per ogni pilota senza registrarsi,
+   conteggio dell'uso, percorso d'ingresso per chi porta le proprie sessioni, tabelle dei click
+   (oggi BMW M4 GT3 e Ferrari 488 GT3 Evo, INC-V2-003).
+3. **La prova.** Da tre a cinque piloti di ACC lo usano da soli: arrivano alla prima analisi?
+   tornano? Intanto: accesso facoltativo con Google, backup.
+4. **Prima uscita:** beta pubblica gratuita, in italiano, da computer.
+5. **Seconda uscita:** versione inglese (le guide dei circuiti restano in italiano).
+
+Già fatto: motore di analisi senza modello, import dai file di ACC e da MoTeC, 24 guide dei circuiti
+su 25 e 22 mappe su 25, catalogo di 54 vetture, Gigi dal vivo con tetto di spesa, confronto fra
+sessioni.
 
 ## Deploy
 Piattaforma **da decidere**. Da tenere presente: le immagini non sono versionate, quindi un deploy

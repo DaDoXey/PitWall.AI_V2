@@ -40,12 +40,13 @@ backend/       FastAPI
     telemetria/  # ACC shared memory: structures, reader, dictionary, recorder, synthetic bench
     motec/       # MoTeC files: .ld/.ldx reader, writer with ACC's exact layout, session export
     analisi/     # deterministic engine: pace, consistency, corners, tyres and brakes; Gigi's context
-    tests/       # 1270 offline tests in 23 files: observability 24, budget 31, bundle 37, adattatori 96,
-                 # analisi 61, analisi_l4 46, demo 38, gigi 36, sessions 61, telemetria 97,
-                 # riferimenti 74, registratore 69, curve 75, telemetria_bundle 50,
-                 # motec 43, motec_bundle 45, motec_export 17, tracciati 169, aggancio 37,
-                 # setup_ranges 40, debrief 39, chat 29, confronto 56
+    tests/       # 1270 offline tests in 23 files: adattatori 96, aggancio 37, analisi 61,
+                 # analisi_l4 46, budget 31, bundle 37, chat 29, confronto 56, curve 75,
+                 # debrief 39, demo 38, gigi 36, motec 43, motec_bundle 45, motec_export 17,
+                 # observability 24, registratore 69, riferimenti 74, sessions 61,
+                 # setup_ranges 40, telemetria 97, telemetria_bundle 50, tracciati 169
   scripts/       # image pipeline, track guide validator, MoTeC validation on real ACC files
+strumenti/     one-command verification, commit guard, server start/stop, documentation figures
 frontend/      Next.js 15.5 (App Router) + TypeScript + Tailwind + Recharts + Framer Motion
   src/
     app/         # layout + pages (listed below)
@@ -78,6 +79,7 @@ specified in [`docs/04-rework-dati.md`](docs/04-rework-dati.md).
 | GET | `/api/catalog` | Car and track catalogue |
 | GET | `/api/catalog/car/{car_id}` | Single car sheet |
 | GET | `/api/catalog/track/{track_id}` | Single track sheet |
+| GET | `/api/catalog/track/{track_id}/guida` | Track guide: sectors and corner by corner |
 | POST | `/api/sessions/import/setup` | Imports a setup saved in ACC |
 | POST | `/api/sessions/import/results` | Imports an ACC results file (409 when it holds several cars) |
 | POST | `/api/sessions/manuale` | Manual session (console players): lap times, setup, the driver's account |
@@ -131,12 +133,15 @@ Open <http://localhost:3000>. Without a Google Client ID, sign in with **«Entra
 > **Never run `npm run build` while `npm run dev` is running:** it corrupts `.next` (HAZARD-V2-A).
 > With the dev server up, use `npx tsc --noEmit` to type-check.
 
-### Tests
+### Verification
+One command, from the repository root, answers green or red:
 ```bash
-cd backend
-./.venv/Scripts/python app/tests/test_observability.py   # logs and request id, offline
-./.venv/Scripts/python app/tests/test_budget.py          # spending cap, offline (fake client)
+python strumenti/verifica.py            # tests, types, docs; with the servers running also
+                                        # pages, five browser journeys and screenshots
+python strumenti/verifica.py --veloce   # no browser: the one GitHub runs on every push
 ```
+Backend tests run offline and cost nothing. The other tools (server start/stop, commit guard,
+documentation figures) are described in [`strumenti/`](strumenti/README.md) (in Italian).
 
 ### Logs
 The backend writes to `backend/logs/` (gitignored):
@@ -189,17 +194,20 @@ stays at its maximum cost, a model missing from the price list is charged at the
 rate, and an unreadable spending record blocks calls.
 
 ## Roadmap
-1. ~~Switch-on and stress test of the real LLM~~ first round done, with the spending cap in place;
-   Gigi live is wired to the Console. The model stays off by default.
-2. **Track guides**: 24 of 25 circuits (the Nordschleife is missing); ten are "essential" guides,
-   holding only the facts that have a source.
-3. **Track maps**: 22 of 25 layouts verified and shown in `/tracciati` (Nordschleife, Oulton Park
-   and Suzuka are missing).
-4. ~~Catalogue batch 2~~ done: 54 cars (31 GT3, 11 GT4, 6 GT2, 5 one-make, 1 TCX), with their photo
-   crops.
-5. **Per-car setup ranges** (INC-V2-003, in progress): setup clicks become in-game values through a
-   per-car table; the BMW M4 GT3 and the Ferrari 488 GT3 Evo are done, the other cars stay in clicks.
-6. A read-only demo **deployment**, and the first trial with outside drivers.
+PitWall is a personal project that currently runs locally. The plan leads to two releases:
+
+1. **Tooling and online showcase.** One-command verification, updated dependencies, write routes
+   locked down, checks on other screens and browsers, first read-only deployment with the demo.
+2. **Ready for the trial.** Landing page, a private space for each driver with no sign-up, usage
+   counting, an entry path for drivers bringing their own sessions, click tables (today BMW M4 GT3
+   and Ferrari 488 GT3 Evo, INC-V2-003).
+3. **The trial.** Three to five ACC drivers use it on their own: do they reach the first analysis?
+   do they come back? Meanwhile: optional Google sign-in, backups.
+4. **First release:** free public beta, in Italian, on desktop.
+5. **Second release:** English version (track guides stay in Italian).
+
+Already done: model-free analysis engine, import from ACC files and MoTeC, 24 of 25 track guides and
+22 of 25 maps, a 54-car catalogue, Gigi live under a spending cap, session-to-session comparison.
 
 ## Deployment
 Platform **to be decided**. Keep in mind: images are not versioned, so a deployment starts without

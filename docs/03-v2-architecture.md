@@ -112,6 +112,7 @@ Acceso il live, ogni chiamata passa da `budget.prenota()` / `budget.salda()` (ag
 ## 7 · Verifica
 - Frontend: `npx tsc --noEmit` **0 err** + rotte `/ /console /telemetry /setup /sessioni /lezioni /crediti /login` **200**.
 - Backend: 23 file di test in `app/tests/`, **1270** test, tutti offline.
+- **Un comando solo** (#078): `python strumenti/verifica.py` → test, tipi, numeri dei documenti e, con i server accesi, pagine, cinque percorsi nel browser (`frontend/e2e/percorsi.spec.ts`, Playwright) e catture su tre formati con il confronto (`e2e/catture.spec.ts`). `--veloce` è quella di GitHub (`.github/workflows/verifica.yml`). Prima di ogni commit gira `strumenti/guardiano.py` (file protetti, `.env`, chiavi).
 - **Mai** `npm run build` con `npm run dev` attivo (corrompe `.next`, HAZARD-V2-A).
 
 ## 8 · Deploy (da decidere)
