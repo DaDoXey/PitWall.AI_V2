@@ -2,10 +2,10 @@
 
 # PitWall.AI_V2
 
-A Virtual Race Engineer for Assetto Corsa Competizione (ACC). Leveraging LLMs to transform
-telemetry and driver feedback into actionable car setup and race strategy advice. Designed to
-bridge the gap between complex data and track performance for sim-racers. Developed for the AI &
-Digital Innovation Specialist course.
+A virtual race engineer for Assetto Corsa Competizione (ACC). It reads sessions from the game's
+files and from MoTeC, works out where time is lost corner by corner and names the first thing to
+change. The numbers come from a verifiable engine; a language model tells them over the radio.
+Born in the AI & Digital Innovation Specialist course.
 
 > **v2** of the PitWall.AI web app: a migration from Streamlit to **Next.js + FastAPI**. It reuses
 > the v1 domain logic (LLM client, ACC ranges, vision) behind a clean API, with a rich

@@ -3368,6 +3368,35 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #080 — Pronto per occhi esterni, su ogni schermo (pacchetto 1.2)
+
+| Campo | Valore |
+|---|---|
+| Data | 05/10/2026 |
+| Area | NEW `components/ui/ServizioFermo.tsx`, `SchermoPiccolo.tsx`, `lib/errori.ts` · Console, Setup, Tracciati, Sessioni, Dashboard, Telemetria, Rapporto completo · `Radio.tsx`, `lib/debrief.ts` · `frontend/e2e/*`, `playwright.config.ts` · `strumenti/verifica.py` · README |
+| Commit | `4f691f0` + commit docs, pushati il 05/10/2026 |
+
+**Perché.** Terzo pacchetto della tabella: quello che uno sconosciuto vede quando qualcosa non va, o quando apre PitWall su uno schermo che non è quello di Edoardo.
+
+**Cosa.**
+- **Servizio fermo.** Via «Backend non raggiungibile — avvia FastAPI su :8000 (vedi README)» da cinque punti, e «riprova quando il backend è su» dai Tracciati. Ora ovunque: «PitWall non risponde in questo momento. Riprova fra qualche secondo.» con il pulsante **Riprova**, che rifà le richieste senza ricaricare la pagina.
+- **Un difetto trovato dal percorso nuovo:** con il servizio fermo all'apertura, la Console diceva «Nessuna sessione aperta» e il Setup «Nessun setup in questa sessione». Ora dicono che il servizio non risponde.
+- **Domande della radio su una riga.** «La prossima» non è una domanda: è diventata una freccia accanto al nome della fase. «Il giro migliore?» è «Il giro?». Cinque domande, una riga.
+- **Schermo stretto.** Sotto i 900 px: «Aprilo da computer», con «Guarda lo stesso».
+- **Tre browser.** I percorsi girano su Chromium, Firefox ed Edge (21 prove); due percorsi nuovi: schermo stretto e servizio fermo con «Riprova».
+- **Cattura del login corretta:** fotografava la Dashboard, perché l'utente demo era già dentro.
+- **README:** frase d'apertura nuova (il motore calcola, il modello racconta), scelta da Edoardo. Nella pagina Sessioni «il backend legge la shared memory» è diventato «PitWall legge la telemetria».
+
+**Emerso dal giro da sconosciuto, non corretto qui** (è scritto nella tabella di marcia come lavoro da decidere): parole da addetti ai lavori nella Dashboard («R² 0.984», «soglia Kunos», «stint», «al core», «apice al metro 5414») · la pagina di login non dice che cos'è PitWall · la freccia della fase successiva è piccola.
+
+**Verifica.** Verde su tutto: 1275 test, tipi 0 errori, 9 pagine, 21 prove sui tre browser, 27 catture (cambiate, come atteso, solo la Console e il login).
+
+**Non verificato:** Gigi dal vivo e la dettatura a voce restano da provare da parte di Edoardo (decisione D6).
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ «ok push» del 05/10/2026. Pacchetto 1.2 chiuso. Delle cose emerse dal giro da sconosciuto Edoardo ha messo in programma le parole della Dashboard (pacchetto 2.6, prima della prova).
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
