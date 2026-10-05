@@ -19,8 +19,8 @@ The LLM client is already implemented: a 5-section validated analysis, with retr
 cascade, switched on with `PITWALL_ALLOW_LIVE=1` + `PITWALL_DEMO_MODE=0` + the API key. The client
 also contains a streaming chat for Gigi, served by `POST /api/sessions/{id}/chat` behind its own
 switch (`PITWALL_CHAT_LIVE=1`, off by default). Every model call goes
-through a daily and monthly **spending cap**. **The real LLM stays off by default** until it has
-been stress-tested (see Roadmap).
+through a daily and monthly **spending cap**. **The real LLM stays off by default**: it is switched
+on by choice, after the first stress test in September (see Roadmap).
 
 Iteration history → `PROMPT_LOG.md` · serious malfunctions → `INCIDENTS.md` (both in Italian).
 
@@ -189,15 +189,17 @@ stays at its maximum cost, a model missing from the price list is charged at the
 rate, and an unreadable spending record blocks calls.
 
 ## Roadmap
-1. **Switch-on and stress test of the real LLM**, with the spending cap already in place.
-2. **Track guides** for all 25 ACC circuits: sectors and corner by corner.
-3. **Track maps**: 5 of 25 layouts verified. The other 20 still need replacing, and no page shows
-   the maps yet.
-4. ~~Catalogue batch 2~~ done: 54 cars (31 GT3, 11 GT4, 6 GT2, 5 one-make, 1 TCX); photo crops for the
-   23 new ones still to do.
+1. ~~Switch-on and stress test of the real LLM~~ first round done, with the spending cap in place;
+   Gigi live is wired to the Console. The model stays off by default.
+2. **Track guides**: 24 of 25 circuits (the Nordschleife is missing); ten are "essential" guides,
+   holding only the facts that have a source.
+3. **Track maps**: 22 of 25 layouts verified and shown in `/tracciati` (Nordschleife, Oulton Park
+   and Suzuka are missing).
+4. ~~Catalogue batch 2~~ done: 54 cars (31 GT3, 11 GT4, 6 GT2, 5 one-make, 1 TCX), with their photo
+   crops.
 5. **Per-car setup ranges** (INC-V2-003, in progress): setup clicks become in-game values through a
    per-car table; the BMW M4 GT3 and the Ferrari 488 GT3 Evo are done, the other cars stay in clicks.
-6. **Deployment**.
+6. A read-only demo **deployment**, and the first trial with outside drivers.
 
 ## Deployment
 Platform **to be decided**. Keep in mind: images are not versioned, so a deployment starts without

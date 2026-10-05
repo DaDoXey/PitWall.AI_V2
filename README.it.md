@@ -17,9 +17,10 @@ propria**: portare PitWall dalla demo al prodotto, con l'LLM reale sotto.
 
 Il client LLM è già implementato: un'analisi a 5 sezioni validate, con retry e cascata di modelli,
 che si accende con `PITWALL_ALLOW_LIVE=1` + `PITWALL_DEMO_MODE=0` + la chiave. Il client contiene
-anche una chat di Gigi in streaming, non ancora collegata a nessuna rotta. Ogni chiamata al modello
-passa da un **tetto di spesa** giornaliero e mensile. **L'LLM reale resta spento di default** finché
-non è stato messo sotto stress (vedi Roadmap).
+anche una chat di Gigi in streaming, servita da `POST /api/sessions/{id}/chat` dietro un interruttore
+suo (`PITWALL_CHAT_LIVE=1`, spento di default). Ogni chiamata al modello passa da un **tetto di
+spesa** giornaliero e mensile. **L'LLM reale resta spento di default**: si accende per scelta, dopo
+il primo stress test di settembre (vedi Roadmap).
 
 Cronologia delle iterazioni → `PROMPT_LOG.md` · malfunzionamenti gravi → `INCIDENTS.md`.
 
@@ -177,7 +178,7 @@ Anthropic fattura.
 |---|---|---|
 | `analisi` | Console, `POST /api/analysis` | `PITWALL_BUDGET_ANALISI_GIORNO=0.50` |
 | `screenshot` | Setup, `POST /api/setup/from-image` | `PITWALL_BUDGET_SCREENSHOT_GIORNO=0.25` |
-| `chat` | chat di Gigi (non collegata) | `PITWALL_BUDGET_CHAT_GIORNO=0` |
+| `chat` | Gigi dal vivo nella Console, `POST /api/sessions/{id}/chat` | `PITWALL_BUDGET_CHAT_GIORNO=0` |
 
 Sopra le tre categorie c'è un tetto **mensile** complessivo, `PITWALL_BUDGET_MESE=5.00`. Il giorno si
 azzera a mezzanotte (ora del server). A tetto raggiunto l'analisi risponde dalla cache con
@@ -187,14 +188,18 @@ fallita resta al costo massimo, un modello fuori listino si paga al listino più
 della spesa illeggibile blocca le chiamate.
 
 ## Roadmap
-1. **Accensione e stress test dell'LLM reale**, con il tetto di spesa già in funzione.
-2. **Guide dei tracciati** per tutti i 25 circuiti ACC: settori e curva per curva.
-3. **Mappe dei circuiti**: 5 layout su 25 verificati. Restano da sostituire gli altri 20, e manca
-   ancora la pagina che le mostri.
-4. **Lotto 2 del catalogo**: 23 vetture GT4, GT2, GTC e TCX.
+1. ~~Accensione e stress test dell'LLM reale~~ fatto il primo giro, con il tetto di spesa in
+   funzione; Gigi dal vivo è collegato alla Console. Il modello resta spento di default.
+2. **Guide dei tracciati**: 24 circuiti su 25 (manca il Nordschleife); dieci sono guide «essenziali»,
+   con i soli fatti che hanno una fonte.
+3. **Mappe dei circuiti**: 22 layout su 25 verificati e visibili in `/tracciati` (mancano
+   Nordschleife, Oulton Park e Suzuka).
+4. ~~Lotto 2 del catalogo~~ fatto: 54 vetture (31 GT3, 11 GT4, 6 GT2, 5 monomarca, 1 TCX), con i
+   ritagli delle foto.
 5. **Range di setup per vettura** (INC-V2-003, in corso): i click del setup diventano i valori del
-   gioco con una tabella per vettura; per ora c'è la BMW M4 GT3, le altre restano in click.
-6. **Deploy**.
+   gioco con una tabella per vettura; ci sono la BMW M4 GT3 e la Ferrari 488 GT3 Evo, le altre
+   restano in click.
+6. **Deploy** dimostrativo in sola lettura, e la prima prova con piloti esterni.
 
 ## Deploy
 Piattaforma **da decidere**. Da tenere presente: le immagini non sono versionate, quindi un deploy
