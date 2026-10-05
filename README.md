@@ -155,10 +155,10 @@ The backend writes to `backend/logs/` (gitignored):
   the LLM client when the real LLM is on.
 
 ### Images (photos and maps)
-Images come from Wikimedia Commons (~33 MB) and are **not in the repo**: `frontend/public/assets/`
-is gitignored. After a clone the app still works, but car and track sheets have no photos and
-`/crediti` reports the assets as not downloaded yet. The hand-picked selection is versioned; to
-download it, from the repo root:
+Images come from Wikimedia Commons and are **in the repo** (`frontend/public/assets/`, about 47 MB):
+photos, verified track layouts, crops and credits. Authors and licences are in `ATTRIBUTIONS.md` and
+on the `/crediti` page. The hand-picked selection is versioned separately; to rebuild the images
+from it, from the repo root:
 ```bash
 backend/.venv/Scripts/python backend/scripts/apply_photos.py   # photos (photos.json) + crops + credits
 backend/.venv/Scripts/python backend/scripts/apply_maps.py     # track layouts (maps_choice.json)
@@ -210,8 +210,11 @@ Already done: model-free analysis engine, import from ACC files and MoTeC, 24 of
 22 of 25 maps, a 54-car catalogue, Gigi live under a spending cap, session-to-session comparison.
 
 ## Deployment
-Platform **to be decided**. Keep in mind: images are not versioned, so a deployment starts without
-photos until `apply_photos.py` is run.
+The showcase comes in two parts, both on free plans: the **frontend on Vercel** (the `frontend`
+folder) and the **backend on Render**, described in [`render.yaml`](render.yaml) as a read-only
+showcase: model, writes and recorder off, no API key, demo session only. The free backend goes to
+sleep after fifteen minutes without visits: the frontend waits for it
+(`NEXT_PUBLIC_ATTESA_ACCENSIONE_S`) and `.github/workflows/sveglia.yml` keeps it awake during the day.
 
 ## License
 Released under the **MIT** license — see [LICENSE](LICENSE).

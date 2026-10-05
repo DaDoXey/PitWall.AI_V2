@@ -52,7 +52,7 @@ Le schede vettura/circuito (`SessionBriefing`) leggono `GET /api/catalog/car/{id
   `theme.ts`, **`instrument.ts`** (token "analogici"), **`motion.ts`**, `catalog.ts` (liste di fallback),
   `console.ts`, `lessons.ts`, `setup.ts`.
 - **Regola L4**: i conti li fa il motore di analisi nel backend; il frontend mostra.
-- Asset visivi in `public/assets/` (**gitignorata**, ~33 MB): si rigenerano con gli script di `backend/scripts/`.
+- Asset visivi in `public/assets/` (dal 05/10/2026 **nel repository**, ~47 MB; fuori solo i provini `_*`): si rigenerano con gli script di `backend/scripts/`.
 
 ## 3 · Backend (`backend/app/`)
 - **`main.py`** — FastAPI, CORS, 6 router sotto `/api`, middleware request-id. **`config.py`** — env server-side +

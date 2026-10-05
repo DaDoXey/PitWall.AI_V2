@@ -3397,6 +3397,34 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #081 — Il primo deploy, la preparazione (pacchetto 1.3, prima parte)
+
+| Campo | Valore |
+|---|---|
+| Data | 05/10/2026 |
+| Area | NEW `render.yaml` · NEW `.github/workflows/sveglia.yml` · NEW `components/ui/Accensione.tsx` · `lib/sessione.tsx` · `(app)/layout.tsx` · `frontend/public/assets/` (101 file ora nel repository) · `.gitignore` · `strumenti/guardiano.py` · `frontend/e2e/percorsi.spec.ts` · `.env.local.example` |
+| Commit | `0e606ba` (deploy) + commit delle immagini e dei documenti, pushati il 05/10/2026 |
+
+**Perché.** Quarto pacchetto della tabella: mettere online la vetrina. Questa voce copre tutto quello che si prepara nel repository; gli account e la pubblicazione vera li fa Edoardo, guidato, e avranno la loro voce.
+
+**Decisioni di Edoardo.** Frontend su Vercel e backend su Render, piani gratuiti (D4) · immagini nel repository, dopo il chiarimento che vengono da Wikimedia Commons e che in vetrina sono comunque pubbliche · repository pubblico e MIT fino al cancello M3 (D1) · indirizzo gratuito per ora, il dominio con il nome definitivo · «PitWall» resta il nome in codice · il sonno del backend si tratta con una schermata d'attesa e una sveglia diurna.
+
+**Cosa.**
+- **Immagini nel repository:** 101 file, 46,6 MB (foto, mappe verificate, ritagli, crediti); restano fuori i provini di lavoro (`_*`). Il test dei tracciati ora gira anche su GitHub.
+- **`render.yaml`:** il backend come vetrina in sola lettura. Modello, scritture e registratore spenti; nessuna chiave API; si pubblica solo un commit che ha passato i controlli.
+- **Accensione:** quando il backend dorme, il primo visitatore legge «Il muretto si sta accendendo» e la pagina riparte da sola; solo dopo l'attesa configurata compare «PitWall non risponde». In locale l'attesa è zero.
+- **Sveglia:** una richiesta ogni 10 minuti nelle ore diurne, da GitHub, all'indirizzo scritto in una variabile del repository.
+- **Percorsi:** uno nuovo sull'accensione; il primo (ingresso dal login) reso stabile, perché ogni tanto cliccava prima che la pagina fosse viva. 8 percorsi su 3 browser = 24 prove.
+
+**Da sapere.** Le immagini pesano 46,6 MB, non i 33 scritti finora nei documenti (sono cresciute con il Lotto 2) · il piano gratuito basta per la vetrina, non per la prova: lì il disco si azzera a ogni riavvio, e dal pacchetto 2.2 servirà un backend con disco permanente (5-7 dollari al mese) · `autoDeployTrigger: checksPass` in `render.yaml` va verificato alla prima pubblicazione.
+
+**Verifica.** Test, tipi, documenti, dipendenze, pagine: verdi; 24 prove nei browser verdi, il percorso dell'accensione ripetuto tre volte sui tre browser; catture: nessuna pagina cambiata.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ «ok push» del 05/10/2026. Il pacchetto resta aperto fino alla pubblicazione vera.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]

@@ -153,10 +153,10 @@ Il backend scrive in `backend/logs/` (gitignorata):
   dal client LLM quando l'LLM reale è acceso.
 
 ### Immagini (foto e mappe)
-Le immagini arrivano da Wikimedia Commons (~33 MB) e **non sono nel repo**: `frontend/public/assets/`
-è gitignorata. Dopo un clone l'app funziona lo stesso, ma senza foto nelle schede e con `/crediti`
-che segnala gli asset come non ancora scaricati. Nel repo è versionata la selezione fatta a mano;
-per scaricarla, dalla radice del repo:
+Le immagini arrivano da Wikimedia Commons e sono **nel repo** (`frontend/public/assets/`, circa
+47 MB): foto, layout verificati dei circuiti, ritagli e crediti. Autori e licenze sono in
+`ATTRIBUTIONS.md` e nella pagina `/crediti`. La selezione fatta a mano è versionata a parte; per
+rigenerare le immagini da quella, dalla radice del repo:
 ```bash
 backend/.venv/Scripts/python backend/scripts/apply_photos.py   # foto (photos.json) + ritagli + crediti
 backend/.venv/Scripts/python backend/scripts/apply_maps.py     # layout dei circuiti (maps_choice.json)
@@ -210,8 +210,12 @@ su 25 e 22 mappe su 25, catalogo di 54 vetture, Gigi dal vivo con tetto di spesa
 sessioni.
 
 ## Deploy
-Piattaforma **da decidere**. Da tenere presente: le immagini non sono versionate, quindi un deploy
-parte senza foto finché non si esegue `apply_photos.py`.
+La vetrina è pensata in due pezzi, tutti e due nel piano gratuito: il **frontend su Vercel** (cartella
+`frontend`) e il **backend su Render**, descritto in [`render.yaml`](render.yaml) come vetrina in sola
+lettura: modello, scritture e registratore spenti, nessuna chiave API, solo la sessione demo. Il
+backend gratuito si addormenta dopo un quarto d'ora senza visite: il frontend lo aspetta («Il muretto
+si sta accendendo», `NEXT_PUBLIC_ATTESA_ACCENSIONE_S`) e `.github/workflows/sveglia.yml` lo tiene
+acceso di giorno.
 
 ## Licenza
 Distribuito con licenza **MIT** — vedi [LICENSE](LICENSE).
