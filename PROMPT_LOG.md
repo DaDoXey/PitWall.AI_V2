@@ -3448,6 +3448,27 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #083 — Vetrina: via il pulsante di Google che dava errore, e il telefono in orizzontale
+
+| Campo | Valore |
+|---|---|
+| Data | 05/10/2026 |
+| Area | `frontend/src/app/(auth)/login/page.tsx` · `components/ui/SchermoPiccolo.tsx` · `frontend/e2e/percorsi.spec.ts` |
+| Commit | `b268c66` + commit docs, pushati il 05/10/2026 |
+
+**Perché.** Edoardo, provando la vetrina: «Continua con Google» apriva una finestra di Google con «Errore 400: invalid_request — Missing required parameter: client_id». E dopo averla fatta aprire da più telefoni: va bene, e in orizzontale si guarda, anche se scomodo.
+
+**Causa.** Errore mio di preparazione: sulla vetrina il Client ID di Google non c'è, di proposito, e avevo dato per scontato che senza di esso il pulsante non comparisse. Compariva sempre.
+
+**Cosa.** Il pulsante di Google, il separatore «oppure» e la nota sul profilo Google compaiono solo dove c'è un Client ID; senza, la pagina di login dice «Nessun account e nessun dato richiesto: è una demo da guardare». L'avviso sugli schermi stretti suggerisce di girare il telefono, e in orizzontale sparisce da solo. Due percorsi automatici lo coprono.
+
+**Verifica.** Verifica completa verde in locale; Vercel ha pubblicato da solo in circa un minuto; i **nove percorsi passano contro la vetrina vera**, compreso quello nuovo sul login senza Google.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ richiesta di Edoardo del 05/10/2026.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
