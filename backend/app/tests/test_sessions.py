@@ -287,6 +287,12 @@ test("S47 l'export del setup risponde 200 con un file JSON da scaricare",
      resp.status_code == 200 and resp.headers["content-type"].startswith("application/json")
      and 'filename="acc_setup_gt3 PitWall.json"' in resp.headers.get("content-disposition", ""),
      f"{resp.status_code} {resp.headers.get('content-disposition')}")
+from app import config as _config  # noqa: E402
+
+test("S47b le origini del frontend perdono percorso e barra finale (un /login in coda non blocca più tutto)",
+     _config.origini("https://sito.app/login, https://sito.app/ ,http://localhost:3000,, https://altro.app")
+     == ["https://sito.app", "http://localhost:3000", "https://altro.app"],
+     str(_config.origini("https://sito.app/login, https://sito.app/ ,http://localhost:3000,, https://altro.app")))
 test("S48 il browser può leggere il nome del file (header esposto dal CORS)",
      "content-disposition" in resp.headers.get("access-control-expose-headers", "").lower(),
      resp.headers.get("access-control-expose-headers", ""))

@@ -24,8 +24,13 @@ jobs:
         env:
           BACKEND: ${{ vars.PITWALL_BACKEND_URL }}
         run: |
+          # L'esito diventa un'annotazione del controllo: si legge senza aprire i log.
           if [ -z "$BACKEND" ]; then
-            echo "PITWALL_BACKEND_URL non impostata: niente da svegliare."
+            echo "::warning title=sveglia::PITWALL_BACKEND_URL non impostata: niente da svegliare"
             exit 0
           fi
-          curl --silent --show-error --max-time 100 --output /dev/null --write-out "risposta %{http_code} in %{time_total} s\n" "$BACKEND/" || echo "il backend non ha risposto: si starà riaccendendo"
+          esito=$(curl --silent --max-time 100 --output /dev/null --write-out "%{http_code} in %{time_total} s" "$BACKEND/" || true)
+          case "$esito" in
+            200*) echo "::notice title=sveglia::il backend ha risposto $esito" ;;
+            *)    echo "::warning title=sveglia::il backend non ha risposto bene ($esito): si starà riaccendendo" ;;
+          esac

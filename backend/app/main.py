@@ -8,6 +8,7 @@ Niente --reload: su Windows serve codice vecchio dopo una modifica al backend
 """
 
 import logging
+import os
 import re
 import time
 import uuid
@@ -107,6 +108,8 @@ def health():
         "status": "ok",
         "service": "PitWall.AI API",
         "version": VERSIONE,
+        # Quale commit è online (lo scrive l'hosting): serve a vedere da fuori se un push è arrivato.
+        "commit": (os.getenv("RENDER_GIT_COMMIT") or "")[:7] or None,
         "demo_mode": config.demo_mode(),
         "live_allowed": config.allow_live(),
         # La chat dal vivo ha il suo interruttore (#061) e serve anche la chiave.

@@ -50,6 +50,13 @@ test("catture su tre formati, con il confronto", async ({ page, browser }) => {
   const fuori = await browser.newContext({ locale: "it-IT", reducedMotion: "reduce" });
   const ospite = await fuori.newPage();
 
+  // Un giro a vuoto prima di fotografare: la prima pagina dopo un riavvio dei server arriva
+  // a pezzi (dati e immagini in ritardo) e risultava «cambiata» senza esserlo.
+  await page.goto("/");
+  await pronta(page);
+  await page.goto("/console");
+  await pronta(page);
+
   const esito: { pagina: string; formato: string; file: string; stato: string; quota: number | null; scorre: boolean }[] = [];
   for (const formato of FORMATI) {
     await page.setViewportSize({ width: formato.width, height: formato.height });

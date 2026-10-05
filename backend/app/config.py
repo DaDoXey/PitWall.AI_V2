@@ -30,11 +30,28 @@ os.environ.setdefault("PITWALL_INCIDENTS_PATH", str(LOG_DIR / "llm_incidents.md"
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 LLM_MODEL = os.getenv("LLM_MODEL", "claude-haiku-4-5")
 
-CORS_ORIGINS = [
-    o.strip()
-    for o in os.getenv("PITWALL_CORS_ORIGINS", "http://localhost:3000").split(",")
-    if o.strip()
-]
+def origini(valore: str) -> list[str]:
+    """Le origini del frontend, ridotte a schema + host (+ porta).
+
+    Un'origine non ha percorso: `https://sito.app/login` o `https://sito.app/` non
+    combaciano mai con quello che manda il browser, e il frontend resta muto senza un
+    errore visibile (successo il 05/10/2026 al primo deploy). Qui il percorso si toglie.
+    """
+    from urllib.parse import urlsplit
+
+    fuori: list[str] = []
+    for pezzo in valore.split(","):
+        pezzo = pezzo.strip()
+        if not pezzo:
+            continue
+        parti = urlsplit(pezzo)
+        origine = f"{parti.scheme}://{parti.netloc}" if parti.scheme and parti.netloc else pezzo.rstrip("/")
+        if origine not in fuori:
+            fuori.append(origine)
+    return fuori
+
+
+CORS_ORIGINS = origini(os.getenv("PITWALL_CORS_ORIGINS", "http://localhost:3000"))
 
 
 def allow_live() -> bool:

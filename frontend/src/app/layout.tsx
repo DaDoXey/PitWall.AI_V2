@@ -10,6 +10,9 @@ const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
 export const metadata: Metadata = {
   title: "PitWall.AI",
   description: "Virtual Race Engineer · ACC GT3",
+  // Quale commit è online (lo scrive Vercel alla costruzione): serve a vedere da fuori se
+  // un push è arrivato. In locale non c'è.
+  other: process.env.VERCEL_GIT_COMMIT_SHA ? { "pitwall-commit": process.env.VERCEL_GIT_COMMIT_SHA.slice(0, 7) } : {},
 };
 
 // Root layout: SOLO fonts + globals. La Sidebar vive nel route group (app):

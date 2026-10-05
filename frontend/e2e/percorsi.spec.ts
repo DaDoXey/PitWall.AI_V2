@@ -70,6 +70,9 @@ test("6 · su uno schermo stretto dice di aprirlo da computer, e si può guardar
 
 test("7 · se il servizio non risponde lo dice senza nomi tecnici, e «Riprova» riparte", async ({ page }) => {
   await entraInDemo(page);
+  // Niente attesa dell'accensione: online vale 90 secondi, e questo percorso parla di ciò che
+  // si legge DOPO l'attesa (l'attesa stessa la prova il percorso 8).
+  await page.addInitScript(() => sessionStorage.setItem("pw_prova_accensione_s", "0"));
   // Il servizio «cade» solo per questa pagina: le richieste all'API falliscono come a rete assente.
   let fermo = true;
   await page.route("**/api/**", (rotta) => (fermo ? rotta.abort() : rotta.continue()));
