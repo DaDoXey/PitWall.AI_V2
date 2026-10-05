@@ -26,8 +26,8 @@ jobs:
         run: |
           # L'esito diventa un'annotazione del controllo: si legge senza aprire i log.
           if [ -z "$BACKEND" ]; then
-            echo "::warning title=sveglia::PITWALL_BACKEND_URL non impostata: niente da svegliare"
-            exit 0
+            echo "::error title=sveglia NON CONFIGURATA::manca la variabile del repository PITWALL_BACKEND_URL: la sveglia non ha chiamato nessuno"
+            exit 1
           fi
           esito=$(curl --silent --max-time 100 --output /dev/null --write-out "%{http_code} in %{time_total} s" "$BACKEND/" || true)
           case "$esito" in
