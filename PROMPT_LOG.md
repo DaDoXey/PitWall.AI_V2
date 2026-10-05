@@ -3234,6 +3234,50 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #076 — La lettura degli screenshot del setup, provata per la prima volta
+
+| Campo | Valore |
+|---|---|
+| Data | 05/10/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | nessun file del repo (prova): `core/vision_parser.py` chiamato così com'è · immagini e resoconto in `%LOCALAPPDATA%\PitWall\screenshot_prova\` |
+| Commit | solo questa entry (docs) |
+| Contesto | Terza e ultima delle cose parcheggiate della Console (punto 5). La rotta `POST /api/setup/from-image` esiste dalla v1 ma non era mai stata provata con un'immagine vera (#029: «nessuno screenshot reale disponibile»); dalla #058 nessuna pagina la usa. |
+
+**Catalogo messaggi:**
+1. (giri di domande della #074) Screenshot: **«Provarlo, poi decidere»**; senza ACC sul PC di Edoardo, immagini **cercate online**; il caricamento torna nella pagina Setup solo se la lettura è buona.
+2. «ok push, poi procedi con gli screenshot» → push della #075 (`5ac0c6c` · `02c0902`), poi la prova.
+
+**Le immagini.** I fermo-immagine dai video di YouTube non si sono potuti prendere (nella scheda in secondo piano il video non si carica). Usate le sette immagini dell'articolo di racinggames.gg sul setup della Porsche 911 GT3 R a Imola: schermate vere di ACC 1.6.5, una per scheda (Tyres, Electronics, Fuel & strategy, Mechanical grip, Dampers, Aero) più una visuale dall'abitacolo senza setup. **Limite:** il sito le serve a 1024×576, non a 1920×1080 come dice il nome del file: più piccole di uno screenshot fatto in casa. Uso locale, fuori dal repo, provenienza scritta accanto. I valori giusti li ho letti io, immagine per immagine (49 in tutto).
+
+**La prova.** Parser chiamato direttamente da uno script (la rotta in demo-mode risponde 503, per scelta della #027), con il modello vero (`claude-sonnet-4-6`) e passando dal tetto di spesa.
+
+| Scheda | Giusti | Note |
+|---|---|---|
+| Tyres | 13/13 | pressioni, toe, camber, caster |
+| Electronics | 4/4 | |
+| Mechanical grip | 10/10 | brake bias compreso (59.0 %) |
+| Dampers | 16/16 | ma il parser li segna «fuori range» (sotto) |
+| Aero | 5/6 | **ala posteriore letta 5, è 6** |
+| Fuel & strategy | — | **letti 4 valori che non sono del setup** (sotto) |
+| Abitacolo | — | nessun valore, giusto |
+
+**48 valori giusti su 49**, 2–5 secondi a immagine, **$0,0395** per le sette (ottobre a $0,107 su $1,00).
+
+**I tre difetti trovati:**
+1. **Un numero sbagliato in silenzio**: ala 5 invece di 6 (cifra bianca sopra la barra rossa, a 1024 px). Il parser lo dà per buono: non c'è modo di accorgersene senza guardare l'immagine.
+2. **La scheda Fuel & strategy inganna**: le pressioni della strategia di sosta (26.5 / 26.1 / 25.6 / 25.3) sono state lette come pressioni del setup (`tire_press_*`), che in quel setup sono 26.2 / 25.7 / 25.7 / 25.6. Validazione «ok».
+3. **Falsi allarmi della validazione**: `validate_setup` usa i range generici (ammortizzatori 0–11), e segna «fuori range» i 12 e 13 veri della Porsche. È il vecchio INC-V2-003 visto da qui.
+
+**Il nodo che la prova ha fatto emergere.** Lo screenshot porta i **valori del gioco** (psi, N/m, gradi); dalla #057/#058 PitWall lavora in **click** e conosce la conversione solo per BMW M4 GT3 e Ferrari 488 GT3 Evo. Per le altre vetture un setup letto da screenshot non si può portare nella pagina Setup né confrontare con un file di ACC senza la tabella di quella vettura.
+
+**Verifica:** resoconto completo (attesi, letti, risposta grezza del modello) in `screenshot_prova/racinggames_porsche_991_imola/resoconto_prova.json`; l'ala a 6 ricontrollata su un ritaglio ingrandito.
+
+**File protetti:** ☑ nessuno toccato (`vision_parser.py` solo chiamato).
+**Decisione:** ☑ «lascialo parcheggiato» (Edoardo, 05/10/2026): la rotta resta, nessuna pagina la usa. Con questa il punto 5 è chiuso.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
