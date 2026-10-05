@@ -377,6 +377,21 @@ export function getDebrief(id: string) {
   return getJSON<Debrief>(`/api/sessions/${encodeURIComponent(id)}/debrief`);
 }
 
+// ── «Sono migliorato?»: la sessione contro la precedente (analisi/confronto.py) ──
+export type Confronto = {
+  /** null = nessuna sessione precedente su questa pista con questa vettura. */
+  precedente: { id: string; giorno: string | null; demo: boolean; riferimento: boolean } | null;
+  /** Perché il confronto non c'è, quando non c'è. */
+  motivo: string | null;
+  messaggio: string;
+  /** Le prove, una per riga: escono con «Perché?». */
+  prova: string[];
+};
+
+export function getConfronto(id: string) {
+  return getJSON<Confronto>(`/api/sessions/${encodeURIComponent(id)}/confronto`);
+}
+
 /** Salva le fasi ritagliate a mano (null = torna a quelle di Gigi) e restituisce il debrief nuovo. */
 export async function salvaTagli(id: string, tagli: number[] | null): Promise<Debrief> {
   const res = await fetch(`${API_BASE}/api/sessions/${encodeURIComponent(id)}/debrief/tagli`, {

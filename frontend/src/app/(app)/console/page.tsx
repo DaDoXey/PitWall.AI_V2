@@ -17,13 +17,25 @@ import MappaFase from "@/components/console/MappaFase";
 import Radio from "@/components/console/Radio";
 import RapportoCompleto from "@/components/console/RapportoCompleto";
 import StrisciaGiri from "@/components/console/StrisciaGiri";
-import { ApiError, chatConGigi, getDebrief, getSetupParams, getStatoBackend, salvaTagli, type Debrief } from "@/lib/api";
+import {
+  ApiError,
+  chatConGigi,
+  getConfronto,
+  getDebrief,
+  getSetupParams,
+  getStatoBackend,
+  salvaTagli,
+  type Confronto,
+  type Debrief,
+} from "@/lib/api";
 import {
   alternaTaglio,
   DOMANDE,
+  domandePer,
   MAX_DOMANDE_DAL_VIVO,
   messaggiIniziali,
   rispondi,
+  rispondiConfronto,
   titoloPrimaCosa,
   type Domanda,
   type Messaggio,
@@ -50,6 +62,7 @@ export default function ConsolePage() {
   const { idSessione, sessione, report, nomi } = useSessione();
   const { profile } = useProfile();
   const [debrief, setDebrief] = useState<Debrief | null>(null);
+  const [confronto, setConfronto] = useState<Confronto | null>(null);
   const [errore, setErrore] = useState<string | null>(null);
   const [attiva, setAttiva] = useState(0);
   const [inRiproduzione, setInRiproduzione] = useState(false);
@@ -84,6 +97,19 @@ export default function ConsolePage() {
     };
   }, [idSessione, riparti]);
 
+  // La sessione precedente sulla stessa pista e vettura: se c'è, compare «Sono migliorato?».
+  useEffect(() => {
+    if (!idSessione) return;
+    let vivo = true;
+    setConfronto(null);
+    getConfronto(idSessione)
+      .then((c) => vivo && setConfronto(c))
+      .catch(() => vivo && setConfronto(null));
+    return () => {
+      vivo = false;
+    };
+  }, [idSessione]);
+
   // Gigi dal vivo c'è solo se il backend ha la chat accesa (interruttore suo e chiave).
   useEffect(() => {
     getStatoBackend()
@@ -117,12 +143,21 @@ export default function ConsolePage() {
 
   const chiedi = (d: Domanda) => {
     if (!debrief) return;
-    const r = rispondi(debrief, d, attiva);
     setInRiproduzione(false);
     const n = Date.now();
+    const tu: Messaggio = { id: `tu-${n}`, da: "tu", testo: DOMANDE.find((x) => x.id === d)?.testo ?? "" };
+    // «Perché?» subito dopo «Sono migliorato?» chiede le prove del confronto, non della fase.
+    const ultimaDiGigi = [...conversazione].reverse().find((m) => m.da === "gigi");
+    if (confronto && (d === "migliorato" || (d === "perche" && ultimaDiGigi?.confronto))) {
+      const r = rispondiConfronto(confronto, d === "perche");
+      setConversazione((c) => [...c, tu, { id: `gigi-${n}`, da: "gigi", testo: r.testo, prova: r.prova, confronto: d === "migliorato" }]);
+      return;
+    }
+    if (d === "migliorato") return;
+    const r = rispondi(debrief, d, attiva);
     setConversazione((c) => [
       ...c,
-      { id: `tu-${n}`, da: "tu", testo: DOMANDE.find((x) => x.id === d)?.testo ?? "" },
+      tu,
       // La prova, numero per numero, esce solo quando la si chiede.
       { id: `gigi-${n}`, da: "gigi", testo: r.testo, prova: d === "perche" ? r.prova : undefined, fase: r.fase },
     ]);
@@ -312,6 +347,7 @@ export default function ConsolePage() {
             <Radio
               messaggio={messaggioDiFase}
               conversazione={conversazione}
+              domande={domandePer(confronto)}
               nomeFase={faseInOnda?.nome}
               dalVivo={dalVivo}
               inRisposta={inRisposta}

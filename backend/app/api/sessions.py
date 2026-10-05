@@ -453,6 +453,35 @@ async def debrief_sessione(id_sessione: str):
         return risultato
 
 
+@router.get("/sessions/{id_sessione}/confronto")
+async def confronto_sessione(id_sessione: str):
+    """«Sono migliorato?»: la sessione contro la precedente sulla stessa pista e vettura,
+    dentro lo stesso gruppo. Dal motore, senza modello, zero spesa. Senza una precedente
+    risponde con `precedente: null` e il motivo: la Console non mostra la domanda.
+    """
+    from app.analisi.confronto import Confronto, confronta, scegli_precedente
+    from app.bundle import demo_precedente
+
+    bundle = _leggi_o_errore(id_sessione)
+    if demo.e_demo(id_sessione):
+        prima, canali_prima = demo_precedente.costruisci()
+        id_prima = demo_precedente.ID
+    else:
+        scelta = scegli_precedente(store.elenca(), id_sessione)
+        if scelta is None:
+            return Confronto(motivo="Non c'è una sessione precedente su questa pista con questa vettura.")
+        id_prima = scelta.id
+        prima = _leggi_o_errore(id_prima)
+        canali_prima = canali_del_bundle(prima)
+    canali = canali_del_bundle(bundle)
+    risultato = confronta(bundle, analizza(bundle, canali), canali,
+                          prima, analizza(prima, canali_prima), canali_prima, id_prima)
+    log.info("confronto di %s con %s: %s", id_sessione, id_prima,
+             f"{risultato.ritmo.delta_migliore_ms:+d} ms sul giro migliore" if risultato.ritmo
+             else "non confrontabili")
+    return risultato
+
+
 class TagliFasi(BaseModel):
     """I giri con cui comincia una fase nuova; null = le fasi di Gigi."""
 

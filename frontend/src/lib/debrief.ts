@@ -2,7 +2,7 @@
 // alle altre sezioni, l'onda della radio, la «prima cosa da fare» detta in click, le
 // risposte che il debrief sa dare da solo. Nessun calcolo di analisi: i numeri sono
 // quelli del motore (analisi/debrief.py); qui solo come si dicono e dove portano.
-import type { Debrief, FaseDebrief } from "@/lib/api";
+import type { Confronto, Debrief, FaseDebrief } from "@/lib/api";
 import { clickDaVariazione, type SetupParams } from "@/lib/setup";
 
 export type Collegamento = { etichetta: string; href: string };
@@ -81,6 +81,7 @@ export type Messaggio = {
   collegamenti?: Collegamento[];
   dalVivo?: boolean; // scambio con il modello (#061): gli altri vengono dal debrief
   errore?: boolean; // la chat non ha risposto: non conta e non torna al modello
+  confronto?: boolean; // risposta a «Sono migliorato?»: il «Perché?» dopo parla di questa
 };
 
 /** Le domande che il pilota può scrivere a Gigi dal vivo in una conversazione (come il backend). */
@@ -98,14 +99,28 @@ export function messaggiIniziali(d: Debrief): Messaggio[] {
   }));
 }
 
-export type Domanda = "perche" | "dove" | "gomme" | "giro";
+export type Domanda = "perche" | "dove" | "gomme" | "giro" | "migliorato";
 
 export const DOMANDE: { id: Domanda; testo: string }[] = [
   { id: "perche", testo: "Perché?" },
   { id: "dove", testo: "Dove perdo?" },
   { id: "gomme", testo: "E le gomme?" },
   { id: "giro", testo: "Il giro migliore?" },
+  // Solo se c'è una sessione precedente sulla stessa pista e vettura (domandePer).
+  { id: "migliorato", testo: "Sono migliorato?" },
 ];
+
+/** Le domande da mostrare: «Sono migliorato?» c'è solo con una sessione precedente. */
+export function domandePer(confronto: Confronto | null) {
+  return DOMANDE.filter((d) => d.id !== "migliorato" || Boolean(confronto?.precedente));
+}
+
+/** «Sono migliorato?»: il messaggio del motore; le prove, riga per riga, solo con «Perché?». */
+export function rispondiConfronto(c: Confronto, conProva: boolean): { testo: string; prova?: string } {
+  if (c.motivo) return { testo: c.motivo };
+  if (!conProva) return { testo: c.messaggio };
+  return { testo: "Il confronto con la sessione precedente, riga per riga:", prova: c.prova.join("\n") };
+}
 
 const s = (ms: number) => `${(Math.floor(ms / 10 + 0.5) / 100).toFixed(2)} s`;
 
@@ -113,7 +128,7 @@ const s = (ms: number) => `${(Math.floor(ms / 10 + 0.5) / 100).toFixed(2)} s`;
  * Le risposte che il debrief sa dare senza modello: dai dati delle fasi, mai inventate.
  * Restituisce anche la fase di cui parla, così la striscia e la mappa la seguono.
  */
-export function rispondi(d: Debrief, domanda: Domanda, faseAttiva: number): { testo: string; prova?: string; fase?: number } {
+export function rispondi(d: Debrief, domanda: Exclude<Domanda, "migliorato">, faseAttiva: number): { testo: string; prova?: string; fase?: number } {
   const fase: FaseDebrief | undefined = d.fasi[faseAttiva];
   if (domanda === "perche") {
     if (!fase) return { testo: "Non ho una fase da spiegarti: questa sessione non ha giri di ritmo." };

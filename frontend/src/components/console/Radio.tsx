@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Onda from "@/components/console/Onda";
 import { SectionBody } from "@/components/console/RapportoCompleto";
-import { DOMANDE, type Domanda, type Messaggio } from "@/lib/debrief";
+import type { Domanda, Messaggio } from "@/lib/debrief";
 import { COLORS } from "@/lib/theme";
 
 const CHIP = "rounded-full border border-line-strong bg-surface px-3 py-1.5 text-[0.78rem] text-[#d6d6d6] transition hover:border-accent hover:text-white";
@@ -21,6 +21,7 @@ export default function Radio({
   messaggio,
   nomeFase,
   conversazione,
+  domande,
   dalVivo,
   inRisposta,
   domandeDalVivo,
@@ -33,6 +34,7 @@ export default function Radio({
   messaggio: Messaggio | undefined;
   nomeFase?: string;
   conversazione: Messaggio[];
+  domande: { id: Domanda; testo: string }[];
   dalVivo: boolean;
   inRisposta: boolean;
   domandeDalVivo: number;
@@ -92,7 +94,7 @@ export default function Radio({
         <button type="button" onClick={onProssima} className={CHIP}>
           La prossima
         </button>
-        {DOMANDE.map((d) => (
+        {domande.map((d) => (
           <button key={d.id} type="button" onClick={() => onDomanda(d.id)} className={CHIP}>
             {d.testo}
           </button>
@@ -128,7 +130,7 @@ export default function Radio({
                 ) : (
                   <p className={`whitespace-pre-wrap text-[0.9rem] leading-snug ${m.errore ? "text-warn" : "text-[#e6e6e6]"}`}>{m.testo}</p>
                 ))}
-              {m.prova && <p className="font-mono text-[0.68rem] leading-relaxed text-[#9a9a9a]">{m.prova}</p>}
+              {m.prova && <p className="whitespace-pre-line font-mono text-[0.68rem] leading-relaxed text-[#9a9a9a]">{m.prova}</p>}
             </div>
           ),
         )}
