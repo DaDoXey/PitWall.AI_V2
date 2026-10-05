@@ -13,9 +13,16 @@ export default defineConfig({
   reporter: [["list"]],
   use: {
     baseURL: process.env.PITWALL_URL ?? "http://localhost:3000",
-    browserName: "chromium",
     locale: "it-IT",
+    viewport: { width: 1536, height: 695 },
     // Le animazioni ferme: una cattura a metà transizione sembrerebbe una pagina cambiata.
     reducedMotion: "reduce",
   },
+  // I percorsi girano su tre browser; le catture solo su Chromium (un termine di paragone
+  // per browser triplicherebbe le immagini senza dire di più).
+  projects: [
+    { name: "chromium", use: { browserName: "chromium" } },
+    { name: "firefox", use: { browserName: "firefox" }, testMatch: /percorsi\.spec\.ts/ },
+    { name: "edge", use: { browserName: "chromium", channel: "msedge" }, testMatch: /percorsi\.spec\.ts/ },
+  ],
 });

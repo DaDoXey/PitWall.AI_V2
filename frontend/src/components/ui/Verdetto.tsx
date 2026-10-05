@@ -9,6 +9,8 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { Perdita, PuntoFermo } from "@/lib/api";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
+import ServizioFermo from "@/components/ui/ServizioFermo";
+import { SERVIZIO_FERMO } from "@/lib/errori";
 import { perdita } from "@/lib/formato";
 
 const VISIBILI = 5;
@@ -158,7 +160,16 @@ export function NoteDati({ note }: { note: string[] }) {
 }
 
 /** Stato di attesa/errore comune alle pagine che leggono la sessione aperta. */
-export function StatoSessione({ errore, caricamento }: { errore: string | null; caricamento: boolean }) {
+export function StatoSessione({
+  errore,
+  caricamento,
+  onRiprova,
+}: {
+  errore: string | null;
+  caricamento: boolean;
+  onRiprova?: () => void;
+}) {
+  if (errore === SERVIZIO_FERMO && onRiprova) return <ServizioFermo onRiprova={onRiprova} />;
   if (errore) return <p className="text-sm text-warn">{errore}</p>;
   if (caricamento) return <p className="text-sm text-subtle">Analisi della sessione…</p>;
   return null;

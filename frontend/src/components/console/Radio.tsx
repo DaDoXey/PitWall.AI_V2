@@ -1,7 +1,8 @@
 "use client";
 
 // La radio con Gigi (#060). In onda c'è un messaggio solo: quello della fase ascoltata
-// (le altre fasi si raggiungono dalla striscia dei giri o con «La prossima»). Sotto, la
+// (le altre fasi si raggiungono dalla striscia dei giri o con la freccia accanto al nome
+// della fase: «La prossima» non è una domanda, e fra le domande non ci sta più). Sotto, la
 // conversazione: le domande preparate, con le risposte che il debrief sa dare da solo
 // (la prova, numero per numero, esce solo chiedendo «Perché?»), e le domande scritte a
 // Gigi dal vivo (#061), con la risposta del modello che arriva pezzo per pezzo.
@@ -76,7 +77,18 @@ export default function Radio({
             <span className="font-mono text-[0.58rem] font-semibold tracking-[0.18em] text-accent">GIGI</span>
             <Onda seme={messaggio.id} barre={30} colore={COLORS.accent} viva />
             {nomeFase && (
-              <span className="ml-auto truncate font-mono text-[0.56rem] uppercase tracking-[0.14em] text-muted">{nomeFase}</span>
+              <button
+                type="button"
+                onClick={onProssima}
+                aria-label="La prossima fase"
+                title="La prossima fase"
+                className="ml-auto flex min-w-0 items-center gap-1.5 rounded-full border border-transparent py-0.5 pl-2 pr-1.5 font-mono text-[0.56rem] uppercase tracking-[0.14em] text-muted transition hover:border-line-strong hover:text-white"
+              >
+                <span className="truncate">{nomeFase}</span>
+                <span aria-hidden="true" className="text-[0.8rem] leading-none text-accent">
+                  →
+                </span>
+              </button>
             )}
           </div>
           <p className="text-[1.2rem] font-medium leading-snug text-white">{messaggio.testo}</p>
@@ -97,9 +109,6 @@ export default function Radio({
       )}
 
       <div className="flex shrink-0 flex-wrap gap-1.5">
-        <button type="button" onClick={onProssima} className={CHIP}>
-          La prossima
-        </button>
         {domande.map((d) => (
           <button key={d.id} type="button" onClick={() => onDomanda(d.id)} className={CHIP}>
             {d.testo}

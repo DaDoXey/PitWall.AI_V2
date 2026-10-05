@@ -16,9 +16,12 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
 import PageHeader from "@/components/ui/PageHeader";
+import ServizioFermo from "@/components/ui/ServizioFermo";
+import { SERVIZIO_FERMO } from "@/lib/errori";
 import CurvaGuida, { TitoloCurva } from "@/components/ui/CurvaGuida";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import {
+  ApiError,
   getCatalogTrack,
   getGuidaTracciato,
   type GuidaTracciato,
@@ -87,6 +90,7 @@ export default function TracciatoPage() {
   const [track, setTrack] = useState<TrackSheet | null>(null);
   const [guida, setGuida] = useState<GuidaTracciato | null>(null);
   const [errore, setErrore] = useState<string | null>(null);
+  const [tentativo, setTentativo] = useState(0);
   const [aperta, setAperta] = useState<number | null>(null);
   const [fontiAperte, setFontiAperte] = useState(false);
 
@@ -108,12 +112,27 @@ export default function TracciatoPage() {
             .catch(() => alive && setGuida(null));
         }
       })
-      .catch((e) => alive && setErrore(e instanceof Error ? e.message : "circuito non trovato"));
+      // Il circuito che non esiste lo dice il servizio (ApiError); tutto il resto è il
+      // servizio che non risponde.
+      .catch((e) => alive && setErrore(e instanceof ApiError ? e.message : SERVIZIO_FERMO));
     return () => {
       alive = false;
     };
-  }, [id]);
+  }, [id, tentativo]);
 
+  if (errore === SERVIZIO_FERMO) {
+    return (
+      <div>
+        <PageHeader title="Tracciato" subtitle="in attesa" />
+        <ServizioFermo
+          onRiprova={() => {
+            setErrore(null);
+            setTentativo((t) => t + 1);
+          }}
+        />
+      </div>
+    );
+  }
   if (errore) {
     return (
       <div>

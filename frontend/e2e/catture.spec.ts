@@ -40,21 +40,27 @@ async function quotaDiversa(a: string, b: string): Promise<number | null> {
   return diversi / (x.data.length / 4);
 }
 
-test("catture su tre formati, con il confronto", async ({ page }) => {
+test("catture su tre formati, con il confronto", async ({ page, browser }) => {
   test.setTimeout(240_000);
   fs.rmSync(ORA, { recursive: true, force: true });
   fs.mkdirSync(ORA, { recursive: true });
   await entraInDemo(page);
+  // La pagina di login si fotografa da fuori: con l'utente demo già dentro l'app rimanda
+  // alla Dashboard, e la cattura «login» era una seconda Dashboard.
+  const fuori = await browser.newContext({ locale: "it-IT", reducedMotion: "reduce" });
+  const ospite = await fuori.newPage();
 
   const esito: { pagina: string; formato: string; file: string; stato: string; quota: number | null; scorre: boolean }[] = [];
   for (const formato of FORMATI) {
     await page.setViewportSize({ width: formato.width, height: formato.height });
+    await ospite.setViewportSize({ width: formato.width, height: formato.height });
     for (const pagina of PAGINE) {
-      await page.goto(pagina);
-      await pronta(page);
+      const scheda = pagina === "/login" ? ospite : page;
+      await scheda.goto(pagina);
+      await pronta(scheda);
       const file = nomeFile(pagina, formato.nome);
-      await page.screenshot({ path: path.join(ORA, file), animations: "disabled" });
-      const scorre = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
+      await scheda.screenshot({ path: path.join(ORA, file), animations: "disabled" });
+      const scorre = await scheda.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
       const precedente = path.join(PRIMA, file);
       let stato = "nuova";
       let quota: number | null = null;
@@ -65,5 +71,6 @@ test("catture su tre formati, con il confronto", async ({ page }) => {
       esito.push({ pagina, formato: formato.nome, file, stato, quota, scorre });
     }
   }
+  await fuori.close();
   fs.writeFileSync(path.join(RADICE, "esito.json"), JSON.stringify(esito, null, 2));
 });

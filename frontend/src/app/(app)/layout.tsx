@@ -3,6 +3,7 @@ import MotionProvider from "@/components/ui/MotionProvider";
 import AuthGate from "@/components/ui/AuthGate";
 import OnboardingFlow from "@/components/ui/OnboardingFlow";
 import GigiTour from "@/components/ui/GigiTour";
+import SchermoPiccolo from "@/components/ui/SchermoPiccolo";
 import { SessioneProvider } from "@/lib/sessione";
 
 // Layout dell'app "loggata" (megaprompt #6, FASE 8): Sidebar + area contenuti.
@@ -26,6 +27,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
         <OnboardingFlow />
         <GigiTour />
+        <SchermoPiccolo />
       </SessioneProvider>
     </AuthGate>
   );

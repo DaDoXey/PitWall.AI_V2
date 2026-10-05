@@ -105,7 +105,7 @@ export const DOMANDE: { id: Domanda; testo: string }[] = [
   { id: "perche", testo: "Perché?" },
   { id: "dove", testo: "Dove perdo?" },
   { id: "gomme", testo: "E le gomme?" },
-  { id: "giro", testo: "Il giro migliore?" },
+  { id: "giro", testo: "Il giro?" },
   // Solo se c'è una sessione precedente sulla stessa pista e vettura (domandePer).
   { id: "migliorato", testo: "Sono migliorato?" },
 ];

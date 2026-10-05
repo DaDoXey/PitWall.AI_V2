@@ -17,6 +17,7 @@ import MappaFase from "@/components/console/MappaFase";
 import Radio from "@/components/console/Radio";
 import RapportoCompleto from "@/components/console/RapportoCompleto";
 import StrisciaGiri from "@/components/console/StrisciaGiri";
+import ServizioFermo from "@/components/ui/ServizioFermo";
 import {
   ApiError,
   chatConGigi,
@@ -40,6 +41,7 @@ import {
   type Domanda,
   type Messaggio,
 } from "@/lib/debrief";
+import { SERVIZIO_FERMO } from "@/lib/errori";
 import { tempoGiro } from "@/lib/formato";
 import { fadeInUp } from "@/lib/motion";
 import { profileContextLine, useProfile } from "@/lib/profile";
@@ -59,11 +61,12 @@ function faseIniziale(d: Debrief): number {
 }
 
 export default function ConsolePage() {
-  const { idSessione, sessione, report, nomi } = useSessione();
+  const { idSessione, sessione, report, nomi, ricarica, errore: erroreSessione } = useSessione();
   const { profile } = useProfile();
   const [debrief, setDebrief] = useState<Debrief | null>(null);
   const [confronto, setConfronto] = useState<Confronto | null>(null);
   const [errore, setErrore] = useState<string | null>(null);
+  const [tentativo, setTentativo] = useState(0); // «Riprova»: rifà le richieste senza ricaricare la pagina
   const [attiva, setAttiva] = useState(0);
   const [inRiproduzione, setInRiproduzione] = useState(false);
   const [occupato, setOccupato] = useState(false);
@@ -91,11 +94,11 @@ export default function ConsolePage() {
     setErrore(null);
     getDebrief(idSessione)
       .then((d) => vivo && riparti(d))
-      .catch(() => vivo && setErrore("Backend non raggiungibile — avvia FastAPI su :8000 (vedi README)."));
+      .catch(() => vivo && setErrore(SERVIZIO_FERMO));
     return () => {
       vivo = false;
     };
-  }, [idSessione, riparti]);
+  }, [idSessione, riparti, tentativo]);
 
   // La sessione precedente sulla stessa pista e vettura: se c'è, compare «Sono migliorato?».
   useEffect(() => {
@@ -285,6 +288,15 @@ export default function ConsolePage() {
     </div>
   );
 
+  // Servizio fermo all'apertura: non c'è una sessione perché l'elenco non è arrivato, non
+  // perché il pilota non ne ha (prima qui si leggeva «Nessuna sessione aperta»).
+  if (!idSessione && erroreSessione === SERVIZIO_FERMO)
+    return (
+      <div>
+        {intestazione}
+        <ServizioFermo onRiprova={() => ricarica()} />
+      </div>
+    );
   if (!idSessione)
     return (
       <div>
@@ -302,7 +314,17 @@ export default function ConsolePage() {
   return (
     <div className="flex h-[calc(100vh-4rem)] min-h-[520px] flex-col">
       {intestazione}
-      {errore && <p className="mb-3 text-sm text-warn">{errore}</p>}
+      {errore === SERVIZIO_FERMO ? (
+        <ServizioFermo
+          className="mb-3"
+          onRiprova={() => {
+            ricarica();
+            setTentativo((t) => t + 1);
+          }}
+        />
+      ) : (
+        errore && <p className="mb-3 text-sm text-warn">{errore}</p>
+      )}
 
       {!debrief ? (
         !errore && <p className="text-sm text-subtle">Gigi sta riascoltando la sessione…</p>

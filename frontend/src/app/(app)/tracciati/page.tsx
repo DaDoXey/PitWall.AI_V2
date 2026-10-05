@@ -16,6 +16,8 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import PageHeader from "@/components/ui/PageHeader";
+import ServizioFermo from "@/components/ui/ServizioFermo";
+import { SERVIZIO_FERMO } from "@/lib/errori";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { getCatalog, type CatalogTrack } from "@/lib/api";
 import { useAssetsIndex, useCrop } from "@/lib/assets";
@@ -72,6 +74,7 @@ function Bandierina({ children, acceso }: { children: React.ReactNode; acceso: b
 export default function TracciatiPage() {
   const [tracks, setTracks] = useState<CatalogTrack[] | null>(null);
   const [errore, setErrore] = useState<string | null>(null);
+  const [tentativo, setTentativo] = useState(0);
   const [filtro, setFiltro] = useState<Filtro>("tutti");
   const foto = useAssetsIndex("tracks");
   const { elenco: sessioni, sessione } = useSessione();
@@ -84,13 +87,14 @@ export default function TracciatiPage() {
 
   useEffect(() => {
     let alive = true;
+    setErrore(null);
     getCatalog()
       .then((c) => alive && setTracks(c.tracks))
-      .catch((e) => alive && setErrore(e instanceof Error ? e.message : "catalogo non raggiungibile"));
+      .catch(() => alive && setErrore(SERVIZIO_FERMO));
     return () => {
       alive = false;
     };
-  }, []);
+  }, [tentativo]);
 
   const conGuida = useMemo(() => (tracks ?? []).filter((t) => t.ha_guida).length, [tracks]);
   const essenziali = useMemo(() => (tracks ?? []).filter((t) => t.guida_essenziale).length, [tracks]);
@@ -133,12 +137,7 @@ export default function TracciatiPage() {
         ))}
       </div>
 
-      {errore && (
-        <div className="rounded-xl border border-line bg-surface p-5 text-sm text-subtle">
-          Il catalogo non risponde ({errore}). La pagina non inventa nulla: riprova quando il
-          backend è su.
-        </div>
-      )}
+      {errore && <ServizioFermo onRiprova={() => setTentativo((t) => t + 1)} />}
 
       {!tracks && !errore && (
         <div className="font-mono text-xs uppercase tracking-widest text-muted">

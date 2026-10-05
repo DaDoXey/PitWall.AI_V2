@@ -22,6 +22,13 @@ test("2 · la Engineer Console apre il debrief della demo", async ({ page }) => 
   await expect(page.getByRole("heading", { name: /GIGI/ })).toBeVisible();
   await expect(page.getByText("La prima cosa da fare")).toBeVisible();
   await expect(page.getByRole("button", { name: "Dove perdo?" })).toBeVisible();
+  // Le domande stanno su una riga sola (prima erano sei, su due).
+  const righe = await page.evaluate(() => {
+    const domande = Array.from(document.querySelectorAll("button")).filter((b) => /\?$/.test(b.textContent?.trim() ?? ""));
+    return new Set(domande.map((b) => Math.round(b.getBoundingClientRect().top))).size;
+  });
+  expect(righe).toBe(1);
+  await page.getByRole("button", { name: "La prossima fase" }).click();
   // La pagina non scorre: scorre solo la conversazione.
   const scorre = await page.evaluate(() => document.documentElement.scrollHeight > window.innerHeight + 1);
   expect(scorre).toBe(false);
@@ -43,6 +50,31 @@ test("4 · l'archivio delle sessioni mostra la demo", async ({ page }) => {
   await pronta(page);
   await expect(page.getByText("Demo", { exact: true }).first()).toBeVisible();
   await expect(page.getByText(/Monza/).first()).toBeVisible();
+});
+
+test("6 · su uno schermo stretto dice di aprirlo da computer, e si può guardare lo stesso", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 780 });
+  await entraInDemo(page);
+  await page.goto("/");
+  const avviso = page.getByRole("dialog", { name: "Schermo troppo stretto" });
+  await expect(avviso).toBeVisible();
+  await expect(avviso.getByText("Aprilo da computer.")).toBeVisible();
+  await avviso.getByRole("button", { name: "Guarda lo stesso" }).click();
+  await expect(avviso).toBeHidden();
+});
+
+test("7 · se il servizio non risponde lo dice senza nomi tecnici, e «Riprova» riparte", async ({ page }) => {
+  await entraInDemo(page);
+  // Il servizio «cade» solo per questa pagina: le richieste all'API falliscono come a rete assente.
+  let fermo = true;
+  await page.route("**/api/**", (rotta) => (fermo ? rotta.abort() : rotta.continue()));
+  await page.goto("/console");
+  const avviso = page.getByRole("alert").filter({ hasText: "PitWall non risponde in questo momento" }).first();
+  await expect(avviso).toBeVisible();
+  await expect(page.getByText(/FastAPI|backend|README|:8000/i)).toHaveCount(0);
+  fermo = false;
+  await avviso.getByRole("button", { name: "Riprova" }).click();
+  await expect(page.getByText("La prima cosa da fare")).toBeVisible();
 });
 
 test("5 · il Setup e la Telemetria si aprono sui dati della demo", async ({ page }) => {

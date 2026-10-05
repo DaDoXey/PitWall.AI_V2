@@ -7,7 +7,9 @@
 import { Fragment, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
+import ServizioFermo from "@/components/ui/ServizioFermo";
 import { postAnalysis } from "@/lib/api";
+import { SERVIZIO_FERMO } from "@/lib/errori";
 import { DEMO_QUESTION, DOMANDA_SESSIONE, parseSections, SETUP_SECTION_INDEX, SOURCE_LABELS } from "@/lib/console";
 import { profileContextLine, useProfile } from "@/lib/profile";
 import { useSessione } from "@/lib/sessione";
@@ -17,6 +19,7 @@ export default function RapportoCompleto({ aperto, onChiudi }: { aperto: boolean
   const { profile } = useProfile();
   const [testo, setTesto] = useState<{ text: string; source: string; per: string } | null>(null);
   const [errore, setErrore] = useState<string | null>(null);
+  const [tentativo, setTentativo] = useState(0);
 
   useEffect(() => {
     if (!aperto || !idSessione || testo?.per === idSessione) return;
@@ -24,11 +27,11 @@ export default function RapportoCompleto({ aperto, onChiudi }: { aperto: boolean
     setErrore(null);
     postAnalysis(sessione?.demo ? DEMO_QUESTION : DOMANDA_SESSIONE, profile ? profileContextLine(profile) : undefined, idSessione)
       .then((r) => vivo && setTesto({ text: r.text, source: r.source, per: idSessione }))
-      .catch(() => vivo && setErrore("Backend non raggiungibile — avvia FastAPI su :8000 (vedi README)."));
+      .catch(() => vivo && setErrore(SERVIZIO_FERMO));
     return () => {
       vivo = false;
     };
-  }, [aperto, idSessione, sessione?.demo, profile, testo?.per]);
+  }, [aperto, idSessione, sessione?.demo, profile, testo?.per, tentativo]);
 
   useEffect(() => {
     if (!aperto) return;
@@ -60,7 +63,7 @@ export default function RapportoCompleto({ aperto, onChiudi }: { aperto: boolean
             Chiudi
           </button>
         </div>
-        {errore && <p className="text-sm text-warn">{errore}</p>}
+        {errore && <ServizioFermo onRiprova={() => setTentativo((t) => t + 1)} />}
         {!testo && !errore && <p className="text-sm text-subtle">Gigi sta scrivendo il rapporto…</p>}
         {sezioni.map((s, i) => (
           <div key={s.title} className={`rounded-xl border p-4 ${i === SETUP_SECTION_INDEX ? "border-accent bg-accent/[0.06]" : "border-line bg-surface"}`}>

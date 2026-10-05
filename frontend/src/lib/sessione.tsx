@@ -13,6 +13,7 @@
 // * la scelta si ricorda (localStorage `pw_sessione`), perché la sessione è una
 //   preferenza di lavoro, non un dato personale;
 // * i nomi di vetture e piste arrivano dal catalogo, una volta sola.
+import { SERVIZIO_FERMO } from "@/lib/errori";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import {
   getAnalisi,
@@ -100,7 +101,7 @@ export function SessioneProvider({ children }: { children: React.ReactNode }) {
         setIdSessione(id);
         if (id) salvaScelta(id, demo);
       } catch {
-        setErrore("Backend non raggiungibile — avvia FastAPI su :8000 (vedi README).");
+        setErrore(SERVIZIO_FERMO);
         setCaricamento(false);
       }
     },

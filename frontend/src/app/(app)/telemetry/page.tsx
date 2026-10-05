@@ -17,7 +17,7 @@ import { useSessione } from "@/lib/sessione";
 import { ETICHETTA_TIPO, giri } from "@/lib/formato";
 
 export default function TelemetryPage() {
-  const { report, idSessione, caricamento, errore, nomi } = useSessione();
+  const { report, idSessione, caricamento, errore, nomi, ricarica } = useSessione();
   // Il tab scelto vive qui, non dentro i Tabs: mentre una sessione nuova carica i Tabs
   // spariscono, e al ritorno ripartirebbero da «Giri».
   const [tab, setTab] = useState("giri");
@@ -33,7 +33,7 @@ export default function TelemetryPage() {
     return (
       <div>
         <PageHeader title="Telemetria" />
-        <StatoSessione errore={errore} caricamento={caricamento || !report} />
+        <StatoSessione errore={errore} caricamento={caricamento || !report} onRiprova={() => ricarica()} />
       </div>
     );
 

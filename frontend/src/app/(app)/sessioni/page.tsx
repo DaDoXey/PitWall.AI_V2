@@ -477,7 +477,7 @@ function Registratore({ stato, registrazioni }: { stato: StatoRegistratore | nul
   }
 
   return (
-    <Parte istruzioni="Il backend legge la shared memory di ACC mentre giri: nessun programma da installare, si avvia da solo.">
+    <Parte istruzioni="PitWall legge la telemetria di ACC mentre giri: nessun programma da installare, parte da solo.">
       {!stato ? (
         <p className="text-sm text-subtle">Stato del registratore non disponibile.</p>
       ) : !stato.abilitato ? (

@@ -11,6 +11,8 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import PageHeader from "@/components/ui/PageHeader";
+import ServizioFermo from "@/components/ui/ServizioFermo";
+import { SERVIZIO_FERMO } from "@/lib/errori";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { ApiError, esportaSetupAcc, getBundle, getSetupParams, type Bundle } from "@/lib/api";
 import {
@@ -40,12 +42,13 @@ const chiaveModifiche = (id: string) => `pw_setup_modifiche_${id}`;
 const clickIntero = (raw: unknown): number | null => (typeof raw === "number" && Number.isInteger(raw) && raw >= 0 ? raw : null);
 
 export default function SetupPage() {
-  const { report, nomi, idSessione } = useSessione();
+  const { report, nomi, idSessione, ricarica, errore: erroreSessione } = useSessione();
   const [bundle, setBundle] = useState<Bundle | null | undefined>(undefined);
   const [params, setParams] = useState<SetupParams | null>(null);
   const [modifiche, setModifiche] = useState<Record<string, number>>({});
   const [active, setActive] = useState<string>("");
   const [err, setErr] = useState<string | null>(null);
+  const [tentativo, setTentativo] = useState(0);
   const [scrollTo, setScrollTo] = useState<string | null>(null);
   const [download, setDownload] = useState<{ ok: boolean; testo: string } | null>(null);
 
@@ -59,7 +62,7 @@ export default function SetupPage() {
     setBundle(undefined);
     getBundle(idSessione)
       .then((b) => vivo && setBundle(b))
-      .catch(() => vivo && setErr("Backend non raggiungibile — avvia FastAPI su :8000 (vedi README)."));
+      .catch(() => vivo && setErr(SERVIZIO_FERMO));
     try {
       const salvate = sessionStorage.getItem(chiaveModifiche(idSessione));
       setModifiche(salvate ? (JSON.parse(salvate) as Record<string, number>) : {});
@@ -69,7 +72,7 @@ export default function SetupPage() {
     return () => {
       vivo = false;
     };
-  }, [idSessione]);
+  }, [idSessione, tentativo]);
 
   const setup = bundle?.setup ?? null;
   const car = setup?.car ?? bundle?.meta.car ?? null;
@@ -83,8 +86,8 @@ export default function SetupPage() {
         setParams(data);
         setActive((a) => a || Object.keys(data)[0] || "");
       })
-      .catch(() => setErr("Backend non raggiungibile — avvia FastAPI su :8000 (vedi README)."));
-  }, [setup, car]);
+      .catch(() => setErr(SERVIZIO_FERMO));
+  }, [setup, car, tentativo]);
 
   useEffect(() => {
     if (!idSessione) return;
@@ -182,11 +185,29 @@ export default function SetupPage() {
     />
   );
 
+  // Servizio fermo all'apertura: senza elenco delle sessioni non c'è niente da mostrare,
+  // ma non è vero che «questa sessione non ha un setup».
+  if (!idSessione && erroreSessione === SERVIZIO_FERMO)
+    return (
+      <div>
+        {titolo}
+        <ServizioFermo onRiprova={() => ricarica()} />
+      </div>
+    );
   if (err)
     return (
       <div>
         {titolo}
-        <p className="text-sm text-warn">{err}</p>
+        {err === SERVIZIO_FERMO ? (
+          <ServizioFermo
+            onRiprova={() => {
+              setErr(null);
+              setTentativo((t) => t + 1);
+            }}
+          />
+        ) : (
+          <p className="text-sm text-warn">{err}</p>
+        )}
       </div>
     );
   if (bundle === undefined || (setup && !params))

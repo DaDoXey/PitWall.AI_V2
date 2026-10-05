@@ -24,14 +24,14 @@ import { COLORS } from "@/lib/theme";
 import { INSTRUMENT, STATE } from "@/lib/instrument";
 
 export default function Dashboard() {
-  const { report, sessione, caricamento, errore, nomi } = useSessione();
+  const { report, sessione, caricamento, errore, nomi, ricarica } = useSessione();
   const [selected, setSelected] = useState<string | null>(null); // indicatore aperto nel dettaglio
 
   if (!report || !sessione)
     return (
       <div>
         <PageHeader title="Dashboard" subtitle="Il verdetto della sessione" />
-        <StatoSessione errore={errore} caricamento={caricamento || !report} />
+        <StatoSessione errore={errore} caricamento={caricamento || !report} onRiprova={() => ricarica()} />
       </div>
     );
 

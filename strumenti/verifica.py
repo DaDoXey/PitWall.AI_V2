@@ -14,7 +14,7 @@ Che cosa controlla, in ordine:
   3b. le dipendenze che finiscono nell'app (`npm audit --omit=dev`): una vulnerabilità alta
       o critica è rosso. Gli strumenti di sviluppo non contano qui: non arrivano agli utenti
   4. le pagine: rispondono 200?                              } solo con i server accesi
-  5. i cinque percorsi automatici nel browser                } (`strumenti/server.ps1 avvia`)
+  5. i percorsi automatici su tre browser                    } (`strumenti/server.ps1 avvia`)
   6. le catture su tre formati, con l'elenco delle pagine cambiate
 
 Esce con 0 se non c'è niente di rosso. Un passo saltato (server spenti, immagini non
@@ -185,7 +185,7 @@ def browser() -> None:
     if p.returncode != 0:
         segna("Percorsi nel browser", ROSSO, (falliti[0] if falliti else righe[-1] if righe else "errore")[:200])
     else:
-        segna("Percorsi nel browser", VERDE, f"{passati} percorsi arrivano in fondo")
+        segna("Percorsi nel browser", VERDE, f"{passati} prove arrivano in fondo (i percorsi su Chromium, Firefox ed Edge)")
     esito = CATTURE / "esito.json"
     if not esito.exists():
         segna("Catture", ROSSO, "nessun esito scritto")
