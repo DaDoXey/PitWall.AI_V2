@@ -2,6 +2,8 @@
 # (strumenti/verifica.py --veloce), senza chiave e senza rete verso il modello.
 # I percorsi nel browser e le catture restano in locale: vogliono i due server accesi.
 # Il test dei tracciati viene saltato e segnalato: legge le immagini, che non sono nel repository.
+# Gira su Windows, come PitWall: la telemetria di ACC è memoria condivisa di Windows, e su
+# Linux quei test non possono passare (strutture di dimensione diversa).
 name: verifica
 
 on:
@@ -14,8 +16,8 @@ permissions:
 
 jobs:
   verifica:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
+    runs-on: windows-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
@@ -39,6 +41,7 @@ jobs:
         run: npm ci
 
       - name: Guardiano sull'ultimo commit
+        shell: bash
         run: |
           git fetch --depth=2 origin "${{ github.sha }}" || true
           python - <<'PY'
