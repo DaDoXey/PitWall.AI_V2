@@ -1,0 +1,29 @@
+{
+  "file": 23,
+  "test": 1270,
+  "per_file": {
+    "test_adattatori.py": 96,
+    "test_aggancio.py": 37,
+    "test_analisi.py": 61,
+    "test_analisi_l4.py": 46,
+    "test_budget.py": 31,
+    "test_bundle.py": 37,
+    "test_chat.py": 29,
+    "test_confronto.py": 56,
+    "test_curve.py": 75,
+    "test_debrief.py": 39,
+    "test_demo.py": 38,
+    "test_gigi.py": 36,
+    "test_motec.py": 43,
+    "test_motec_bundle.py": 45,
+    "test_motec_export.py": 17,
+    "test_observability.py": 24,
+    "test_registratore.py": 69,
+    "test_riferimenti.py": 74,
+    "test_sessions.py": 61,
+    "test_setup_ranges.py": 40,
+    "test_telemetria.py": 97,
+    "test_telemetria_bundle.py": 50,
+    "test_tracciati.py": 169
+  }
+}

@@ -1,0 +1,14 @@
+#!/bin/sh
+# Hook di PitWall: prima di ogni commit gira il guardiano (strumenti/guardiano.py).
+# Si attiva una volta con:  python strumenti/guardiano.py --installa
+radice="$(git rev-parse --show-toplevel)"
+if [ -x "$radice/backend/.venv/Scripts/python.exe" ]; then
+  py="$radice/backend/.venv/Scripts/python.exe"
+elif [ -x "$radice/backend/.venv/bin/python" ]; then
+  py="$radice/backend/.venv/bin/python"
+elif command -v python3 >/dev/null 2>&1; then
+  py=python3
+else
+  py=python
+fi
+exec "$py" "$radice/strumenti/guardiano.py"
