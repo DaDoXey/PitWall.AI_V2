@@ -52,7 +52,9 @@ Thumbs.db
 # manifest.json e ATTRIBUTIONS.md sono generati dagli asset a disco, quindi
 # seguono la stessa sorte: senza asset la UI non mostra la banda foto e
 # /crediti dice "asset non ancora scaricati", invece di mostrare img rotte.
-/frontend/public/assets/
+# Dal 05/10/2026 (pacchetto 1.3) le immagini che l'app usa SONO nel repository: la vetrina
+# online si costruisce da qui a ogni push. Restano fuori solo i provini di lavoro.
+/frontend/public/assets/_*
 
 # -- Log del backend (Entry #026) --
 # pitwall.log rotante + i due registri markdown di agent.py (token stimati e

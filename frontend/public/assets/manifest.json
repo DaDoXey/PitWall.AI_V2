@@ -1,0 +1,258 @@
+{
+  "cars": {
+    "alpine_a110_gt4": {
+      "photo": "/assets/cars/alpine_a110_gt4_photo.jpg"
+    },
+    "aston_martin_v12_vantage_gt3": {
+      "photo": "/assets/cars/aston_martin_v12_vantage_gt3_photo.jpg"
+    },
+    "aston_martin_v8_vantage_gt3": {
+      "photo": "/assets/cars/aston_martin_v8_vantage_gt3_photo.jpg"
+    },
+    "aston_martin_vantage_gt4": {
+      "photo": "/assets/cars/aston_martin_vantage_gt4_photo.jpg"
+    },
+    "audi_r8_lms_evo_gt3": {
+      "photo": "/assets/cars/audi_r8_lms_evo_gt3_photo.jpg"
+    },
+    "audi_r8_lms_gt2": {
+      "photo": "/assets/cars/audi_r8_lms_gt2_photo.jpg"
+    },
+    "audi_r8_lms_gt3": {
+      "photo": "/assets/cars/audi_r8_lms_gt3_photo.jpg"
+    },
+    "audi_r8_lms_gt4": {
+      "photo": "/assets/cars/audi_r8_lms_gt4_photo.jpg"
+    },
+    "bentley_continental_gt3_2015": {
+      "photo": "/assets/cars/bentley_continental_gt3_2015_photo.jpg"
+    },
+    "bentley_continental_gt3_2018": {
+      "photo": "/assets/cars/bentley_continental_gt3_2018_photo.jpg"
+    },
+    "bmw_m2_cs_racing": {
+      "photo": "/assets/cars/bmw_m2_cs_racing_photo.jpg"
+    },
+    "bmw_m4_gt3": {
+      "photo": "/assets/cars/bmw_m4_gt3_photo.jpg"
+    },
+    "bmw_m4_gt4": {
+      "photo": "/assets/cars/bmw_m4_gt4_photo.jpg"
+    },
+    "bmw_m6_gt3": {
+      "photo": "/assets/cars/bmw_m6_gt3_photo.jpg"
+    },
+    "chevrolet_camaro_gt4r": {
+      "photo": "/assets/cars/chevrolet_camaro_gt4r_photo.jpg"
+    },
+    "emil_frey_jaguar_gt3": {
+      "photo": "/assets/cars/emil_frey_jaguar_gt3_photo.jpg"
+    },
+    "ferrari_296_gt3": {
+      "photo": "/assets/cars/ferrari_296_gt3_photo.jpg"
+    },
+    "ferrari_488_challenge_evo": {
+      "photo": "/assets/cars/ferrari_488_challenge_evo_photo.jpg"
+    },
+    "ferrari_488_gt3_evo": {
+      "photo": "/assets/cars/ferrari_488_gt3_evo_photo.jpg"
+    },
+    "ferrari_488_gt3": {
+      "photo": "/assets/cars/ferrari_488_gt3_photo.jpg"
+    },
+    "ford_mustang_gt3": {
+      "photo": "/assets/cars/ford_mustang_gt3_photo.jpg"
+    },
+    "ginetta_g55_gt4": {
+      "photo": "/assets/cars/ginetta_g55_gt4_photo.jpg"
+    },
+    "honda_nsx_gt3_evo": {
+      "photo": "/assets/cars/honda_nsx_gt3_evo_photo.png"
+    },
+    "honda_nsx_gt3": {
+      "photo": "/assets/cars/honda_nsx_gt3_photo.jpg"
+    },
+    "ktm_xbow_gt2": {
+      "photo": "/assets/cars/ktm_xbow_gt2_photo.jpg"
+    },
+    "ktm_xbow_gt4": {
+      "photo": "/assets/cars/ktm_xbow_gt4_photo.jpg"
+    },
+    "lamborghini_huracan_gt3_evo2": {
+      "photo": "/assets/cars/lamborghini_huracan_gt3_evo2_photo.jpg"
+    },
+    "lamborghini_huracan_gt3_evo": {
+      "photo": "/assets/cars/lamborghini_huracan_gt3_evo_photo.jpg"
+    },
+    "lamborghini_huracan_gt3": {
+      "photo": "/assets/cars/lamborghini_huracan_gt3_photo.jpg"
+    },
+    "lamborghini_huracan_super_trofeo_evo2": {
+      "photo": "/assets/cars/lamborghini_huracan_super_trofeo_evo2_photo.jpg"
+    },
+    "lamborghini_huracan_super_trofeo": {
+      "photo": "/assets/cars/lamborghini_huracan_super_trofeo_photo.png"
+    },
+    "lexus_rc_f_gt3": {
+      "photo": "/assets/cars/lexus_rc_f_gt3_photo.jpg"
+    },
+    "maserati_granturismo_mc_gt4": {
+      "photo": "/assets/cars/maserati_granturismo_mc_gt4_photo.jpg"
+    },
+    "maserati_mc20_gt2": {
+      "photo": "/assets/cars/maserati_mc20_gt2_photo.jpg"
+    },
+    "mclaren_570s_gt4": {
+      "photo": "/assets/cars/mclaren_570s_gt4_photo.jpg"
+    },
+    "mclaren_650s_gt3": {
+      "photo": "/assets/cars/mclaren_650s_gt3_photo.jpg"
+    },
+    "mclaren_720s_gt3_evo": {
+      "photo": "/assets/cars/mclaren_720s_gt3_evo_photo.jpg"
+    },
+    "mclaren_720s_gt3": {
+      "photo": "/assets/cars/mclaren_720s_gt3_photo.jpg"
+    },
+    "mercedes_amg_gt2": {
+      "photo": "/assets/cars/mercedes_amg_gt2_photo.jpg"
+    },
+    "mercedes_amg_gt3_evo": {
+      "photo": "/assets/cars/mercedes_amg_gt3_evo_photo.jpg"
+    },
+    "mercedes_amg_gt3": {
+      "photo": "/assets/cars/mercedes_amg_gt3_photo.jpg"
+    },
+    "mercedes_amg_gt4": {
+      "photo": "/assets/cars/mercedes_amg_gt4_photo.jpg"
+    },
+    "nissan_gtr_nismo_gt3_2015": {
+      "photo": "/assets/cars/nissan_gtr_nismo_gt3_2015_photo.jpg"
+    },
+    "nissan_gtr_nismo_gt3_2018": {
+      "photo": "/assets/cars/nissan_gtr_nismo_gt3_2018_photo.jpg"
+    },
+    "porsche_718_cayman_gt4_clubsport": {
+      "photo": "/assets/cars/porsche_718_cayman_gt4_clubsport_photo.jpg"
+    },
+    "porsche_911_gt2_rs_clubsport_evo": {
+      "photo": "/assets/cars/porsche_911_gt2_rs_clubsport_evo_photo.jpg"
+    },
+    "porsche_911_gt3_cup_991": {
+      "photo": "/assets/cars/porsche_911_gt3_cup_991_photo.jpg"
+    },
+    "porsche_911_gt3_cup_992": {
+      "photo": "/assets/cars/porsche_911_gt3_cup_992_photo.jpg"
+    },
+    "porsche_911_gt3_r_991": {
+      "photo": "/assets/cars/porsche_911_gt3_r_991_photo.jpg"
+    },
+    "porsche_911_ii_gt3_r_991": {
+      "photo": "/assets/cars/porsche_911_ii_gt3_r_991_photo.jpg"
+    },
+    "porsche_935": {
+      "photo": "/assets/cars/porsche_935_photo.jpg"
+    },
+    "porsche_992_gt3_r": {
+      "photo": "/assets/cars/porsche_992_gt3_r_photo.jpg"
+    }
+  },
+  "tracks": {
+    "barcelona_catalunya": {
+      "map": "/assets/tracks/barcelona_catalunya_map.svg",
+      "photo": "/assets/tracks/barcelona_catalunya_photo.jpg"
+    },
+    "brands_hatch": {
+      "map": "/assets/tracks/brands_hatch_map.svg",
+      "photo": "/assets/tracks/brands_hatch_photo.jpg"
+    },
+    "cota": {
+      "map": "/assets/tracks/cota_map.svg",
+      "photo": "/assets/tracks/cota_photo.jpg"
+    },
+    "donington_park": {
+      "map": "/assets/tracks/donington_park_map.svg",
+      "photo": "/assets/tracks/donington_park_photo.jpg"
+    },
+    "hungaroring": {
+      "map": "/assets/tracks/hungaroring_map.svg",
+      "photo": "/assets/tracks/hungaroring_photo.jpg"
+    },
+    "imola": {
+      "map": "/assets/tracks/imola_map.png",
+      "photo": "/assets/tracks/imola_photo.jpg"
+    },
+    "indianapolis": {
+      "map": "/assets/tracks/indianapolis_map.svg",
+      "photo": "/assets/tracks/indianapolis_photo.jpg"
+    },
+    "kyalami": {
+      "map": "/assets/tracks/kyalami_map.png",
+      "photo": "/assets/tracks/kyalami_photo.jpg"
+    },
+    "laguna_seca": {
+      "map": "/assets/tracks/laguna_seca_map.svg",
+      "photo": "/assets/tracks/laguna_seca_photo.jpg"
+    },
+    "misano": {
+      "map": "/assets/tracks/misano_map.svg",
+      "photo": "/assets/tracks/misano_photo.jpg"
+    },
+    "monza": {
+      "map": "/assets/tracks/monza_map.svg",
+      "photo": "/assets/tracks/monza_photo.jpg"
+    },
+    "mount_panorama": {
+      "map": "/assets/tracks/mount_panorama_map.svg",
+      "photo": "/assets/tracks/mount_panorama_photo.jpg"
+    },
+    "nurburgring_gp": {
+      "map": "/assets/tracks/nurburgring_gp_map.svg",
+      "photo": "/assets/tracks/nurburgring_gp_photo.jpg"
+    },
+    "nurburgring_nordschleife": {
+      "photo": "/assets/tracks/nurburgring_nordschleife_photo.jpg"
+    },
+    "oulton_park": {
+      "photo": "/assets/tracks/oulton_park_photo.jpg"
+    },
+    "paul_ricard": {
+      "map": "/assets/tracks/paul_ricard_map.svg",
+      "photo": "/assets/tracks/paul_ricard_photo.jpg"
+    },
+    "red_bull_ring": {
+      "map": "/assets/tracks/red_bull_ring_map.svg",
+      "photo": "/assets/tracks/red_bull_ring_photo.jpg"
+    },
+    "silverstone": {
+      "map": "/assets/tracks/silverstone_map.png",
+      "photo": "/assets/tracks/silverstone_photo.jpg"
+    },
+    "snetterton": {
+      "map": "/assets/tracks/snetterton_map.svg",
+      "photo": "/assets/tracks/snetterton_photo.jpg"
+    },
+    "spa_francorchamps": {
+      "map": "/assets/tracks/spa_francorchamps_map.png",
+      "photo": "/assets/tracks/spa_francorchamps_photo.jpg"
+    },
+    "suzuka": {
+      "photo": "/assets/tracks/suzuka_photo.jpg"
+    },
+    "valencia_ricardo_tormo": {
+      "map": "/assets/tracks/valencia_ricardo_tormo_map.svg"
+    },
+    "watkins_glen": {
+      "map": "/assets/tracks/watkins_glen_map.svg",
+      "photo": "/assets/tracks/watkins_glen_photo.jpg"
+    },
+    "zandvoort": {
+      "map": "/assets/tracks/zandvoort_map.png",
+      "photo": "/assets/tracks/zandvoort_photo.jpg"
+    },
+    "zolder": {
+      "map": "/assets/tracks/zolder_map.svg",
+      "photo": "/assets/tracks/zolder_photo.jpg"
+    }
+  }
+}

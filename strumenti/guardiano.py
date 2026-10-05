@@ -45,7 +45,7 @@ PROTETTI = (
 # Mai nel repository, qualunque cosa dica il .gitignore in quel momento.
 MAI = (
     ".env", ".env.*", "*/.env", "*/.env.*", "CLAUDE.md", ".claude/*", "*/.claude/*",
-    "*_REPORT.md", "*_PitWall.md", "frontend/public/assets/*", "backend/logs/*",
+    "*_REPORT.md", "*_PitWall.md", "frontend/public/assets/_*", "backend/logs/*",
     "backend/sessions/*", "*/node_modules/*", "*.ld", "*.ldx",
 )
 CONSENTITI = ("backend/.env.example", "frontend/.env.local.example")
