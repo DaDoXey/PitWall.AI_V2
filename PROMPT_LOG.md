@@ -3425,6 +3425,29 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #082 — La vetrina è online (pacchetto 1.3, seconda parte)
+
+| Campo | Valore |
+|---|---|
+| Data | 05/10/2026 |
+| Area | Vercel e Render (account di Edoardo) · `backend/app/config.py`, `main.py` · `frontend/src/app/layout.tsx` · `.github/workflows/sveglia.yml` · `frontend/e2e/*` · `test_sessions.py` · Runbook (fuori repo) |
+| Commit | `114e177` + commit docs, pushati il 05/10/2026 |
+
+**Cosa è successo.** Edoardo ha creato gli account e pubblicato, guidato passo per passo: backend su Render dal `render.yaml` (https://pitwall-backend-5del.onrender.com), frontend su Vercel dalla cartella `frontend` (https://pitwall-wine.vercel.app), le due variabili su Vercel, l'origine del frontend su Render. È la prima volta che questa versione di PitWall gira fuori dal suo PC.
+
+**L'unico intoppo.** Nella variabile `PITWALL_CORS_ORIGINS` è finito l'indirizzo con `/login` in coda: il backend rifiutava ogni richiesta del frontend e la pagina restava su «Il muretto si sta accendendo», senza un errore leggibile. Trovato provando da fuori quali origini il backend accettava. Corretto il valore; e nel codice `config.origini()` ora toglie percorso e barra finale, con un test.
+
+**In più.** Backend e frontend dicono quale commit è online (campo `commit` dello stato, tag `pitwall-commit` della pagina): così si vede da fuori se un push è arrivato · l'esito della sveglia è un'annotazione leggibile senza credenziali · il percorso «servizio fermo» non dà più per scontata l'attesa zero del PC · le catture fanno un giro a vuoto prima di fotografare (un falso allarme sulla Dashboard dopo il riavvio dei server).
+
+**Verifica.** Da fuori: il backend risponde come vetrina (modello, chat, registratore spenti; una sola sessione, la demo; cancellare, caricare, registrare, scrivere a Gigi, leggere uno screenshot: tutti 503). Gli **otto percorsi automatici passano contro la vetrina vera**. In locale: 1276 test, 24 prove nei browser, verifica verde.
+
+**Non verificato da me:** l'apertura da un telefono con un'altra rete (la fa Edoardo) · il nome scelto per `pitwall-backend` su Render esisteva già, di un altro: l'indirizzo vero ha un suffisso e non va indovinato.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ «ok procedi» del 05/10/2026 dopo aver visto la vetrina funzionare. Resta il cancello M1, che è di Edoardo.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]

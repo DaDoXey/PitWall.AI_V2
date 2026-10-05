@@ -69,7 +69,7 @@ Le schede vettura/circuito (`SessionBriefing`) leggono `GET /api/catalog/car/{id
   ⚠️`prompts/` (`system_prompt_v5.txt`, `chat_system_prompt.txt`), ⚠️`demo_responses.py`, `riferimenti_fisica.py`
   (+ `data/acc_riferimenti_fisica_v19.json` Kunos e `acc_riferimenti_community.json`), `riferimenti_acc.py`,
   `catalog.py` + `data/cars.json` (54 vetture: 31 GT3, 11 GT4, 6 GT2, 5 monomarca, 1 TCX — Lotto 2, Entry #064) e `data/tracks.json` (25 circuiti), `data/tracks_knowledge/` (guide: 24 su 25, al 02/10, manca il Nordschleife; le 10 dei circuiti senza una guida scritta per ACC sono «essenziali», solo i fatti con fonte — campo `livello`), `data/tracks_anchors/` (ancore delle curve: inizio, apice, uscita sul giro e punto sulla mappa per ogni curva della guida; Monza e Zandvoort al 28/09; formato e validatore in `core/ancore.py`, rilevamento in `analisi/eventi_curva.py`).
-- **`tests/`**: 23 file, 1275 test offline (elenco nei README).
+- **`tests/`**: 23 file, 1276 test offline (elenco nei README).
 - **`backend/scripts/`** (fuori da `app/`): pipeline delle immagini (foto, ritagli, mappe, crediti) e validatore delle guide.
 - **`backend/logs/`** (gitignorata): `pitwall.log`, `llm_spesa.json`, e i registri `llm_token_log.md` / `llm_incidents.md`
   scritti da `agent.py`.
@@ -111,7 +111,7 @@ Acceso il live, ogni chiamata passa da `budget.prenota()` / `budget.salda()` (ag
 
 ## 7 · Verifica
 - Frontend: `npx tsc --noEmit` **0 err** + rotte `/ /console /telemetry /setup /sessioni /lezioni /crediti /login` **200**.
-- Backend: 23 file di test in `app/tests/`, **1275** test, tutti offline.
+- Backend: 23 file di test in `app/tests/`, **1276** test, tutti offline.
 - **Un comando solo** (#078): `python strumenti/verifica.py` → test, tipi, numeri dei documenti e, con i server accesi, pagine, cinque percorsi nel browser (`frontend/e2e/percorsi.spec.ts`, Playwright) e catture su tre formati con il confronto (`e2e/catture.spec.ts`). `--veloce` è quella di GitHub (`.github/workflows/verifica.yml`). Prima di ogni commit gira `strumenti/guardiano.py` (file protetti, `.env`, chiavi).
 - **Mai** `npm run build` con `npm run dev` attivo (corrompe `.next`, HAZARD-V2-A).
 

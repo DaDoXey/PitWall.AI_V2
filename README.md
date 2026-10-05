@@ -40,10 +40,10 @@ backend/       FastAPI
     telemetria/  # ACC shared memory: structures, reader, dictionary, recorder, synthetic bench
     motec/       # MoTeC files: .ld/.ldx reader, writer with ACC's exact layout, session export
     analisi/     # deterministic engine: pace, consistency, corners, tyres and brakes; Gigi's context
-    tests/       # 1275 offline tests in 23 files: adattatori 96, aggancio 37, analisi 61,
+    tests/       # 1276 offline tests in 23 files: adattatori 96, aggancio 37, analisi 61,
                  # analisi_l4 46, budget 31, bundle 37, chat 29, confronto 56, curve 75,
                  # debrief 39, demo 38, gigi 36, motec 43, motec_bundle 45, motec_export 17,
-                 # observability 24, registratore 69, riferimenti 74, sessions 66,
+                 # observability 24, registratore 69, riferimenti 74, sessions 67,
                  # setup_ranges 40, telemetria 97, telemetria_bundle 50, tracciati 169
   scripts/       # image pipeline, track guide validator, MoTeC validation on real ACC files
 strumenti/     one-command verification, commit guard, server start/stop, documentation figures
