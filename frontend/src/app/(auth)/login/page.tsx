@@ -14,6 +14,9 @@ import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { useAuth } from "@/lib/auth";
 import { useProfile } from "@/lib/profile";
 
+// L'accesso con Google c'è solo dove è configurato (in locale); sulla vetrina online no.
+const CON_GOOGLE = Boolean(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
+
 export default function LoginPage() {
   const router = useRouter();
   const { user, ready, signInWithGoogle, enterDemo } = useAuth();
@@ -65,7 +68,12 @@ export default function LoginPage() {
           </div>
         </motion.div>
 
-        {/* Google Sign-In reale (popup). Tema scuro per coerenza col design system. */}
+        {/* Google Sign-In reale (popup). Tema scuro per coerenza col design system.
+            Solo se l'installazione ha un Client ID: senza, il pulsante apriva una finestra
+            di Google con «Errore 400: Missing required parameter: client_id» (visto il
+            05/10/2026 sulla vetrina, dove il Client ID non c'è di proposito). */}
+        {CON_GOOGLE && (
+        <>
         <motion.div variants={fadeInUp} className="flex justify-center">
           <GoogleLogin
             onSuccess={(res) => {
@@ -87,6 +95,8 @@ export default function LoginPage() {
           oppure
           <span className="h-px flex-1 bg-line" />
         </motion.div>
+        </>
+        )}
 
         {/* Quick-login demo (percorso d'esame: nessuna rete/account richiesti) */}
         <motion.button
@@ -100,11 +110,17 @@ export default function LoginPage() {
         </motion.button>
 
         {/* Nota privacy: il profilo Google resta nel browser, sessione di tab */}
-        <motion.p variants={fadeInUp} className="mt-4 text-center font-mono text-[0.55rem] leading-relaxed text-muted">
-          Il profilo Google (nome, email, foto) resta solo in questo browser
-          <br />
-          e viene eliminato alla chiusura della scheda. Nessun invio a server.
-        </motion.p>
+        {CON_GOOGLE ? (
+          <motion.p variants={fadeInUp} className="mt-4 text-center font-mono text-[0.55rem] leading-relaxed text-muted">
+            Il profilo Google (nome, email, foto) resta solo in questo browser
+            <br />
+            e viene eliminato alla chiusura della scheda. Nessun invio a server.
+          </motion.p>
+        ) : (
+          <motion.p variants={fadeInUp} className="mt-4 text-center font-mono text-[0.55rem] leading-relaxed text-muted">
+            Nessun account e nessun dato richiesto: è una demo da guardare.
+          </motion.p>
+        )}
 
         <motion.p variants={fadeInUp} className="mt-5 text-center text-[0.7rem] text-muted">
           © 2026 Edoardo Ferlito · Licenza MIT

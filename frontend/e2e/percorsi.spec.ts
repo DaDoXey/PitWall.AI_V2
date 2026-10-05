@@ -64,8 +64,26 @@ test("6 · su uno schermo stretto dice di aprirlo da computer, e si può guardar
   const avviso = page.getByRole("dialog", { name: "Schermo troppo stretto" });
   await expect(avviso).toBeVisible();
   await expect(avviso.getByText("Aprilo da computer.")).toBeVisible();
+  await expect(avviso.getByText(/gira il telefono in orizzontale/)).toBeVisible();
+  // In orizzontale l'avviso sparisce da solo…
+  await page.setViewportSize({ width: 844, height: 390 });
+  await expect(avviso).toBeHidden();
+  // …e tornando in verticale ricompare, finché non si sceglie di guardare lo stesso.
+  await page.setViewportSize({ width: 390, height: 780 });
+  await expect(avviso).toBeVisible();
   await avviso.getByRole("button", { name: "Guarda lo stesso" }).click();
   await expect(avviso).toBeHidden();
+});
+
+test("9 · senza accesso con Google configurato il pulsante non c'è, e si entra in demo", async ({ page }) => {
+  await page.goto("/login");
+  await pronta(page);
+  const configurato = await page.getByText("Il profilo Google").count();
+  // In locale Google può essere configurato: allora il pulsante c'è ed è giusto così.
+  test.skip(configurato > 0, "questa installazione ha l'accesso con Google");
+  await expect(page.locator('iframe[src*="accounts.google.com"]')).toHaveCount(0);
+  await expect(page.getByText("oppure", { exact: true })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /Entra in modalità demo/ })).toBeVisible();
 });
 
 test("7 · se il servizio non risponde lo dice senza nomi tecnici, e «Riprova» riparte", async ({ page }) => {
