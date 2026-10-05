@@ -3205,6 +3205,35 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #075 — La dettatura alla radio di Gigi
+
+| Campo | Valore |
+|---|---|
+| Data | 05/10/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | NEW `frontend/src/lib/dettatura.ts` · `frontend/src/components/console/Radio.tsx` · `frontend/src/app/globals.css` · docs |
+| Commit | `5ac0c6c` + commit docs, pushati il 05/10/2026 |
+| Contesto | Seconda delle tre cose parcheggiate della Console (punto 5). Il microfono era stato tolto con la #061 («microfono via per ora»). |
+
+**Catalogo messaggi:**
+1. (primo giro di domande della #074) Dettatura: **«Detta, poi invii tu»**, con il riconoscimento vocale del browser.
+2. «ok push, poi procedi con la dettatura» → push della #074 (`368f110` · `086e877`), poi questa.
+
+**Modifica:**
+- NEW `lib/dettatura.ts`: `useDettatura` sopra la Web Speech API del browser (`SpeechRecognition` / `webkitSpeechRecognition`), in italiano (`it-IT`), con la frase che compare mentre si parla; l'ascolto si chiude da solo al silenzio o con un secondo clic. `accoda()` attacca il dettato a quello che era già scritto, entro i 1000 caratteri della casella.
+- `Radio`: un pulsante con il microfono nella casella, fra il testo e il contatore. **Scrive nella casella e non invia**: una parola capita male si corregge prima di spendere una delle 12 domande. Mentre ascolta il pulsante pulsa in rosso e la casella dice «Ti ascolto… poi premi Invio»; inviando, l'ascolto si ferma.
+- Il microfono compare solo con Gigi dal vivo acceso **e** se il browser ha la Web Speech API (Chrome, Edge; non Firefox). Permesso negato, nessun microfono o rete assente: lo dice la casella, senza finestre.
+- `globals.css`: l'alone del microfono in ascolto (fermo con «riduci movimento»).
+
+**Cosa va saputo:** in Chrome l'audio lo riconoscono i server di Google, non PitWall: è scritto nel tooltip del pulsante. Nessuna spesa per PitWall, nessuna chiave. Il backend non è toccato.
+
+**Verifica:** `tsc --noEmit` 0 errori · a 1536×695 il pulsante è nella casella, la pagina non scorre, l'API è presente nel Chrome di Edoardo. **Non verificato da me:** il riconoscimento vero (serve la voce di Edoardo e il permesso del microfono nel suo browser).
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» del 05/10/2026 (Edoardo non ha riferito l'esito della prova a voce).
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
