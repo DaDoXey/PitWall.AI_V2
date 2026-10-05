@@ -251,6 +251,11 @@ def importa(id_sessione: str):
 def cancella(id_sessione: str):
     import shutil
 
+    from app.api.sessions import _presidio as presidio_scritture
+
+    # Cancellare è una scrittura: con PITWALL_ALLOW_IMPORT spento (la vetrina) risponde 503,
+    # anche se il registratore è acceso. Prima questa rotta non aveva nessun presidio.
+    presidio_scritture()
     if demo.e_demo(id_sessione):
         raise HTTPException(status_code=403, detail="La registrazione demo non si cancella")
     cartella = _cartella(id_sessione)

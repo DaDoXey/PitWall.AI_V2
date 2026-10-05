@@ -81,7 +81,7 @@ def _import_consentito() -> bool:
 
 def _presidio() -> None:
     if not _import_consentito():
-        log.warning("503: import richiesto ma PITWALL_ALLOW_IMPORT e' spento")
+        log.warning("503: scrittura richiesta ma PITWALL_ALLOW_IMPORT e' spento")
         raise HTTPException(status_code=503,
                             detail="Import delle sessioni disattivato su questa installazione")
 
@@ -585,6 +585,8 @@ async def tracce_sessione(
 
 @router.delete("/sessions/{id_sessione}")
 async def cancella_sessione(id_sessione: str):
+    # Cancellare è una scrittura: sulla vetrina (scritture spente) non si può, come gli import.
+    _presidio()
     if demo.e_demo(id_sessione):
         raise HTTPException(status_code=403, detail="La sessione demo non si cancella")
     try:

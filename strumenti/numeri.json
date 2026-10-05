@@ -1,6 +1,6 @@
 {
   "file": 23,
-  "test": 1270,
+  "test": 1275,
   "per_file": {
     "test_adattatori.py": 96,
     "test_aggancio.py": 37,
@@ -20,7 +20,7 @@
     "test_observability.py": 24,
     "test_registratore.py": 69,
     "test_riferimenti.py": 74,
-    "test_sessions.py": 61,
+    "test_sessions.py": 66,
     "test_setup_ranges.py": 40,
     "test_telemetria.py": 97,
     "test_telemetria_bundle.py": 50,

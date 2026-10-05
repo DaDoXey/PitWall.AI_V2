@@ -23,7 +23,11 @@ from app.telemetria import registratore as telemetria_reg
 setup_logging()
 log = logging.getLogger("pitwall.http")
 
-app = FastAPI(title="PitWall.AI API", version="0.1.0")
+# Una sola versione, la stessa di frontend/package.json e del menu utente: 0.9.x fino alla
+# beta pubblica, 1.0.0 con la prima uscita (deciso il 05/10/2026).
+VERSIONE = "0.9.0"
+
+app = FastAPI(title="PitWall.AI API", version=VERSIONE)
 
 app.add_middleware(
     CORSMiddleware,
@@ -102,7 +106,7 @@ def health():
     return {
         "status": "ok",
         "service": "PitWall.AI API",
-        "version": "0.1.0",
+        "version": VERSIONE,
         "demo_mode": config.demo_mode(),
         "live_allowed": config.allow_live(),
         # La chat dal vivo ha il suo interruttore (#061) e serve anche la chiave.

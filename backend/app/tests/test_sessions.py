@@ -238,7 +238,21 @@ resp = carica("acc_setup_gt3.json", "/api/sessions/import/setup")
 test("S39 con PITWALL_ALLOW_IMPORT=0 l'import risponde 503",
      resp.status_code == 503, f"{resp.status_code}: {resp.text[:120]}")
 test("S40 ma la consultazione resta aperta", client.get("/api/sessions").status_code == 200)
+# Con le scritture spente non si cancella nemmeno: prima le due rotte DELETE restavano aperte.
+elenco_ora = client.get("/api/sessions").json()
+rimasta = next(s["id"] for s in elenco_ora["sessioni"] if not s["demo"])
+demo_id = elenco_ora["demo_id"]
+resp = client.delete(f"/api/sessions/{rimasta}")
+test("S40b con le scritture spente DELETE di una sessione risponde 503",
+     resp.status_code == 503, f"{resp.status_code}: {resp.text[:120]}")
+test("S40c …e la sessione è ancora in archivio", client.get(f"/api/sessions/{rimasta}").status_code == 200)
+test("S40d con le scritture spente DELETE di una registrazione risponde 503, anche se non esiste",
+     client.delete("/api/telemetria/sessioni/20990101-000000-nessuna-0000").status_code == 503)
+test("S40e anche la demo: prima il presidio, poi il divieto",
+     client.delete(f"/api/sessions/{demo_id}").status_code == 503)
 os.environ["PITWALL_ALLOW_IMPORT"] = "1"
+test("S40f riaccese le scritture, la demo torna a rispondere 403",
+     client.delete(f"/api/sessions/{demo_id}").status_code == 403)
 
 # ---------------------------------------------------------------------------
 # 5. Le rotte di prima non si sono rotte

@@ -15,7 +15,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/lib/auth";
 import { useProfile } from "@/lib/profile";
 
-const VERSIONE = "v1.1.0 · © 2026 Edoardo Ferlito · MIT";
+const VERSIONE = "v0.9.0 · © 2026 Edoardo Ferlito · MIT";
 
 export default function UserChip() {
   const { user, signOut } = useAuth();

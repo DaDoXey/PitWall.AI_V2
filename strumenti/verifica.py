@@ -11,6 +11,8 @@ Che cosa controlla, in ordine:
   1. i test del backend (tutti i `backend/app/tests/test_*.py`, senza rete e senza spesa)
   2. i tipi del frontend (`tsc --noEmit`)
   3. i numeri scritti nei documenti (`numeri_documenti.py`): se sono rimasti indietro è rosso
+  3b. le dipendenze che finiscono nell'app (`npm audit --omit=dev`): una vulnerabilità alta
+      o critica è rosso. Gli strumenti di sviluppo non contano qui: non arrivano agli utenti
   4. le pagine: rispondono 200?                              } solo con i server accesi
   5. i cinque percorsi automatici nel browser                } (`strumenti/server.ps1 avvia`)
   6. le catture su tre formati, con l'elenco delle pagine cambiate
@@ -146,6 +148,23 @@ def documenti() -> None:
     segna("Numeri nei documenti", VERDE if p.returncode == 0 else ROSSO, ultima[:240])
 
 
+# ── 3b · dipendenze dell'app ────────────────────────────────────────────────
+def dipendenze() -> None:
+    npm = shutil.which("npm.cmd") or shutil.which("npm") or "npm"
+    p = subprocess.run([npm, "audit", "--omit=dev", "--json"], cwd=FRONTEND, capture_output=True, text=True,
+                       encoding="utf-8", errors="replace")
+    try:
+        conti = json.loads(p.stdout)["metadata"]["vulnerabilities"]
+    except (ValueError, KeyError):
+        segna("Dipendenze dell'app", GIALLO, "npm audit non ha risposto (serve la rete)")
+        return
+    gravi = conti.get("high", 0) + conti.get("critical", 0)
+    if gravi:
+        segna("Dipendenze dell'app", ROSSO, f"{conti.get('critical', 0)} critiche e {conti.get('high', 0)} alte: npm audit --omit=dev")
+    else:
+        segna("Dipendenze dell'app", VERDE, "nessuna vulnerabilità alta o critica in ciò che arriva agli utenti")
+
+
 # ── 4-6 · pagine, percorsi, catture ─────────────────────────────────────────
 def pagine() -> bool:
     if risponde("http://localhost:8000/") != 200 or risponde("http://localhost:3000/login") is None:
@@ -213,6 +232,7 @@ def main() -> int:
             print(f"   (aggiornato strumenti/numeri.json: {nuovo['test']} test in {nuovo['file']} file)")
     tipi()
     documenti()
+    dipendenze()
     if not opzioni.veloce and pagine():
         browser()
 
