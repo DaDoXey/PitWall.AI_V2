@@ -58,6 +58,10 @@ esiti: list[tuple[str, str, str]] = []
 def segna(nome: str, stato: str, dettaglio: str = "") -> None:
     esiti.append((nome, stato, dettaglio))
     print(f"{SIMBOLO[stato]} {nome}" + (f" — {dettaglio}" if dettaglio else ""), flush=True)
+    # Su GitHub un rosso diventa un'annotazione del controllo: si legge senza aprire i log.
+    if os.environ.get("GITHUB_ACTIONS") and stato != VERDE:
+        livello = "error" if stato == ROSSO else "notice"
+        print(f"::{livello} title={nome.strip()}::{dettaglio.replace('%', '%25').replace(chr(10), ' ')}", flush=True)
 
 
 def python_del_backend() -> str:
