@@ -3469,6 +3469,27 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #084 — Pacchetto 1.3 chiuso, cancello M1 superato: la fase 1 è finita
+
+| Campo | Valore |
+|---|---|
+| Data | 05/10/2026 |
+| Area | `.github/workflows/sveglia.yml` · tabella di marcia e Runbook (fuori repo) |
+| Commit | `6df80fb` (sveglia) + questo commit docs |
+
+**Cosa.** La sveglia è confermata: la variabile `PITWALL_BACKEND_URL` su GitHub non era stata creata, e l'avviso «niente da svegliare» era stato letto come un «tutto acceso». Creata da Edoardo; il giro lanciato a mano ha risposto «200 in 0,5 s». Ora senza variabile la sveglia fallisce in rosso. Backend pubblicato a mano da Edoardo: frontend e backend online sono tutti e due a `6df80fb`, nove percorsi verdi contro la vetrina.
+
+**Limite noto, accettato da Edoardo per chiudere:** Render non pubblica il backend da solo, anche se l'impostazione è «After CI Checks Pass». Si aggiorna con «Manual Deploy → Deploy latest commit». Ipotesi da provare al prossimo lavoro sul backend: guarda solo l'ultimo commit del push, che finora è sempre stato quello dei documenti.
+
+**Decisioni di Edoardo.** Pacchetto 1.3 chiuso con quel limite · **cancello M1 superato**: la vetrina si può far vedere (l'ha già fatta aprire da più dispositivi) · il primo giro a orario della sveglia lo verifica lui domani.
+
+**Bilancio della fase 1.** Quattro pacchetti (1.0 attrezzi, 1.1 sicurezza, 1.2 occhi esterni, 1.3 deploy) in circa 3,75 sessioni su una stima di 4 – 6. La vetrina è online: https://pitwall-wine.vercel.app
+
+**File protetti:** ☑ nessuno toccato in tutta la fase.
+**Decisione:** ☑ «chiudiamo l'1.3 […] ok procedi per togliere il cancello M1» (05/10/2026).
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
