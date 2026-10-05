@@ -3278,6 +3278,42 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #077 — Pulizia del repo: righe false, codice morto, documenti del corso fuori da Git
+
+| Campo | Valore |
+|---|---|
+| Data | 05/10/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | `docs/03-v2-architecture.md` · `README.md` · `README.it.md` · `frontend/src/app/(auth)/login/page.tsx` · `frontend/src/lib/api.ts` · `backend/app/tests/test_budget.py` · `.gitignore` |
+| Commit | `ba54c38` (README) · `d08221d` (pulizia) + commit docs, pushati il 05/10/2026 |
+| Contesto | Punto 6 dell'ordine (fuori dal codice). Scrivendo il Runbook è saltata fuori una riga vecchia del README; Edoardo: «dimmi se vedi qualcosa di errato o ancora antico sul repo che lo sistemiamo». |
+
+**Catalogo messaggi:**
+1. «ok va bene, correggi il readme e procedi con la landing» → README riallineati nelle due lingue: la chat di Gigi è collegata (stato attuale e tabella del tetto, italiano), roadmap aggiornata (stress test fatto, guide 24/25, mappe 22/25, Lotto 2 chiuso, ultimo punto = deploy dimostrativo e prima prova con piloti esterni).
+2. «ok push, poi dimmi se vedi qualcosa di errato o ancora antico sul repo» → push (`ba54c38`) e ricerca: frasi superate, codice che nessuno usa, numeri di versione. Sei correzioni proposte, tre decisioni lasciate a lui.
+3. «ok procedi con i sei punti».
+
+**Modifica:**
+- `docs/03`, limiti noti: via «LLM reale mai acceso: manca lo stress test» (fatto l'11/09) e «`agent.py:134` ha ancora `import streamlit`» (non c'è più); corretti «la pagina Setup si rifà nella #058» e «La chat dal vivo arriva con la #061»; la rotta degli screenshot dichiarata non usata da nessuna pagina.
+- Pagina di login: via «Progetto d'esame» dal piede (restano copyright e licenza).
+- `test_budget.py`: il test B14 si chiamava «chat a $0 (non collegata)»; cambiato solo il nome.
+- `lib/api.ts`: via tre funzioni che nessuno chiamava (`getHealth`, `getRiferimenti`, `postSetupFromImage`) e i tre tipi che servivano solo a loro. La rotta `/api/setup/from-image` nel backend resta (parcheggiata, #076).
+- `.gitignore`: `/*_PitWall.md`, per i documenti del corso compilati nella radice (PRR, Scorecard, Backlog, Runbook, Landing, informativa privacy).
+- README: la rotta degli screenshot segnata «nessuna pagina la usa».
+
+**Errore mio, corretto subito:** la prima scrittura del `.gitignore` ha raddoppiato i fine riga e per qualche minuto Git ha visto come nuovi `backend/.env`, `node_modules` e i report. Nessun commit in quello stato: file ripristinato con `git checkout`, riga riaggiunta in coda, e verificato con `git check-ignore` che `.env`, `CLAUDE.md`, `node_modules`, i report e i documenti del corso siano ignorati.
+
+**Lasciato a Edoardo (non toccato):** il numero di versione (0.1.0 in `package.json` e nell'API, `v1.1.0` nel menu utente) · la frase d'apertura dei README, ancora centrata sugli LLM · la licenza MIT prima di un deploy pubblico. Segnalato e non toccato perché protetto: il modello di ripiego e quello degli screenshot sono `claude-sonnet-4-6`.
+
+**Trovato cercando, da decidere:** `npm audit` segnala 4 vulnerabilità nelle dipendenze del frontend (Next.js critica, `sharp`, `postcss`, `nanoid` alte), con correzione disponibile · le due rotte `DELETE` (sessione e registrazione) non passano dal presidio delle scritture: su una vetrina pubblica chiunque potrebbe cancellare le sessioni che non sono la demo · nessuna CI e nessun test del frontend.
+
+**Verifica:** `tsc --noEmit` 0 errori · `test_budget` 31/31 · rotte `/ /login /console /setup /telemetry` 200.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ Mantenuto — «ok push» del 05/10/2026.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]

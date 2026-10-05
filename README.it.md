@@ -74,7 +74,7 @@ specificato in [`docs/04-rework-dati.md`](docs/04-rework-dati.md).
 |---|---|---|
 | POST | `/api/analysis` | Analisi del race engineer su una sessione (5 sezioni; `session_id`, di default la DEMO) |
 | GET | `/api/setup-params` | Parametri di setup, con la regola click → valore del gioco della vettura (`?car=`) |
-| POST | `/api/setup/from-image` | Lettura del setup da uno screenshot |
+| POST | `/api/setup/from-image` | Lettura del setup da uno screenshot (provata, oggi nessuna pagina la usa) |
 | GET | `/api/catalog` | Catalogo vetture e circuiti |
 | GET | `/api/catalog/car/{car_id}` | Scheda di una vettura |
 | GET | `/api/catalog/track/{track_id}` | Scheda di un circuito |
@@ -177,7 +177,7 @@ Anthropic fattura.
 | Categoria | Uso | Tetto giornaliero (default) |
 |---|---|---|
 | `analisi` | Console, `POST /api/analysis` | `PITWALL_BUDGET_ANALISI_GIORNO=0.50` |
-| `screenshot` | Setup, `POST /api/setup/from-image` | `PITWALL_BUDGET_SCREENSHOT_GIORNO=0.25` |
+| `screenshot` | `POST /api/setup/from-image` (nessuna pagina la usa) | `PITWALL_BUDGET_SCREENSHOT_GIORNO=0.25` |
 | `chat` | Gigi dal vivo nella Console, `POST /api/sessions/{id}/chat` | `PITWALL_BUDGET_CHAT_GIORNO=0` |
 
 Sopra le tre categorie c'è un tetto **mensile** complessivo, `PITWALL_BUDGET_MESE=5.00`. Il giorno si

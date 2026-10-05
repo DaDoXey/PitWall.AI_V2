@@ -74,7 +74,7 @@ specified in [`docs/04-rework-dati.md`](docs/04-rework-dati.md).
 |---|---|---|
 | POST | `/api/analysis` | Race engineer analysis of a session (5 sections; `session_id`, default the DEMO) |
 | GET | `/api/setup-params` | Setup parameters, with the click → in-game value rule of the car (`?car=`) |
-| POST | `/api/setup/from-image` | Reads a setup from a screenshot |
+| POST | `/api/setup/from-image` | Reads a setup from a screenshot (tested, currently used by no page) |
 | GET | `/api/catalog` | Car and track catalogue |
 | GET | `/api/catalog/car/{car_id}` | Single car sheet |
 | GET | `/api/catalog/track/{track_id}` | Single track sheet |
@@ -178,7 +178,7 @@ even with concurrent requests. Amounts are in dollars, the currency Anthropic bi
 | Category | Use | Daily cap (default) |
 |---|---|---|
 | `analisi` | Console, `POST /api/analysis` | `PITWALL_BUDGET_ANALISI_GIORNO=0.50` |
-| `screenshot` | Setup, `POST /api/setup/from-image` | `PITWALL_BUDGET_SCREENSHOT_GIORNO=0.25` |
+| `screenshot` | `POST /api/setup/from-image` (used by no page) | `PITWALL_BUDGET_SCREENSHOT_GIORNO=0.25` |
 | `chat` | Gigi live on the Console, `POST /api/sessions/{id}/chat` | `PITWALL_BUDGET_CHAT_GIORNO=0` |
 
 On top of the three categories there is an overall **monthly** cap, `PITWALL_BUDGET_MESE=5.00`. The
