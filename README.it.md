@@ -39,10 +39,11 @@ backend/       FastAPI
     telemetria/  # shared memory di ACC: strutture, lettore, dizionario, registratore, banco sintetico
     motec/       # file MoTeC: lettore .ld/.ldx, scrittore con l'impaginazione esatta di ACC, export
     analisi/     # motore deterministico: ritmo, costanza, curve, gomme e freni; contesto di Gigi
-    tests/       # 1005 test offline: observability 24, budget 31, bundle 37, adattatori 86,
-                 # analisi 59, analisi_l4 45, demo 38, gigi 32, sessions 50, telemetria 97,
-                 # riferimenti 73, registratore 69, curve 74, telemetria_bundle 50,
-                 # motec 43, motec_bundle 45, motec_export 17, tracciati 98, aggancio 37
+    tests/       # 1270 test offline in 23 file: observability 24, budget 31, bundle 37, adattatori 96,
+                 # analisi 61, analisi_l4 46, demo 38, gigi 36, sessions 61, telemetria 97,
+                 # riferimenti 74, registratore 69, curve 75, telemetria_bundle 50,
+                 # motec 43, motec_bundle 45, motec_export 17, tracciati 169, aggancio 37,
+                 # setup_ranges 40, debrief 39, chat 29, confronto 56
   scripts/       # pipeline delle immagini, validatore delle guide, validazione MoTeC sui file veri
 frontend/      Next.js 15.5 (App Router) + TypeScript + Tailwind + Recharts + Framer Motion
   src/
@@ -83,6 +84,7 @@ specificato in [`docs/04-rework-dati.md`](docs/04-rework-dati.md).
 | GET | `/api/sessions/{id}/export/motec` | La sessione come .ld + .ldx (zip) da aprire in MoTeC i2 |
 | GET | `/api/sessions/{id}/debrief` | Il debrief di Gigi fase per fase (dal motore, senza modello) |
 | PUT | `/api/sessions/{id}/debrief/tagli` | Le fasi ritagliate a mano, salvate nella sessione (`null` = quelle di Gigi) |
+| GET | `/api/sessions/{id}/confronto` | «Sono migliorato?»: la sessione contro la precedente su stessa pista e vettura (dal motore, senza modello) |
 | POST | `/api/sessions/{id}/export/setup` | Il setup della sessione con i click cambiati, come file JSON da ricaricare in ACC |
 | GET | `/api/sessions` | Elenco delle sessioni, DEMO compresa |
 | GET | `/api/sessions/{id}` | Una sessione (session bundle) |

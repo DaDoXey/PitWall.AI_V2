@@ -3158,6 +3158,53 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #074 — «Sono migliorato?»: la sessione contro la precedente
+
+| Campo | Valore |
+|---|---|
+| Data | 05/10/2026 |
+| Agente dev | Claude Code (claude-opus-5-5) |
+| Area | NEW `backend/app/analisi/confronto.py` · NEW `backend/app/bundle/demo_precedente.py` · `backend/app/api/sessions.py` (1 rotta) · NEW `backend/app/tests/test_confronto.py` · `frontend/src/app/(app)/console/page.tsx` · `components/console/Radio.tsx` · `lib/debrief.ts` · `lib/api.ts` · docs |
+| Commit | `368f110` + commit docs, pushati il 05/10/2026 |
+| Contesto | Punto 5 dell'ordine dell'01/10: le tre cose parcheggiate della Console. Questa è la prima, il debrief su più sessioni; restano la dettatura al microfono e la prova degli screenshot del setup. |
+
+**Catalogo messaggi:**
+1. «leggi la memoria e riprendiamo il lavoro con pitwall» → status (main = origin = `d6aa84f`, server spenti), poi tre giri di domande. Scelte di Edoardo: si parte dal **debrief su più sessioni**; confronto fra sessioni sulla **stessa pista e vettura**; **ultima contro precedente**; contenuto **ritmo, curve, setup cambiato, gomme**; **nella radio di Gigi** come domanda in più; «la precedente» **dentro lo stesso gruppo** (tue · riferimenti · demo); condizioni diverse = **si confronta e si dichiara**, gomme confrontate entro **5 °C** di pista; la domanda si chiama **«Sono migliorato?»**; **un messaggio**, il resto con «Perché?». Dettatura: detta e poi invii tu. Screenshot: provarli prima, con immagini cercate online.
+2. «non ho ACC sul pc, quindi tocca trovare una soluzione» → dati: **seconda demo + ricerca online** (scelta sua); storia della seconda demo «setup e guida insieme»; «ricordati di accendere i server dev così vedo cosa fai a schermo».
+3. «ok procedi. vai avanti con tutto quello che serve.» → scaricato il file trovato, reimportati i due Zandvoort già sul disco, scritta la seconda demo (numeri protetti) e costruito tutto.
+
+**I dati (fuori repo).** In archivio non c'era nessuna coppia vera «stessa pista e vettura». Ricerca online (~10 minuti): **PS_Racing, BMW M4 GT3 a Monza** (video del 19/04/2024, ACC 1.10.1, Drive pubblico, nessuna licenza esplicita → uso locale, `PROVENIENZA.md` aggiornato). 10 giri, 8 con tempo, migliore 1:46.829; setup Q dedotto da `telemetryLaps = 10`. Importata come riferimento (`20261005-151527-monza_bmw_m4_gt3-3afe`): fa coppia con la `…711b` (Fri3d0lf, 2023, un giro, altro pilota). Reimportati i due file Zandvoort · McLaren 720S di kyxap del 5 e 6 dicembre 2023 (`…e93b`, `…9a04`): con la `…3e52` del 10 dicembre sono tre sessioni dello stesso pilota in giorni diversi, un giro lanciato l'una.
+
+**Modifica:**
+- NEW `analisi/confronto.py`. `scegli_precedente(riassunti, id)`: stessa pista, stessa vettura, stesso gruppo, iniziata prima, la più vicina (date con e senza fuso; senza data di inizio vale quella di import; fuori le sessioni senza un tempo). `confronta(...)` → `Confronto`:
+  - **Ritmo**: giro migliore contro giro migliore; la media solo con almeno 2 giri di ritmo per parte.
+  - **Curve**: **giro migliore contro giro migliore sugli stessi tratti** (quelli del motore per la sessione aperta; se ha un giro solo, quelli della precedente o quelli ricavati dal giro). I tratti si toccano e coprono il giro: la somma delle differenze è la differenza sul giro. Così il confronto regge anche fra due sessioni da un giro. Nomi e punti dall'aggancio della guida; si nominano solo le differenze da 50 ms in su.
+  - **Setup**: i parametri con un click diverso, con il valore del gioco dove la vettura ha la tabella («Pressione Post.SX +4 click (24.7 → 25.1 psi)»); nella prova i primi sei, gli altri contati. Mai detto come causa del tempo.
+  - **Gomme**: per ruota, sui giri di ritmo, pressione media, temperatura massima al core e stato contro la finestra Kunos; una ruota si nomina se cambia stato, o di almeno 0.2 psi o 3 °C. Oltre 5 °C di differenza di pista non si confrontano.
+  - **Condizioni**: differenza di pista e di aria dichiarata da 3 °C; temperatura non registrata → detto; fra riferimenti «possono essere di piloti diversi». Asciutto contro bagnato: nessun confronto, con il motivo.
+  - **Messaggio** («Sì / No / Sei lì», i due tempi, la media, il tratto che pesa di più e quello che va contro) e **prova** riga per riga.
+- NEW `bundle/demo_precedente.py`, **la volta prima della demo**: stesso banco e tracciato, 14/07/2026, migliore **1:48.150** al giro 3, media 1:49.072, posteriori 4 click più basse nel file di setup (0.4 psi a caldo), Post.DX a 108 °C, Roggia −4.5 km/h, Lesmo 1 +4.5 km/h. **Solo in memoria**: non è in archivio, non compare negli elenchi, non si apre come sessione (così non tocca colonna di sinistra, Rapporto completo in cache, conteggi dei tracciati). `demo.py` non è modificato.
+- `GET /api/sessions/{id}/confronto`: senza una precedente risponde `precedente: null` con il motivo.
+- **Console**: la domanda **«Sono migliorato?»** compare fra le domande preparate solo se c'è una precedente; Gigi risponde con il messaggio, e il «Perché?» subito dopo dà le prove del confronto (non quelle della fase). La prova va a capo riga per riga.
+
+**Risultato osservato:**
+- Demo: «Sì: il giro migliore è 0.33 s più veloce della volta prima (1:47.820 contro 1:48.150). Anche in media guadagni 0.57 s a giro. Il grosso lo guadagni in curva 3: 0.40 s; in curva 4 ne lasci 0.06 s.» Prova: setup «Pressione Post.SX +4 click (24.7 → 25.1 psi) · Pressione Post.DX +4 click (25.3 → 25.7 psi)», gomme «Post.SX 25.0 → 25.4 psi (ancora sotto la finestra) · Post.DX 24.8 → 25.2 psi · 108 → 105 °C al core (ancora oltre la finestra di temperatura)».
+- BMW M4 a Monza (PS_Racing contro Fri3d0lf): «No: il giro migliore è 0.63 s più lento della sessione precedente (1:46.829 contro 1:46.200). Il grosso lo lasci in T8-T10 Variante Ascari: 0.39 s.» Setup: 39 parametri cambiati su 49. Dichiarati: temperatura della pista non registrata, piloti diversi.
+- McLaren a Zandvoort (10/12 contro 06/12/2023): «Sì: … 0.50 s più veloce … Il grosso lo guadagni in T8 Mastersbocht: 0.35 s; in T1 Tarzanbocht ne lasci 0.20 s.»
+
+**Limiti dichiarati:**
+- I file MoTeC non portano la temperatura della pista né la versione di ACC: la prima si dichiara come «non registrata», la seconda non si può dire.
+- Sulle sessioni MoTeC la posizione in pista è ricavata dalla velocità: fra due file i tratti possono scostarsi di qualche metro (giri di riferimento 5760 e 5749 m a Monza).
+- Sulla demo le curve restano «curva 3», senza nome: la guida non si aggancia (come nel resto della Console).
+- A schermo le domande ora sono sei e vanno su due righe: la conversazione perde una riga di altezza. Da decidere con Edoardo.
+
+**Verifica:** suite **1270/1270** in 23 file (+56 `test_confronto`) · `tsc --noEmit` 0 errori · a schermo a 1536×695 su demo e su Monza · BMW M4 GT3 (domanda, risposta, «Perché?»; la pagina non scorre).
+
+**File protetti:** ☑ numeri della demo: scritti in un file nuovo (`demo_precedente.py`) con l'«ok procedi» del 05/10; `demo.py`, `demo_responses.py`, prompt, `agent.py`, `setup_params.py` non toccati (`setup_params` solo letto, per le etichette).
+**Decisione:** ☑ Mantenuto — «ok push» del 05/10/2026.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]

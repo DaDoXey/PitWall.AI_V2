@@ -40,10 +40,11 @@ backend/       FastAPI
     telemetria/  # ACC shared memory: structures, reader, dictionary, recorder, synthetic bench
     motec/       # MoTeC files: .ld/.ldx reader, writer with ACC's exact layout, session export
     analisi/     # deterministic engine: pace, consistency, corners, tyres and brakes; Gigi's context
-    tests/       # 1005 offline tests: observability 24, budget 31, bundle 37, adattatori 86,
-                 # analisi 59, analisi_l4 45, demo 38, gigi 32, sessions 50, telemetria 97,
-                 # riferimenti 73, registratore 69, curve 74, telemetria_bundle 50,
-                 # motec 43, motec_bundle 45, motec_export 17, tracciati 98, aggancio 37
+    tests/       # 1270 offline tests in 23 files: observability 24, budget 31, bundle 37, adattatori 96,
+                 # analisi 61, analisi_l4 46, demo 38, gigi 36, sessions 61, telemetria 97,
+                 # riferimenti 74, registratore 69, curve 75, telemetria_bundle 50,
+                 # motec 43, motec_bundle 45, motec_export 17, tracciati 169, aggancio 37,
+                 # setup_ranges 40, debrief 39, chat 29, confronto 56
   scripts/       # image pipeline, track guide validator, MoTeC validation on real ACC files
 frontend/      Next.js 15.5 (App Router) + TypeScript + Tailwind + Recharts + Framer Motion
   src/
@@ -84,6 +85,7 @@ specified in [`docs/04-rework-dati.md`](docs/04-rework-dati.md).
 | GET | `/api/sessions/{id}/export/motec` | The session as .ld + .ldx (zip) to open in MoTeC i2 |
 | GET | `/api/sessions/{id}/debrief` | Gigi's debrief, phase by phase (engine only, no model) |
 | PUT | `/api/sessions/{id}/debrief/tagli` | Phases cut by hand, saved in the session (`null` = Gigi's) |
+| GET | `/api/sessions/{id}/confronto` | "Did I improve?": the session against the previous one on the same track and car (engine only, no model) |
 | POST | `/api/sessions/{id}/chat` | Gigi live on the Console radio: streamed answer on the open session (needs `PITWALL_CHAT_LIVE=1`; 503 off, 429 cap reached, 409 conversation full) |
 | POST | `/api/sessions/{id}/export/setup` | The session setup with the changed clicks, as a JSON file to load back into ACC |
 | GET | `/api/sessions` | Stored sessions, DEMO included |
