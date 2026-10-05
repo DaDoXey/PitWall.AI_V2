@@ -3344,6 +3344,30 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #079 — Messa in sicurezza (pacchetto 1.1)
+
+| Campo | Valore |
+|---|---|
+| Data | 05/10/2026 |
+| Area | `frontend/package.json` + lock · `backend/app/api/sessions.py` · `backend/app/api/telemetria.py` · `backend/app/main.py` · `components/ui/UserChip.tsx` · `test_sessions.py` · `strumenti/verifica.py` · documenti |
+| Commit | `a11f16c` + commit docs, pushati il 05/10/2026 |
+
+**Perché.** Secondo pacchetto della tabella di marcia: chiudere ciò che diventa un problema il giorno del deploy.
+
+**Cosa.**
+- **Dipendenze del frontend.** Next.js 15.5.20 → 15.5.27 (via la vulnerabilità critica), `sharp` e `nanoid` aggiornati, PostCSS 8.4.49 → 8.5.29 anche dentro Next (con `overrides`). **In ciò che arriva agli utenti: zero vulnerabilità.**
+- **Restano 5 «alte» negli strumenti di sviluppo**, tutte dalla stessa radice: Tailwind 3 usa `braces`, che non ha una versione corretta. Si tolgono solo passando a Tailwind 4, che è un salto di versione con modifiche a tutta la configurazione degli stili. Non l'ho fatto: è fuori dal pacchetto e lo decide Edoardo. Riguardano la compilazione degli stili sul PC di chi sviluppa, non l'app in funzione.
+- **Rotte di cancellazione.** `DELETE /api/sessions/{id}` e `DELETE /api/telemetria/sessioni/{id}` ora passano dal presidio delle scritture: con `PITWALL_ALLOW_IMPORT=0` rispondono 503, demo compresa.
+- **Versione `0.9.0`** in un punto solo del backend (`VERSIONE`), in `package.json` e nel menu utente.
+- **Verifica:** nuovo passo «Dipendenze dell'app» (`npm audit --omit=dev`), rosso con una vulnerabilità alta o critica in ciò che arriva agli utenti.
+
+**Verifica.** Verde su tutto: 1275 test (+5 sulle rotte di cancellazione), tipi 0 errori, 9 pagine, 5 percorsi, 27 catture con **nessuna pagina cambiata** dopo l'aggiornamento di Next.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ «ok push» del 05/10/2026. Sulle 5 vulnerabilità degli strumenti di sviluppo Edoardo ha scelto: Tailwind 4 dopo la prima uscita. Pacchetto 1.1 chiuso.
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
