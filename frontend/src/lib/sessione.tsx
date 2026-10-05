@@ -32,6 +32,23 @@ const KEY = "pw_sessione";
 // sessione aperta.
 const KEY_DEMO = "pw_sessione_visita";
 
+// L'attesa dell'accensione (pacchetto 1.3). Online il servizio si addormenta: per questi
+// secondi, alla prima richiesta fallita, si riprova in silenzio invece di dire «non
+// risponde». In locale vale 0: se il servizio è spento lo si dice subito.
+// `pw_prova_accensione_s` in sessionStorage serve solo ai percorsi automatici.
+const ATTESA_ACCENSIONE_S = Number(process.env.NEXT_PUBLIC_ATTESA_ACCENSIONE_S ?? 0);
+const PAUSA_FRA_TENTATIVI_MS = 4000;
+
+function attesaAccensione(): number {
+  try {
+    const prova = sessionStorage.getItem("pw_prova_accensione_s");
+    if (prova) return Number(prova) || 0;
+  } catch {
+    /* senza sessionStorage vale la configurazione */
+  }
+  return ATTESA_ACCENSIONE_S;
+}
+
 type Stato = {
   elenco: Riassunto[] | null;
   demoId: string | null;
@@ -40,6 +57,10 @@ type Stato = {
   report: Report | null;
   caricamento: boolean;
   errore: string | null;
+  /** Il servizio si sta riaccendendo: si aspetta, non è un errore. */
+  accensione: boolean;
+  /** Quante volte il servizio si è riacceso in questa visita: le pagine si rimontano. */
+  risvegli: number;
   nomi: NomiCatalogo;
   catalogo: Catalog | null;
   apri: (id: string) => void;
@@ -82,12 +103,37 @@ export function SessioneProvider({ children }: { children: React.ReactNode }) {
   const [report, setReport] = useState<Report | null>(null);
   const [caricamento, setCaricamento] = useState(true);
   const [errore, setErrore] = useState<string | null>(null);
+  const [accensione, setAccensione] = useState(false);
+  const [risvegli, setRisvegli] = useState(0);
   const [catalogo, setCatalogo] = useState<Catalog | null>(null);
 
   const ricarica = useCallback(
     async (apriId?: string) => {
+      const inizio = Date.now();
+      const attesa = attesaAccensione() * 1000;
+      let aspettato = false;
+      let risposta: Awaited<ReturnType<typeof getSessioni>> | null = null;
+      // Online il primo tentativo può trovare il servizio addormentato: si riprova per un po'.
+      for (;;) {
+        try {
+          risposta = await getSessioni();
+          break;
+        } catch {
+          if (Date.now() - inizio >= attesa) break;
+          aspettato = true;
+          setAccensione(true);
+          await new Promise((fatto) => setTimeout(fatto, PAUSA_FRA_TENTATIVI_MS));
+        }
+      }
+      setAccensione(false);
+      if (!risposta) {
+        setErrore(SERVIZIO_FERMO);
+        setCaricamento(false);
+        return;
+      }
+      const r = risposta;
+      if (aspettato) setRisvegli((n) => n + 1);
       try {
-        const r = await getSessioni();
         setElenco(r.sessioni);
         setDemoId(r.demo_id);
         setErrore(null);
@@ -116,7 +162,8 @@ export function SessioneProvider({ children }: { children: React.ReactNode }) {
     getCatalog()
       .then(setCatalogo)
       .catch(() => setCatalogo(null));
-  }, []);
+    // Dopo un risveglio il catalogo va richiesto di nuovo: la prima volta il servizio dormiva.
+  }, [risvegli]);
 
   // Il report segue la sessione scelta.
   useEffect(() => {
@@ -159,7 +206,7 @@ export function SessioneProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <Ctx.Provider
-      value={{ elenco, demoId, idSessione, sessione, report, caricamento, errore, nomi, catalogo, apri, ricarica }}
+      value={{ elenco, demoId, idSessione, sessione, report, caricamento, errore, accensione, risvegli, nomi, catalogo, apri, ricarica }}
     >
       {children}
     </Ctx.Provider>

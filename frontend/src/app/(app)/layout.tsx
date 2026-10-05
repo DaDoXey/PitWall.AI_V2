@@ -1,5 +1,6 @@
 import Sidebar from "@/components/ui/Sidebar";
 import MotionProvider from "@/components/ui/MotionProvider";
+import Accensione from "@/components/ui/Accensione";
 import AuthGate from "@/components/ui/AuthGate";
 import OnboardingFlow from "@/components/ui/OnboardingFlow";
 import GigiTour from "@/components/ui/GigiTour";
@@ -21,7 +22,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               colonna e lasciava una banda vuota a destra. */}
           <main className="min-w-0 flex-1 px-8 py-8 xl:px-12">
             <div className="mx-auto max-w-6xl">
-              <MotionProvider>{children}</MotionProvider>
+              <MotionProvider>
+                <Accensione>{children}</Accensione>
+              </MotionProvider>
             </div>
           </main>
         </div>

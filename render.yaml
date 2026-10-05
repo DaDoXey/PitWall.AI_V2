@@ -1,0 +1,40 @@
+# Il backend di PitWall su Render, come VETRINA in sola lettura (tabella di marcia, pacchetto 1.3).
+#
+# Che cosa fa questa configurazione, e perché:
+#   - modello spento, scritture spente, registratore spento: la vetrina non può spendere
+#     né ricevere file. Non serve nessuna chiave API: non metterla.
+#   - c'è solo la sessione demo, che il backend genera da sé all'avvio. Il disco del piano
+#     gratuito si azzera a ogni riavvio: per la vetrina va bene, per le sessioni dei piloti no
+#     (da lì in poi servirà un disco permanente).
+#   - il piano gratuito si addormenta dopo 15 minuti senza visite: il frontend lo sa
+#     (NEXT_PUBLIC_ATTESA_ACCENSIONE_S) e .github/workflows/sveglia.yml lo tiene acceso di giorno.
+#
+# L'unico valore da scrivere a mano nella pagina di Render è PITWALL_CORS_ORIGINS:
+# l'indirizzo del frontend su Vercel, senza barra finale.
+services:
+  - type: web
+    name: pitwall-backend
+    runtime: python
+    plan: free
+    region: frankfurt
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /
+    # Si pubblica solo un commit che ha passato i controlli di GitHub.
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.10
+      - key: PITWALL_ALLOW_LIVE
+        value: "0"
+      - key: PITWALL_DEMO_MODE
+        value: "1"
+      - key: PITWALL_CHAT_LIVE
+        value: "0"
+      - key: PITWALL_ALLOW_IMPORT
+        value: "0"
+      - key: PITWALL_ALLOW_RECORDER
+        value: "0"
+      - key: PITWALL_CORS_ORIGINS
+        sync: false

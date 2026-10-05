@@ -1,0 +1,31 @@
+# Tiene sveglio il backend della vetrina nelle ore diurne (pacchetto 1.3).
+# Il piano gratuito dell'hosting lo addormenta dopo 15 minuti senza visite, e il primo
+# visitatore aspetta fino a un minuto. Una richiesta ogni 10 minuti lo evita di giorno;
+# di notte dorme, così le ore gratuite del mese bastano con margine.
+#
+# L'indirizzo sta nella variabile del repository PITWALL_BACKEND_URL
+# (Settings → Secrets and variables → Actions → Variables). Senza, non fa niente.
+name: sveglia
+
+on:
+  schedule:
+    # dalle 5 alle 21 UTC: più o meno dalle 7 alle 23 in Italia d'estate, 6-22 d'inverno
+    - cron: "*/10 5-21 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  sveglia:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Una richiesta al backend
+        env:
+          BACKEND: ${{ vars.PITWALL_BACKEND_URL }}
+        run: |
+          if [ -z "$BACKEND" ]; then
+            echo "PITWALL_BACKEND_URL non impostata: niente da svegliare."
+            exit 0
+          fi
+          curl --silent --show-error --max-time 100 --output /dev/null --write-out "risposta %{http_code} in %{time_total} s\n" "$BACKEND/" || echo "il backend non ha risposto: si starà riaccendendo"

@@ -6,8 +6,13 @@ import { entraInDemo, pronta } from "./aiuti";
 
 test("1 · dal login si entra in demo e si arriva alla Dashboard", async ({ page }) => {
   await page.goto("/login");
-  await page.getByRole("button", { name: /Entra in modalità demo/ }).click();
-  await expect(page).not.toHaveURL(/\/login/);
+  // Si aspetta che la pagina sia viva: un clic arrivato prima non fa niente (era la causa
+  // di un rosso saltuario, soprattutto al primo percorso del giro).
+  await pronta(page);
+  await expect(async () => {
+    await page.getByRole("button", { name: /Entra in modalità demo/ }).click();
+    await expect(page).not.toHaveURL(/\/login/, { timeout: 3000 });
+  }).toPass({ timeout: 20_000 });
   // Al primo ingresso c'è il wizard del profilo: lo si salta come farebbe chi ha fretta.
   const salta = page.getByRole("button", { name: /Salta per ora/ });
   if (await salta.isVisible().catch(() => false)) await salta.click();
@@ -75,6 +80,20 @@ test("7 · se il servizio non risponde lo dice senza nomi tecnici, e «Riprova»
   fermo = false;
   await avviso.getByRole("button", { name: "Riprova" }).click();
   await expect(page.getByText("La prima cosa da fare")).toBeVisible();
+});
+
+test("8 · se il servizio si sta riaccendendo aspetta e poi parte da solo", async ({ page }) => {
+  await entraInDemo(page);
+  await page.addInitScript(() => sessionStorage.setItem("pw_prova_accensione_s", "30"));
+  let addormentato = true;
+  await page.route("**/api/**", (rotta) => (addormentato ? rotta.abort() : rotta.continue()));
+  await page.goto("/console");
+  await expect(page.getByText("Il muretto si sta accendendo.")).toBeVisible();
+  await expect(page.getByText("PitWall non risponde in questo momento")).toHaveCount(0);
+  addormentato = false;
+  // Riprova ogni 4 secondi, poi carica la Console: su Firefox servono anche più di 15 secondi.
+  await expect(page.getByText("La prima cosa da fare")).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByText("Il muretto si sta accendendo.")).toHaveCount(0);
 });
 
 test("5 · il Setup e la Telemetria si aprono sui dati della demo", async ({ page }) => {
