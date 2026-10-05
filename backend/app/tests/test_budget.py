@@ -249,7 +249,7 @@ try:
 
     azzera()
     os.environ.pop("PITWALL_BUDGET_CHAT_GIORNO")
-    test("B14 default: chat a $0 (non collegata), analisi $0,50, screenshot $0,25, mese $5",
+    test("B14 default: chat a $0 (spenta finché non le si dà un tetto), analisi $0,50, screenshot $0,25, mese $5",
          budget.tetto_giornaliero("chat") == 0 and not budget.disponibile("chat")
          and budget.tetto_giornaliero("analisi") >= 0 and budget.DEFAULT_GIORNO["analisi"] == "0.50"
          and budget.DEFAULT_GIORNO["screenshot"] == "0.25" and budget.DEFAULT_MESE == "5.00")

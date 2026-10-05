@@ -64,10 +64,6 @@ export type Health = {
   chat_live?: boolean; // la chat dal vivo di Gigi: interruttore suo e chiave presente (#061)
 };
 
-export function getHealth() {
-  return getJSON<Health>("/");
-}
-
 // ─────────────────────────────────────────────
 // Archivio delle sessioni
 // ─────────────────────────────────────────────
@@ -521,31 +517,6 @@ export function getTracce(id: string, giri: number[], canali: string[], punti = 
 }
 
 // ─────────────────────────────────────────────
-// Soglie di riferimento (Kunos e community, separate)
-// ─────────────────────────────────────────────
-export type VoceRiferimento = {
-  min?: number;
-  max?: number;
-  unita?: string | null;
-  citazione?: string;
-  si_applica_a?: string;
-  nota?: string;
-  stato?: string;
-};
-
-export type Riferimenti = {
-  ufficiali: {
-    fonte: { titolo: string; editore: string; pubblicato_il: string; versione_acc: string; url_thread_ufficiale: string };
-    voci: Record<string, VoceRiferimento>;
-  };
-  community: { regola: string; voci: Record<string, VoceRiferimento & { fonti?: { nome: string; url: string }[] }> };
-};
-
-export function getRiferimenti() {
-  return getJSON<Riferimenti>("/api/riferimenti/fisica");
-}
-
-// ─────────────────────────────────────────────
 // Import (PC) e sessione manuale (console)
 // ─────────────────────────────────────────────
 export type Partecipante = {
@@ -892,12 +863,4 @@ export function postAnalysis(prompt: string, profile?: string, sessionId?: strin
     ...(profile ? { profile } : {}),
     ...(sessionId ? { session_id: sessionId } : {}),
   });
-}
-
-export type VisionResult = { params: Record<string, number>; summary: string };
-
-export function postSetupFromImage(file: File) {
-  const form = new FormData();
-  form.append("file", file);
-  return postForm<VisionResult>("/api/setup/from-image", form);
 }

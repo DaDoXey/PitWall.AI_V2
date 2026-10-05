@@ -58,3 +58,7 @@ Thumbs.db
 # pitwall.log rotante + i due registri markdown di agent.py (token stimati e
 # guasti). Percorso fissato in backend/app/config.py.
 /backend/logs/
+
+# -- Documenti del corso compilati su PitWall (PRR, Scorecard, Backlog, Runbook, Landing,
+# informativa privacy): materiale di consegna, mai committato.
+/*_PitWall.md
