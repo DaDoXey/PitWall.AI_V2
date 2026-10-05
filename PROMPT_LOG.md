@@ -3338,7 +3338,9 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 **Decisioni di Edoardo:** attrezzi nel repository · Playwright sì · versione `0.9.0` fino alla beta (si applica nel pacchetto 1.1).
 **File protetti:** ☑ nessuno modificato (`agent.py` toccato e ripristinato per provare il guardiano).
-**Decisione:** ☐ in attesa dell'«ok push»; il «finito quando» si chiude quando il primo push fa partire i controlli su GitHub.
+**Su GitHub.** I controlli sono partiti al primo push e sono usciti rossi due volte: su Linux falliscono solo `test_telemetria` e `test_registratore`, perché la memoria condivisa di ACC esiste solo su Windows e le strutture hanno un'altra dimensione. I controlli ora girano su Windows, come PitWall, e i passi rossi diventano annotazioni leggibili da fuori (`a86fcb7`, `b22dfb4`). Verdi dal commit `b22dfb4`; il test dei tracciati lì è saltato e lo dichiara.
+
+**Decisione:** ☑ «ok push» del 05/10/2026. Pacchetto 1.0 chiuso: tutte le voci del «finito quando» sono vere.
 
 ---
 
