@@ -118,3 +118,23 @@ html {
     animation: none;
   }
 }
+
+/* Il microfono della radio mentre ascolta (#075): un alone rosso che pulsa. */
+@keyframes pw-ascolto {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(232, 0, 45, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(232, 0, 45, 0);
+  }
+}
+.pw-ascolto {
+  animation: pw-ascolto 1.2s ease-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pw-ascolto {
+    animation: none;
+    background: rgba(232, 0, 45, 0.15);
+  }
+}

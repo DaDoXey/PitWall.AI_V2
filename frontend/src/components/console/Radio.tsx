@@ -6,12 +6,14 @@
 // (la prova, numero per numero, esce solo chiedendo «Perché?»), e le domande scritte a
 // Gigi dal vivo (#061), con la risposta del modello che arriva pezzo per pezzo.
 // La casella è accesa solo se il backend ha la chat dal vivo: senza, restano le
-// domande preparate.
+// domande preparate. Con la chat accesa c'è anche il microfono (#075): detta nella
+// casella, non invia.
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Onda from "@/components/console/Onda";
 import { SectionBody } from "@/components/console/RapportoCompleto";
 import type { Domanda, Messaggio } from "@/lib/debrief";
+import { accoda, useDettatura } from "@/lib/dettatura";
 import { COLORS } from "@/lib/theme";
 
 const CHIP = "rounded-full border border-line-strong bg-surface px-3 py-1.5 text-[0.78rem] text-[#d6d6d6] transition hover:border-accent hover:text-white";
@@ -46,6 +48,9 @@ export default function Radio({
 }) {
   const lista = useRef<HTMLDivElement>(null);
   const [testo, setTesto] = useState("");
+  // Quello che c'era nella casella quando si è acceso il microfono: il dettato si accoda lì.
+  const primaDelDettato = useRef("");
+  const dettatura = useDettatura((dettato) => setTesto(accoda(primaDelDettato.current, dettato, MAX_CARATTERI)));
   const ultimo = conversazione[conversazione.length - 1];
   const piena = domandeDalVivo >= maxDomande;
 
@@ -58,6 +63,7 @@ export default function Radio({
     e.preventDefault();
     const domanda = testo.trim();
     if (!domanda || !dalVivo || inRisposta || piena) return;
+    dettatura.ferma();
     setTesto("");
     onScrivi(domanda);
   };
@@ -162,10 +168,42 @@ export default function Radio({
             disabled={!dalVivo}
             autoComplete="off"
             placeholder={
-              !dalVivo ? "Gigi dal vivo è spento · usa le domande qui sopra" : inRisposta ? "Gigi sta rispondendo…" : "Scrivi a Gigi…"
+              !dalVivo
+                ? "Gigi dal vivo è spento · usa le domande qui sopra"
+                : inRisposta
+                  ? "Gigi sta rispondendo…"
+                  : dettatura.inAscolto
+                    ? "Ti ascolto… poi premi Invio"
+                    : (dettatura.avviso ?? "Scrivi a Gigi…")
             }
             className="min-w-0 flex-1 bg-transparent py-1.5 text-[0.85rem] text-white placeholder:text-muted focus:outline-none disabled:cursor-not-allowed"
           />
+          {dalVivo && dettatura.disponibile && (
+            <button
+              type="button"
+              onClick={() => {
+                primaDelDettato.current = testo;
+                dettatura.alterna();
+              }}
+              disabled={inRisposta}
+              aria-pressed={dettatura.inAscolto}
+              aria-label={dettatura.inAscolto ? "Ferma la dettatura" : "Detta la domanda"}
+              title={
+                dettatura.inAscolto
+                  ? "Ferma la dettatura"
+                  : "Detta la domanda: compare qui, poi la invii tu. L'audio lo riconosce il browser, non PitWall."
+              }
+              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border transition disabled:opacity-40 ${
+                dettatura.inAscolto ? "pw-ascolto border-accent text-accent" : "border-line-strong text-subtle hover:border-accent hover:text-white"
+              }`}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="9" y="3" width="6" height="11" rx="3" />
+                <path d="M5 11a7 7 0 0 0 14 0" />
+                <path d="M12 18v3" />
+              </svg>
+            </button>
+          )}
           {dalVivo && (
             <span className="shrink-0 font-mono text-[0.58rem] text-muted" title="Domande a Gigi dal vivo in questa conversazione">
               {domandeDalVivo}/{maxDomande}
