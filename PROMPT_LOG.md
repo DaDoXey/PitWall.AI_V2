@@ -3557,6 +3557,29 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #088 — Pacchetto 2.2: uno spazio per ogni pilota, senza registrarsi
+
+| Campo | Valore |
+|---|---|
+| Data | 06/10/2026 |
+| Area | NEW `backend/app/spazi.py` · `bundle/store.py` · `telemetria/registratore.py` · `main.py` · rotte · NEW `frontend/src/lib/spazio.ts` · login, menu utente, Sessioni |
+| Commit | `d80a8f1` (backend) · `c368783` (frontend) + questo commit docs |
+
+**Scelte di Edoardo.** Piano a pagamento con disco permanente al cancello M2, non adesso (e intanto cercare un'alternativa gratuita) · un codice per ritrovare lo spazio da un altro browser · 20 sessioni e 60 MB a file per spazio · alla prima schermata un solo pulsante «Entra».
+
+**Backend.** Con `PITWALL_SPAZI=1` ogni richiesta porta un codice (`X-PitWall-Spazio`, 32-64 caratteri, mai in un indirizzo né nei log) e archivio e canali stanno in `<archivio>/spazi/<impronta del codice>/`. La demo resta nell'archivio comune: si legge da ogni spazio, nessuno la cancella né ne cambia i tagli. Senza codice: 400. Spazio pieno: 409 con «cancellane una»; file oltre il tetto: 413. A spazi spenti (il valore predefinito, in locale) non cambia niente. `demo.py`, protetto, non è stato toccato: la demo si crea passando da `spazi.assicura_demo()`.
+
+**Frontend.** Il browser genera il codice (48 esadecimali) al primo «Entra» e lo manda a ogni chiamata; l'export MoTeC non è più un link ma una richiesta, perché un link non può portare il codice. Nel menu utente: «Copia il tuo codice», «Ho già un codice». Il pulsante «Entra» e la riga «Non serve registrarsi» compaiono solo dove il backend dice di avere gli spazi.
+
+**Verifica.** NEW `test_spazi.py`, 70 prove: due piloti che non si vedono su dieci rotte (lettura, analisi, debrief, confronto, tracce, export, tagli, chat, Gigi, cancellazione), demo comune, limiti, un file MoTeC con i canali nella cartella dello spazio, lo stesso codice da un altro browser, spazi spenti. NEW percorso 10 nel browser, con due profili: passa su Chromium, Firefox ed Edge contro un backend di prova con gli spazi accesi; nella verifica di tutti i giorni si salta (in locale sono spenti) e lo dice. Verifica completa verde: 1346 test in 24 file.
+
+**Non fatto, e perché.** Online gli spazi restano SPENTI: il disco del piano gratuito si azzera a ogni riavvio. `render.yaml` dice i tre passi per accenderli al cancello M2. Alternativa gratuita cercata: fra Render, Fly.io, Railway e Koyeb nessuna dà oggi un disco permanente nel piano gratuito (da pagine di confronto, non verificato piattaforma per piattaforma). Su Render: 7 dollari al mese più 0,25 a GB.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ «ok procedi con il 2.2» (06/10/2026).
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]

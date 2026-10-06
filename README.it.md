@@ -40,11 +40,12 @@ backend/       FastAPI
     telemetria/  # shared memory di ACC: strutture, lettore, dizionario, registratore, banco sintetico
     motec/       # file MoTeC: lettore .ld/.ldx, scrittore con l'impaginazione esatta di ACC, export
     analisi/     # motore deterministico: ritmo, costanza, curve, gomme e freni; contesto di Gigi
-    tests/       # 1276 test offline in 23 file: adattatori 96, aggancio 37, analisi 61,
+    tests/       # 1346 test offline in 24 file: adattatori 96, aggancio 37, analisi 61,
                  # analisi_l4 46, budget 31, bundle 37, chat 29, confronto 56, curve 75,
                  # debrief 39, demo 38, gigi 36, motec 43, motec_bundle 45, motec_export 17,
                  # observability 24, registratore 69, riferimenti 74, sessions 67,
-                 # setup_ranges 40, telemetria 97, telemetria_bundle 50, tracciati 169
+                 # setup_ranges 40, spazi 70, telemetria 97, telemetria_bundle 50,
+                 # tracciati 169
   scripts/       # pipeline delle immagini, validatore delle guide, validazione MoTeC sui file veri
 strumenti/     verifica in un comando, guardiano dei commit, avvio dei server, numeri dei documenti
 frontend/      Next.js 15.5 (App Router) + TypeScript + Tailwind + Recharts + Framer Motion
@@ -216,6 +217,15 @@ lettura: modello, scritture e registratore spenti, nessuna chiave API, solo la s
 backend gratuito si addormenta dopo un quarto d'ora senza visite: il frontend lo aspetta («Il muretto
 si sta accendendo», `NEXT_PUBLIC_ATTESA_ACCENSIONE_S`) e un servizio esterno di ping lo tiene
 acceso di giorno (`.github/workflows/sveglia.yml` è un controllo al giorno).
+
+**Uno spazio per ogni pilota, senza registrarsi.** Dove il servizio è di più persone si accende
+`PITWALL_SPAZI=1`: il browser genera un codice lungo e casuale e lo manda a ogni richiesta
+(`X-PitWall-Spazio`), il backend tiene le sessioni di ogni codice in una cartella separata
+(`backend/app/spazi.py`). Nessuno vede, apre o cancella le sessioni di un altro; la demo è di tutti e
+in sola lettura; ogni spazio ha un tetto (`PITWALL_SPAZIO_MAX_SESSIONI`, 20, e
+`PITWALL_SPAZIO_MAX_FILE_MB`, 60). Con il codice, dal menu utente, si ritrova lo spazio da un altro
+browser. In locale è spento e non cambia niente. Per accenderlo online serve un disco che non si
+azzera a ogni riavvio: nella vetrina di oggi resta spento.
 
 ## Licenza
 Distribuito con licenza **MIT** — vedi [LICENSE](LICENSE).

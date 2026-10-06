@@ -40,11 +40,12 @@ backend/       FastAPI
     telemetria/  # ACC shared memory: structures, reader, dictionary, recorder, synthetic bench
     motec/       # MoTeC files: .ld/.ldx reader, writer with ACC's exact layout, session export
     analisi/     # deterministic engine: pace, consistency, corners, tyres and brakes; Gigi's context
-    tests/       # 1276 offline tests in 23 files: adattatori 96, aggancio 37, analisi 61,
+    tests/       # 1346 offline tests in 24 files: adattatori 96, aggancio 37, analisi 61,
                  # analisi_l4 46, budget 31, bundle 37, chat 29, confronto 56, curve 75,
                  # debrief 39, demo 38, gigi 36, motec 43, motec_bundle 45, motec_export 17,
                  # observability 24, registratore 69, riferimenti 74, sessions 67,
-                 # setup_ranges 40, telemetria 97, telemetria_bundle 50, tracciati 169
+                 # setup_ranges 40, spazi 70, telemetria 97, telemetria_bundle 50,
+                 # tracciati 169
   scripts/       # image pipeline, track guide validator, MoTeC validation on real ACC files
 strumenti/     one-command verification, commit guard, server start/stop, documentation figures
 frontend/      Next.js 15.5 (App Router) + TypeScript + Tailwind + Recharts + Framer Motion
@@ -215,6 +216,14 @@ folder) and the **backend on Render**, described in [`render.yaml`](render.yaml)
 showcase: model, writes and recorder off, no API key, demo session only. The free backend goes to
 sleep after fifteen minutes without visits: the frontend waits for it
 (`NEXT_PUBLIC_ATTESA_ACCENSIONE_S`) and an external pinger keeps it awake during the day (`.github/workflows/sveglia.yml` is a daily check).
+
+**A space for every driver, no sign-up.** Where the service is shared, `PITWALL_SPAZI=1` turns it
+on: the browser generates a long random code and sends it with every request (`X-PitWall-Spazio`),
+and the backend keeps each code's sessions in its own folder (`backend/app/spazi.py`). Nobody can
+see, open or delete someone else's sessions; the demo is shared and read-only; each space has a cap
+(`PITWALL_SPAZIO_MAX_SESSIONI`, 20, and `PITWALL_SPAZIO_MAX_FILE_MB`, 60). With the code, from the
+user menu, a driver finds their space again from another browser. Locally it is off and nothing
+changes. Turning it on online needs a disk that survives restarts: today's showcase keeps it off.
 
 ## License
 Released under the **MIT** license — see [LICENSE](LICENSE).
