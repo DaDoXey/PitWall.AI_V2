@@ -66,6 +66,11 @@ export default function LoginPage() {
           <div className="mt-1 font-mono text-[0.6rem] uppercase tracking-[0.22em] text-muted">
             Virtual Race Engineer · ACC GT3
           </div>
+          {/* La stessa frase della landing: chi arriva qui senza conoscere PitWall legge cos'è. */}
+          <p className="mx-auto mt-4 max-w-xs text-sm leading-relaxed text-muted">
+            Un ingegnere di pista che guarda i tuoi giri di Assetto Corsa Competizione e ti dice
+            alla radio dove perdi tempo e cosa cambiare.
+          </p>
         </motion.div>
 
         {/* Google Sign-In reale (popup). Tema scuro per coerenza col design system.
