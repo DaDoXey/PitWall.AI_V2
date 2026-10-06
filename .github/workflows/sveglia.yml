@@ -3,34 +3,100 @@
 # visitatore aspetta fino a un minuto. Una richiesta ogni 10 minuti lo evita di giorno;
 # di notte dorme, così le ore gratuite del mese bastano con margine.
 #
+# Come è fatta (dal 06/10): GitHub NON garantisce l'orario dei giri programmati (li ritarda
+# di ore e ne salta: il primo giorno, su 24 giri attesi ne è partito uno). Quindi l'orario
+# serve solo ad ACCENDERE un giro di guardia, che poi resta acceso e fa lui una richiesta
+# ogni 10 minuti, puntuale, fino alle 21 UTC o per 5 ore e mezza. Gli avvii sono ogni
+# mezz'ora: chi parte e trova un giro di guardia già acceso esce subito.
+#
 # L'indirizzo sta nella variabile del repository PITWALL_BACKEND_URL
-# (Settings → Secrets and variables → Actions → Variables). Senza, non fa niente.
+# (Settings → Secrets and variables → Actions → Variables). Senza, è un errore.
 name: sveglia
 
 on:
   schedule:
-    # dalle 5 alle 21 UTC: più o meno dalle 7 alle 23 in Italia d'estate, 6-22 d'inverno
-    - cron: "*/10 5-21 * * *"
+    # di guardia dalle 4:40 alle 21 UTC: più o meno 7-23 in Italia d'estate, 6-22 d'inverno.
+    # Minuti lontani dall'ora piena, dove GitHub è più carico.
+    - cron: "43 4 * * *"
+    - cron: "13,43 5-20 * * *"
   workflow_dispatch:
 
-permissions: {}
+permissions:
+  actions: read
 
 jobs:
   sveglia:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 350
+    env:
+      BACKEND: ${{ vars.PITWALL_BACKEND_URL }}
     steps:
-      - name: Una richiesta al backend
+      - name: Prima richiesta al backend
+        id: prima
         env:
-          BACKEND: ${{ vars.PITWALL_BACKEND_URL }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           # L'esito diventa un'annotazione del controllo: si legge senza aprire i log.
           if [ -z "$BACKEND" ]; then
             echo "::error title=sveglia NON CONFIGURATA::manca la variabile del repository PITWALL_BACKEND_URL: la sveglia non ha chiamato nessuno"
             exit 1
           fi
+
+          # Fuori orario (un avvio arrivato in ritardo nella notte): non si sveglia nessuno.
+          minuti=$(( 10#$(date -u +%H) * 60 + 10#$(date -u +%M) ))
+          if [ "$minuti" -lt 280 ] || [ "$minuti" -ge 1260 ]; then
+            echo "::notice title=sveglia fuori orario::sono le $(date -u +%H:%M) UTC, la guardia va dalle 4:40 alle 21: nessuna richiesta, il backend di notte dorme"
+            echo "guardia=no" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # C'è già un giro di guardia più vecchio di questo? Allora questo non serve.
+          # Se la domanda a GitHub fallisce si resta di guardia: due insieme non fanno danni.
+          altri=$(curl --silent --max-time 30 \
+            -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/sveglia.yml/runs?status=in_progress&per_page=30" \
+            | python3 -c "import sys, json; print(sum(1 for r in json.load(sys.stdin)['workflow_runs'] if r['id'] < $GITHUB_RUN_ID))" 2>/dev/null \
+            || echo 0)
+          if [ "${altri:-0}" -gt 0 ]; then
+            echo "::notice title=sveglia già di guardia::un giro di guardia è già acceso: questo avvio non serve ed esce"
+            echo "guardia=no" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
           esito=$(curl --silent --max-time 100 --output /dev/null --write-out "%{http_code} in %{time_total} s" "$BACKEND/" || true)
           case "$esito" in
-            200*) echo "::notice title=sveglia::il backend ha risposto $esito" ;;
-            *)    echo "::warning title=sveglia::il backend non ha risposto bene ($esito): si starà riaccendendo" ;;
+            200*) echo "::notice title=sveglia::di guardia dalle $(date -u +%H:%M) UTC; alla prima richiesta il backend ha risposto $esito" ;;
+            *)    echo "::warning title=sveglia::di guardia dalle $(date -u +%H:%M) UTC; alla prima richiesta il backend non ha risposto bene ($esito): si starà riaccendendo" ;;
           esac
+          echo "guardia=si" >> "$GITHUB_OUTPUT"
+
+      - name: Di guardia, una richiesta ogni 10 minuti
+        if: steps.prima.outputs.guardia == 'si'
+        env:
+          # sovrascrivibili solo per provare il giro in locale
+          PASSO_S: 600
+          DURATA_S: 19800
+        run: |
+          inizio=$(date +%s)
+          fatte=0
+          buone=0
+          while :; do
+            sleep "$PASSO_S"
+            minuti=$(( 10#$(date -u +%H) * 60 + 10#$(date -u +%M) ))
+            if [ "$minuti" -lt 280 ] || [ "$minuti" -ge 1260 ]; then break; fi
+            if [ $(( $(date +%s) - inizio )) -ge "$DURATA_S" ]; then break; fi
+            esito=$(curl --silent --max-time 100 --output /dev/null --write-out "%{http_code} in %{time_total} s" "$BACKEND/" || true)
+            fatte=$(( fatte + 1 ))
+            case "$esito" in 200*) buone=$(( buone + 1 )) ;; esac
+            echo "$(date -u +%H:%M) UTC  $esito"
+          done
+
+          riepilogo="guardia finita alle $(date -u +%H:%M) UTC: $buone risposte buone su $fatte richieste"
+          if [ "$fatte" -gt 0 ] && [ "$buone" -eq 0 ]; then
+            echo "::error title=sveglia: il backend NON ha mai risposto::$riepilogo"
+            exit 1
+          elif [ "$buone" -lt "$fatte" ]; then
+            echo "::warning title=sveglia::$riepilogo"
+          else
+            echo "::notice title=sveglia::$riepilogo"
+          fi
