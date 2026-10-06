@@ -5,6 +5,8 @@
 // (`/api/session` è sparito). Leggono l'archivio delle sessioni e il REPORT del motore
 // di analisi: ogni cifra a schermo è una cifra calcolata e dimostrata dal backend, e
 // il frontend la mostra senza rifare conti.
+import { conSpazio } from "./spazio";
+
 export const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
 
@@ -32,7 +34,7 @@ async function leggiErrore(res: Response): Promise<ApiError> {
 }
 
 async function getJSON<T>(path: string): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, { cache: "no-store" });
+  const res = await fetch(`${API_BASE}${path}`, { cache: "no-store", headers: conSpazio() });
   if (!res.ok) throw await leggiErrore(res);
   return res.json() as Promise<T>;
 }
@@ -40,7 +42,7 @@ async function getJSON<T>(path: string): Promise<T> {
 async function sendJSON<T>(path: string, method: "POST" | "DELETE", body?: unknown): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
     method,
-    headers: body === undefined ? undefined : { "Content-Type": "application/json" },
+    headers: conSpazio(body === undefined ? undefined : { "Content-Type": "application/json" }),
     body: body === undefined ? undefined : JSON.stringify(body),
   });
   if (!res.ok) throw await leggiErrore(res);
@@ -48,7 +50,7 @@ async function sendJSON<T>(path: string, method: "POST" | "DELETE", body?: unkno
 }
 
 async function postForm<T>(path: string, form: FormData): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, { method: "POST", body: form });
+  const res = await fetch(`${API_BASE}${path}`, { method: "POST", body: form, headers: conSpazio() });
   if (!res.ok) throw await leggiErrore(res);
   return res.json() as Promise<T>;
 }
@@ -62,6 +64,7 @@ export type Health = {
   live_allowed: boolean;
   recorder_allowed: boolean;
   chat_live?: boolean; // la chat dal vivo di Gigi: interruttore suo e chiave presente (#061)
+  spazi?: boolean; // uno spazio per ogni pilota (2.2): online sì, in locale no
 };
 
 // ─────────────────────────────────────────────
@@ -102,9 +105,16 @@ export function getSessioni() {
   return getJSON<{ sessioni: Riassunto[]; demo_id: string }>("/api/sessions?limite=200");
 }
 
-/** Lo zip .ld + .ldx della sessione, per MoTeC i2 (L5): un link da scaricare, non un fetch. */
-export function urlEsportaMotec(id: string) {
-  return `${API_BASE}/api/sessions/${encodeURIComponent(id)}/export/motec`;
+/** Lo zip .ld + .ldx della sessione, per MoTeC i2 (L5). È un fetch e non un link: dove ogni
+ *  pilota ha il suo spazio la richiesta deve portare il codice, e un link non può. */
+export async function esportaMotec(id: string): Promise<{ file: Blob; nome: string }> {
+  const res = await fetch(`${API_BASE}/api/sessions/${encodeURIComponent(id)}/export/motec`, {
+    cache: "no-store",
+    headers: conSpazio(),
+  });
+  if (!res.ok) throw await leggiErrore(res);
+  const nome = /filename="([^"]+)"/.exec(res.headers.get("Content-Disposition") ?? "")?.[1] ?? "sessione PitWall.zip";
+  return { file: await res.blob(), nome };
 }
 
 export function cancellaSessione(id: string) {
@@ -392,7 +402,7 @@ export function getConfronto(id: string) {
 export async function salvaTagli(id: string, tagli: number[] | null): Promise<Debrief> {
   const res = await fetch(`${API_BASE}/api/sessions/${encodeURIComponent(id)}/debrief/tagli`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
+    headers: conSpazio({ "Content-Type": "application/json" }),
     body: JSON.stringify({ tagli }),
   });
   if (!res.ok) throw await leggiErrore(res);
@@ -420,7 +430,7 @@ export async function chatConGigi(
 ): Promise<void> {
   const res = await fetch(`${API_BASE}/api/sessions/${encodeURIComponent(id)}/chat`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: conSpazio({ "Content-Type": "application/json" }),
     body: JSON.stringify(corpo),
     signal,
   });
@@ -836,7 +846,7 @@ export function getGuidaTracciato(id: string) {
 export async function esportaSetupAcc(id: string, click: Record<string, number>): Promise<{ file: Blob; nome: string }> {
   const res = await fetch(`${API_BASE}/api/sessions/${encodeURIComponent(id)}/export/setup`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: conSpazio({ "Content-Type": "application/json" }),
     body: JSON.stringify({ click }),
   });
   if (!res.ok) throw await leggiErrore(res);

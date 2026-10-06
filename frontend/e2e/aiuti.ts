@@ -6,6 +6,9 @@ export async function entraInDemo(page: Page) {
   await page.addInitScript(() => {
     sessionStorage.setItem("pw_user", JSON.stringify({ kind: "demo", name: "Pilota demo" }));
     localStorage.setItem("pw_onboarding_skipped", "1");
+    // Dove ogni pilota ha il suo spazio (2.2) senza codice il backend rifiuta le richieste:
+    // le prove ne usano uno fisso e vuoto. Dove gli spazi sono spenti viene ignorato.
+    localStorage.setItem("pitwall_spazio", "e2e0".repeat(12));
   });
 }
 

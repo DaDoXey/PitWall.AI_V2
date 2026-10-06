@@ -10,7 +10,7 @@ test("1 · dal login si entra in demo e si arriva alla Dashboard", async ({ page
   // di un rosso saltuario, soprattutto al primo percorso del giro).
   await pronta(page);
   await expect(async () => {
-    await page.getByRole("button", { name: /Entra in modalità demo/ }).click();
+    await page.getByRole("button", { name: /🏁 Entra/ }).click();
     await expect(page).not.toHaveURL(/\/login/, { timeout: 3000 });
   }).toPass({ timeout: 20_000 });
   // Al primo ingresso c'è il wizard del profilo: lo si salta come farebbe chi ha fretta.
@@ -83,7 +83,7 @@ test("9 · senza accesso con Google configurato il pulsante non c'è, e si entra
   test.skip(configurato > 0, "questa installazione ha l'accesso con Google");
   await expect(page.locator('iframe[src*="accounts.google.com"]')).toHaveCount(0);
   await expect(page.getByText("oppure", { exact: true })).toHaveCount(0);
-  await expect(page.getByRole("button", { name: /Entra in modalità demo/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /🏁 Entra/ })).toBeVisible();
 });
 
 test("7 · se il servizio non risponde lo dice senza nomi tecnici, e «Riprova» riparte", async ({ page }) => {
@@ -125,4 +125,74 @@ test("5 · il Setup e la Telemetria si aprono sui dati della demo", async ({ pag
   await page.goto("/telemetry");
   await pronta(page);
   await expect(page.getByText("1:47.820").first()).toBeVisible();
+});
+
+// Solo dove ogni pilota ha il suo spazio (online, o un backend avviato con PITWALL_SPAZI=1):
+// in locale gli spazi sono spenti e il percorso si salta, dicendolo.
+test("10 · due piloti nello stesso PitWall non si vedono; con il codice si ritrova lo spazio", async ({ browser, request, baseURL }) => {
+  const anna = await (await browser.newContext({ locale: "it-IT", reducedMotion: "reduce" })).newPage();
+  const bruno = await (await browser.newContext({ locale: "it-IT", reducedMotion: "reduce" })).newPage();
+
+  const entra = async (page: typeof anna) => {
+    await page.addInitScript(() => localStorage.setItem("pw_onboarding_skipped", "1"));
+    await page.goto(`${baseURL}/login`);
+    await pronta(page);
+    await expect(async () => {
+      await page.getByRole("button", { name: /🏁 Entra/ }).click();
+      await expect(page).not.toHaveURL(/\/login/, { timeout: 3000 });
+    }).toPass({ timeout: 20_000 });
+    const salta = page.getByRole("button", { name: /Salta per ora/ });
+    if (await salta.isVisible().catch(() => false)) await salta.click();
+    return page.evaluate(() => localStorage.getItem("pitwall_spazio"));
+  };
+
+  await anna.goto(`${baseURL}/login`);
+  await pronta(anna);
+  await anna.waitForTimeout(1500); // il pulsante cambia nome quando il backend ha detto se ha gli spazi
+  const conSpazi = await anna.getByRole("button", { name: /^🏁 Entra$/ }).isVisible().catch(() => false);
+  test.skip(!conSpazi, "gli spazi sono spenti su questa installazione (in locale è normale)");
+
+  const codiceAnna = await entra(anna);
+  const codiceBruno = await entra(bruno);
+  expect(codiceAnna).toMatch(/^[0-9a-f]{48}$/);
+  expect(codiceBruno).toMatch(/^[0-9a-f]{48}$/);
+  expect(codiceAnna).not.toBe(codiceBruno);
+
+  // Anna porta una sessione sua (scritta a mano: la via più corta).
+  const base = process.env.PITWALL_API_URL ?? "http://localhost:8000";
+  const creata = await request.post(`${base}/api/sessions/manuale`, {
+    headers: { "X-PitWall-Spazio": codiceAnna! },
+    data: { piattaforma: "playstation", car: "bmw_m4_gt3", track: "zolder", giri: [{ numero: 1, tempo_ms: 89500 }, { numero: 2, tempo_ms: 89100 }] },
+  });
+  expect(creata.status(), await creata.text()).toBe(200);
+  const idAnna = (await creata.json()).id as string;
+
+  // Anna la vede nella pagina Sessioni; Bruno no.
+  await anna.goto(`${baseURL}/sessioni`);
+  await pronta(anna);
+  await expect(anna.getByText(/Zolder/i).first()).toBeVisible();
+  await bruno.goto(`${baseURL}/sessioni`);
+  await pronta(bruno);
+  await expect(bruno.getByText(/Monza/i).first()).toBeVisible();
+  await expect(bruno.getByText(/Zolder/i)).toHaveCount(0);
+
+  // Bruno conosce l'id di Anna: non gli serve.
+  const rubata = await request.get(`${base}/api/sessions/${idAnna}`, { headers: { "X-PitWall-Spazio": codiceBruno! } });
+  expect(rubata.status()).toBe(404);
+  const cancellata = await request.delete(`${base}/api/sessions/${idAnna}`, { headers: { "X-PitWall-Spazio": codiceBruno! } });
+  expect(cancellata.status()).toBe(404);
+
+  // Con il codice di Anna, dal menu, Bruno (un altro browser) ritrova lo spazio di Anna.
+  await bruno.getByRole("button", { name: /Pilota: menu/ }).click();
+  await expect(bruno.getByText("il tuo spazio", { exact: true })).toBeVisible();
+  await bruno.getByRole("menuitem", { name: /Ho già un codice/ }).click();
+  await bruno.getByLabel("Il codice del tuo spazio").fill("troppo-corto");
+  await bruno.getByRole("button", { name: "Apri quello spazio" }).click();
+  await expect(bruno.getByText(/Non sembra un codice di PitWall/)).toBeVisible();
+  await bruno.getByLabel("Il codice del tuo spazio").fill(codiceAnna!);
+  await bruno.getByRole("button", { name: "Apri quello spazio" }).click();
+  await bruno.waitForLoadState("load");
+  await bruno.goto(`${baseURL}/sessioni`);
+  await pronta(bruno);
+  await expect(bruno.getByText(/Zolder/i).first()).toBeVisible();
 });

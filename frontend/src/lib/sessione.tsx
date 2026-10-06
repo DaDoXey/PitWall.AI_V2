@@ -24,6 +24,7 @@ import {
   type Riassunto,
 } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import { assicuraCodiceSpazio } from "@/lib/spazio";
 import { slugLeggibile, type NomiCatalogo } from "@/lib/formato";
 
 const KEY = "pw_sessione";
@@ -97,6 +98,7 @@ export const GRUPPI_SESSIONI: { titolo: string; filtro: (s: Riassunto) => boolea
 export function SessioneProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const demo = user?.kind === "demo";
+  const spazio = user?.kind === "spazio";
   const [elenco, setElenco] = useState<Riassunto[] | null>(null);
   const [demoId, setDemoId] = useState<string | null>(null);
   const [idSessione, setIdSessione] = useState<string | null>(null);
@@ -109,6 +111,9 @@ export function SessioneProvider({ children }: { children: React.ReactNode }) {
 
   const ricarica = useCallback(
     async (apriId?: string) => {
+      // Chi è entrato nel proprio spazio deve avere il codice anche se i dati del browser
+      // sono stati cancellati a metà visita: senza, ogni richiesta sarebbe rifiutata.
+      if (spazio) assicuraCodiceSpazio();
       const inizio = Date.now();
       const attesa = attesaAccensione() * 1000;
       let aspettato = false;
@@ -151,7 +156,7 @@ export function SessioneProvider({ children }: { children: React.ReactNode }) {
         setCaricamento(false);
       }
     },
-    [demo],
+    [demo, spazio],
   );
 
   useEffect(() => {

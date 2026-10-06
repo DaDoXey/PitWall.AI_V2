@@ -29,7 +29,7 @@ import {
   type Racconto,
   type Registrazione,
   type StatoRegistratore,
-  urlEsportaMotec,
+  esportaMotec,
 } from "@/lib/api";
 import { CLASSI_VETTURE } from "@/lib/catalog";
 import { useProfile } from "@/lib/profile";
@@ -714,6 +714,22 @@ function Archivio() {
   const [esito, setEsito] = useState<Esito>(null);
   // Cancellare è irreversibile: il primo click chiede conferma sul bottone stesso.
   const [daConfermare, setDaConfermare] = useState<string | null>(null);
+  const [motecFallito, setMotecFallito] = useState<string | null>(null);
+
+  async function scaricaMotec(id: string) {
+    setMotecFallito(null);
+    try {
+      const { file, nome } = await esportaMotec(id);
+      const url = URL.createObjectURL(file);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = nome;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      setMotecFallito(id);
+    }
+  }
   const router = useRouter();
 
   async function cancella(id: string) {
@@ -779,14 +795,14 @@ function Archivio() {
                         {aperta ? "Aperta" : "Apri"}
                       </button>
                       {s.ha_canali && (
-                        <a
-                          href={urlEsportaMotec(s.id)}
-                          download
+                        <button
+                          type="button"
+                          onClick={() => scaricaMotec(s.id)}
                           className="rounded-md px-2 py-1 font-mono text-[0.6rem] uppercase tracking-widest text-subtle transition hover:text-white"
                           title="Scarica .ld + .ldx da aprire in MoTeC i2 (con carburante, temperature al core e posizione, se registrati)"
                         >
-                          MoTeC ↓
-                        </a>
+                          {motecFallito === s.id ? "Non riuscito ↻" : "MoTeC ↓"}
+                        </button>
                       )}
                       {!s.demo && (
                         <button

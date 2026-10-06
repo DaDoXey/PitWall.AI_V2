@@ -6,21 +6,43 @@
 // — nessuna sessione server, nessun logging di dati personali (GDPR).
 // Il form email/password finto è stato rimosso: con un Sign-In reale accanto,
 // un form presentazionale che non autentica stonava (decisione F9, reversibile).
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { GoogleLogin } from "@react-oauth/google";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { useAuth } from "@/lib/auth";
 import { useProfile } from "@/lib/profile";
+import { getStatoBackend } from "@/lib/api";
+import { assicuraCodiceSpazio } from "@/lib/spazio";
 
 // L'accesso con Google c'è solo dove è configurato (in locale); sulla vetrina online no.
 const CON_GOOGLE = Boolean(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
 
 export default function LoginPage() {
   const router = useRouter();
-  const { user, ready, signInWithGoogle, enterDemo } = useAuth();
+  const { user, ready, signInWithGoogle, enterDemo, enterSpazio } = useAuth();
   const { resetProfile } = useProfile();
+  // Online ogni pilota ha il suo spazio (2.2): lo dice il backend. Finché non risponde, e in
+  // locale, resta l'ingresso in modalità demo.
+  const [conSpazi, setConSpazi] = useState(false);
+
+  useEffect(() => {
+    let vivo = true;
+    getStatoBackend()
+      .then((s) => vivo && setConSpazi(Boolean(s.spazi)))
+      .catch(() => {});
+    return () => {
+      vivo = false;
+    };
+  }, []);
+
+  function handleEntra() {
+    // Niente azzeramento: lo spazio è di questo browser, e chi torna ritrova le sue sessioni.
+    assicuraCodiceSpazio();
+    enterSpazio();
+    router.push("/");
+  }
 
   // Già dentro (Google o demo, stessa tab)? Niente doppio login: si va all'app.
   useEffect(() => {
@@ -116,10 +138,10 @@ export default function LoginPage() {
           variants={fadeInUp}
           whileHover={{ y: -1 }}
           whileTap={{ scale: 0.98 }}
-          onClick={handleDemo}
+          onClick={conSpazi ? handleEntra : handleDemo}
           className="w-full rounded-md border border-line-strong bg-raised px-4 py-2.5 text-sm text-white transition hover:border-accent"
         >
-          🏁 Entra in modalità demo
+          {conSpazi ? "🏁 Entra" : "🏁 Entra in modalità demo"}
         </motion.button>
 
         {/* Nota privacy: il profilo Google resta nel browser, sessione di tab */}
@@ -128,6 +150,12 @@ export default function LoginPage() {
             Il profilo Google (nome, email, foto) resta solo in questo browser
             <br />
             e viene eliminato alla chiusura della scheda. Nessun invio a server.
+          </motion.p>
+        ) : conSpazi ? (
+          <motion.p variants={fadeInUp} className="mt-4 text-center font-mono text-[0.55rem] leading-relaxed text-muted">
+            Non serve registrarsi: questo browser riceve uno spazio tuo,
+            <br />
+            con la sessione demo già dentro e posto per le tue.
           </motion.p>
         ) : (
           <motion.p variants={fadeInUp} className="mt-4 text-center font-mono text-[0.55rem] leading-relaxed text-muted">

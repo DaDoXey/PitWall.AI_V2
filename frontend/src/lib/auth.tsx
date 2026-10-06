@@ -10,13 +10,16 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 export type PwUser =
   | { kind: "google"; name: string; email: string; picture: string }
-  | { kind: "demo"; name: string };
+  | { kind: "demo"; name: string }
+  // Online, dove ogni pilota ha il suo spazio senza registrarsi (2.2): vedi lib/spazio.ts.
+  | { kind: "spazio"; name: string };
 
 type AuthCtx = {
   user: PwUser | null;
   ready: boolean; // true dopo la lettura iniziale di sessionStorage (evita flash)
   signInWithGoogle: (credential: string) => void;
   enterDemo: () => void;
+  enterSpazio: () => void;
   signOut: () => void;
 };
 
@@ -67,10 +70,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const enterDemo = () => persist({ kind: "demo", name: "Pilota demo" });
+  const enterSpazio = () => persist({ kind: "spazio", name: "Pilota" });
   const signOut = () => persist(null);
 
   return (
-    <Ctx.Provider value={{ user, ready, signInWithGoogle, enterDemo, signOut }}>
+    <Ctx.Provider value={{ user, ready, signInWithGoogle, enterDemo, enterSpazio, signOut }}>
       {children}
     </Ctx.Provider>
   );

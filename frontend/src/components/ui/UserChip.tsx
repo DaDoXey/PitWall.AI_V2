@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/lib/auth";
 import { useProfile } from "@/lib/profile";
+import { codiceSpazio, usaCodiceSpazio } from "@/lib/spazio";
 
 const VERSIONE = "v0.9.0 · © 2026 Edoardo Ferlito · MIT";
 
@@ -22,6 +23,11 @@ export default function UserChip() {
   const { startOnboarding } = useProfile();
   const router = useRouter();
   const [aperto, setAperto] = useState(false);
+  // Lo spazio del pilota (2.2): copiare il proprio codice, o usarne uno di un altro browser.
+  const [copiato, setCopiato] = useState(false);
+  const [inserisci, setInserisci] = useState(false);
+  const [codice, setCodice] = useState("");
+  const [codiceSbagliato, setCodiceSbagliato] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -39,6 +45,27 @@ export default function UserChip() {
   }, [aperto]);
 
   if (!user) return null;
+
+  const copiaCodice = async () => {
+    const mio = codiceSpazio();
+    if (!mio) return;
+    try {
+      await navigator.clipboard.writeText(mio);
+      setCopiato(true);
+      setTimeout(() => setCopiato(false), 2500);
+    } catch {
+      /* appunti non disponibili: il codice resta comunque in questo browser */
+    }
+  };
+
+  const usaCodice = () => {
+    if (!usaCodiceSpazio(codice)) {
+      setCodiceSbagliato(true);
+      return;
+    }
+    // Lo spazio è cambiato: si ricarica tutto, così ogni pagina legge quello nuovo.
+    window.location.assign("/");
+  };
 
   const logout = () => {
     signOut();
@@ -86,7 +113,7 @@ export default function UserChip() {
             <div className="border-b border-line px-2.5 pb-2 pt-1.5">
               <div className="truncate text-xs text-white">{user.name}</div>
               <div className="truncate font-mono text-[0.55rem] text-muted">
-                {user.kind === "google" ? user.email : "modalità demo"}
+                {user.kind === "google" ? user.email : user.kind === "spazio" ? "il tuo spazio" : "modalità demo"}
               </div>
             </div>
             {/* Replay onboarding (megaprompt #9): rilancia wizard "Conosci il pilota" → tour. */}
@@ -101,6 +128,55 @@ export default function UserChip() {
             >
               ↻ Rifai il tutorial
             </button>
+            {user.kind === "spazio" && (
+              <>
+                <button type="button" role="menuitem" onClick={copiaCodice} className={voce}>
+                  {copiato ? "✓ Codice copiato" : "⧉ Copia il tuo codice"}
+                </button>
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => setInserisci((v) => !v)}
+                  aria-expanded={inserisci}
+                  className={voce}
+                >
+                  ↪ Ho già un codice
+                </button>
+                {inserisci && (
+                  <div className="px-2.5 pb-2 pt-1">
+                    <input
+                      value={codice}
+                      onChange={(e) => {
+                        setCodice(e.target.value);
+                        setCodiceSbagliato(false);
+                      }}
+                      onKeyDown={(e) => e.key === "Enter" && usaCodice()}
+                      placeholder="Incolla il codice"
+                      aria-label="Il codice del tuo spazio"
+                      autoComplete="off"
+                      spellCheck={false}
+                      className="w-full rounded-md border border-line bg-surface px-2 py-1 font-mono text-[0.6rem] text-white outline-none focus:border-accent"
+                    />
+                    <button
+                      type="button"
+                      onClick={usaCodice}
+                      className="mt-1.5 w-full rounded-md border border-line-strong px-2 py-1 font-mono text-[0.6rem] text-white transition hover:border-accent"
+                    >
+                      Apri quello spazio
+                    </button>
+                    {codiceSbagliato && (
+                      <p className="mt-1.5 font-mono text-[0.55rem] leading-relaxed text-accent">
+                        Non sembra un codice di PitWall: controlla di averlo copiato intero.
+                      </p>
+                    )}
+                  </div>
+                )}
+                <p className="px-2.5 pb-1.5 font-mono text-[0.52rem] leading-relaxed text-muted">
+                  Il codice apre il tuo spazio da un altro browser. Chi lo ha vede le tue sessioni: non
+                  condividerlo.
+                </p>
+              </>
+            )}
             {/* Attribuzione asset: le licenze CC BY/BY-SA la vogliono raggiungibile
                 dall'utente, non solo nel repo. */}
             <Link href="/crediti" role="menuitem" onClick={() => setAperto(false)} className={voce}>
