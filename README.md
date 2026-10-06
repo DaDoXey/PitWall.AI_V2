@@ -214,7 +214,7 @@ The showcase comes in two parts, both on free plans: the **frontend on Vercel** 
 folder) and the **backend on Render**, described in [`render.yaml`](render.yaml) as a read-only
 showcase: model, writes and recorder off, no API key, demo session only. The free backend goes to
 sleep after fifteen minutes without visits: the frontend waits for it
-(`NEXT_PUBLIC_ATTESA_ACCENSIONE_S`) and `.github/workflows/sveglia.yml` keeps it awake during the day.
+(`NEXT_PUBLIC_ATTESA_ACCENSIONE_S`) and an external pinger keeps it awake during the day (`.github/workflows/sveglia.yml` is a daily check).
 
 ## License
 Released under the **MIT** license — see [LICENSE](LICENSE).

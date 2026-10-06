@@ -214,8 +214,8 @@ La vetrina è pensata in due pezzi, tutti e due nel piano gratuito: il **fronten
 `frontend`) e il **backend su Render**, descritto in [`render.yaml`](render.yaml) come vetrina in sola
 lettura: modello, scritture e registratore spenti, nessuna chiave API, solo la sessione demo. Il
 backend gratuito si addormenta dopo un quarto d'ora senza visite: il frontend lo aspetta («Il muretto
-si sta accendendo», `NEXT_PUBLIC_ATTESA_ACCENSIONE_S`) e `.github/workflows/sveglia.yml` lo tiene
-acceso di giorno.
+si sta accendendo», `NEXT_PUBLIC_ATTESA_ACCENSIONE_S`) e un servizio esterno di ping lo tiene
+acceso di giorno (`.github/workflows/sveglia.yml` è un controllo al giorno).
 
 ## Licenza
 Distribuito con licenza **MIT** — vedi [LICENSE](LICENSE).

@@ -3536,6 +3536,27 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #087 — Pacchetto 2.1 chiuso; la sveglia passa a un servizio esterno
+
+| Campo | Valore |
+|---|---|
+| Data | 06/10/2026 |
+| Area | `landing/index.html` · `.github/workflows/sveglia.yml` · README · modulo Google, Runbook e tabella (fuori repo) |
+| Commit | `107d139` (landing) · `0b3da32` (sveglia) + questo commit docs |
+
+**Landing e modulo.** Edoardo ha trovato brusca la frase «Le candidature le leggo io e rispondo di persona». Ora, nella landing: «Leggo personalmente ogni candidatura e rispondo a ciascuno»; nel modulo, stessa mano su descrizione, riga sopra il consenso e messaggio dopo l'invio («Grazie, la tua candidatura è arrivata. Ti risponderò personalmente nei prossimi giorni…»). Verificato sul modulo pubblico: le frasi vecchie non compaiono più.
+
+**Pacchetto 2.1 chiuso** in una sessione (stima 1 – 1,5): le undici verifiche della checklist sono spuntate, il test dei dieci secondi l'ha fatto Edoardo («andato spedito»). Resta aperta, nel pacchetto 4.2, la rilettura dell'informativa da parte di una persona competente.
+
+**Sveglia.** La correzione della #085 non è servita: dopo il push GitHub non ha acceso nessuno dei giri programmati (07:43, 08:13, 08:43 UTC) e il backend dormiva. A tenerlo sveglio è ora **cron-job.org** (account del progetto, creato da Edoardo): una richiesta ogni 10 minuti di giorno. Verificato da fuori: risposta in 0,2 s dopo 35 minuti senza altre visite note. Il workflow `sveglia` torna a una richiesta sola, una volta al giorno, come controllo: rosso se il backend non risponde.
+
+**Verifica.** `verifica.py --veloce` verde; landing riletta dopo la modifica.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ «ok push ed ok procedi» (06/10/2026).
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
