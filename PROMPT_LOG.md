@@ -706,7 +706,7 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 | Data | 13/07/2026 (notte) |
 | Agente dev | Claude Code (`claude-fable-5`) |
 | Area | SPEC_ERRATA.md · PROMPT_LOG.md (titolo #008) · NEW cartella Desktop "consegne pitwall" (fuori repo) |
-| Commit | non ancora committato |
+| Commit | `cda7d98` (sveglia) + questo commit docs |
 | Contesto | Consegna serale del materiale alla prof (pre-esame 15/07). Richiesto controllo di completezza PRIMA delle copie. |
 
 **Catalogo messaggi:**
@@ -734,7 +734,7 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 | Data | 30/08/2026 |
 | Agente dev | Claude Code (claude-sonnet-5) |
 | Area | Frontend (OnboardingFlow, profile, Sidebar) · Backend protetto (setup_params.py, con «ok procedi») |
-| Commit | non ancora committato |
+| Commit | `cda7d98` (sveglia) + questo commit docs |
 | Contesto | Ripartenza post-esame (15/07 superato). Apertura di PitWall in locale + tour a schermo delle 6 pagine per decidere cosa migliorare. Primo blocco: i fix emersi dal giro; le aggiunte arriveranno dopo. |
 
 **Catalogo messaggi:**
@@ -837,7 +837,7 @@ _(Aggiungere qui sotto le entry man mano che i rework vengono affrontati.)_
 | Data | 07/09/2026 |
 | Agente dev | Claude Code (claude-opus-5) |
 | Area | NEW `backend/scripts/build_maps_proof.py` · NEW `backend/scripts/check_track_knowledge.py` · NEW `backend/app/core/data/tracks_knowledge/` · NEW `backend/scripts/maps_candidates.json` |
-| Commit | non ancora committato |
+| Commit | `cda7d98` (sveglia) + questo commit docs |
 | Contesto | Primo blocco della fase "guide dei tracciati" consegnato da Claude Desktop (`files_nuovi.zip`). Le mappe a disco sono in gran parte layout storici sbagliati: stesso errore delle foto, scelta fatta sul nome del file. |
 
 **Catalogo messaggi:**
@@ -1898,7 +1898,7 @@ scostamenti sono uguali fra sinistra e destra: ciò che si chiede è ciò che si
 | Data | 18/09/2026 |
 | Agente dev | Claude Code (claude-opus-5) |
 | Area | Backend: `core/catalog.py` (guide dei tracciati, `map_verified`, bandierine nel `track_summary`) · `api/catalog.py` (`GET /api/catalog/track/{id}/guida`, bandierine nella scheda) · `core/data/tracks.json` (stato dei layout) · NEW `app/tests/test_tracciati.py`. Frontend: NEW `app/(app)/tracciati/page.tsx` e `tracciati/[id]/page.tsx` · NEW `components/ui/CurvaGuida.tsx` · NEW `lib/assets.ts` (manifest e ritagli condivisi) · `components/ui/SessionBriefing.tsx` (usa il modulo nuovo) · `lib/api.ts` (tipi della guida) · `Sidebar.tsx` + `NavIcons.tsx` (voce Tracciati). Asset: 20 layout non verificati tolti dal repo, `manifest.json` e `ATTRIBUTIONS.md` rigenerati. |
-| Commit | non ancora committato |
+| Commit | `cda7d98` (sveglia) + questo commit docs |
 | Contesto | Apertura del filone «guide dei tracciati» (2° dell'ordine deciso il 17/09), dopo cinque giri di domande. Passo 1 di 4: sezione a schermo → ricerca del blocco B2 → provino di ancoraggio → aggancio in sessione. |
 
 **Catalogo messaggi:**
@@ -3487,6 +3487,27 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 **File protetti:** ☑ nessuno toccato in tutta la fase.
 **Decisione:** ☑ «chiudiamo l'1.3 […] ok procedi per togliere il cancello M1» (05/10/2026).
+
+---
+
+## Entry #085 — La sveglia non partiva a orario: ora è un giro di guardia
+
+| Campo | Valore |
+|---|---|
+| Data | 06/10/2026 |
+| Area | `.github/workflows/sveglia.yml` · Runbook (fuori repo) |
+| Commit | `cda7d98` (sveglia) + questo commit docs |
+
+**Cosa si è visto.** Alla ripresa, alle 07:17 UTC: dei 24 giri programmati da quando il workflow esiste (10 la sera del 05/10, 14 dalle 5 UTC del 06/10) ne è partito uno solo, alle 01:18 UTC, cioè con ore di ritardo e fuori dalla finestra. Il backend ha risposto in 42 secondi: dormiva. I giri lanciati a mano funzionavano.
+
+**Causa.** Non è un errore del workflow: la documentazione di GitHub dice che i giri programmati possono essere ritardati nei momenti di carico (l'inizio di ogni ora è uno di questi) e che, se il carico è alto, alcuni vengono scartati. Un orario ogni 10 minuti non è quindi un orologio su cui contare.
+
+**Correzione.** L'orario serve solo ad accendere un **giro di guardia**, che poi resta acceso e fa lui una richiesta ogni 10 minuti, fino alle 21 UTC o per 5 ore e mezza. Gli avvii sono ogni mezz'ora, ai minuti 13 e 43 (lontani dall'ora piena): chi parte e trova un giro di guardia più vecchio già acceso esce subito; chi parte fuori orario (4:40 – 21 UTC) esce senza chiamare nessuno. Esiti nelle annotazioni: uno alla prima richiesta, uno di riepilogo a fine guardia; rosso se il backend non ha mai risposto.
+
+**Verifica.** I due passi estratti dal file e lanciati in locale contro il backend vero: senza variabile → errore; in orario → «di guardia», 200; avvio alle 01:18 → «fuori orario», nessuna richiesta; guardia breve → 2 risposte buone su 2; indirizzo sbagliato → errore rosso. **Non verificabile in locale, da guardare dopo il push:** che GitHub accenda davvero il primo giro, che il secondo avvio riconosca il primo ed esca, e quanto dura il buco al cambio di guardia (al più mezz'ora più il ritardo di GitHub, una o due volte al giorno; in quel buco il visitatore vede la schermata di accensione).
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ «indaga e fixiamo la sveglia su github» (06/10/2026).
 
 ---
 
