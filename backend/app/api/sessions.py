@@ -42,6 +42,7 @@ import os
 from fastapi import APIRouter, File, Form, HTTPException, Query, UploadFile
 from pydantic import BaseModel, Field, StrictInt
 
+from app import spazi
 from app.analisi import analizza
 from app.bundle import demo, store
 from app.bundle.adapters import (
@@ -87,6 +88,9 @@ def _presidio() -> None:
 
 
 async def _leggi_upload(file: UploadFile, massimo: int = MAX_BYTE) -> bytes:
+    if spazi.attivi():
+        # Dove ogni pilota ha il suo spazio il disco è di tutti: un tetto più basso per file.
+        massimo = min(massimo, spazi.max_byte_file())
     raw = await file.read(massimo + 1)
     if not raw:
         raise HTTPException(status_code=400, detail="File vuoto")
@@ -201,7 +205,7 @@ class SessioneManuale(BaseModel):
 
 def _leggi_o_errore(id_sessione: str) -> SessionBundle:
     if demo.e_demo(id_sessione):
-        demo.assicura_demo()
+        spazi.assicura_demo()
     try:
         return store.leggi(id_sessione)
     except store.SessioneNonTrovata:
@@ -406,7 +410,7 @@ async def esporta_setup(id_sessione: str, corpo: ClickSetup):
 @router.get("/sessions")
 async def elenco_sessioni(limite: int = 50):
     limite = max(1, min(limite, 200))
-    demo.assicura_demo()
+    spazi.assicura_demo()
     return {"sessioni": store.elenca(limite), "demo_id": demo.DEMO_ID}
 
 
@@ -494,6 +498,9 @@ async def salva_tagli(id_sessione: str, corpo: TagliFasi):
     from app.analisi.debrief import TagliNonValidi, debrief
 
     _presidio()
+    if spazi.attivi() and demo.e_demo(id_sessione):
+        # La demo è di tutti: i tagli di uno cambierebbero il debrief degli altri.
+        raise HTTPException(status_code=403, detail="La sessione demo non si modifica")
     bundle = _leggi_o_errore(id_sessione)
     report = analizza(bundle, canali_del_bundle(bundle))
     try:

@@ -27,7 +27,7 @@ import time
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from app import budget, config
+from app import budget, config, spazi
 from app.analisi import analizza
 from app.analisi.gigi import contesto, risposta_dal_motore
 from app.bundle import demo, store
@@ -106,7 +106,7 @@ def _sessione(id_sessione: str | None):
     """(bundle, report) della sessione chiesta, o della demo."""
     id_sessione = id_sessione or demo.DEMO_ID
     if demo.e_demo(id_sessione):
-        demo.assicura_demo()
+        spazi.assicura_demo()
     try:
         bundle = store.leggi(id_sessione)
     except store.SessioneNonTrovata:

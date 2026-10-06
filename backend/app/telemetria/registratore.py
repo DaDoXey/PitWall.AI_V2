@@ -64,16 +64,18 @@ def abilitato() -> bool:
     )
 
 
-def cartella_telemetria() -> Path:
+def cartella_telemetria(id_sessione: str | None = None) -> Path:
     """Dove finiscono i canali.
 
     Di default `<archivio sessioni>/telemetria`. **Vale la pena spostarla fuori da
     OneDrive** con `PITWALL_SESSIONS_DIR`: una sessione lunga sono centinaia di MB,
     e una cartella sincronizzata li manderebbe in rete uno per uno.
     """
-    grezzo = os.getenv("PITWALL_SESSIONS_DIR", "").strip()
-    radice = Path(grezzo) if grezzo else Path(__file__).resolve().parents[2] / "sessions"
-    percorso = radice / "telemetria"
+    from app import spazi
+
+    # Dove ogni pilota ha il suo spazio i canali stanno nello spazio; quelli della demo,
+    # che è di tutti, nell'archivio comune (basta dire di quale sessione si parla).
+    percorso = spazi.radice_di(id_sessione) / "telemetria"
     percorso.mkdir(parents=True, exist_ok=True)
     return percorso
 

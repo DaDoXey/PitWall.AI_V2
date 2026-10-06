@@ -376,7 +376,9 @@ def canali_del_bundle(bundle: SessionBundle) -> dict[str, np.ndarray] | None:
     if bundle.canali is None or bundle.meta.fonte not in (Fonte.ACC_SHARED_MEMORY, Fonte.DEMO,
                                                           Fonte.MOTEC):
         return None
-    cartella = (cartella_telemetria() / bundle.canali.file).parent
+    # Il primo pezzo del percorso è l'id della registrazione: dice se è la demo (di tutti).
+    di_chi = bundle.canali.file.replace("\\", "/").split("/")[0]
+    cartella = (cartella_telemetria(di_chi) / bundle.canali.file).parent
     if not (cartella / "canali.npz").exists() or not (cartella / "sessione.json").exists():
         return None
     return leggi_canali(cartella)

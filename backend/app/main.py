@@ -14,9 +14,10 @@ import time
 import uuid
 
 from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from app import config
+from app import config, spazi
 from app.api import analysis, catalog, chat, sessions, setup, telemetria, vision
 from app.logging_config import request_id, setup_logging
 from app.telemetria import registratore as telemetria_reg
@@ -56,6 +57,13 @@ async def request_context(request: Request, call_next):
     rid = ricevuto if _RID_VALIDO.fullmatch(ricevuto) else uuid.uuid4().hex[:12]
     token = request_id.set(rid)
     inizio = time.perf_counter()
+    # Di chi è la richiesta, dove ogni pilota ha il suo spazio (app/spazi.py). Il codice
+    # non si scrive mai nei log.
+    codice = request.headers.get(spazi.INTESTAZIONE, "") if spazi.attivi() else ""
+    if codice and not spazi.CODICE_VALIDO.fullmatch(codice):
+        request_id.reset(token)
+        return JSONResponse(status_code=400, content={"detail": "Codice dello spazio non valido"})
+    gettone_spazio = spazi.imposta(codice or None)
     try:
         response = await call_next(request)
     except Exception:
@@ -68,17 +76,26 @@ async def request_context(request: Request, call_next):
                  response.status_code, (time.perf_counter() - inizio) * 1000)
         return response
     finally:
+        spazi.ripristina(gettone_spazio)
         request_id.reset(token)
+
+
+@app.exception_handler(spazi.SpazioMancante)
+async def spazio_mancante(_request: Request, errore: spazi.SpazioMancante):
+    return JSONResponse(status_code=400, content={"detail": str(errore)})
+
+
+@app.exception_handler(spazi.LimiteSpazio)
+async def spazio_pieno(_request: Request, errore: spazi.LimiteSpazio):
+    return JSONResponse(status_code=409, content={"detail": str(errore)})
 
 
 @app.on_event("startup")
 def prepara_demo():
     """La sessione DEMO nello stesso archivio delle altre (L4). Se manca o è di una
     versione vecchia del generatore, si ricrea: qualche secondo, una volta sola."""
-    from app.bundle.demo import assicura_demo
-
     try:
-        assicura_demo()
+        spazi.assicura_demo()
     except Exception:   # una demo che non si crea non deve impedire all'app di partire
         log.exception("sessione demo non creata")
 
@@ -115,4 +132,6 @@ def health():
         # La chat dal vivo ha il suo interruttore (#061) e serve anche la chiave.
         "chat_live": config.chat_live() and bool(config.ANTHROPIC_API_KEY),
         "recorder_allowed": telemetria_reg.abilitato(),
+        # Uno spazio per ogni pilota (2.2): il frontend lo legge per sapere cosa mostrare.
+        "spazi": spazi.attivi(),
     }

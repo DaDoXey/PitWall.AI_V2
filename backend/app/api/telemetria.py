@@ -69,7 +69,7 @@ def _presidio() -> None:
 def _cartella(id_sessione: str) -> Path:
     if not ID_VALIDO.match(id_sessione or ""):
         raise HTTPException(status_code=400, detail=f"id non valido: {id_sessione!r}")
-    radice = reg.cartella_telemetria().resolve()
+    radice = reg.cartella_telemetria(id_sessione).resolve()
     percorso = (radice / id_sessione).resolve()
     if percorso.parent != radice or not percorso.is_dir():
         raise HTTPException(status_code=404, detail="registrazione non trovata")

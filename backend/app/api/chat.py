@@ -26,7 +26,7 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
-from app import budget, config
+from app import budget, config, spazi
 from app.analisi import analizza
 from app.analisi.debrief import TagliNonValidi, debrief
 from app.analisi.gigi import contesto_chat
@@ -87,7 +87,7 @@ def chat_sessione(id_sessione: str, corpo: RichiestaChat):
                             detail=f"Conversazione piena ({MAX_DOMANDE} domande): aprine una nuova.")
 
     if demo.e_demo(id_sessione):
-        demo.assicura_demo()
+        spazi.assicura_demo()
     try:
         bundle = store.leggi(id_sessione)
     except store.SessioneNonTrovata:

@@ -9,6 +9,13 @@
 #   - il piano gratuito si addormenta dopo 15 minuti senza visite: il frontend lo sa
 #     (NEXT_PUBLIC_ATTESA_ACCENSIONE_S) e .github/workflows/sveglia.yml lo tiene acceso di giorno.
 #
+# Per passare dalla vetrina alla PROVA con i piloti (cancello M2), in quest'ordine:
+#   1. un piano con disco permanente, e PITWALL_SESSIONS_DIR sulla cartella di quel disco:
+#      senza, le sessioni dei piloti spariscono a ogni riavvio;
+#   2. PITWALL_SPAZI=1 (uno spazio per ogni pilota: backend/app/spazi.py);
+#   3. PITWALL_ALLOW_IMPORT=1 (le scritture). MAI il punto 3 senza il 2: con le scritture
+#      accese e gli spazi spenti tutti scriverebbero nello stesso archivio.
+#
 # L'unico valore da scrivere a mano nella pagina di Render è PITWALL_CORS_ORIGINS:
 # l'indirizzo del frontend su Vercel, senza barra finale.
 services:

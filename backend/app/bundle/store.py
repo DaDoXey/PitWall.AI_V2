@@ -28,6 +28,7 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
+from app import spazi
 from app.bundle.schema import SessionBundle
 
 ID_VALIDO = re.compile(r"^[0-9]{8}-[0-9]{6}-[a-z0-9_]{1,48}-[0-9a-f]{4}$")
@@ -68,12 +69,14 @@ class Riassunto(BaseModel):
     ritaglio_i2: bool = False
 
 
-def cartella() -> Path:
-    """La cartella dell'archivio, creata alla prima occorrenza."""
-    grezzo = os.getenv("PITWALL_SESSIONS_DIR", "").strip()
-    radice = Path(grezzo) if grezzo else Path(__file__).resolve().parents[2] / "sessions"
-    radice.mkdir(parents=True, exist_ok=True)
-    return radice
+def cartella(id_sessione: str | None = None) -> Path:
+    """La cartella dove sta una sessione, creata alla prima occorrenza.
+
+    In locale è l'archivio (`backend/sessions/` o `PITWALL_SESSIONS_DIR`). Dove ogni
+    pilota ha il suo spazio (`app/spazi.py`) è la cartella dello spazio della richiesta;
+    la demo, che è di tutti, resta nell'archivio comune.
+    """
+    return spazi.radice_di(id_sessione)
 
 
 def _pezzo_leggibile(bundle: SessionBundle) -> str:
@@ -94,7 +97,7 @@ def nuovo_id(bundle: SessionBundle) -> str:
 def _percorso(id_sessione: str) -> Path:
     if not ID_VALIDO.match(id_sessione or ""):
         raise ArchivioError(f"id non valido: {id_sessione!r}")
-    radice = cartella().resolve()
+    radice = cartella(id_sessione).resolve()
     percorso = (radice / f"{id_sessione}.json").resolve()
     # Cintura e bretelle: la regex già esclude i separatori, ma un id che esce dalla
     # cartella non deve poter arrivare al filesystem nemmeno per sbaglio.
@@ -107,6 +110,15 @@ def salva(bundle: SessionBundle, id_sessione: str | None = None) -> str:
     """Scrive il bundle e restituisce il suo id. La scrittura è atomica."""
     id_sessione = id_sessione or nuovo_id(bundle)
     percorso = _percorso(id_sessione)
+    if spazi.attivi() and not spazi.in_comune():
+        if spazi.e_comune(id_sessione):
+            raise ArchivioError("la sessione demo è di tutti: non si modifica")
+        if not percorso.exists():
+            presenti = sum(1 for _ in percorso.parent.glob("*.json"))
+            if presenti >= spazi.max_sessioni():
+                raise spazi.LimiteSpazio(
+                    f"Hai raggiunto il massimo di {spazi.max_sessioni()} sessioni: "
+                    "cancellane una per caricarne un'altra")
     temporaneo = percorso.with_suffix(".json.tmp")
     temporaneo.write_text(bundle.to_json(), encoding="utf-8")
     os.replace(temporaneo, percorso)   # o c'è il file vecchio, o quello nuovo: mai mezzo
@@ -161,7 +173,11 @@ def riassunto(id_sessione: str) -> Riassunto:
 
 def elenca(limite: int | None = None) -> list[Riassunto]:
     """Le sessioni archiviate, dalla più recente. I file illeggibili si saltano."""
-    file = sorted(cartella().glob("*.json"), key=lambda p: p.name, reverse=True)
+    file = list(cartella().glob("*.json"))
+    if spazi.attivi() and not spazi.in_comune():
+        # La demo è di tutti e vive nell'archivio comune: si vede da ogni spazio.
+        file += [p for p in spazi.radice_comune().glob("*.json") if spazi.e_comune(p.stem)]
+    file.sort(key=lambda p: p.name, reverse=True)
     fuori: list[Riassunto] = []
     for percorso in file:
         if limite is not None and len(fuori) >= limite:
