@@ -3527,7 +3527,9 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 **Verifica.** Landing servita in locale su 1536×695, 1920×1080 e 390×844: pulsante in vista senza scorrere, nessuno scorrimento orizzontale, i tre caratteri caricati dalla cartella, zero richieste verso altri siti, 413 KB in tutto. Modulo: aperto senza accesso (200), candidatura di prova inviata e arrivata nel foglio. App: verifica completa verde, 1276 test, 24 prove nel browser; cambiate solo le tre catture del login, come atteso.
 
-**Ancora da fare per chiudere il pacchetto:** pubblicare la landing (progetto Vercel sulla cartella `landing`), data nell'informativa, link all'informativa nel modulo e link alla landing nel login, le undici verifiche della checklist; di Edoardo: immagine di testata del modulo, test dei dieci secondi, rilettura dell'informativa.
+**Online dal 06/10:** https://pitwall-muretto.vercel.app (progetto Vercel `pitwall-muretto`, cartella radice `landing`, pubblica da solo a ogni push). Da fuori: 200, circa 350 ms, zero richieste verso altri siti, pulsante in vista su computer e telefono. Poi, in `c46a7dc`: la data nell'informativa e, nel login, il link «Scopri di più →» alla landing; nel modulo il link all'informativa e l'immagine di testata (caricata da Edoardo). Landing vista e approvata da Edoardo.
+
+**Ancora da fare per chiudere il pacchetto:** le undici verifiche della checklist; di Edoardo: test dei dieci secondi, rilettura dell'informativa.
 
 **File protetti:** ☑ nessuno toccato.
 **Decisione:** ☑ «ok push, poi crea tu il progetto vercel da chrome» (06/10/2026).
