@@ -69,7 +69,15 @@ export default function LoginPage() {
           {/* La stessa frase della landing: chi arriva qui senza conoscere PitWall legge cos'è. */}
           <p className="mx-auto mt-4 max-w-xs text-sm leading-relaxed text-muted">
             Un ingegnere di pista che guarda i tuoi giri di Assetto Corsa Competizione e ti dice
-            alla radio dove perdi tempo e cosa cambiare.
+            alla radio dove perdi tempo e cosa cambiare.{" "}
+            <a
+              href="https://pitwall-muretto.vercel.app"
+              target="_blank"
+              rel="noopener"
+              className="whitespace-nowrap text-zinc-300 underline decoration-zinc-600 underline-offset-4 hover:decoration-accent"
+            >
+              Scopri di più →
+            </a>
           </p>
         </motion.div>
 
