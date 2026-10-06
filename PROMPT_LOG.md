@@ -3511,6 +3511,29 @@ Spa. Nella lista `/tracciati`: **23 foto caricate, zero stirate** (controllate t
 
 ---
 
+## Entry #086 — Pacchetto 2.1: la landing page, il modulo e la riga nel login
+
+| Campo | Valore |
+|---|---|
+| Data | 06/10/2026 |
+| Area | `landing/` (nuova) · `frontend/src/app/(auth)/login/page.tsx` · modulo Google (fuori repo) |
+| Commit | `d6fb328` (landing e login) + questo commit docs |
+
+**Cosa.** NEW `landing/`: pagina statica a sé (`index.html`, `privacy.html`, `stile.css`), testi della checklist parola per parola: «Il muretto box, a casa tua.», schermata vera della Console, quattro benefici ognuno con un ritaglio preso dalla vetrina online, seconda chiamata, piede con credito della mappa e nota su Kunos. Caratteri dell'app serviti dalla cartella (Orbitron, Inter, JetBrains Mono), nessuna statistica, nessun contenuto incorporato. Informativa dalla bozza del 05/10, con titolare, contatto e hosting; **non vista da un legale**.
+
+**Modulo.** «Candidature PitWall» su Moduli Google, creato dall'account del progetto: cinque domande e due caselle (consenso obbligatorio, avviso di lancio facoltativo), nessuna raccolta automatica di indirizzi, nessun accesso richiesto, foglio collegato non condiviso. Tema: rosso `#E8002D`, Orbitron e Inter; lo sfondo nero Moduli non lo permette. I due pulsanti della landing lo aprono in una scheda nuova.
+
+**Login dell'app.** Sotto il nome, la stessa frase della landing: chi arriva senza conoscere PitWall legge cos'è (era rimasto «da decidere» dall'1.2).
+
+**Verifica.** Landing servita in locale su 1536×695, 1920×1080 e 390×844: pulsante in vista senza scorrere, nessuno scorrimento orizzontale, i tre caratteri caricati dalla cartella, zero richieste verso altri siti, 413 KB in tutto. Modulo: aperto senza accesso (200), candidatura di prova inviata e arrivata nel foglio. App: verifica completa verde, 1276 test, 24 prove nel browser; cambiate solo le tre catture del login, come atteso.
+
+**Ancora da fare per chiudere il pacchetto:** pubblicare la landing (progetto Vercel sulla cartella `landing`), data nell'informativa, link all'informativa nel modulo e link alla landing nel login, le undici verifiche della checklist; di Edoardo: immagine di testata del modulo, test dei dieci secondi, rilettura dell'informativa.
+
+**File protetti:** ☑ nessuno toccato.
+**Decisione:** ☑ «ok push, poi crea tu il progetto vercel da chrome» (06/10/2026).
+
+---
+
 <!-- TEMPLATE — copia e incolla per ogni nuova entry
 
 ## Entry #XXX — [titolo breve]
